@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="dbfit-core/target/classes" path="dbfit-core/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-core/target/classes" path="dbfit-core/src/main/resources"/>
+	<classpathentry kind="src" output="dbfit-core/target/test-classes" path="dbfit-core/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-core/target/test-classes" path="dbfit-core/src/test/resources"/>
+	<classpathentry kind="src" output="dbfit-fitnesse/target/classes" path="dbfit-fitnesse/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-fitnesse/target/classes" path="dbfit-fitnesse/src/main/resources"/>
+	<classpathentry kind="src" output="dbfit-fitnesse/target/test-classes" path="dbfit-fitnesse/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-fitnesse/target/test-classes" path="dbfit-fitnesse/src/test/resources"/>
+	<classpathentry kind="src" output="dbfit-greenpepper/target/classes" path="dbfit-greenpepper/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-greenpepper/target/classes" path="dbfit-greenpepper/src/main/resources"/>
+	<classpathentry kind="src" output="dbfit-greenpepper/target/test-classes" path="dbfit-greenpepper/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-greenpepper/target/test-classes" path="dbfit-greenpepper/src/test/resources"/>
+	<classpathentry kind="src" output="dbfit-oracle/target/classes" path="dbfit-oracle/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-oracle/target/classes" path="dbfit-oracle/src/main/resources"/>
+	<classpathentry kind="src" output="dbfit-oracle/target/test-classes" path="dbfit-oracle/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-oracle/target/test-classes" path="dbfit-oracle/src/test/resources"/>
+	<classpathentry kind="src" output="dbfit-sqlserver/target/classes" path="dbfit-sqlserver/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-sqlserver/target/classes" path="dbfit-sqlserver/src/main/resources"/>
+	<classpathentry kind="src" output="dbfit-sqlserver/target/test-classes" path="dbfit-sqlserver/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-sqlserver/target/test-classes" path="dbfit-sqlserver/src/test/resources"/>
+	<classpathentry kind="src" output="dbfit-mysql/target/classes" path="dbfit-mysql/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-mysql/target/classes" path="dbfit-mysql/src/main/resources"/>
+	<classpathentry kind="src" output="dbfit-mysql/target/test-classes" path="dbfit-mysql/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-mysql/target/test-classes" path="dbfit-mysql/src/test/resources"/>
+	<classpathentry kind="src" output="dbfit-db2/target/classes" path="dbfit-db2/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-db2/target/classes" path="dbfit-db2/src/main/resources"/>
+	<classpathentry kind="src" output="dbfit-db2/target/test-classes" path="dbfit-db2/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-db2/target/test-classes" path="dbfit-db2/src/test/resources"/>
+	<classpathentry kind="src" output="dbfit-postgre/target/classes" path="dbfit-postgre/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-postgre/target/classes" path="dbfit-postgre/src/main/resources"/>
+	<classpathentry kind="src" output="dbfit-postgre/target/test-classes" path="dbfit-postgre/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-postgre/target/test-classes" path="dbfit-postgre/src/test/resources"/>
+	<classpathentry kind="src" output="dbfit-hsqldb/target/classes" path="dbfit-hsqldb/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-hsqldb/target/classes" path="dbfit-hsqldb/src/main/resources"/>
+	<classpathentry kind="src" output="dbfit-hsqldb/target/test-classes" path="dbfit-hsqldb/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-hsqldb/target/test-classes" path="dbfit-hsqldb/src/test/resources"/>
+	<classpathentry kind="src" output="dbfit-sybase/target/classes" path="dbfit-sybase/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-sybase/target/classes" path="dbfit-sybase/src/main/resources"/>
+	<classpathentry kind="src" output="dbfit-sybase/target/test-classes" path="dbfit-sybase/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="dbfit-sybase/target/test-classes" path="dbfit-sybase/src/test/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

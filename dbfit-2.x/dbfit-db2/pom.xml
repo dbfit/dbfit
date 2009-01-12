@@ -1,0 +1,18 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>dbfit-pom</artifactId>
+    <groupId>org.dbfit</groupId>
+    <version>2.0.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>dbfit-db2</artifactId>
+  <groupId>${project.parent.groupId}</groupId>
+  <version>${project.parent.version}</version>
+  <dependencies>
+  <dependency>
+	  <groupId>${project.groupId}</groupId>
+	  <version>${project.version}</version>
+	  <artifactId>dbfit-core</artifactId>
+  </dependency>
+  </dependencies>
+</project>

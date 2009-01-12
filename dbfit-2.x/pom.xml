@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.dbfit</groupId>
+  <artifactId>dbfit-superproject</artifactId>
+  <packaging>pom</packaging>
+  <name>dbfit 2.0 project base</name>
+  <version>2.0.0-SNAPSHOT</version>
+  <modules>
+	<module>dbfit-pom</module>
+  	<module>dbfit-core</module>
+  	<module>dbfit-greenpepper</module>
+  	<module>dbfit-oracle</module>
+  	<module>dbfit-sqlserver</module>
+  	<module>dbfit-mysql</module>
+  	<module>dbfit-db2</module>
+  	<module>dbfit-postgre</module>
+  	<module>dbfit-hsqldb</module>
+  	<module>dbfit-sybase</module>
+  	<module>dbfit-derby</module>
+  	<module>dbfit-fitnesse</module>
+  </modules>
+</project>
