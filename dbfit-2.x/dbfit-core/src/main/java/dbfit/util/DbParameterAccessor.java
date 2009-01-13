@@ -4,9 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import fit.Fixture;
 
-public class DbParameterAccessor extends DbTypeAdapter {
+public class DbParameterAccessor {
 	public static final int RETURN_VALUE=0;
 	public static final int INPUT=1;
 	public static final int OUTPUT=2;
@@ -16,6 +15,7 @@ public class DbParameterAccessor extends DbTypeAdapter {
 	private int direction;
 	private String name;
 	private int sqlType;
+	protected Class<?> type;
 	private int position; //zero-based index of parameter in procedure or column in table
 	public static Object normaliseValue(Object currVal) throws SQLException{
 		if (currVal==null) return null;
@@ -65,9 +65,8 @@ public class DbParameterAccessor extends DbTypeAdapter {
 	}
 	/*******************************************/
 	private PreparedStatement cs;
-	public void bindTo(Fixture f, PreparedStatement cs, int ind) throws SQLException{
+	public void bindTo(PreparedStatement cs, int ind) throws SQLException{
 		this.cs=cs;
-		this.fixture=f;
 		this.index=ind;	
 		if (direction==DbParameterAccessor.OUTPUT || 
 				direction==DbParameterAccessor.RETURN_VALUE||
@@ -75,9 +74,8 @@ public class DbParameterAccessor extends DbTypeAdapter {
 			convertStatementToCallable().registerOutParameter(ind, getSqlType());
 		}
 	}
-	public void bindToReturning(Fixture f, PreparedStatement cs, int ind) {
+	public void bindToReturning(PreparedStatement cs, int ind) {
 		this.cs=cs;
-		this.fixture=f;
 		this.index=ind;	
 	}
 	public void set(Object value) throws Exception {
@@ -90,6 +88,7 @@ public class DbParameterAccessor extends DbTypeAdapter {
 			if (direction==INPUT)
 				throw new UnsupportedOperationException("Trying to get value of input parameter "+name);			
       
+// TODO: GOJKO FIX THIS!			
 //  		if (this.fixture instanceof Insert) {
 //        if (((Insert) this.fixture).GetRowResult() != null) {
 //      	  return normaliseValue(((Insert) this.fixture).GetRowResult().getObject(getName()));
@@ -108,5 +107,5 @@ public class DbParameterAccessor extends DbTypeAdapter {
 	public int getPosition() {
 		return position;
 	}
-	
+
 }

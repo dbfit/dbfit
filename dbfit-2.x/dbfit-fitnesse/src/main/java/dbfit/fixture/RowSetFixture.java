@@ -17,11 +17,14 @@ public abstract class RowSetFixture extends ColumnFixture {
 	    public String key;
 	    @SuppressWarnings("unchecked")
 	    public CurrentDataRowTypeAdapter(String key, Class type) throws NoSuchMethodException {
-	        target = null;
+	    	super(null, RowSetFixture.this);
+	    	target = null;
 	        method = CurrentDataRowTypeAdapter.class.getMethod("get", new Class[] {});
-	        fixture = RowSetFixture.this;
 	        this.type = type;
 	        this.key = key;
+	    }
+	    public void set(Object value) throws Exception {
+	    	throw new UnsupportedOperationException("changing values in row sets is not supported");
 	    }
 	    public Object get() {
 	           return currentRow.get(key);

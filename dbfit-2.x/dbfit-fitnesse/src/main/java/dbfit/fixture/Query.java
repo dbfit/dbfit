@@ -6,6 +6,8 @@ import java.sql.SQLException;
 
 import org.dbfit.core.DBEnvironment;
 import org.dbfit.core.DbEnvironmentFactory;
+import org.dbfit.fitnesse.FitNesseTestHost;
+
 import dbfit.util.DataColumn;
 import dbfit.util.DataTable;
 import dbfit.util.Log;
@@ -36,7 +38,7 @@ public class Query extends RowSetFixture {
 		if (query.startsWith("<<"))
 			return getFromSymbol();
 		Log.log("Query: '%s'", query);
-		PreparedStatement st = dbEnvironment.createStatementWithBoundFixtureSymbols(query);
+		PreparedStatement st = dbEnvironment.createStatementWithBoundFixtureSymbols(FitNesseTestHost.getInstance(),query);
 		return new DataTable(st.executeQuery());
 	}
 

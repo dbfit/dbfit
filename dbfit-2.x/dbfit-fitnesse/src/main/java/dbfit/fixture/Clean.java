@@ -5,10 +5,14 @@ import java.sql.SQLException;
 
 import org.dbfit.core.DBEnvironment;
 import org.dbfit.core.DbEnvironmentFactory;
+import org.dbfit.core.TestHost;
+import org.dbfit.fitnesse.FitNesseTestHost;
+
 import fit.Parse;
 
 public class Clean extends fit.ColumnFixture {
     private DBEnvironment environment;
+
 	public Clean(DBEnvironment environment) {
 		this.environment = environment;
 	}
@@ -50,14 +54,14 @@ public class Clean extends fit.ColumnFixture {
     private boolean hadRowOperation=false;		
 	public boolean clean() throws SQLException{
 		String s=  "Delete from " + table +(where!=null?(" where "+where):"");
-		environment.createStatementWithBoundFixtureSymbols(s).execute();
+		environment.createStatementWithBoundFixtureSymbols(FitNesseTestHost.getInstance(),s).execute();
 		return true;
 	}
     public boolean DeleteRowsForIDs() throws SQLException
     {
         String s=    "Delete from " + table + " where "+columnName +" in ("
             + getIDCSV()+") "+(where != null ? " and " + where : "");
-		environment.createStatementWithBoundFixtureSymbols(s).execute();
+		environment.createStatementWithBoundFixtureSymbols(FitNesseTestHost.getInstance(),s).execute();
 		hadRowOperation=true;
 		return true;
     }
@@ -65,7 +69,7 @@ public class Clean extends fit.ColumnFixture {
     {
     	String s=   "Delete from " + table + " where " + columnName + " in ("
             + getKeyCSV() + ") " + (where != null ? " and " + where : "");
-    	environment.createStatementWithBoundFixtureSymbols(s).execute();
+    	environment.createStatementWithBoundFixtureSymbols(FitNesseTestHost.getInstance(),s).execute();
     	hadRowOperation=true;
     	return true;
     }

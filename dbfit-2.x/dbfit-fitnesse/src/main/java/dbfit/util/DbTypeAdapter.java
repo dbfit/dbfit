@@ -1,6 +1,11 @@
 package dbfit.util;
 
 
+import java.lang.reflect.InvocationTargetException;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import fit.Fixture;
 import fit.TypeAdapter;
 /* this class addresses several issues with parsing, and is used as a base for any other dbfit type adapters:
  * 1: TypeAdapter does not check the parse delegates directly when parsing, it relies on appropriate delegate
@@ -12,6 +17,20 @@ import fit.TypeAdapter;
  * 
  */
 public class DbTypeAdapter extends TypeAdapter {	
+	private DbParameterAccessor parameterAccessor;
+	public DbTypeAdapter(DbParameterAccessor accessor,Fixture f){
+		this.fixture=f;
+		this.parameterAccessor=accessor;		
+	}
+	@Override
+	public Object get() throws IllegalAccessException,
+			InvocationTargetException {
+		return parameterAccessor.get();
+	}
+	@Override
+	public void set(Object value) throws Exception {
+		parameterAccessor.set(value);
+	}
 	private Object tryToConvert(Object value) throws Exception{
 		try{
 			return type.cast(value);

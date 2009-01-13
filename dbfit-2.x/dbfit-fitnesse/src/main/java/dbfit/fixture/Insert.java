@@ -39,9 +39,9 @@ public class Insert extends fit.Fixture {
 							environment.getConnection().prepareStatement(ins,Statement.RETURN_GENERATED_KEYS);
 		for (int i=0; i<accessors.length; i++){
       if (accessors[i].getDirection() == DbParameterAccessor.INPUT)
-			  accessors[i].bindTo(this, cs, i+1);
+			  accessors[i].bindTo(cs, i+1);
       else
-			  accessors[i].bindToReturning(this, cs, i+1);
+			  accessors[i].bindToReturning(cs, i+1);
 		}
 		return cs;
 	}
@@ -103,7 +103,7 @@ public class Insert extends fit.Fixture {
 			}
 			else
 				columnBindings[i]=new SymbolAccessSetBinding();
-        	columnBindings[i].adapter=accessors[i];
+        	columnBindings[i].adapter=new DbTypeAdapter(accessors[i],this);
 		}
 	}
 	private void runRow(Parse row)  throws Throwable{

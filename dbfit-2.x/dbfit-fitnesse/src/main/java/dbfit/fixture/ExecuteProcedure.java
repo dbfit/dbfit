@@ -12,6 +12,7 @@ import java.util.Map;
 import org.dbfit.core.DBEnvironment;
 import org.dbfit.core.DbEnvironmentFactory;
 import dbfit.util.DbParameterAccessor;
+import dbfit.util.DbTypeAdapter;
 import dbfit.util.NameNormaliser;
 import dbfit.util.SymbolAccessQueryBinding;
 import dbfit.util.SymbolAccessSetBinding;
@@ -102,7 +103,7 @@ public class ExecuteProcedure extends fit.Fixture {
 
 			int realindex=accessorNames.indexOf(ac.getName());
 //			System.out.println("Binding "+ac.getName()+" to "+(realindex+1));
-			ac.bindTo(this, cs, realindex+1); // jdbc params are 1-based
+			ac.bindTo(cs, realindex+1); // jdbc params are 1-based
 		}
 		return cs;
 	}
@@ -196,7 +197,7 @@ public class ExecuteProcedure extends fit.Fixture {
 				}
 				columnBindings[i]=new SymbolAccessSetBinding();
 			}
-        	columnBindings[i].adapter=accessors[i];
+        	columnBindings[i].adapter=new DbTypeAdapter(accessors[i],this);
 		}
 	}
 	private void runRow(Parse row)  throws Throwable{
@@ -209,7 +210,7 @@ public class ExecuteProcedure extends fit.Fixture {
 			}
 		  else if (accessors[column].getDirection()==DbParameterAccessor.RETURN_VALUE)
       {
-        accessors[column].bindTo(this, statement, Math.abs(accessors[column].getPosition()));
+        accessors[column].bindTo(statement, Math.abs(accessors[column].getPosition()));
 		  }
 		} 
 		if (!exceptionExpected){

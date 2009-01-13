@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.dbfit.core.DBEnvironment;
 import org.dbfit.core.DbEnvironmentFactory;
+import org.dbfit.core.TestHost;
+import org.dbfit.fitnesse.FitNesseTestHost;
 
 
 public class QueryStats extends fit.ColumnFixture{
@@ -37,7 +39,8 @@ public class QueryStats extends fit.ColumnFixture{
             if (query == null){
                 query = "select * from " + tableName + (where != null ? " where " + where : "");
             }
-            PreparedStatement st=            environment.createStatementWithBoundFixtureSymbols("select count(*) from ("+query+") temp");
+            PreparedStatement st= 
+            	environment.createStatementWithBoundFixtureSymbols(FitNesseTestHost.getInstance(),"select count(*) from ("+query+") temp");
             ResultSet rs=st.executeQuery();
             if (rs.next())_rows=rs.getInt(1);
 

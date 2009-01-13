@@ -1,7 +1,7 @@
 package org.dbfit.core;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.math.BigDecimal;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -9,25 +9,15 @@ import java.util.regex.Pattern;
 
 import org.dbfit.core.DBEnvironment;
 
-import dbfit.util.BigDecimalParseDelegate;
 import dbfit.util.DbConnectionProperties;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Options;
-import dbfit.util.SqlDateParseDelegate;
-import dbfit.util.SqlTimestampParseDelegate;
-
-import fit.TypeAdapter;
 
 public abstract class AbstractDbEnvironment implements DBEnvironment {
 
 		protected Connection currentConnection;
         protected abstract String getDriverClassName();
         private boolean driverRegistered=false;
-        public AbstractDbEnvironment() {
-    		TypeAdapter.registerParseDelegate(BigDecimal.class, BigDecimalParseDelegate.class);
-    		TypeAdapter.registerParseDelegate(java.sql.Date.class, SqlDateParseDelegate.class);
-    		TypeAdapter.registerParseDelegate(java.sql.Timestamp.class, SqlTimestampParseDelegate.class);
-        }
         private void registerDriver() throws SQLException{
         	String driverName=getDriverClassName();
         	try {
@@ -79,7 +69,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
        	* can be directly invoked using
         * dbCommand.setObject(parameterName, x, targetSqlType)
 		*/
-        public final PreparedStatement createStatementWithBoundFixtureSymbols(String commandText) throws SQLException
+        public final PreparedStatement createStatementWithBoundFixtureSymbols(TestHost testHost, String commandText) throws SQLException
         {
 //            System.out.println("paramNames length "+paramNames.length);
             if (Options.isBindSymbols()){
@@ -87,7 +77,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
                 String paramNames[]=extractParamNames(commandText);
 	        	for (int i=0; i<paramNames.length; i++ )
 	            {
-	        		Object value=dbfit.util.SymbolUtil.getSymbol(paramNames[i]);
+	        		Object value=testHost.getSymbolValue(paramNames[i]);
 	        		cs.setObject(i+1, value);
 	            }
 	            return cs;

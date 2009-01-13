@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.dbfit.core.DBEnvironment;
 import org.dbfit.core.DbEnvironmentFactory;
+import org.dbfit.fitnesse.FitNesseTestHost;
+
 import dbfit.util.DbParameterAccessor;
 import fit.Fixture;
 import fit.Parse;
@@ -60,7 +62,7 @@ public class Inspect extends fit.Fixture {
 		addRowWithParamNames(table,allParams);
 	}
 	private void inspectQuery(Parse table) throws SQLException{
-		PreparedStatement st=environment.createStatementWithBoundFixtureSymbols(objectName);
+		PreparedStatement st=environment.createStatementWithBoundFixtureSymbols(FitNesseTestHost.getInstance(),objectName);
 		ResultSet rs=st.executeQuery();
 		Parse newRow=getHeaderFromRS(rs);
 		table.parts.more=newRow;

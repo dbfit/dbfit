@@ -6,10 +6,14 @@ import java.sql.SQLException;
 
 import org.dbfit.core.DBEnvironment;
 import org.dbfit.core.DbEnvironmentFactory;
+import org.dbfit.core.TestHost;
+import org.dbfit.fitnesse.FitNesseTestHost;
+
 import dbfit.util.DataTable;
 import fit.Parse;
 
 public class StoreQuery extends fit.Fixture{
+
 	private DBEnvironment dbEnvironment;
 	private String query;
 	private String symbolName;
@@ -30,7 +34,7 @@ public class StoreQuery extends fit.Fixture{
 		}
 		if (symbolName.startsWith(">>")) symbolName=symbolName.substring(2);
 		try {
-			PreparedStatement st=dbEnvironment.createStatementWithBoundFixtureSymbols(query);
+			PreparedStatement st=dbEnvironment.createStatementWithBoundFixtureSymbols(FitNesseTestHost.getInstance(),query);
 			ResultSet rs= st.executeQuery();
 			DataTable dt=new DataTable(rs);
 			dbfit.util.SymbolUtil.setSymbol(symbolName, dt);

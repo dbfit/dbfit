@@ -9,25 +9,4 @@
   <version>${project.parent.version}</version>
   <artifactId>dbfit-core</artifactId>
   <name>dbfit core elements (API/shared classes)</name>
-
-  <properties>
-	  <fitnesse.version>20081201</fitnesse.version>
-	  <fitlibrary.version>20081102</fitlibrary.version>
-  </properties>
-
-    <dependencies>
-  	<dependency>
-  		<groupId>org.fitnesse</groupId>
-  		<artifactId>fitnesse</artifactId>
-		<version>${fitnesse.version}</version>
-		<type>jar</type>
-  	</dependency>
-  	<dependency>
-  	<groupId>org.fitnesse</groupId>
-		<artifactId>fitlibrary</artifactId>
-		<version>${fitlibrary.version}</version>
-		<type>jar</type>
-  	</dependency>
-  </dependencies>
-  
 </project>

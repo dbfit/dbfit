@@ -70,7 +70,7 @@ public interface DBEnvironment {
 	 * Create a {@link PreparedStatement} object and binds fixture symbols to
 	 * SQL statement parameters with matching names.
 	 */
-	PreparedStatement createStatementWithBoundFixtureSymbols(String commandText)
+	PreparedStatement createStatementWithBoundFixtureSymbols(TestHost th, String commandText)
 			throws SQLException;
 
 	/**
