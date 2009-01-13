@@ -39,7 +39,7 @@ public class DatabaseEnvironment extends fitlibrary.SequenceFixture{
         		else if ("DERBY".equals(requestedEnv)){
         			oe=new DerbyEnvironment();
         		}
-        		if ("POSTGRES".equals(requestedEnv)){
+        		else if ("POSTGRES".equals(requestedEnv)){
                     oe= new PostgresEnvironment();
         		}
         		else throw new UnsupportedOperationException("DB Environment not supported:"+args[0]);
