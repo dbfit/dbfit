@@ -17,7 +17,8 @@ public class DbParameterAccessor {
 	private int sqlType;
 	protected Class<?> type;
 	private int position; //zero-based index of parameter in procedure or column in table
-	public static Object normaliseValue(Object currVal) throws SQLException{
+	private PreparedStatement cs;
+	public static Object normaliseValue(Object currVal) throws SQLException{		
 		if (currVal==null) return null;
 		TypeNormaliser tn=TypeNormaliserFactory.getNormaliser(currVal.getClass());
 		if (tn!=null) currVal=tn.normalise(currVal);
@@ -27,8 +28,8 @@ public class DbParameterAccessor {
 		this.name = acc.name;
 		this.direction = acc.direction;
 		this.sqlType = acc.sqlType;
-		this.type=null;
-		//this.type = acc.type;
+		//this.type=null;
+		this.type = acc.type;
 		this.position=acc.position;
 	}
 	@SuppressWarnings("unchecked")
@@ -64,7 +65,6 @@ public class DbParameterAccessor {
 		throw new SQLException("This operation requires a callable statement instead of "+cs.getClass().getName());
 	}
 	/*******************************************/
-	private PreparedStatement cs;
 	public void bindTo(PreparedStatement cs, int ind) throws SQLException{
 		this.cs=cs;
 		this.index=ind;	
@@ -74,10 +74,10 @@ public class DbParameterAccessor {
 			convertStatementToCallable().registerOutParameter(ind, getSqlType());
 		}
 	}
-	public void bindToReturning(PreparedStatement cs, int ind) {
-		this.cs=cs;
-		this.index=ind;	
-	}
+//	public void bindToReturning(PreparedStatement cs, int ind) {
+//		this.cs=cs;
+//		this.index=ind;	
+//	}
 	public void set(Object value) throws Exception {
 		if (direction==OUTPUT||direction==RETURN_VALUE)
 			throw new UnsupportedOperationException("Trying to set value of output parameter "+name);

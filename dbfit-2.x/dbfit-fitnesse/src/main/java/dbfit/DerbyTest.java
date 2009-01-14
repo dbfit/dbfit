@@ -16,7 +16,4 @@ public class DerbyTest extends DatabaseTest {
 	protected DerbyTest(DBEnvironment env) {
 		super(env);
 	}
-	public void dbfitDotDerbyTest() {
-		// required by fitnesse release 20080812
-	}
 }

@@ -13,11 +13,11 @@ public abstract class RowSetFixture extends ColumnFixture {
 	//private ResultSetMetaData rsmd;
 	private DataRow currentRow;
 	
-	private class CurrentDataRowTypeAdapter extends DbTypeAdapter {
+	private class CurrentDataRowTypeAdapter extends TypeAdapter {
 	    public String key;
 	    @SuppressWarnings("unchecked")
 	    public CurrentDataRowTypeAdapter(String key, Class type) throws NoSuchMethodException {
-	    	super(null, RowSetFixture.this);
+	    	this.fixture=RowSetFixture.this;
 	    	target = null;
 	        method = CurrentDataRowTypeAdapter.class.getMethod("get", new Class[] {});
 	        this.type = type;
@@ -31,6 +31,10 @@ public abstract class RowSetFixture extends ColumnFixture {
 	    }
 	    public Object invoke() throws IllegalAccessException {
 	        return get();
+	    }
+	    @Override
+	    public Object parse(String s) throws Exception {
+	    	return new ParseHelper(this.fixture,this.type).parse(s);
 	    }
 	}	
 	private int findColumn(String name) throws Exception{

@@ -1,0 +1,5 @@
+!3 IN/OUT params need to be specified twice
+
+|execute procedure|Multiply|
+|factor|val|val?|
+|5|10|50|

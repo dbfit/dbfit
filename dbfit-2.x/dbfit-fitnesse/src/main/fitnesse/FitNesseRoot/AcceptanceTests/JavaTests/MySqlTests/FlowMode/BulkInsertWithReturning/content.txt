@@ -1,0 +1,23 @@
+!3 Use ? to mark columns that should return values
+
+!|Insert|users|
+|username|name|userid?|
+|pera|Petar Detlic|>>pera|
+|Mika|Mitar Miric|>>mika|
+|Zeka|Dusko Dugousko|>>zeka|
+|DevNull|null|>>nll|
+
+!3 Confirm that IDs are the same as in the database
+
+!|Ordered Query|Select * from users|
+|username|name|userid|
+|pera|Petar Detlic|<<pera|
+|Mika|Mitar Miric|<<mika|
+|Zeka|Dusko Dugousko|<<zeka|
+|DevNull|null|<<nll|
+
+!3 Stored values can be used in queries directly
+
+|Query|Select * from users where userid=@zeka|
+|username|name|userid|
+|Zeka|Dusko Dugousko|<<zeka|

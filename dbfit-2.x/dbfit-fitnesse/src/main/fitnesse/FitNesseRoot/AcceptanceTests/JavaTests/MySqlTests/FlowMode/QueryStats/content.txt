@@ -1,0 +1,24 @@
+!3 Query Stats 
+
+|Query Stats|
+|query|row count?|is empty?|
+|SELECT 1 as n union select 2  union select 3  union select 4 union select 5 |5|false|
+
+|execute| create table tempt (tempf varchar(10))|
+
+|execute| insert into tempt values  ('tempf')|
+
+!|Query Stats|
+|query | row count? |is empty?|
+| SELECT * from  tempt where 0=1 |0|true|
+
+!|Query Stats|
+|table name| row count? |is empty?|
+| tempt |1|false|
+
+
+!|Query Stats|
+|table name| where|row count? |is empty?|
+| tempt |1=0|0|true|
+
+|execute| drop table tempt|

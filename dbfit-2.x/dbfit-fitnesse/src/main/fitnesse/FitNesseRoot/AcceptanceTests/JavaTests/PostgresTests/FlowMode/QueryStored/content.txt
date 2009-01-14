@@ -1,0 +1,7 @@
+|Store Query|select n from ( select 1 as n union select 2 union select 3) x|firsttable|
+
+|query|<<firsttable|
+|n|
+|1|
+|2|
+|3|

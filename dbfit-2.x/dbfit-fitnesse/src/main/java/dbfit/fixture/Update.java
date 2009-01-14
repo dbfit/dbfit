@@ -107,7 +107,7 @@ public class Update extends fit.Fixture {
 			else
 				selectAcc.add(acc);
 			columnBindings[i]=new SymbolAccessSetBinding();
-        	columnBindings[i].adapter=new DbTypeAdapter(acc,this);
+        	columnBindings[i].adapter=new DbParameterAccessorTypeAdapter(acc,this);
 		}
 		// weird jdk syntax, method param is the type of array.
 		selectAccessors=selectAcc.toArray(new DbParameterAccessor[0]);

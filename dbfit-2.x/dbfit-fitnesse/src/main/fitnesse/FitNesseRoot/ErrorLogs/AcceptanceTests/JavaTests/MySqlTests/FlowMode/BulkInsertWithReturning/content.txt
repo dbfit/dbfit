@@ -1,0 +1,22 @@
+!3 !-fit:fit.FitServer-!
+|'''Date: '''|!-12:03:57 AM (GMT) on Wednesday, January 14, 2009-!|
+|'''Command: '''|!-java -cp /home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/mysql-connector-java.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-core.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-db2.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-derby.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-hsqldb.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-mysql.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-oracle.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-postgre.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-sqlserver.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-sybase.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/fitlibrary.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/fitnesse.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-fitnesse-2.0.0-SNAPSHOT.jar:classes fit.FitServer flux 8085 6-!|
+|'''Exit code: '''|!-1-!|
+|'''Time elapsed: '''|!-1.284 seconds-!|
+----'''Standard Output:'''
+{{{Query: 'Select * from users'
+class java.lang.String Petar Detlic
+class java.lang.String pera
+class java.lang.Integer 80
+class java.lang.String Mitar Miric
+class java.lang.String Mika
+class java.lang.Integer 81
+class java.lang.String Dusko Dugousko
+class java.lang.String Zeka
+class java.lang.Integer 82
+Query: 'Select * from users where userid=@zeka'
+class java.lang.String Dusko Dugousko
+class java.lang.String Zeka
+class java.lang.Integer 82
+Rolling back
+}}}

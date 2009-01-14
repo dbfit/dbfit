@@ -1,0 +1,4 @@
+!|Execute Procedure|TestDecimal|
+|inParam|copyOfInParam?|constOutParam?|
+|3.14|3.14|123.456|
+|0.79|0.79|123.456|

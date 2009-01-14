@@ -1,0 +1,6 @@
+|Set Parameter|depth|3|
+
+|Query|SELECT n FROM ( SELECT 1 as n union select 2 union select 3 union select 4) x where n < _:depth::INT|
+|n|
+|2|
+|1|

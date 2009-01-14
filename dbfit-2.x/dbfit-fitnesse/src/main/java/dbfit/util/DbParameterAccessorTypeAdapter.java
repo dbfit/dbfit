@@ -16,10 +16,11 @@ import fit.TypeAdapter;
  *  	this adapter tries to fix inconsistent types first by casting, then by parsing if needed
  * 
  */
-public class DbTypeAdapter extends TypeAdapter {	
+public class DbParameterAccessorTypeAdapter extends TypeAdapter {	
 	private DbParameterAccessor parameterAccessor;
-	public DbTypeAdapter(DbParameterAccessor accessor,Fixture f){
+	public DbParameterAccessorTypeAdapter(DbParameterAccessor accessor,Fixture f){
 		this.fixture=f;
+		this.type=accessor.type;
 		this.parameterAccessor=accessor;		
 	}
 	@Override
@@ -31,38 +32,8 @@ public class DbTypeAdapter extends TypeAdapter {
 	public void set(Object value) throws Exception {
 		parameterAccessor.set(value);
 	}
-	private Object tryToConvert(Object value) throws Exception{
-		try{
-			return type.cast(value);
-		}
-		catch (ClassCastException cex){
-				return parse(value.toString());
-		}
-	}
-	private Object parseSymbol(String s) throws Exception{
-		Object value=dbfit.util.SymbolUtil.getSymbol(s.substring(2).trim());
-		if (value.getClass().equals(type))
-			return value;
-		// else try to convert
-		try{
-			return tryToConvert(value);
-		} catch (Exception e){
-			throw new UnsupportedOperationException(
-						"Incompatible types between symbol and cell value: expected "+type +"; but symbol is "+value.getClass(),e);
-		}
-	}
+	@Override
 	public Object parse(String s) throws Exception {
-		if (s.startsWith("<<")){
-			return parseSymbol(s);
-		}
-		String trim=s.trim();
-		if (trim.toLowerCase().equals("null")) return null;
-		if (this.type.equals(String.class) && Options.isFixedLengthStringParsing() &&
-				trim.startsWith("'") && trim.endsWith("'")){
-			return trim.substring(1,trim.length()-1);
-		}
-		TypeAdapter ta=TypeAdapter.adapterFor(this.type);
-		if (ta.getClass().equals(TypeAdapter.class)) return super.parse(s);
-		return ta.parse(s);
+		return new ParseHelper(this.fixture,this.type).parse(s);
 	}
 }

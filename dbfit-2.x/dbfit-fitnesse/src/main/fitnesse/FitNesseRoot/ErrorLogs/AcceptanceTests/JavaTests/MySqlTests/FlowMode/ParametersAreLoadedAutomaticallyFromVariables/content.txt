@@ -1,0 +1,9 @@
+!3 !-fit:fit.FitServer-!
+|'''Date: '''|!-11:36:23 PM (GMT) on Tuesday, January 13, 2009-!|
+|'''Command: '''|!-java -cp /home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/mysql-connector-java.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-core.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-db2.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-derby.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-hsqldb.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-mysql.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-oracle.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-postgre.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-sqlserver.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-sybase.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/fitlibrary.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/fitnesse.jar:classes fit.FitServer flux 8085 3-!|
+|'''Exit code: '''|!-0-!|
+|'''Time elapsed: '''|!-1.166 seconds-!|
+----'''Standard Output:'''
+{{{Query: 'Select * from users where userid=@pera'
+Rolling back
+}}}

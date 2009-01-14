@@ -6,6 +6,7 @@
   </parent>
   <properties>
   <fitnesse.version>20081201</fitnesse.version>
+  <fitnesse.lib.dir>${project.build.directory}</fitnesse.lib.dir>
   <fitlibrary.version>20081102</fitlibrary.version>
   </properties>
   <modelVersion>4.0.0</modelVersion>
@@ -17,7 +18,7 @@
   	<dependency>
   		<groupId>${project.groupId}</groupId>
   		<version>${project.version}</version>
-  		<artifactId>dbfit-core</artifactId>  		
+  		<artifactId>dbfit-core</artifactId> 
   	</dependency>
   	<dependency>
   		<groupId>${project.groupId}</groupId>
@@ -64,12 +65,85 @@
   		<artifactId>fitnesse</artifactId>
 		<version>${fitnesse.version}</version>
 		<type>jar</type>
+		<scope>provided</scope>
   	</dependency>
   	<dependency>
   	<groupId>org.fitnesse</groupId>
 		<artifactId>fitlibrary</artifactId>
 		<version>${fitlibrary.version}</version>
 		<type>jar</type>
+		<scope>provided</scope>
   	</dependency>
+  	<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.6</version>
+			<scope>runtime</scope>
+  	</dependency>  	
   </dependencies>
+  <profiles>
+  <profile>
+  <id>development</id>
+    <activation><activeByDefault>true</activeByDefault></activation>
+	<build>
+	<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-dependency-plugin</artifactId>
+			<executions>
+				<execution>
+					<phase>process-resources</phase>
+					<goals>
+						<goal>copy-dependencies</goal>
+					</goals>
+					<configuration>
+						<outputDirectory>${fitnesse.lib.dir}</outputDirectory>
+						<overWriteIfNewer>true</overWriteIfNewer>
+						<stripVersion>true</stripVersion>
+					</configuration>					
+				</execution>
+			</executions>
+		</plugin>
+		<plugin>
+	        <artifactId>maven-resources-plugin</artifactId>
+	        <executions>
+	          <execution>
+	            <id>copy-fitnesse-start-files</id>
+	            <phase>process-resources</phase>
+	            <goals>
+	              <goal>testResources</goal>
+	            </goals>
+ 	            <configuration>
+	              <outputDirectory>${project.build.directory}</outputDirectory>
+	            </configuration>            
+	          </execution>
+	        </executions>
+	      </plugin>
+	     </plugins>
+	</build>	
+  </profile>
+  <profile>
+  <id>deployment</id>
+  <activation><activeByDefault>false</activeByDefault></activation>
+  	<build><plugins>
+			 <plugin>
+		        <artifactId>maven-assembly-plugin</artifactId>
+		        <version>2.1</version>
+		        <executions>
+		          <execution>
+		            <id>package complete dbfit</id>
+		            <phase>package</phase>		            
+		            <goals><goal>single</goal></goals>
+				  </execution>
+				 </executions>
+		        <configuration>
+		           <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
+		          <descriptors>
+		            <descriptor>src/main/assembly/assembly.xml</descriptor>
+		          </descriptors>
+		        </configuration>
+			</plugin>
+	</plugins></build>	
+  </profile>
+  </profiles>
 </project>

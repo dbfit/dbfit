@@ -1,0 +1,13 @@
+!3 Enclose multi-line queries into !- !- -! and !- -! -! to prevent table breaks
+
+newlines are replaced with blanks - so don't use them in string values. edit page source to see that query is multi-line
+
+|Ordered Query|!-
+SELECT ROWNUM n FROM ( 
+  SELECT 1 FROM dual 
+  CONNECT BY LEVEL <= 3 
+)-!|
+|n|
+|1|
+|2|
+|3|

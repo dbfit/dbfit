@@ -1,0 +1,11 @@
+!3 IN/OUT params should be split into two columns - one for in, one for out
+
+!|execute|!-
+create or replace procedure MultiplyIO(factor number, val IN OUT number) as begin val:=val*factor; end;
+-!|
+
+
+|Execute procedure|MultiplyIO|
+|factor|val|val?|
+|10|5|50|
+|2|8|16|

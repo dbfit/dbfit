@@ -1,0 +1,12 @@
+!|dbfit.fixture.DatabaseEnvironment|
+|set option|bind symbols|false|
+
+|execute|!-begin
+declare @x varchar(100);
+set @x='test test';
+insert into users (username,name) values (@x,'test');
+end;-!|
+
+|query|select * from users|
+|username|name|
+|test test|test|

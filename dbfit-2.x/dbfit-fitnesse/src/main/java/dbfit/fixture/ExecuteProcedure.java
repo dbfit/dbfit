@@ -12,7 +12,7 @@ import java.util.Map;
 import org.dbfit.core.DBEnvironment;
 import org.dbfit.core.DbEnvironmentFactory;
 import dbfit.util.DbParameterAccessor;
-import dbfit.util.DbTypeAdapter;
+import dbfit.util.DbParameterAccessorTypeAdapter;
 import dbfit.util.NameNormaliser;
 import dbfit.util.SymbolAccessQueryBinding;
 import dbfit.util.SymbolAccessSetBinding;
@@ -197,7 +197,7 @@ public class ExecuteProcedure extends fit.Fixture {
 				}
 				columnBindings[i]=new SymbolAccessSetBinding();
 			}
-        	columnBindings[i].adapter=new DbTypeAdapter(accessors[i],this);
+        	columnBindings[i].adapter=new DbParameterAccessorTypeAdapter(accessors[i],this);
 		}
 	}
 	private void runRow(Parse row)  throws Throwable{

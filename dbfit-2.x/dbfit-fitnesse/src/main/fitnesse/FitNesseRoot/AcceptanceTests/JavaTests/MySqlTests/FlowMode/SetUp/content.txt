@@ -1,0 +1,3 @@
+!|dbfit.MySqlTest|
+
+!|Connect|localhost|dbfit_user|password|dbfit|

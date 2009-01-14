@@ -1,0 +1,9 @@
+!3 Query Results do not have to be in the same order as table data
+
+|Query|SELECT ROWNUM*5 n FROM ( SELECT 1 FROM dual CONNECT BY LEVEL <= 5 )|
+|n|
+|5|
+|25|
+|10|
+|20|
+|15|

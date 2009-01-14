@@ -12,7 +12,4 @@ public class EmbeddedDerbyTest extends DerbyTest {
 	public EmbeddedDerbyTest() {
 		super(new EmbeddedDerbyEnvironment());
 	}
-	public void dbfitDotEmbeddedDerbyTest() {
-		// required by fitnesse release 20080812
-	}
 }

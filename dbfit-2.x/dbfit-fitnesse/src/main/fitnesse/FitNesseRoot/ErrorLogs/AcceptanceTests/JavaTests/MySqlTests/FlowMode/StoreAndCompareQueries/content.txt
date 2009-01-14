@@ -1,0 +1,20 @@
+!3 !-fit:fit.FitServer-!
+|'''Date: '''|!-12:03:02 AM (GMT) on Wednesday, January 14, 2009-!|
+|'''Command: '''|!-java -cp /home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/mysql-connector-java.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-core.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-db2.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-derby.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-hsqldb.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-mysql.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-oracle.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-postgre.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-sqlserver.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-sybase.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/fitlibrary.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/fitnesse.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-fitnesse-2.0.0-SNAPSHOT.jar:classes fit.FitServer flux 8085 4-!|
+|'''Exit code: '''|!-0-!|
+|'''Time elapsed: '''|!-1.318 seconds-!|
+----'''Standard Output:'''
+{{{class java.lang.Integer 1
+class java.lang.String NAME1
+class java.lang.Integer 3
+class java.lang.String NAME3
+class java.lang.Integer 2
+class java.lang.String NAME2
+class java.lang.Long 1
+class java.lang.String NAME1
+class java.lang.Long 3
+class java.lang.String NAME3
+class java.lang.Long 2
+class java.lang.String NAME2
+Rolling back
+}}}

@@ -9,9 +9,14 @@ public  class DataRow{
 		}
 		public DataRow(ResultSet rs, ResultSetMetaData rsmd) throws SQLException{
 			for(int i=1; i<=rsmd.getColumnCount(); i++){
+				Object val=rs.getObject(i);
+				
+//				Log.log("loading data from "+rsmd.getColumnName(i) +" = "+
+//						val==null?"NULL":(val.getClass() + " "+ val));
 				values.put(
 						NameNormaliser.normaliseName(rsmd.getColumnName(i)), 
-						DbParameterAccessor.normaliseValue(rs.getObject(i)));
+						DbParameterAccessor.normaliseValue(val));
+				
 			}
 		}
 		public String getStringValue(String columnName){

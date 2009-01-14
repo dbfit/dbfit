@@ -1,0 +1,88 @@
+!3 !-fit:fit.FitServer-!
+|'''Date: '''|!-12:06:51 AM (GMT) on Wednesday, January 14, 2009-!|
+|'''Command: '''|!-java -cp /home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/mysql-connector-java.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-core.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-db2.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-derby.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-hsqldb.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-mysql.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-oracle.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-postgre.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-sqlserver.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/dbfit-sybase.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/fitlibrary.jar:/home/goyqo/work/dbfit2/dbfit-superproject/dbfit-fitnesse/target/fitnesse.jar:classes fit.FitServer flux 8085 10-!|
+|'''Exit code: '''|!-0-!|
+|'''Time elapsed: '''|!-3.977 seconds-!|
+----'''Standard Output:'''
+{{{Query: 'Select * from Test_DBFit'
+Rolling back
+Query: 'Select * from users'
+Query: 'Select * from users where userid=@zeka'
+Rolling back
+Rolling back
+Query: 'SELECT n, n*2 as l  FROM ( select 1 as n union select 2 union select 3 ) x'
+Rolling back
+Query: 'select date(now()) as dat, timestamp(now()) as ts, now() as dt'
+Query: 'select * from datatypetest'
+Query: 'select * from datatypetest'
+Query: 'select * from datatypetest'
+Query: 'select * from datatypetest'
+Query: 'select * from datatypetest'
+Rolling back
+Query: 'select * from datatypetest'
+Query: 'select * from datatypetest'
+Query: 'select * from datatypetest'
+Rolling back
+Query: 'Select * from datatypetest'
+Query: 'Select * from datatypetest'
+Query: 'Select * from datatypetest'
+Rolling back
+Query: 'Select * from Test_DBFit'
+Rolling back
+Rolling back
+Rolling back
+Query: 'select n from (
+ select 1 as n union
+ select 2 union
+ select 3)
+x'
+Rolling back
+Query: 'select * from users'
+Rolling back
+Query: 'select * from test_1'
+Rolling back
+Query: 'Select coalesce(@myid,-1) as val'
+Rolling back
+Query: 'SELECT n FROM ( SELECT 1 as n union select 2 union select 3 ) x'
+Query: 'SELECT n FROM ( SELECT 1 as n union select 2 union select 3 ) x'
+Rolling back
+Query: 'Select * from users where userid=@pera'
+Rolling back
+Query: 'select @p1  as what from dual'
+Query: 'select @p1 as whatnext from dual'
+Rolling back
+Rolling back
+Rolling back
+Query: 'SELECT n FROM ( SELECT 1 as n union select 2 union select 3 union select 4) x where n<@depth'
+Rolling back
+Query: 'SELECT @depth+n as n FROM ( SELECT 1 as n union select 2 union select 3 union select 4) x where n<@depth'
+Rolling back
+Query: 'select now() as currd'
+Rolling back
+Query: 'select n from ( select 1 as n union select 2 union select 3) x'
+Rolling back
+Query: 'select 'test' as x'
+Rolling back
+Rolling back
+Query: 'select * from users'
+Rolling back
+Rolling back
+Rolling back
+Rolling back
+Query: 'select * from users'
+Rolling back
+Rolling back
+Query: 'Select * from Test_DBFit'
+Query: 'Select * from Test_DBFit'
+Query: 'Select * from Test_DBFit'
+Rolling back
+Query: 'Select @involved as what'
+Rolling back
+Query: 'select * from users'
+Query: 'select * from users'
+Query: 'select * from users'
+Query: 'select * from users'
+Query: 'select * from users'
+Query: 'select * from users'
+Rolling back
+}}}

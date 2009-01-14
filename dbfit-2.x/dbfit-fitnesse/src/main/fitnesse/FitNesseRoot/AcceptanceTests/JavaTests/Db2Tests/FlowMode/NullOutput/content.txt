@@ -1,0 +1,17 @@
+|execute|create table test_1(ky int,i int, d date, s varchar(100))|
+
+|insert|test_1|
+|ky|i|d|s|
+|1|1|2007-10-10|tst|
+|2|null|2007-10-10|tst|
+|3|1|null|tst|
+|4|1|2007-10-10|null|
+
+|query|select * from test_1|
+|ky|i?|d?|s?|
+|1|1|2007-10-10|tst|
+|2|null|2007-10-10|tst|
+|3|1|null|tst|
+|4|1|2007-10-10|null|
+
+|execute|drop  table test_1|

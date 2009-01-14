@@ -1,0 +1,22 @@
+!3 Dates
+
+Following types map to Date/Time: "SMALLDATETIME" ,"DATETIME"
+
+|Execute|Create table datatypetest (d1 SMALLDATETIME, d2 DATETIME)|
+
+|Query| select dt=CAST(GETDATE() AS SMALLDATETIME), ts=GETDATE()|
+|dt?|ts?|
+|>>dt1|>>ts1|
+
+|insert|datatypetest|
+|d1|d2|
+|<<dt1|<<ts1|
+
+|query|select * from datatypetest|
+|d1?|d2?|
+|<<dt1|<<ts1|
+
+|Query| Select 1 as correct WHERE GETDATE()> @ts1|
+|correct|
+|1|
+

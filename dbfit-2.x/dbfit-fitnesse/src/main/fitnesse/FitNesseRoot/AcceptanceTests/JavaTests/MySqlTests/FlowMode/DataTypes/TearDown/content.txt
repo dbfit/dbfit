@@ -1,0 +1,2 @@
+|Execute|Drop table datatypetest|
+
