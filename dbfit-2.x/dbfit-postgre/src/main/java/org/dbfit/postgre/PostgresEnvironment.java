@@ -29,10 +29,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
   public boolean supportsOuputOnInsert(){
     	return true;
   }
-  public boolean supportsOuputOnInsertViaResultSet(){
-    return true;
-  }
-	protected String getConnectionString(String dataSource) {
+  protected String getConnectionString(String dataSource) {
 		return "jdbc:postgresql://"+dataSource;
 	}
 
