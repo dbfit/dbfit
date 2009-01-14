@@ -178,14 +178,6 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
 		    public boolean supportsOuputOnInsert(){
 		    	return false;
 		    }
-		  	/**
-		  	 * by default, this is set to false.
-		  	 * @see org.dbfit.core.DBEnvironment#supportsOuputOnInsertViaResultSet()
-		  	 */
-		    public boolean supportsOuputOnInsertViaResultSet(){
-		    	return false;
-		    }
-		    
 	        /** Check the validity of the supplied connection. */
 	        public static void checkConnectionValid(final Connection conn) throws SQLException {
 	        	if (conn == null || conn.isClosed()) {
