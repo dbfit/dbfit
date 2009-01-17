@@ -1,0 +1,29 @@
+<html>
+<head>
+<style type='text/css'>
+table {border:1px solid black;}
+td {border:1px solid black;}
+</style>
+</head>
+<body>
+<h2>Basic Query</h2>
+<p>With the DbFit system under test, Query fixture can be used to process
+a query and can be interpreted using any of the collections interpreters.
+The example below shows how to use it with the <b>set of</b> interpreter.</p>
+<br/>
+<table ><tbody>
+<tr><td>connect to</td><td>mySQL</td><td>database on</td><td>localhost</td><td>with username</td><td>dbfit_user</td><td>and password</td><td>password</td><td>and database</td><td>dbfit</td></tr>
+</tbody>
+</table>
+<br/>
+<table >
+<tbody>
+<tr><td>set of</td><td>query</td><td></td><td>select 'test' as x</td></tr>
+<tr><td>x</td></tr>
+<tr><td>test</td></tr>
+</tbody>
+</table>
+
+<br/>
+</body>
+</html>

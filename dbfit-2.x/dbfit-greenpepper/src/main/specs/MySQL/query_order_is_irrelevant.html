@@ -1,0 +1,28 @@
+<html>
+<head>
+<style type='text/css'>
+table {border:1px solid black;}
+td {border:1px solid black;}
+</style>
+</head>
+<body>
+<h2>Query order is irrelevant</h2>
+<p>Query does not presume order, that is left to the interpreter to sort out.</p>
+<br/>
+<table ><tbody>
+<tr><td>connect to</td><td>mySQL</td><td>database on</td><td>localhost</td><td>with username</td><td>dbfit_user</td><td>and password</td><td>password</td><td>and database</td><td>dbfit</td></tr>
+</tbody>
+</table>
+<br/>
+<table >
+<tbody>
+<tr><td>set of</td><td>query</td><td></td><td>select n from ( select 1 as n union select 2 union select 3) x</td></tr>
+<tr><td>x</td></tr>
+<tr><td>3</td></tr>
+<tr><td>1</td></tr>
+<tr><td>2</td></tr>
+</tbody>
+</table>
+<br/>
+</body>
+</html>
