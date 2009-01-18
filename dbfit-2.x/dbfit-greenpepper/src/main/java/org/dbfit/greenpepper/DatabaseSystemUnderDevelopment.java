@@ -1,7 +1,9 @@
 package org.dbfit.greenpepper;
 
 import org.dbfit.core.DBEnvironment;
+import org.dbfit.greenpepper.fixture.InsertFixture;
 import org.dbfit.greenpepper.fixture.QueryFixture;
+import org.dbfit.greenpepper.fixture.Statement;
 import org.dbfit.mysql.MySqlEnvironment;
 
 import com.greenpepper.GreenPepper;
@@ -20,7 +22,7 @@ public class DatabaseSystemUnderDevelopment extends DefaultSystemUnderDevelopmen
 	}
 	@Override
 	public void onEndDocument(Document document) {
-		System.err.println("end document");
+		Log.log("end document");
 		try {
 			Log.log("Rolling back");
 			environment.closeConnection();
@@ -33,7 +35,7 @@ public class DatabaseSystemUnderDevelopment extends DefaultSystemUnderDevelopmen
 
 	@Override
 	public void onStartDocument(Document document) {
-		System.err.println("start document");
+		Log.log("start document");
 		super.onStartDocument(document);
 	}
 	@Override
@@ -41,6 +43,12 @@ public class DatabaseSystemUnderDevelopment extends DefaultSystemUnderDevelopmen
 		if (name.toUpperCase().trim().equals("MYSQL")){
 			this.environment=new MySqlEnvironment();
 			return new PlainOldFixture(new ConnectionProperties(environment, params));
+		}			
+		if (name.toUpperCase().trim().equals("INSERT")){
+			return new InsertFixture(environment, params[0]);
+		}			
+		if (name.toUpperCase().trim().equals("STATEMENT")){
+			return new PlainOldFixture(new Statement(environment, params[0]));
 		}			
 		if (name.toUpperCase().trim().equals("QUERY")){
 			return new QueryFixture(environment,params[0]);

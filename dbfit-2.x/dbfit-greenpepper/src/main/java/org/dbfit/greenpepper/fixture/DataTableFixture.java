@@ -6,6 +6,7 @@ import com.greenpepper.reflect.NoSuchMessageException;
 
 import dbfit.util.DataRow;
 import dbfit.util.DataTable;
+import dbfit.util.NameNormaliser;
 
 public class DataTableFixture implements Fixture{
 	class DataColumnReader extends Message {
@@ -20,14 +21,13 @@ public class DataTableFixture implements Fixture{
 	    public Object send( String... args ) throws Exception
 	    {
 	        assertArgumentsCount( args );
-	        return dataRow.get(key);
+	        return dataRow.getStringValue(NameNormaliser.normaliseName(key));
 	    }
 	    @Override
 	    public int getArity()
 	    {
 	        return 0;
-	    }
-
+	    }	    	   
 	}
 	class DataRowFixture implements Fixture{
 		private DataRow dataRow;

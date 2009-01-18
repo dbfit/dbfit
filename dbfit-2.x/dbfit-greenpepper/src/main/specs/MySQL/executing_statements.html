@@ -1,0 +1,52 @@
+
+<html>
+<head>
+<style type='text/css'>
+table {border:1px solid black;}
+td {border:1px solid black;}
+</style>
+</head>
+<body>
+<h2>Executing statements</h2>
+<p>With the DbFit system under test, Execute interpreter can be used to
+execute arbitrary database statements.</p>
+<br/>
+<table><tbody>
+<tr><td>connect to</td><td>mySQL</td><td>database on</td><td>localhost</td><td>with username</td><td>dbfit_user</td><td>and password</td><td>password</td><td>and database</td><td>dbfit</td></tr>
+</tbody>
+</table>
+<br/>
+
+<table><tbody>
+<tr><td>execute</td><td>statement</td><td></td><td>Create table Test_DBFit(name varchar(50), luckyNumber int)</td></tr>
+</tbody></table>
+<br/>
+
+
+<table><tbody>
+<tr><td>execute</td><td>statement</td><td></td><td>Insert into Test_DBFit values ('Obi Wan',80)</td></tr>
+</tbody></table>
+<br/>
+<table><tbody>
+<tr><td>execute</td><td>statement</td><td></td><td>Insert into Test_DBFit values ('Darth Maul',10)</td></tr>
+</tbody></table>
+
+<br/>
+<table >
+<tbody>
+<tr><td>set of</td><td>query</td><td></td><td>Select * from Test_DBFit</td></tr>
+<tr><td>Name</td><td>Lucky Number</td></tr>
+<tr><td>Darth Maul</td><td>10</td></tr>
+<tr><td>Obi Wan</td><td>80</td></tr>
+</tbody>
+</table>
+
+
+<table><tbody>
+<tr><td>execute</td><td>statement</td><td></td><td>drop table Test_DBFit</td></tr>
+</tbody></table>
+<br/>
+
+<br/>
+</body>
+</html>

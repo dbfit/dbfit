@@ -93,6 +93,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         	if (currentConnection!=null){
         		currentConnection.rollback();
         		currentConnection.close();
+        		currentConnection=null;
         	}
         }
         public void commit() throws SQLException

@@ -12,7 +12,7 @@
   <name>dbfit green pepper implementation</name>
   <groupId>${project.parent.groupId}</groupId>
   <version>${project.parent.version}</version>
-  
+<!--  
   <repositories>
     <repository>
       <id>GreenPepper Proximity</id>
@@ -28,7 +28,7 @@
       <url>http://www.greenpeppersoftware.com/proximity/repository/public</url>
     </pluginRepository>
   </pluginRepositories>
-  
+-->  
   <dependencies>
   <dependency>
 	  <groupId>${project.groupId}</groupId>

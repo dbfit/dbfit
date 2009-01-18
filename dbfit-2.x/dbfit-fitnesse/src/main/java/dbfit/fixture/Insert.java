@@ -31,7 +31,7 @@ public class Insert extends fit.Fixture {
 		this.environment = dbEnvironment;
 	}
 
-	public PreparedStatement BuildInsertCommand(String tableName,
+	public PreparedStatement buildInsertCommand(String tableName,
 			DbParameterAccessor[] accessors) throws SQLException {
 		PreparedStatement cs = environment.buildInsertPreparedStatement(tableName, accessors);
 		for (int i = 0; i < accessors.length; i++) {
@@ -52,7 +52,7 @@ public class Insert extends fit.Fixture {
 		}
 		try {
 			initParameters(rows.parts);// init parameters from the first row
-			statement = BuildInsertCommand(tableName, accessors);
+			statement = buildInsertCommand(tableName, accessors);
 			Parse row = rows;
 			while ((row = row.more) != null) {
 				runRow(row);
