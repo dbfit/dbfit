@@ -11,7 +11,7 @@ public class DbParameterAccessorTypeAdapter extends TypeAdapter {
 	private DbParameterAccessor parameterAccessor;
 	public DbParameterAccessorTypeAdapter(DbParameterAccessor accessor,Fixture f){
 		this.fixture=f;
-		this.type=accessor.type;
+		this.type=accessor.javaType;
 		this.parameterAccessor=accessor;		
 	}
 	@Override

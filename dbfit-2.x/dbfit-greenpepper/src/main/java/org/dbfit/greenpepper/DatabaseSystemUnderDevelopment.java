@@ -1,9 +1,9 @@
 package org.dbfit.greenpepper;
 
 import org.dbfit.core.DBEnvironment;
-import org.dbfit.greenpepper.fixture.InsertFixture;
 import org.dbfit.greenpepper.fixture.QueryFixture;
-import org.dbfit.greenpepper.fixture.Statement;
+import org.dbfit.greenpepper.util.Statement;
+import org.dbfit.greenpepper.util.Table;
 import org.dbfit.mysql.MySqlEnvironment;
 
 import com.greenpepper.GreenPepper;
@@ -44,8 +44,8 @@ public class DatabaseSystemUnderDevelopment extends DefaultSystemUnderDevelopmen
 			this.environment=new MySqlEnvironment();
 			return new PlainOldFixture(new ConnectionProperties(environment, params));
 		}			
-		if (name.toUpperCase().trim().equals("INSERT")){
-			return new InsertFixture(environment, params[0]);
+		if (name.toUpperCase().trim().equals("TABLE")){
+			return new PlainOldFixture(new Table(environment, params[0]));
 		}			
 		if (name.toUpperCase().trim().equals("STATEMENT")){
 			return new PlainOldFixture(new Statement(environment, params[0]));

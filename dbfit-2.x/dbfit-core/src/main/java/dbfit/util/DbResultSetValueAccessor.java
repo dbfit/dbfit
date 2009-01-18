@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class DbResultSetValueAccessor extends DbParameterAccessor {
 	
 	public DbResultSetValueAccessor (DbParameterAccessor c){
-		super(c.getName(),DbParameterAccessor.OUTPUT,c.getSqlType(),c.type,c.getPosition());
+		super(c.getName(),DbParameterAccessor.OUTPUT,c.getSqlType(),c.javaType,c.getPosition());
 	}
 	private PreparedStatement statement;
 	public void bindTo(PreparedStatement cs, int ind) throws SQLException{

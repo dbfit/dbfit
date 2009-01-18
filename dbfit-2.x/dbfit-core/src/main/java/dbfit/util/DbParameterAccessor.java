@@ -15,7 +15,7 @@ public class DbParameterAccessor {
 	private int direction;
 	private String name;
 	private int sqlType;
-	protected Class<?> type;
+	protected Class<?> javaType;
 	private int position; //zero-based index of parameter in procedure or column in table
 	private PreparedStatement cs;
 	public static Object normaliseValue(Object currVal) throws SQLException{		
@@ -29,7 +29,7 @@ public class DbParameterAccessor {
 		this.direction = acc.direction;
 		this.sqlType = acc.sqlType;
 		//this.type=null;
-		this.type = acc.type;
+		this.javaType = acc.javaType;
 		this.position=acc.position;
 	}
 	@SuppressWarnings("unchecked")
@@ -37,7 +37,7 @@ public class DbParameterAccessor {
 		this.name = name;
 		this.direction = direction;
 		this.sqlType = sqlType;
-		this.type = javaType;
+		this.javaType = javaType;
 		this.position=position;
 	}
 	public int getSqlType() {
@@ -74,10 +74,6 @@ public class DbParameterAccessor {
 			convertStatementToCallable().registerOutParameter(ind, getSqlType());
 		}
 	}
-//	public void bindToReturning(PreparedStatement cs, int ind) {
-//		this.cs=cs;
-//		this.index=ind;	
-//	}
 	public void set(Object value) throws Exception {
 		if (direction==OUTPUT||direction==RETURN_VALUE)
 			throw new UnsupportedOperationException("Trying to set value of output parameter "+name);
@@ -87,14 +83,6 @@ public class DbParameterAccessor {
 		try{
 			if (direction==INPUT)
 				throw new UnsupportedOperationException("Trying to get value of input parameter "+name);			
-      
-// TODO: GOJKO FIX THIS!			
-//  		if (this.fixture instanceof Insert) {
-//        if (((Insert) this.fixture).GetRowResult() != null) {
-//      	  return normaliseValue(((Insert) this.fixture).GetRowResult().getObject(getName()));
-//        }
-//      }
-    
 			return normaliseValue(convertStatementToCallable().getObject(index));
 		}
 		catch (SQLException sqle){
@@ -107,5 +95,7 @@ public class DbParameterAccessor {
 	public int getPosition() {
 		return position;
 	}
-
+	public Class<?> getJavaType() {
+		return javaType;
+	}
 }

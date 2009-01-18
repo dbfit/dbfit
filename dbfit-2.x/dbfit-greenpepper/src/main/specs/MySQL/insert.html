@@ -1,0 +1,53 @@
+
+<html>
+<head>
+<style type='text/css'>
+table {border:1px solid black;}
+td {border:1px solid black;}
+</style>
+</head>
+<body>
+<h2>Inserting records</h2>
+<p>With the DbFit system under test, Insert Into interpreter can be used to insert records into a table
+(similar to the SetUp interpreter).</p>
+<br/>
+<table><tbody>
+<tr><td>connect to</td><td>mySQL</td><td>database on</td><td>localhost</td><td>with username</td><td>dbfit_user</td><td>and password</td><td>password</td><td>and database</td><td>dbfit</td></tr>
+</tbody>
+</table>
+<br/>
+
+<table><tbody>
+<tr><td>execute</td><td>statement</td><td></td><td>Create table Test_DBFit(name varchar(50), luckyNumber int)</td></tr>
+</tbody></table>
+<br/>
+
+
+<table><tbody>
+<tr><td>insert into</td><td>Table</td><td></td><td>Test_DBFit</td></tr>
+<tr><td>name</td><td>luckyNumber</td></tr>
+<tr><td>pera</td><td>1</td></tr>
+<tr><td>nuja</td><td>2</td></tr>
+<tr><td>nnn</td><td>3</td></tr>
+</tbody></table>
+
+<br/>
+<table >
+<tbody>
+<tr><td>set of</td><td>query</td><td></td><td>Select * from Test_DBFit</td></tr>
+<tr><td>Name</td><td>Lucky Number</td></tr>
+<tr><td>pera</td><td>1</td></tr>
+<tr><td>nuja</td><td>2</td></tr>
+<tr><td>nnn</td><td>3</td></tr>
+</tbody>
+</table>
+
+
+<table><tbody>
+<tr><td>execute</td><td>statement</td><td></td><td>drop table Test_DBFit</td></tr>
+</tbody></table>
+<br/>
+
+<br/>
+</body>
+</html>

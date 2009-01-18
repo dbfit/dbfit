@@ -1,4 +1,4 @@
-package org.dbfit.greenpepper.fixture;
+package org.dbfit.greenpepper.util;
 
 import java.sql.SQLException;
 
