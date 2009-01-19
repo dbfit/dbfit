@@ -1,0 +1,45 @@
+
+<html>
+<head>
+<style type='text/css'>
+table {border:1px solid black;}
+td {border:1px solid black;}
+</style>
+</head>
+<body>
+<h2>Parameters as bind variables</h2>
+<p>Set interpreter can be used to set symbol values explicitly. They are then available to queries and statements as bind variables.</p>
+<br/>
+<table><tbody>
+<tr><td>connect to</td><td>mySQL</td><td>database on</td><td>localhost</td><td>with username</td><td>dbfit_user</td><td>and password</td><td>password</td><td>and database</td><td>dbfit</td></tr>
+</tbody>
+</table>
+<br/>
+
+<table><tbody>
+<tr><td>insert into</td><td>Table</td><td></td><td>users</td></tr>
+<tr><td>username</td><td>name</td></tr>
+<tr><td>pera</td><td>pera pera</td></tr>
+<tr><td>nuja</td><td>nuja nuja</td></tr>
+<tr><td>nnn</td><td>nnn nnn</td></tr>
+</tbody></table>
+
+
+<table><tbody>
+<tr><td>set</td><td>parameter</td><td></td><td>p1</td><td></td><td>pera</td></tr>
+</tbody></table>
+
+<br/>
+<p>Symbols are then automatically available as bind variables for queries</p>
+<br/>
+<table >
+<tbody>
+<tr><td>set of</td><td>query</td><td></td><td>Select * from users where username=@p1</td></tr>
+<tr><td>username</td><td>name</td></tr>
+<tr><td>pera</td><td>pera pera</td></tr>
+</tbody>
+</table>
+
+<br/>
+</body>
+</html>

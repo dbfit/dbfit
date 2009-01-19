@@ -1,0 +1,41 @@
+
+<html>
+<head>
+<style type='text/css'>
+table {border:1px solid black;}
+td {border:1px solid black;}
+</style>
+</head>
+<body>
+<h2>Literal processing of arguments</h2>
+<p>When you don't want queries to be processed for bind variables, turn that off by setting the bind symbols option to false.</p>
+<br/>
+<table><tbody>
+<tr><td>connect to</td><td>mySQL</td><td>database on</td><td>localhost</td><td>with username</td><td>dbfit_user</td><td>and password</td><td>password</td><td>and database</td><td>dbfit</td></tr>
+</tbody>
+</table>
+<br/>
+
+
+
+
+<table><tbody>
+<tr><td>set</td><td>option</td><td></td><td>bind symbols</td><td></td><td>false</td></tr>
+</tbody></table>
+
+<table><tbody>
+<tr><td>execute</td><td>statement</td><td></td><td>insert into users (name, username) values ('@hey','uuu')</td></tr>
+</tbody></table>
+<br/>
+
+<table >
+<tbody>
+<tr><td>set of</td><td>query</td><td></td><td>Select * from users</td></tr>
+<tr><td>name</td><td>username</td></tr>
+<tr><td>@hey</td><td>uuu</td></tr>
+</tbody>
+</table>
+
+<br/>
+</body>
+</html>

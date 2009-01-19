@@ -14,6 +14,7 @@ import com.greenpepper.reflect.PlainOldFixture;
 import com.greenpepper.systemunderdevelopment.DefaultSystemUnderDevelopment;
 
 import dbfit.util.Log;
+import dbfit.util.Options;
 
 public class DatabaseSystemUnderDevelopment extends DefaultSystemUnderDevelopment {
 	protected DBEnvironment environment;
@@ -23,9 +24,9 @@ public class DatabaseSystemUnderDevelopment extends DefaultSystemUnderDevelopmen
 	}
 	@Override
 	public void onEndDocument(Document document) {
-		Log.log("end document");
+		if (Options.isDebugLog()) Log.log("end document");
 		try {
-			Log.log("Rolling back");
+			if (Options.isDebugLog()) Log.log("Rolling back");
 			environment.closeConnection();
 
 		} catch (Exception e) {
@@ -36,7 +37,7 @@ public class DatabaseSystemUnderDevelopment extends DefaultSystemUnderDevelopmen
 
 	@Override
 	public void onStartDocument(Document document) {
-		Log.log("start document");		
+		if (Options.isDebugLog()) Log.log("start document");		
 		GreenPepperTestHost.getInstance().clearSymbols();
 		super.onStartDocument(document);
 	}

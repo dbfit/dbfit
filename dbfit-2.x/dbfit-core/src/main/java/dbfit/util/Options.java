@@ -4,12 +4,12 @@ public class Options {
 	public static void reset() {
 		fixedLengthStringParsing = false;
 		bindSymbols = true;
-		debugLog = true;
+		debugLog = false;
 	}
 
 	private static boolean fixedLengthStringParsing = false;
 	private static boolean bindSymbols = true;
-	private static boolean debugLog = true;
+	private static boolean debugLog = false;
 
 	public static boolean isFixedLengthStringParsing() {
 		return fixedLengthStringParsing;

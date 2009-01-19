@@ -19,8 +19,7 @@ public class ConnectionProperties {
 			database=params[3];
 		}			
 	}
-	public void connect() throws SQLException{
-		System.err.println ("Connecting to "+host);
+	public void connect() throws SQLException{		
 		dbEnvironment.connect(host, username, password, database);
 		dbEnvironment.getConnection().setAutoCommit(false);		
 	}	
