@@ -9,6 +9,13 @@ import com.greenpepper.Statistics;
 import com.greenpepper.TypeConversion;
 import com.greenpepper.expectation.EqualExpectation;
 import com.greenpepper.expectation.Expectation;
+import com.greenpepper.interpreter.HeaderForm;
+import com.greenpepper.interpreter.column.Column;
+import com.greenpepper.interpreter.column.ExpectedColumn;
+import com.greenpepper.interpreter.column.GivenColumn;
+import com.greenpepper.interpreter.column.RecalledColumn;
+import com.greenpepper.interpreter.column.SavedColumn;
+import com.greenpepper.reflect.Message;
 
 import dbfit.util.DbParameterAccessor;
 
@@ -46,5 +53,53 @@ public class DbAccessorCellHelper {
         }
         return stats;
     }
+	public static Column getColumn(final String headerText,
+			final DbParameterAccessor dbParameterAccessor) throws Exception {
+    	
+		HeaderForm header= HeaderForm.parse(headerText);
+    	if (header.isExpected()) return new ExpectedColumn(new Message(){
+    		@Override
+    		public int getArity() {
+    			return 0;
+    		}
+    		@Override
+    		public Object send(String... args) throws Exception {
+    			return dbParameterAccessor.get();
+    		}
+    	});
+    	if (header.isGiven()) return new GivenColumn(new Message(){
+    		@Override
+    		public int getArity() {
+    			return 0;
+    		}
+    		@Override
+    		public Object send(String... args) throws Exception {
+    			dbParameterAccessor.set(TypeConversion.parse(args[0],dbParameterAccessor.getJavaType()));
+    			return null;
+    		}
+    	});
+    	if (header.isSaved()) return new SavedColumn(new Message(){
+    		@Override
+    		public int getArity() {
+    			return 0;
+    		}
+    		@Override
+    		public Object send(String... args) throws Exception {
+    			return dbParameterAccessor.get();
+    		}
+    	});
+    	if (header.isRecalled()) return new RecalledColumn(new Message(){
+    		@Override
+    		public int getArity() {
+    			return 0;
+    		}
+    		@Override
+    		public Object send(String... args) throws Exception {
+    			dbParameterAccessor.set(TypeConversion.parse(args[0],dbParameterAccessor.getJavaType()));
+    			return null;
+    		}
+    	}); 
+    	throw new UnsupportedOperationException("Unsupported header scheme "+headerText);
+	}
 
 }

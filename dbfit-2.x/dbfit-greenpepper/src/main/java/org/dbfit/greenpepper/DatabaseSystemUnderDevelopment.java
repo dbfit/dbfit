@@ -2,6 +2,7 @@ package org.dbfit.greenpepper;
 
 import org.dbfit.core.DBEnvironment;
 import org.dbfit.greenpepper.fixture.QueryFixture;
+import org.dbfit.greenpepper.util.GreenPepperTestHost;
 import org.dbfit.greenpepper.util.Statement;
 import org.dbfit.greenpepper.util.Table;
 import org.dbfit.mysql.MySqlEnvironment;
@@ -35,7 +36,8 @@ public class DatabaseSystemUnderDevelopment extends DefaultSystemUnderDevelopmen
 
 	@Override
 	public void onStartDocument(Document document) {
-		Log.log("start document");
+		Log.log("start document");		
+		GreenPepperTestHost.getInstance().clearSymbols();
 		super.onStartDocument(document);
 	}
 	@Override

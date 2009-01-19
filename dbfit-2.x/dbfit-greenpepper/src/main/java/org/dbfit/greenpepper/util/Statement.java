@@ -3,7 +3,6 @@ package org.dbfit.greenpepper.util;
 import java.sql.SQLException;
 
 import org.dbfit.core.DBEnvironment;
-import org.dbfit.greenpepper.GreenPepperTestHost;
 
 public class Statement {
 	private DBEnvironment environment;

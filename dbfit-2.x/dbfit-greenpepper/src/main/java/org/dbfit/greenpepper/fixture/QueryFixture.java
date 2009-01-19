@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.dbfit.core.DBEnvironment;
-import org.dbfit.greenpepper.GreenPepperTestHost;
+import org.dbfit.greenpepper.util.GreenPepperTestHost;
 
 import dbfit.util.DataTable;
 

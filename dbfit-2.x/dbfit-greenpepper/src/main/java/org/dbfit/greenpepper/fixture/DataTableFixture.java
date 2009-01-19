@@ -1,5 +1,4 @@
 package org.dbfit.greenpepper.fixture;
-
 import com.greenpepper.reflect.Fixture;
 import com.greenpepper.reflect.Message;
 import com.greenpepper.reflect.NoSuchMessageException;
