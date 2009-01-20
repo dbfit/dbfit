@@ -10,6 +10,7 @@ import com.greenpepper.TypeConversion;
 import com.greenpepper.expectation.EqualExpectation;
 import com.greenpepper.expectation.Expectation;
 import com.greenpepper.interpreter.HeaderForm;
+import com.greenpepper.interpreter.SetOfInterpreter;
 import com.greenpepper.interpreter.column.Column;
 import com.greenpepper.interpreter.column.ExpectedColumn;
 import com.greenpepper.interpreter.column.GivenColumn;
@@ -74,7 +75,18 @@ public class DbAccessorCellHelper {
     		}
     		@Override
     		public Object send(String... args) throws Exception {
-    			dbParameterAccessor.set(TypeConversion.parse(args[0],dbParameterAccessor.getJavaType()));
+    			try{
+	    			if (args[0]==null || args[0].equals("null")){
+	    				dbParameterAccessor.set(null);
+	    			}
+	    			else{
+	    				dbParameterAccessor.set(TypeConversion.parse(args[0],dbParameterAccessor.getJavaType()));
+	    			}
+    			}
+    			catch (Exception e){
+    				e.printStackTrace();
+    				throw e;
+    			}
     			return null;
     		}
     	});

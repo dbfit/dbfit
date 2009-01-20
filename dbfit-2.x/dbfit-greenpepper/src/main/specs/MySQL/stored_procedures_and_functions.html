@@ -72,5 +72,24 @@ td {border:1px solid black;}
 </tbody></table>
 <br/>
 
+
+<h2> Stored functions are treated like procs - just put ? in the result column header</h2>
+
+<table><tbody>
+<tr><td>execute</td><td>procedure</td><td></td><td>ConcatenateF</td></tr>
+<tr><td>first string</td><td>second string</td><td>?</td></tr>
+<tr><td>Hello</td><td>World</td><td>Hello World</td></tr>
+<tr><td>Ford</td><td>Prefect</td><td>Ford Prefect</td></tr>
+</tbody></table>
+
+<h2> ? does not have to appear on the end (although it is a good practice to put it there)</h2>
+
+<table><tbody>
+<tr><td>execute</td><td>procedure</td><td></td><td>ConcatenateF</td></tr>
+<tr><td>second string</td><td>?</td><td>first string</td></tr>
+<tr><td>World</td><td>Hello World</td><td>Hello</td></tr>
+<tr><td>Prefect</td><td>Ford Prefect</td><td>Ford</td></tr>
+</tbody></table>
+
 </body>
 </html>

@@ -1,0 +1,52 @@
+
+<html>
+<head>
+<style type='text/css'>
+table {border:1px solid black;}
+td {border:1px solid black;}
+</style>
+</head>
+<body>
+<h2>Null values</h2>
+<p>Nulls are handled just like normal values.</p>
+<br/>
+<table><tbody>
+<tr><td>connect to</td><td>mySQL</td><td>database on</td><td>localhost</td><td>with username</td><td>dbfit_user</td><td>and password</td><td>password</td><td>and database</td><td>dbfit</td></tr>
+</tbody>
+</table>
+<br/>
+
+<table><tbody>
+<tr><td>execute</td><td>statement</td><td></td><td>create table test_1(ky int,i int, d date, s varchar(100))</td></tr>
+</tbody></table>
+<br/>
+
+
+<table><tbody>
+<tr><td>insert into</td><td>Table</td><td></td><td>test_1</td></tr>
+<tr><td>ky</td><td>i</td><td>d</td><td>s</td></tr>
+<tr><td>1</td><td>1</td><td>2007-10-10</td><td>tst</td></tr>
+<tr><td>2</td><td>null</td><td>2007-10-10</td><td>tst</td></tr>
+<tr><td>3</td><td>1</td><td>null</td><td>tst</td></tr>
+<tr><td>4</td><td>1</td><td>2007-10-10</td><td>null</td></tr>
+</tbody></table>
+
+<table><tbody>
+<tr><td>set of</td><td>query</td><td></td><td>select * from test_1</td></tr>
+<tr><td>ky</td><td>i?</td><td>d?</td><td>s?</td></tr>
+<tr><td>1</td><td>1</td><td>2007-10-10</td><td>tst</td></tr>
+<tr><td>2</td><td>null</td><td>2007-10-10</td><td>tst</td></tr>
+<tr><td>3</td><td>1</td><td>null</td><td>tst</td></tr>
+<tr><td>4</td><td>1</td><td>2007-10-10</td><td>null</td></tr>
+</tbody></table>
+
+
+
+<table><tbody>
+<tr><td>execute</td><td>statement</td><td></td><td>drop  table test_1</td></tr>
+</tbody></table>
+<br/>
+
+<br/>
+</body>
+</html>
