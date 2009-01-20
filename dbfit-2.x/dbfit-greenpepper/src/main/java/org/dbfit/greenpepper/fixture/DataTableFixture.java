@@ -33,27 +33,21 @@ public class DataTableFixture implements Fixture{
 		DataRowFixture (DataRow dataRow){
 			this.dataRow=dataRow;
 		}
-		@Override
 		public Fixture fixtureFor(Object arg0) {
 			return this;
 		}
-		@Override
 		public boolean canCheck(String arg0) {
 			return true;
 		}
-		@Override
 		public boolean canSend(String arg0) {
 			return false;
 		}
-		@Override
 		public Message check(String header) throws NoSuchMessageException {
 			return new DataColumnReader(dataRow,header);
 		}
-		@Override
 		public Object getTarget() {
 			return this;
 		}
-		@Override
 		public Message send(String arg0) throws NoSuchMessageException {
 			throw new UnsupportedOperationException("send is not supported by data table fixture");
 		}

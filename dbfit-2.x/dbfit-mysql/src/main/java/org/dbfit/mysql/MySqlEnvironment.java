@@ -149,6 +149,7 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
 		int position=0;
 		for (String param: paramList.split(",")){
 			StringTokenizer s=new StringTokenizer(param.trim().toLowerCase()," ()");
+			if (!s.hasMoreElements()) return allParams;
 			String token=s.nextToken();
 			int direction=DbParameterAccessor.INPUT;
 			

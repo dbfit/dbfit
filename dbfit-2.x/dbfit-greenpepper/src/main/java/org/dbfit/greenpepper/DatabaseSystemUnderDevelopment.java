@@ -4,6 +4,7 @@ import org.dbfit.core.DBEnvironment;
 import org.dbfit.greenpepper.fixture.QueryFixture;
 import org.dbfit.greenpepper.util.GreenPepperTestHost;
 import org.dbfit.greenpepper.util.Statement;
+import org.dbfit.greenpepper.util.StoredProcedure;
 import org.dbfit.greenpepper.util.Table;
 import org.dbfit.mysql.MySqlEnvironment;
 
@@ -43,18 +44,22 @@ public class DatabaseSystemUnderDevelopment extends DefaultSystemUnderDevelopmen
 	}
 	@Override
 	public Fixture getFixture(String name, String... params) throws Throwable {
-		if (name.toUpperCase().trim().equals("MYSQL")){
+		name=name.toUpperCase().trim();
+		if (name.equals("MYSQL")){
 			this.environment=new MySqlEnvironment();
 			return new PlainOldFixture(new ConnectionProperties(environment, params));
 		}			
-		if (name.toUpperCase().trim().equals("TABLE")){
+		if (name.equals("TABLE")){
 			return new PlainOldFixture(new Table(environment, params[0]));
 		}			
-		if (name.toUpperCase().trim().equals("STATEMENT")){
+		if (name.equals("STATEMENT")){
 			return new PlainOldFixture(new Statement(environment, params[0]));
 		}			
-		if (name.toUpperCase().trim().equals("QUERY")){
+		if (name.equals("QUERY")){
 			return new QueryFixture(environment,params[0]);
+		}
+		if (name.equals("PROCEDURE")||name.equals("FUNCTION")){
+			return new PlainOldFixture(new StoredProcedure(environment, params[0]));
 		}
 		return super.getFixture(name, params);
 	}	

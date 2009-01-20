@@ -1,0 +1,76 @@
+
+<html>
+<head>
+<style type='text/css'>
+table {border:1px solid black;}
+td {border:1px solid black;}
+</style>
+</head>
+<body>
+
+<table><tbody>
+<tr><td>connect to</td><td>mySQL</td><td>database on</td><td>localhost</td><td>with username</td><td>dbfit_user</td><td>and password</td><td>password</td><td>and database</td><td>dbfit</td></tr>
+</tbody>
+</table>
+<br/>
+
+<h2>Stored Procedures</h2>
+<p>The <b>Execute</b> interpreter can be used similar to the <b>Rule For</b> interpreter to specify behaviour of stored procedures and functions.</p>
+
+<table><tbody>
+<tr><td>execute</td><td>procedure</td><td></td><td>CalcLength</td></tr>
+<tr><td>name</td><td>str length?</td></tr>
+<tr><td>mika</td><td>4</td></tr>
+<tr><td>paradajz</td><td>8</td></tr>
+<tr><td>saeiluhrweurhfi7fhi7rhgf</td><td>24</td></tr>
+</tbody></table>
+
+<h2>Multiple parameters and human-readable names</h2>
+
+<b>You can specify multiple parameters, with blanks in names and different letter casing</b>
+
+<table><tbody>
+<tr><td>execute</td><td>procedure</td><td></td><td>ConcatenateStrings</td></tr>
+<tr><td>first string</td><td>second string</td><td>concatenated?</td></tr>
+<tr><td>Hello</td><td>World</td><td>Hello World</td></tr>
+<tr><td>Ford</td><td>Prefect</td><td>Ford Prefect</td></tr>
+</tbody></table>
+
+<h2>Special case with no parameters</h2>
+<p> If there are no parameters, you don't need to specify the second header row</p>
+
+
+<table><tbody>
+<tr><td>execute</td><td>procedure</td><td></td><td>MakeUser</td></tr>
+</tbody></table>
+
+<table><tbody>
+<tr><td>set of</td><td>query</td><td></td><td>select * from users</td></tr>
+<tr><td>name</td><td>username</td></tr>
+<tr><td>user1</td><td>fromproc</td></tr>
+</tbody></table>
+
+<h2>Order of parameters</h2>
+
+<p>table parameter order does not have to match database parameter order</p>
+
+<table><tbody>
+<tr><td>execute</td><td>procedure</td><td></td><td>ConcatenateStrings</td></tr>
+<tr><td>second string</td><td>concatenated?</td><td>first string</td></tr>
+<tr><td>World</td><td>Hello World</td><td>Hello</td></tr>
+<tr><td>Prefect</td><td>Ford Prefect</td><td>Ford</td></tr>
+</tbody></table>
+
+<h2>IN/OUT params</h2>
+<p>In/Out parameters of stored procedures should be specified twice. Once for the input and once for the expected output.</p>
+<br/>
+
+<table><tbody>
+<tr><td>execute</td><td>procedure</td><td></td><td>Multiply</td></tr>
+<tr><td>factor</td><td>val</td><td>val?</td></tr>
+<tr><td>5</td><td>10</td><td>50</td></tr>
+</tbody></table>
+<br/>
+
+</body>
+</html>
