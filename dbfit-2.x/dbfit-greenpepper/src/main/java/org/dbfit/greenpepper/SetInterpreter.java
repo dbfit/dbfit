@@ -13,7 +13,6 @@ public class SetInterpreter implements Interpreter{
 	public SetInterpreter(Fixture f){
 		this.f=f;
 	}
-	@Override
 	public void interpret(Specification specification) {
 		Statistics s=new Statistics();
 		specification.nextExample();

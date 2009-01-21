@@ -10,15 +10,12 @@ import com.greenpepper.ExecutionContext;
 
 public class GreenPepperTestHost implements TestHost{
 	private Map<String, Object> symbols=new HashMap<String, Object>();
-	@Override
 	public void clearSymbols() {
 		symbols.clear();
 	}
-	@Override
 	public Object getSymbolValue(String symbolName) {
 		return symbols.get(symbolName);
 	}
-	@Override
 	public void setSymbolValue(String symbolName, Object value) {
 		symbols.put(symbolName, value);	
 	}

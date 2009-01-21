@@ -20,7 +20,7 @@ public class DataTableFixture implements Fixture{
 	    public Object send( String... args ) throws Exception
 	    {
 	        assertArgumentsCount( args );
-	        return dataRow.getStringValue(NameNormaliser.normaliseName(key));
+	        return dataRow.get(NameNormaliser.normaliseName(key));
 	    }
 	    @Override
 	    public int getArity()

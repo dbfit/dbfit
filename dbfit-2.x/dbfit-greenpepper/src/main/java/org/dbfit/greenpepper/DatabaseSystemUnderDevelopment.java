@@ -23,7 +23,6 @@ public class DatabaseSystemUnderDevelopment extends DefaultSystemUnderDevelopmen
 		super.addImport("org.dbfit.greenpepper");
         GreenPepper.addImport( "org.dbfit.greenpepper");
 	}
-	@Override
 	public void onEndDocument(Document document) {
 		if (Options.isDebugLog()) Log.log("end document");
 		try {
@@ -36,13 +35,11 @@ public class DatabaseSystemUnderDevelopment extends DefaultSystemUnderDevelopmen
 		super.onEndDocument(document);
 	}
 
-	@Override
 	public void onStartDocument(Document document) {
 		if (Options.isDebugLog()) Log.log("start document");		
 		GreenPepperTestHost.getInstance().clearSymbols();
 		super.onStartDocument(document);
 	}
-	@Override
 	public Fixture getFixture(String name, String... params) throws Throwable {
 		name=name.toUpperCase().trim();
 		if (name.equals("MYSQL")){
