@@ -1,4 +1,4 @@
-package org.dbfit.greenpepper.util;
+package org.dbfit.core;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -9,16 +9,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import org.dbfit.core.DBEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
 
-public class StoredProcedure implements DbObject {
+public class DbStoredProcedure implements DbObject {
 	private DBEnvironment environment;
 	private String storedProcName;
 	private Map<String, DbParameterAccessor> allParams;
 	
-	public StoredProcedure(DBEnvironment environment, String storedProcName) throws Exception{
+	public DbStoredProcedure(DBEnvironment environment, String storedProcName) throws Exception{
 		this.environment = environment;
 		this.storedProcName = storedProcName;
 	}

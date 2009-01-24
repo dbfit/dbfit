@@ -1,18 +1,17 @@
-package org.dbfit.greenpepper.util;
+package org.dbfit.core;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 
-import org.dbfit.core.DBEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
 
-public class Table implements DbObject{
+public class DbTable implements DbObject{
 
 	private DBEnvironment dbEnvironment;
 	private String tableOrViewName;
 	private Map<String, DbParameterAccessor> allParams;
-	public Table (DBEnvironment dbEnvironment, String tableName) throws SQLException{
+	public DbTable (DBEnvironment dbEnvironment, String tableName) throws SQLException{
 		this.dbEnvironment=dbEnvironment;
 		this.tableOrViewName=tableName;		
 		allParams=	dbEnvironment.getAllColumns(tableName);

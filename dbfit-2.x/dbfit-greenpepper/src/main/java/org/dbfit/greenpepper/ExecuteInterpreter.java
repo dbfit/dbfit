@@ -5,8 +5,8 @@ import static com.greenpepper.annotation.Annotations.wrong;
 
 import java.sql.PreparedStatement;
 
+import org.dbfit.core.DbObject;
 import org.dbfit.greenpepper.util.DbAccessorCellHelper;
-import org.dbfit.greenpepper.util.DbObject;
 import org.dbfit.greenpepper.util.GreenPepperTestHost;
 
 import com.greenpepper.Example;
@@ -47,14 +47,14 @@ public class ExecuteInterpreter implements Interpreter{
     {
         stats = new Statistics();
         Example table = specification.nextExample();
-        accessors = parseHeaders( table );
+        accessors = getDbAccessors( table );
         GreenPepperTestHost.getInstance().copyToExecutionContext(specification);
         try{
 	        if (accessors.length==0) {
 	        	targetTable.buildPreparedStatement(new DbParameterAccessor[0]).execute();		
 	        }
 	        else{
-	            columns=parseColumnHeaders(table, accessors, specification);
+	            columns=getColumns(table, accessors, specification);
 	        	statement=targetTable.buildPreparedStatement(accessors);        
 	        	for (Example row = table.at( 0, 2 ); row != null; row = row.nextSibling())
 		        {
@@ -70,18 +70,18 @@ public class ExecuteInterpreter implements Interpreter{
         GreenPepperTestHost.getInstance().copyFromExecutionContext(specification);        
     }
  
-    private DbParameterAccessor[] parseHeaders( Example table ){
+    private DbParameterAccessor[] getDbAccessors( Example table ){
         Example headers = table.at( 0, 1, 0 );
         if (headers == null) return new DbParameterAccessor[0];
 
         DbParameterAccessor[] columns = new DbParameterAccessor[headers.remainings()];
         for (int i = 0; i < headers.remainings(); i++)
         {
-            columns[i] = parseColumn( headers.at( i ) );
+            columns[i] = getDbParameterAccessor( headers.at( i ) );
         }
         return columns;
     }
-    private Column[] parseColumnHeaders(Example table, DbParameterAccessor[] accessors, ExecutionContext specification) throws Exception{
+    private Column[] getColumns(Example table, DbParameterAccessor[] accessors, ExecutionContext specification) throws Exception{
         Example headers = table.at( 0, 1, 0 );
         if (headers == null) return new Column[0];
         Column[] columns = new Column[headers.remainings()];
@@ -94,7 +94,7 @@ public class ExecuteInterpreter implements Interpreter{
         return columns;
 
     }
-    private DbParameterAccessor parseColumn( Example header )
+    private DbParameterAccessor getDbParameterAccessor( Example header )
     {
         try
         {

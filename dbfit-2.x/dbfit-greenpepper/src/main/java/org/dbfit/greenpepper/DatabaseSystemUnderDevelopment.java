@@ -1,11 +1,11 @@
 package org.dbfit.greenpepper;
 
 import org.dbfit.core.DBEnvironment;
+import org.dbfit.core.DbStatement;
+import org.dbfit.core.DbStoredProcedure;
+import org.dbfit.core.DbTable;
 import org.dbfit.greenpepper.fixture.QueryFixture;
 import org.dbfit.greenpepper.util.GreenPepperTestHost;
-import org.dbfit.greenpepper.util.Statement;
-import org.dbfit.greenpepper.util.StoredProcedure;
-import org.dbfit.greenpepper.util.Table;
 import org.dbfit.mysql.MySqlEnvironment;
 
 import com.greenpepper.GreenPepper;
@@ -47,16 +47,16 @@ public class DatabaseSystemUnderDevelopment extends DefaultSystemUnderDevelopmen
 			return new PlainOldFixture(new ConnectionProperties(environment, params));
 		}			
 		if (name.equals("TABLE")){
-			return new PlainOldFixture(new Table(environment, params[0]));
+			return new PlainOldFixture(new DbTable(environment, params[0]));
 		}			
 		if (name.equals("STATEMENT")){
-			return new PlainOldFixture(new Statement(environment, params[0]));
+			return new PlainOldFixture(new DbStatement(environment, params[0],GreenPepperTestHost.getInstance()));
 		}			
 		if (name.equals("QUERY")){
 			return new QueryFixture(environment,params[0]);
 		}
 		if (name.equals("PROCEDURE")||name.equals("FUNCTION")){
-			return new PlainOldFixture(new StoredProcedure(environment, params[0]));
+			return new PlainOldFixture(new DbStoredProcedure(environment, params[0]));
 		}
 		return super.getFixture(name, params);
 	}	

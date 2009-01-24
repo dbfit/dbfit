@@ -1,4 +1,4 @@
-package org.dbfit.greenpepper.util;
+package org.dbfit.core;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import dbfit.util.DbParameterAccessor;
