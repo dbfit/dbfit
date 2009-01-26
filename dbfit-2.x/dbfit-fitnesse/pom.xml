@@ -77,7 +77,7 @@
   	<dependency>
   		<groupId>com.neuri.tdd</groupId>
 		<artifactId>fitnesserunner</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.1-SNAPSHOT</version>
 		<type>jar</type>
 		<scope>test</scope>
   	</dependency>
@@ -86,6 +86,12 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.6</version>
 			<scope>runtime</scope>
+  	</dependency>  	
+  	<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
+			<scope>test</scope>
   	</dependency>  	
   </dependencies>
   <profiles>

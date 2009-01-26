@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.neuri.trinidad.JUnitHelper;
-import com.neuri.trinidad.fitnesserunner.FITTestEngine;
+import com.neuri.trinidad.fitnesserunner.FitTestEngine;
 import com.neuri.trinidad.fitnesserunner.FitNesseRepository;
 
 public class MySQLRegressionTest {
@@ -15,7 +15,7 @@ public class MySQLRegressionTest {
 	@Before
 	public void initHelper() throws Exception{
 		helper=new JUnitHelper(new FitNesseRepository("src/main/fitnesse"),
-			new FITTestEngine(),
+			new FitTestEngine(),
 			new File(System.getProperty("java.io.tmpdir"),"dbfit-tests").getAbsolutePath());
 	}	@Test
 	public void runFlowModeSuite() throws Exception {
