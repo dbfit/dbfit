@@ -2,6 +2,7 @@ package dbfit.fixture;
 
 import java.sql.SQLException;
 import org.dbfit.core.DBEnvironment;
+import org.dbfit.core.DbEnvironmentFactory;
 import org.dbfit.core.DbObject;
 import org.dbfit.core.DbTable;
 
@@ -11,6 +12,7 @@ public class Insert extends DbObjectExecutionFixture{
 	private DBEnvironment environment;
 	private String tableName;
 	public Insert() {
+		environment=DbEnvironmentFactory.getDefaultEnvironment();
 	}
 
 	public Insert(DBEnvironment dbEnvironment) {

@@ -7,9 +7,9 @@ import java.util.Map;
 
 import org.dbfit.core.DBEnvironment;
 import org.dbfit.core.DbEnvironmentFactory;
-import org.dbfit.fitnesse.FitNesseTestHost;
 
 import dbfit.util.DbParameterAccessor;
+import dbfit.util.FitNesseTestHost;
 import fit.Fixture;
 import fit.Parse;
 

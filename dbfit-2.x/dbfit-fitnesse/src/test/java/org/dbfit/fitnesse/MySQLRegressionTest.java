@@ -17,10 +17,15 @@ public class MySQLRegressionTest {
 		helper=new JUnitHelper(new FitNesseRepository("src/main/fitnesse"),
 			new FitTestEngine(),
 			new File(System.getProperty("java.io.tmpdir"),"dbfit-tests").getAbsolutePath());
-	}	@Test
+	}	
+	@Test
 	public void runFlowModeSuite() throws Exception {
 		helper.assertSuitePasses("AcceptanceTests.JavaTests.MySqlTests.FlowMode");
 //		helper.assertTestPasses("AcceptanceTests.JavaTests.MySqlTests.FlowMode.StoredProcNoParams");
+	}
+	@Test
+	public void runStandaloneTests() throws Exception {
+		helper.assertSuitePasses("AcceptanceTests.JavaTests.MySqlTests.StandaloneFixtures");
 	}
 
 }

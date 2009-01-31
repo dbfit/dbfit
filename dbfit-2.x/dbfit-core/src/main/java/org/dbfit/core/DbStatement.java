@@ -10,6 +10,9 @@ public class DbStatement implements DbObject {
 	private DBEnvironment environment;
 	private String statementText;
 	private TestHost testHost;
+	public DbStatement() {
+		environment=DbEnvironmentFactory.getDefaultEnvironment();
+	}
 	public DbStatement(DBEnvironment environment, String statementText, TestHost testHost) {
 		this.environment = environment;
 		this.statementText = statementText;

@@ -16,39 +16,37 @@ import org.dbfit.sqlserver.SqlServerEnvironment;
 import fit.Parse;
 
 public class DatabaseEnvironment extends fitlibrary.SequenceFixture{
-		public void dbfitDotFixtureDotDatabaseEnvironment() {
-		// required by fitnesse release 20080812
-		}		
         public void doTable(Parse table) {
         	if (args.length>0){	
-        		//todo:refactor to reflection-based factory
-        		DBEnvironment oe ;
-        		String requestedEnv=args[0].toUpperCase().trim();
-        		if ("ORACLE".equals(requestedEnv)){
-                    oe= new OracleEnvironment();
-        		}
-        		else if ("MYSQL".equals(requestedEnv)){
-                    oe= new MySqlEnvironment();
-        		}
-        		else if ("SQLSERVER".equals(requestedEnv)){
-                    oe= new SqlServerEnvironment();
-        		}
-        		else if ("DB2".equals(requestedEnv)){
-        			oe=new DB2Environment();
-        		}
-        		else if ("DERBY".equals(requestedEnv)){
-        			oe=new DerbyEnvironment();
-        		}
-        		else if ("POSTGRES".equals(requestedEnv)){
-                    oe= new PostgresEnvironment();
-        		}
-        		else throw new UnsupportedOperationException("DB Environment not supported:"+args[0]);
-                DbEnvironmentFactory.setDefaultEnvironment(oe);
-//                setSystemUnderTest(oe);
-        	}     
+        		setDatabaseEnvironment(args[0]);
+        	}
         	super.doTable(table);
         }
-        // workaround for fitlibrary limitation with system under test & abstract classes
+        public void setDatabaseEnvironment(String requestedEnv) { 
+    		//todo:refactor to reflection-based factory        		
+    		requestedEnv=requestedEnv.trim().toUpperCase();
+        	DBEnvironment oe;
+    		if ("ORACLE".equals(requestedEnv)){
+                oe= new OracleEnvironment();
+    		}
+    		else if ("MYSQL".equals(requestedEnv)){
+                oe= new MySqlEnvironment();
+    		}
+    		else if ("SQLSERVER".equals(requestedEnv)){
+                oe= new SqlServerEnvironment();
+    		}
+    		else if ("DB2".equals(requestedEnv)){
+    			oe=new DB2Environment();
+    		}
+    		else if ("DERBY".equals(requestedEnv)){
+    			oe=new DerbyEnvironment();
+    		}
+    		else if ("POSTGRES".equals(requestedEnv)){
+                oe= new PostgresEnvironment();
+    		}
+    		else throw new UnsupportedOperationException("DB Environment not supported:"+args[0]);
+            DbEnvironmentFactory.setDefaultEnvironment(oe);
+        }
     	public void rollback() throws SQLException {
     		DbEnvironmentFactory.getDefaultEnvironment().rollback();
     	}

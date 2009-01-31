@@ -5,7 +5,8 @@ import org.dbfit.core.DBEnvironment;
 import org.dbfit.core.DbEnvironmentFactory;
 import org.dbfit.core.DbObject;
 import org.dbfit.core.DbStatement;
-import org.dbfit.fitnesse.FitNesseTestHost;
+
+import dbfit.util.FitNesseTestHost;
 
 public class Execute extends DbObjectExecutionFixture{
 	private String statementText;

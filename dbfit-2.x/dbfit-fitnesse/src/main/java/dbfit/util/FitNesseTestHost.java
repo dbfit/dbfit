@@ -1,4 +1,4 @@
-package org.dbfit.fitnesse;
+package dbfit.util;
 
 import java.math.BigDecimal;
 
@@ -7,7 +7,6 @@ import org.dbfit.core.TestHost;
 import dbfit.util.BigDecimalParseDelegate;
 import dbfit.util.SqlDateParseDelegate;
 import dbfit.util.SqlTimestampParseDelegate;
-import dbfit.util.SymbolUtil;
 import fit.TypeAdapter;
 
 public class FitNesseTestHost implements TestHost{
