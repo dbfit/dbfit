@@ -1,8 +1,0 @@
-#Mon Jan 12 09:16:31 GMT 2009
-activeProfiles=
-eclipse.preferences.version=1
-fullBuildGoals=process-test-resources
-includeModules=true
-resolveWorkspaceProjects=true
-resourceFilterGoals=process-resources resources\:testResources
-version=1
