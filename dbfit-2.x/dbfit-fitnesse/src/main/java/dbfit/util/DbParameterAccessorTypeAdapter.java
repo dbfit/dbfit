@@ -1,12 +1,9 @@
 package dbfit.util;
 
-
 import java.lang.reflect.InvocationTargetException;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import fit.Fixture;
 import fit.TypeAdapter;
+
 public class DbParameterAccessorTypeAdapter extends TypeAdapter {	
 	private DbParameterAccessor parameterAccessor;
 	public DbParameterAccessorTypeAdapter(DbParameterAccessor accessor,Fixture f){

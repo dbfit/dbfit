@@ -19,9 +19,8 @@ public class MySQLRegressionTest {
 			new File(System.getProperty("java.io.tmpdir"),"dbfit-tests").getAbsolutePath());
 	}	@Test
 	public void runFlowModeSuite() throws Exception {
-		helper
-				.assertSuitePasses("AcceptanceTests.JavaTests.MySqlTests.FlowMode");
-		// helper.assertTestPasses("AcceptanceTests.JavaTests.MySqlTests.FlowMode.DataTypes.DateTests");
+		helper.assertSuitePasses("AcceptanceTests.JavaTests.MySqlTests.FlowMode");
+//		helper.assertTestPasses("AcceptanceTests.JavaTests.MySqlTests.FlowMode.StoredProcNoParams");
 	}
 
 }

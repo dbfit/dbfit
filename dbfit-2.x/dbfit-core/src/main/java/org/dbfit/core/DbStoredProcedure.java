@@ -17,7 +17,7 @@ public class DbStoredProcedure implements DbObject {
 	private String storedProcName;
 	private Map<String, DbParameterAccessor> allParams;
 	
-	public DbStoredProcedure(DBEnvironment environment, String storedProcName) throws Exception{
+	public DbStoredProcedure(DBEnvironment environment, String storedProcName){
 		this.environment = environment;
 		this.storedProcName = storedProcName;
 	}
@@ -117,4 +117,8 @@ public class DbStoredProcedure implements DbObject {
 		}
 		return accessor;
 	}
+	public DBEnvironment getDbEnvironment() {
+		return environment;
+	}
+
 }

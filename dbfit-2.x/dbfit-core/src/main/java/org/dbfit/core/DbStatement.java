@@ -22,4 +22,7 @@ public class DbStatement implements DbObject {
 	public DbParameterAccessor getDbParameterAccessor(String paramName, int expectedDirection){
 		return null;
 	}
+	public DBEnvironment getDbEnvironment() {
+		return environment;
+	}
 }

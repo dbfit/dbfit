@@ -34,5 +34,8 @@ public class DbTable implements DbObject{
     	}
     	return accessor;
 	}
+	public DBEnvironment getDbEnvironment() {
+		return dbEnvironment;
+	}
 
 }

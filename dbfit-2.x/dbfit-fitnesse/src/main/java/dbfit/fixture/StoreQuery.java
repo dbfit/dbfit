@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 import org.dbfit.core.DBEnvironment;
 import org.dbfit.core.DbEnvironmentFactory;
-import org.dbfit.core.TestHost;
 import org.dbfit.fitnesse.FitNesseTestHost;
 
 import dbfit.util.DataTable;
