@@ -1,5 +1,8 @@
 package dbfit.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Options {
 	public static void reset() {
 		fixedLengthStringParsing = false;
@@ -22,7 +25,13 @@ public class Options {
 	public static boolean isDebugLog() {
 		return debugLog;
 	}
-
+	private static Map<String,String> freeOptions=new HashMap<String,String>();
+	
+	public static boolean is(String option){
+		String normalname = NameNormaliser.normaliseName(option);
+		if (!freeOptions.containsKey(normalname)) return false;
+		return Boolean.parseBoolean(freeOptions.get(normalname));
+	}
 	public static void setOption(String name, String value) {
 		String normalname = NameNormaliser.normaliseName(name);
 		if ("fixedlengthstringparsing".equals(normalname)) {
@@ -32,6 +41,6 @@ public class Options {
 		} else if ("debuglog".equals(normalname)) {
 			debugLog = Boolean.parseBoolean(value);
 		} else
-			throw new IllegalArgumentException(String.format("Unsupported option '%s'", normalname));
+			freeOptions.put(normalname,value);
 	}
 }

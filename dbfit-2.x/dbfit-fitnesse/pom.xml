@@ -14,7 +14,18 @@
   <name>dbfit fitnesse implementation</name>
   <groupId>${project.parent.groupId}</groupId>
   <version>${project.parent.version}</version>
+  
   <dependencies>
+  	<dependency>
+  		<groupId>${project.groupId}</groupId>
+  		<version>${project.version}</version>
+  		<artifactId>dbfit-derby</artifactId>  		
+  	</dependency>  	
+  	<dependency>
+  		<groupId>${project.groupId}</groupId>
+  		<version>${project.version}</version>
+  		<artifactId>dbfit-db2</artifactId>  		
+  	</dependency>  	
   	<dependency>
   		<groupId>${project.groupId}</groupId>
   		<version>${project.version}</version>
@@ -46,16 +57,6 @@
   		<artifactId>dbfit-postgre</artifactId>  		
   	</dependency>  	
   	<dependency>
-  		<groupId>${project.groupId}</groupId>
-  		<version>${project.version}</version>
-  		<artifactId>dbfit-derby</artifactId>  		
-  	</dependency>  	
-  	<dependency>
-  		<groupId>${project.groupId}</groupId>
-  		<version>${project.version}</version>
-  		<artifactId>dbfit-db2</artifactId>  		
-  	</dependency>  	
-  	<dependency>
   		<groupId>org.fitnesse</groupId>
   		<artifactId>fitnesse</artifactId>
 		<version>${fitnesse.version}</version>
@@ -72,7 +73,7 @@
   	<dependency>
   		<groupId>com.neuri.tdd</groupId>
 		<artifactId>fitnesserunner</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.2</version>
 		<type>jar</type>
 		<scope>test</scope>
   	</dependency>
@@ -100,39 +101,28 @@
     <activation><activeByDefault>true</activeByDefault></activation>
 	<build>
 	<plugins>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-dependency-plugin</artifactId>
-			<executions>
-				<execution>
-					<phase>process-resources</phase>
-					<goals>
-						<goal>copy-dependencies</goal>
-					</goals>
+	      <plugin>
+				<artifactId>maven-trinidad-plugin</artifactId>
+				<version>1.0.2</version>
+				<executions>
+					<execution>
+						<phase>test</phase>
+						<goals>
+							<goal>run-tests</goal>
+						</goals>
 					<configuration>
-						<outputDirectory>${fitnesse.lib.dir}</outputDirectory>
-						<overWriteIfNewer>true</overWriteIfNewer>
-						<stripVersion>true</stripVersion>
-					</configuration>					
+						<testEngine>fit</testEngine>
+						<testRepositoryType>fitnesse</testRepositoryType>
+						<testRepositoryUri>${basedir}/src/main/fitnesse</testRepositoryUri>
+						<suites>
+						<suite>AcceptanceTests.JavaTests.MySqlTests.FlowMode</suite>
+						<suite>AcceptanceTests.JavaTests.MySqlTests.StandaloneFixtures</suite>						
+						</suites>
+					</configuration>
 				</execution>
-			</executions>
-		</plugin>
-		<plugin>
-	        <artifactId>maven-resources-plugin</artifactId>
-	        <executions>
-	          <execution>
-	            <id>copy-fitnesse-start-files</id>
-	            <phase>process-resources</phase>
-	            <goals>
-	              <goal>testResources</goal>
-	            </goals>
- 	            <configuration>
-	              <outputDirectory>${project.build.directory}</outputDirectory>
-	            </configuration>            
-	          </execution>
-	        </executions>
-	      </plugin>
-	     </plugins>
+				</executions>
+			</plugin>
+			</plugins>
 	</build>	
   </profile>
   <profile>
@@ -156,7 +146,9 @@
 		          </descriptors>
 		        </configuration>
 			</plugin>
-	</plugins></build>	
+	</plugins>
+	
+	</build>	
   </profile>
   </profiles>
 </project>

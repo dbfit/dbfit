@@ -17,6 +17,8 @@ import org.dbfit.core.AbstractDbEnvironment;
 import dbfit.util.*;
 
 public class OracleEnvironment extends AbstractDbEnvironment {
+	private static String SKIP_ORACLE_SYNONYMS="SKIPORACLESYNONYMS";
+	
 	public static class OracleTimestampParser{
 		public static Object parse(String s) throws Exception{
 			return new oracle.sql.TIMESTAMP((java.sql.Timestamp)SqlTimestampParseDelegate.parse(s));			
@@ -130,7 +132,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 		}
 		
 		// map to public synonyms also
-		if (qualifiers.length<3){
+		if (qualifiers.length<3 && (!Options.is(SKIP_ORACLE_SYNONYMS))){
 			qry+=" union all "+
 				 " select " + cols +" from all_arguments, all_synonyms "+		
 				 " where data_level=0 and all_synonyms.owner='PUBLIC' and all_arguments.owner=table_owner and ";
