@@ -29,7 +29,7 @@
   <dependencySets>
     <dependencySet>
       <unpack>true</unpack>
-      <scope>compile</scope>
+      <scope>runtime</scope>
     </dependencySet>
   </dependencySets>
   <fileSets>
