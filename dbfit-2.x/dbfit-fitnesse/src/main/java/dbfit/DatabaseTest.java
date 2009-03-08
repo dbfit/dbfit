@@ -35,6 +35,7 @@ public class DatabaseTest extends Fixture{
 		}
 	}
     public DatabaseTest(DBEnvironment environment) {
+    	FitNesseTestHost.getInstance(); // load up fitnesse test host to ensure that parsers are intialised
 		this.environment = environment;
 	}
 	public void connect(String dataSource, String username, String password,String database)  throws SQLException {
