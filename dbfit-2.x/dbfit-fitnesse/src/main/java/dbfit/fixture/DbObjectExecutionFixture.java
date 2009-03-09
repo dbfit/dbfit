@@ -131,7 +131,8 @@ public abstract class DbObjectExecutionFixture extends Fixture{
 		
 	}
 	private void executeStatementExpectingException(Parse row) throws Exception{
-	    String savepointName = "executeExpectingException" + this.hashCode();
+	    String savepointName = "eee" + this.hashCode();
+	    if (savepointName.length()>10) savepointName=savepointName.substring(1,9);
 	    Savepoint savepoint = null;
 		try{
 			savepoint = statement.getConnection().setSavepoint(savepointName);
@@ -139,6 +140,7 @@ public abstract class DbObjectExecutionFixture extends Fixture{
 			wrong(row);
 		}
 		catch (SQLException e){
+			e.printStackTrace();
 			// all good, exception expected
 			if (getExpectedBehaviour()==ExpectedBehaviour.ANY_EXCEPTION){
 				right(row);
