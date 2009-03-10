@@ -10,6 +10,8 @@ import java.util.Map;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
 
+import javax.sql.DataSource;
+
 
 public interface DBEnvironment {
 	/**
@@ -101,6 +103,7 @@ public interface DBEnvironment {
 	 */
 	void connect(String connectionString) throws SQLException;
 
+
 	/**
 	 * Commit current transaction.
 	 */
@@ -171,4 +174,14 @@ public interface DBEnvironment {
 	 */
 	void connectUsingFile(String filePath) throws SQLException, IOException,
 			FileNotFoundException;
+
+
+    /**
+     * Connects to the database using a specified DataSource.
+     *
+     * @param dataSource
+     *            DataSource object used to connect the database
+     */
+    void connectUsingDataSource(DataSource dataSource) throws SQLException;
+    
 }

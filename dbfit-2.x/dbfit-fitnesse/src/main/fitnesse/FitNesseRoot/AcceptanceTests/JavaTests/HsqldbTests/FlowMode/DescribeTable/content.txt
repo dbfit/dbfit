@@ -1,0 +1,14 @@
+!3 to execute statements, use the 'execute' command
+
+!|Execute|Create table Test_DBFit(name varchar(50), luckyNumber int, nickname varchar(20))|
+
+!|Query|SELECT COLUMN_NAME, TYPE_NAME, COLUMN_SIZE FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_NAME = 'TEST_DBFIT'|
+|COLUMN_NAME|TYPE_NAME|COLUMN_SIZE|
+|LUCKYNUMBER|INTEGER|null|
+|NAME|VARCHAR|50|
+|NICKNAME|VARCHAR|20|
+
+!|Execute|Drop table Test_DBFit|
+
+!|Query|SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_NAME = 'TEST_DBFIT'|
+|COLUMN_NAME|

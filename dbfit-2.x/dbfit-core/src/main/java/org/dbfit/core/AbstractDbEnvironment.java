@@ -14,6 +14,8 @@ import dbfit.util.DbConnectionProperties;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Options;
 
+import javax.sql.DataSource;
+
 public abstract class AbstractDbEnvironment implements DBEnvironment {
 
 		protected Connection currentConnection;
@@ -55,6 +57,11 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
             else if (dbp.DbName != null) connect(dbp.Service, dbp.Username, dbp.Password, dbp.DbName);
             else connect(dbp.Service, dbp.Username, dbp.Password);	
         }
+        public void connectUsingDataSource(DataSource dataSource) throws SQLException {
+            currentConnection = dataSource.getConnection();
+            currentConnection.setAutoCommit(false);
+        }
+
         /**
          * any processing required to turn a string into something jdbc driver can process, 
          * can be used to clean up CRLF, externalise parameters if required etc.  

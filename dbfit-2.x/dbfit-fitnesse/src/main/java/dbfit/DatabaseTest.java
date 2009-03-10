@@ -10,6 +10,8 @@ import fit.Fixture;
 import fit.Parse;
 import fitlibrary.SequenceFixture;
 
+import javax.sql.DataSource;
+
 public class DatabaseTest extends Fixture{
 	protected DBEnvironment environment;	
 	// ugly workaround since fitlibrary no longer allows this to be 
@@ -54,6 +56,11 @@ public class DatabaseTest extends Fixture{
         environment.connectUsingFile(filePath);
 		environment.getConnection().setAutoCommit(false);
 	}
+	public void connectUsingDataSource(DataSource dataSource) throws SQLException {
+        environment.connectUsingDataSource(dataSource);
+		environment.getConnection().setAutoCommit(false);
+	}
+
 	
     public void close() throws SQLException 
     {
