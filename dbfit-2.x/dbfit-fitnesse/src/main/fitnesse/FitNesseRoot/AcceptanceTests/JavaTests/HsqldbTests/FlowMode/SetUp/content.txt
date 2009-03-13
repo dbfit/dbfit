@@ -1,2 +1,2 @@
 !|dbfit.HSQLDBTest|
-!|Connect|dbfit;create=true|sa||
+!|Connect|mem:dbfit|sa||
