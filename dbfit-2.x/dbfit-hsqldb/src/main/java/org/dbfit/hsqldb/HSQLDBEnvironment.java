@@ -44,7 +44,7 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
 
     @Override
     protected String getConnectionString(String dataSource) {
-        return String.format("jdbc:hsqldb:file:%s", dataSource);
+        return String.format("jdbc:hsqldb:%s", dataSource);
     }
 
     @Override

@@ -13,7 +13,6 @@ import org.dbfit.oracle.OracleEnvironment;
 import org.dbfit.postgre.PostgresEnvironment;
 import org.dbfit.sqlserver.SqlServerEnvironment;
 import org.dbfit.hsqldb.HSQLDBEnvironment;
-import org.dbfit.hsqldb.EmbeddedHSQLDBEnvironment;
 
 import fit.Parse;
 
@@ -48,9 +47,6 @@ public class DatabaseEnvironment extends fitlibrary.SequenceFixture{
     		}
     		else if ("HSQLDB".equals(requestedEnv)){
                 oe= new HSQLDBEnvironment();
-    		}
-    		else if ("EMBEDDEDHSQLDB".equals(requestedEnv)){
-                oe= new EmbeddedHSQLDBEnvironment();
     		}
     		else throw new UnsupportedOperationException("DB Environment not supported:"+args[0]);
             DbEnvironmentFactory.setDefaultEnvironment(oe);
