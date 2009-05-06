@@ -16,15 +16,12 @@ public class FitNesseTestHost implements TestHost{
 		TypeAdapter.registerParseDelegate(java.sql.Date.class, SqlDateParseDelegate.class);
 		TypeAdapter.registerParseDelegate(java.sql.Timestamp.class, SqlTimestampParseDelegate.class);
 	}
-	@Override
 	public Object getSymbolValue(String symbolName) {
 		return SymbolUtil.getSymbol(symbolName);
 	}
-	@Override
 	public void setSymbolValue(String symbolName, Object value) {
 		SymbolUtil.setSymbol(symbolName, value);
 	}
-	@Override
 	public void clearSymbols() {
 		SymbolUtil.clearSymbols();
 	}
