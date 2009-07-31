@@ -5,9 +5,7 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.neuri.trinidad.JUnitHelper;
-import com.neuri.trinidad.fitnesserunner.FitTestEngine;
-import com.neuri.trinidad.fitnesserunner.FitNesseRepository;
+import fitnesse.trinidad.*;
 
 public class MySQLRegressionTest {
 	JUnitHelper helper;
@@ -20,12 +18,11 @@ public class MySQLRegressionTest {
 	}	
 	@Test
 	public void runFlowModeSuite() throws Exception {
-//		helper.assertSuitePasses("AcceptanceTests.JavaTests.OracleTests.FlowMode");
-//		helper.assertTestPasses("AcceptanceTests.JavaTests.MySqlTests.TestSenet");
+		helper.assertSuitePasses("AcceptanceTests.JavaTests.MySqlTests.FlowMode");
 	}
-//	@Test
-//	public void runStandaloneTests() throws Exception {
-//		helper.assertSuitePasses("AcceptanceTests.JavaTests.MySqlTests.StandaloneFixtures");
-//	}
+	@Test
+	public void runStandaloneTests() throws Exception {
+		helper.assertSuitePasses("AcceptanceTests.JavaTests.MySqlTests.StandaloneFixtures");
+	}
 
 }

@@ -1,5 +1,7 @@
 #!/bin/sh
-mvn clean dependency:copy-dependencies package 
-java -cp target/dependency/fitnesse-20081201.jar fitnesse.FitNesse -p 8085 -e 0 -d src/main/fitnesse -o $1 $2 $3 $4 $5
+#mvn clean dependency:copy-dependencies -Dmdep.stripVersion=true package 
+cd target/dependency
+#java -jar fitnesse.jar
+java -jar fitnesse.jar -p 8085 -e 0 -d ../../src/main/fitnesse -o $1 $2 $3 $4 $5
 
 
