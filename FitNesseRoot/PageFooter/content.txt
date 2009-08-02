@@ -1,0 +1,7 @@
+!-
+<br clear="all" />
+-!
+----
+
+!c  [[!-DbFit Project on SourceForge-!][https://sourceforge.net/projects/dbfit]] | [[!-DbFit documentation and reference-!][http://fitnesse.info/dbfit]] | [[!-Comments and feedback-!][http://gojko.net/fitnesse/dbfit]] 
+!c copyright (c) 2006-2008 [[Gojko Adzic][http://gojko.net/]] | Cover photo by [[Michael Hall][http://www.sxc.hu/profile/cwcav]]

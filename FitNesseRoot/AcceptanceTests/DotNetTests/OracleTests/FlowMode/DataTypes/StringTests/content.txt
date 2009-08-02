@@ -1,0 +1,24 @@
+!3 Strings
+
+Following types map to string: "VARCHAR", "VARCHAR2","NVARCHAR2","CHAR","NCHAR","ROWID"
+
+|Execute|Create table datatypetest (s1 varchar(20), s2 varchar2(20), s3 nvarchar2(20), s4 char(4), s5 nchar(5), s6 CLOB)|
+
+|Insert|datatypetest|
+|s1|s2|s3|s4|s5|s6|
+|VARCHAR|VARCHAR2|NVARCHAR2|CHAR|NCHAR|CLOB|
+|null|null|null|null|null|null|
+
+|Query|Select datatypetest.*, rowid as rid from datatypetest|
+|s1|s2?|s3?|s4?|s5?|s6?|rid?|
+|VARCHAR|VARCHAR2|NVARCHAR2|CHAR|NCHAR|CLOB|>>rid|
+|null|null|null|null|null|null||
+
+|Query|Select * from datatypetest where rowid=:rid|
+|s1?|s2?|s3?|s4?|s5?|s6?|
+|VARCHAR|VARCHAR2|NVARCHAR2|CHAR|NCHAR|CLOB|
+
+|Query|Select * from datatypetest where rowid=:rid|
+|s1?|s2?|s3?|s4?|s5?|s6?|
+|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|
+

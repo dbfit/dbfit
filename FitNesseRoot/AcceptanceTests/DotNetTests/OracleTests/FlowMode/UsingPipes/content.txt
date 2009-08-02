@@ -1,0 +1,23 @@
+
+
+Pipes (||) have special meaning both in FitNesse and Oracle - so they may break a query into several columns incorrectly: here is an example:
+
+
+|note|SELECT * FROM ( SELECT trim( SUBSTR (txt, INSTR (txt, ',', 1, LEVEL  ) + 1, INSTR (txt, ',', 1, LEVEL+1) - INSTR (txt, ',', 1, LEVEL) -1 )) AS token FROM (SELECT ','||:txt||',' txt FROM dual) CONNECT BY LEVEL <= LENGTH(:txt) - LENGTH(REPLACE(:txt,',',''))+ 1)|
+
+to prevent query from breaking, add !- !- -! and !- -! -! around it - FitNesse will parse it correctly:
+
+
+|note|!-SELECT * FROM ( SELECT trim( SUBSTR (txt, INSTR (txt, ',', 1, LEVEL  ) + 1, INSTR (txt, ',', 1, LEVEL+1) - INSTR (txt, ',', 1, LEVEL) -1 )) AS token FROM (SELECT ','||:txt||',' txt FROM dual) CONNECT BY LEVEL <= LENGTH(:txt) - LENGTH(REPLACE(:txt,',',''))+ 1)-!|
+
+
+here is a test example
+
+!|set parameter|txt|1,2,3,4|
+
+!|Query|!-SELECT * FROM ( SELECT trim( SUBSTR (txt, INSTR (txt, ',', 1, LEVEL  ) + 1, INSTR (txt, ',', 1, LEVEL+1) - INSTR (txt, ',', 1, LEVEL) -1 )) AS token FROM (SELECT ','||:txt||',' txt FROM dual) CONNECT BY LEVEL <= LENGTH(:txt) - LENGTH(REPLACE(:txt,',',''))+ 1)-!|
+|token|
+|1|
+|2|
+|3|
+|4|

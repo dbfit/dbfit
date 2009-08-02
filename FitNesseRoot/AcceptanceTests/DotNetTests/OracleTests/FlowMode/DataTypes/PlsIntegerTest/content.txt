@@ -1,0 +1,5 @@
+|execute|create or replace procedure proc1(myoutput out PLS_INTEGER) as begin myoutput:=1; end;|
+
+|execute procedure|proc1|
+|myoutput?|
+|1|

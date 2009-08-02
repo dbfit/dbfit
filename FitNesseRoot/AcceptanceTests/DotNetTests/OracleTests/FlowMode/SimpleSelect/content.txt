@@ -1,0 +1,3 @@
+!|Query| select 'test' as x from dual|
+|x|
+|test|

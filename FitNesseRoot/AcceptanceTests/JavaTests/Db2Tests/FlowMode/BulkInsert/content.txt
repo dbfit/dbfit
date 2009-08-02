@@ -1,0 +1,16 @@
+|Execute|Create table Test_DBFit(name varchar(50), luckyNumber int)|
+
+|Insert|Test_DBFit|
+|name|LUCKYNUMBER|
+|pera|1|
+|nuja|2|
+|nnn|3|
+
+|Query|Select * from Test_DBFit|
+|name|lucky Number|
+|pera|1|
+|nuja|2|
+|nnn|3|
+
+
+|Execute|Drop table Test_DBFit|

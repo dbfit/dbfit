@@ -1,0 +1,27 @@
+!3 Dates
+
+Following types map to Date/Time: "TIMESTAMP" ,"DATE"
+
+|Execute|Create table datatypetest (d1 date, d2 timestamp)|
+
+|Query| select sysdate as dt, cast(sysdate as timestamp) as ts from dual|
+|dt?|ts?|
+|>>dt1|>>ts1|
+
+|insert|datatypetest|
+|d1|d2|
+|<<dt1|<<ts1|
+
+|Query| select * from datatypetest|
+|d1?|d2?|
+|fail[null]|fail[null]|
+
+|execute|delete from datatypetest|
+
+|insert|datatypetest|
+|d1|d2|
+|null|null|
+
+|Query|select * from datatypetest|
+|d1|d2|
+|null|null|

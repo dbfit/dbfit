@@ -1,0 +1,15 @@
+!3 Enclose multi-line queries into !- !- -! and !- -! -! to prevent table breaks
+
+newlines are replaced with blanks - so don't use them in string values. edit page source to see that query is multi-line
+
+|Ordered Query|!-
+select 'l' = 1
+union
+select 'l' = 2
+union
+select 'l' = 3
+ -!|
+|l|
+|1|
+|2|
+|3|

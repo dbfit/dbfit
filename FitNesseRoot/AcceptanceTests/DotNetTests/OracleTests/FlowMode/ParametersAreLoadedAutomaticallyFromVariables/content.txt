@@ -1,0 +1,13 @@
+Parameters are loaded automatically from variables, no need to set them explicitly with Set Parameter
+
+!|Insert|Users|
+|username|name|userid?|
+|pera|Petar Detlic|>>pera|
+|Mika|Mitar Miric|>>mika|
+|Zeka|Dusko Dugousko|>>zeka|
+|DevNull|null|>>nll|
+
+
+|Query|Select * from Users where userid=:pera|
+|username|name|userid|
+|pera|Petar Detlic|<<pera|

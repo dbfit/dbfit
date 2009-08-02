@@ -1,0 +1,6 @@
+!3 Simple Select
+
+|Query| select 'test' as x|
+|x|
+|test|
+

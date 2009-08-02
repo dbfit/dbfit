@@ -1,0 +1,6 @@
+(override setup so that parent setup does not load)
+
+!|dbfit.MySqlTest|
+
+|Connect using file|MySQLConnection.properties|
+

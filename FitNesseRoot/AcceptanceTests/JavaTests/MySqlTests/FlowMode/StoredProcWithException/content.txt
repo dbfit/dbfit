@@ -1,0 +1,17 @@
+!3 create a user so that subsequent inserts would fail
+
+!|execute procedure|createuser|
+|new name|new username|
+|arthur dent|adent|
+
+!3 check for any error
+
+!|execute procedure expect exception|createuser|
+|new name|new username|
+|arthur dent|adent|
+
+!3 check for a specific error code
+
+!|execute procedure expect exception|createuser|1062|
+|new name|new username|
+|arthur dent|adent|

@@ -1,0 +1,13 @@
+!3 Stored functions are treated like procs - just put ? in the result column header
+
+!|Execute Procedure|ConcatenateF|
+|first string|second string|?|
+|Hello|World|Hello World|
+|Ford|Prefect|Ford Prefect|
+
+!3 ? does not have to appear on the end (although it is a good practice to put it there)
+
+!|Execute Procedure|ConcatenateF|
+|second string|?|first string|
+|World|Hello World|Hello|
+|Prefect|Ford Prefect|Ford|
