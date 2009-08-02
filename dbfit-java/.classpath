@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" output="core/target/classes" path="core/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="core/target/classes" path="core/src/main/resources"/>
+	<classpathentry kind="src" output="core/target/test-classes" path="core/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="core/target/test-classes" path="core/src/test/resources"/>
+	<classpathentry kind="src" output="mysql/target/classes" path="mysql/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="mysql/target/classes" path="mysql/src/main/resources"/>
+	<classpathentry kind="src" output="mysql/target/test-classes" path="mysql/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="mysql/target/test-classes" path="mysql/src/test/resources"/>
+	<classpathentry kind="src" output="oracle/target/classes" path="oracle/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="oracle/target/classes" path="oracle/src/main/resources"/>
+	<classpathentry kind="src" output="oracle/target/test-classes" path="oracle/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="oracle/target/test-classes" path="oracle/src/test/resources"/>
+	<classpathentry kind="src" output="derby/target/classes" path="derby/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="derby/target/classes" path="derby/src/main/resources"/>
+	<classpathentry kind="src" output="derby/target/test-classes" path="derby/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="derby/target/test-classes" path="derby/src/test/resources"/>
+	<classpathentry kind="src" output="db2/target/classes" path="db2/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="db2/target/classes" path="db2/src/main/resources"/>
+	<classpathentry kind="src" output="db2/target/test-classes" path="db2/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="db2/target/test-classes" path="db2/src/test/resources"/>
+	<classpathentry kind="src" output="postgre/target/classes" path="postgre/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="postgre/target/classes" path="postgre/src/main/resources"/>
+	<classpathentry kind="src" output="postgre/target/test-classes" path="postgre/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="postgre/target/test-classes" path="postgre/src/test/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

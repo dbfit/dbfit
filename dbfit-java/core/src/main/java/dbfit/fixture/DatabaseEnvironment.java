@@ -10,25 +10,13 @@ import dbfit.api.DbEnvironmentFactory;
 import fit.Parse;
 
 public class DatabaseEnvironment extends fitlibrary.SequenceFixture{
+		private static final String[] environments=new String[]
+		{"Oracle", "MySql", "SqlServer", "DB2","Derby","Postgres", "HSQLDB"};
 		private static String getEnvironmentClassName(String requestedEnv){
-			if ("ORACLE".equals(requestedEnv)){
-                return "dbfit.environment.OracleEnvironment";
-    		}
-    		else if ("MYSQL".equals(requestedEnv)){
-                return "dbfit.environment.MySqlEnvironment";
-    		}
-    		else if ("SQLSERVER".equals(requestedEnv)){
-                return "dbfit.environment.SqlServerEnvironment";
-    		}
-    		else if ("DB2".equals(requestedEnv)){
-    			return "dbfit.environment.DB2Environment";
-    		}
-    		else if ("DERBY".equals(requestedEnv)){
-    			return "dbfit.environment.DerbyEnvironment";
-    		}
-    		else if ("POSTGRES".equals(requestedEnv)){
-    			return "dbfit.environment.PostgresEnvironment";
-    		}
+			for (String environment:environments){
+				if (environment.equalsIgnoreCase(requestedEnv))
+					return "dbfit.environment."+environment+"Environment";
+			}
 			throw new IllegalArgumentException("DB Environment not supported:"+requestedEnv);
 		}
         public void doTable(Parse table) {
