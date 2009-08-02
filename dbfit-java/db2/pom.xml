@@ -1,0 +1,26 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>dbfit</artifactId>
+    <groupId>com.neuri.dbfit</groupId>
+    <version>2.0.0-SNAPSHOT</version>
+  </parent>
+  <name>DBFit db2 engine</name>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>${project.parent.groupId}</groupId>
+  <artifactId>db2</artifactId>
+  <version>${project.parent.version}</version>
+  <properties><db2.version>10.2.0.2.0</db2.version></properties>
+  <dependencies>
+<!--     <dependency>
+			<groupId>com.db2</groupId>
+			<artifactId>ojdbc14</artifactId>
+			<version>${db2.version}</version>
+			<scope>test</scope>
+  	</dependency>  	
+ -->    <dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>core</artifactId>
+			<version>${project.version}</version>
+  	</dependency>  	
+  </dependencies>
+</project>
