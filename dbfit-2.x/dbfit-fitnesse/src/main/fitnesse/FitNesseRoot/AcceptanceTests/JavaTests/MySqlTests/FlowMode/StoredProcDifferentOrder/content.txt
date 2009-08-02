@@ -1,6 +1,0 @@
-!3 table parameter order does not have to match db parameter order
-
-!|Execute Procedure|ConcatenateStrings|
-|second string|concatenated?|first string|
-|World|Hello World|Hello|
-|Prefect|Ford Prefect|Ford|

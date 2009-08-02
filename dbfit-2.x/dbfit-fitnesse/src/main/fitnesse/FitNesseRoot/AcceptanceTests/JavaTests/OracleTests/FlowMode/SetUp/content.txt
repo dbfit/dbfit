@@ -1,3 +1,0 @@
-!|dbfit.OracleTest|
-
-|Connect|testdbserver.dbfit.org:1521|dftest|dftest|XE|

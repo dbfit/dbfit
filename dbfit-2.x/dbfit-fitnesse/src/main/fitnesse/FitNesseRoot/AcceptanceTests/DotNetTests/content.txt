@@ -1,6 +1,0 @@
-!define COMMAND_PATTERN {%m %p}
-!define TEST_RUNNER {..\impl\dotnet\bin\debug\FitServer.exe}
-!define PATH_SEPARATOR {;}
-!path ..\impl\dotnet\bin\debug\*.dll
-
-!contents
