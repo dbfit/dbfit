@@ -8,7 +8,7 @@ import fitnesse.trinidad.FitnesseSuite.*;
 
 @RunWith(FitnesseSuite.class)
 @Name("AcceptanceTests.JavaTests.MySqlTests.FlowMode")
-@FitnesseDir("../core/src/main/resources")
+@FitnesseDir("../../FitNesseRoot")
 @OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "fitnesse")
 public class MySQLRegressionFlowModeTest {
   @Test

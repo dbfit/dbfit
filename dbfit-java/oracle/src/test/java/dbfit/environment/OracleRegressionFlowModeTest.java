@@ -8,7 +8,7 @@ import fitnesse.trinidad.FitnesseSuite.*;
 
 @RunWith(FitnesseSuite.class)
 @Name("AcceptanceTests.JavaTests.OracleTests.FlowMode")
-@FitnesseDir("../core/src/main/resources")
+@FitnesseDir("../../FitNesseRoot")
 @OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "fitnesse")
 public class OracleRegressionFlowModeTest {
   @Test
