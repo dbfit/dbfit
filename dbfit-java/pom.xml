@@ -6,9 +6,9 @@
   <name>DBFit database testing library</name>
   <version>2.0.0-SNAPSHOT</version>
   <properties>
-      <fitnesse.version>20090709</fitnesse.version>
+      <fitnesse.version>20090818</fitnesse.version>
   	  <fitlibrary.version>20081102</fitlibrary.version>
-  	  <trinidad.version>1.0.9</trinidad.version>
+  	  <trinidad.version>20090818</trinidad.version>
   	  <junit.version>4.6</junit.version>
   </properties>
   <modules>
@@ -18,7 +18,6 @@
 	<module>derby</module>
 	<module>db2</module>
 	<module>postgre</module>
-	<module>hsqldb</module>
   </modules>
   <dependencies>
   	<dependency>

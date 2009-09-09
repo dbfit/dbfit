@@ -8,7 +8,7 @@ import fitnesse.trinidad.FitnesseSuite.*;
 
 @RunWith(FitnesseSuite.class)
 @Name("AcceptanceTests.JavaTests.MySqlTests.StandaloneFixtures")
-@FitnesseDir("../../FitNesseRoot")
+@FitnesseDir("../../")
 @OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "fitnesse")
 public class MySQLRegressionStandaloneTest {
   @Test

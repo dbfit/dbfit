@@ -15,7 +15,6 @@
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc14</artifactId>
 			<version>${oracle.version}</version>
-			<scope>test</scope>
   	</dependency>  	
     <dependency>
 			<groupId>${project.groupId}</groupId>
