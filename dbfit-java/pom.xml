@@ -51,16 +51,6 @@
   </dependencies>
     
      <repositories>
-   <repository>
-   			<id>neuri-maven</id>
-   			<url>http://maven.neuri.com/</url>
-   			<snapshots>
-   				<enabled>true</enabled>
-   			</snapshots>
-   			<releases>
-   				<enabled>true</enabled>
-   			</releases>
-   	</repository>
    	<repository>
    			<id>maven-central</id>
    			<url>http://repo1.maven.org/maven2</url>
