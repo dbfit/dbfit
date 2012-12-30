@@ -3,7 +3,7 @@ package dbfit.util;
 /**
  * Provides basic support for logging and debugging for dbfit.
  * 
- * @author Pål Brattberg, Acando AB
+ * @author P&aring;l Brattberg, Acando AB
  * @since 1.1.2
  */
 public class Log {
