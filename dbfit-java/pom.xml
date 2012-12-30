@@ -18,6 +18,7 @@
         <module>derby</module>
         <module>db2</module>
         <module>postgre</module>
+        <module>hsqldb</module>
     </modules>
     <dependencies>
         <dependency>
