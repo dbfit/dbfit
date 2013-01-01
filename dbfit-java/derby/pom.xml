@@ -9,7 +9,7 @@
   <groupId>${project.parent.groupId}</groupId>
   <artifactId>derby</artifactId>
   <version>${project.parent.version}</version>
-  <properties><derby.version>10.4.2.0</derby.version></properties>
+  <properties><derby.version>10.9.1.0</derby.version></properties>
   <dependencies>
 	<dependency>
 		<groupId>org.apache.derby</groupId>
@@ -17,6 +17,18 @@
 		<version>${derby.version}</version>
 		<scope>test</scope>
 	</dependency>
+    <dependency>
+        <groupId>org.apache.derby</groupId>
+        <artifactId>derbynet</artifactId>
+        <version>${derby.version}</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.derby</groupId>
+        <artifactId>derbyclient</artifactId>
+        <version>${derby.version}</version>
+        <scope>test</scope>
+    </dependency>
     <dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>core</artifactId>
