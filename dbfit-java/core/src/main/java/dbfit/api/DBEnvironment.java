@@ -122,7 +122,7 @@ public interface DBEnvironment {
 	 * Retrieve current connection. Could be used by 3rd party classes to
 	 * execute database commands in the same session.
 	 */
-	Connection getConnection();
+	Connection getConnection() throws SQLException;
 
 	/**
 	 * Get the Java class that should be used to store objects of a DB specific
