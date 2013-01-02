@@ -1,19 +1,13 @@
 package dbfit.fixture;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import dbfit.api.DBEnvironment;
+import dbfit.util.*;
+import fit.Fixture;
+import fit.Parse;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
-import dbfit.api.DBEnvironment;
-import dbfit.util.DataRow;
-import dbfit.util.DataTable;
-import dbfit.util.NameNormaliser;
-import dbfit.util.NoMatchingRowFoundException;
-import fit.Fixture;
-import fit.Parse;
 
 public class CompareStoredQueries extends fit.Fixture {
 	private String symbol1;
@@ -29,28 +23,15 @@ public class CompareStoredQueries extends fit.Fixture {
 		this.symbol1=symbol1;
 		this.symbol2=symbol2;
 	}
-	private DataTable getDataTable(String symbolName){
-		Object o=dbfit.util.SymbolUtil.getSymbol(symbolName);
-		if (o==null) throw new UnsupportedOperationException("Cannot load a stored query from "+symbolName);
-		if (o instanceof DataTable) return (DataTable) o;
-		try{
-			if (o instanceof ResultSet) return new DataTable((ResultSet)o);
-		}
-		catch (SQLException e){
-			throw new UnsupportedOperationException("Cannot load stored query from "+symbolName, e);
-		}
-		throw new UnsupportedOperationException("Cannot load stored query from "+symbolName + " - object type is "+o.getClass().getName());
-	}
-	private void initialiseDataTables(){
+
+    private void initialiseDataTables(){
 		if (symbol1==null||symbol2==null){
 			if (args.length<2) throw new UnsupportedOperationException("No symbols specified to CompareStoreQueries constructor or argument list");
 			symbol1=args[0];
 			symbol2=args[1];			
 		}
-		if (symbol1.startsWith("<<")) symbol1=symbol1.substring(2);
-		if (symbol2.startsWith("<<")) symbol2=symbol2.substring(2);
-		dt1=getDataTable(symbol1);
-		dt2=getDataTable(symbol2);
+		dt1= SymbolUtil.getDataTable(symbol1);
+		dt2= SymbolUtil.getDataTable(symbol2);
 	}
 	public void doTable(Parse table) {
 		initialiseDataTables();		
