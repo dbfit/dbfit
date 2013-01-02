@@ -19,6 +19,7 @@
         <module>db2</module>
         <module>postgre</module>
         <module>hsqldb</module>
+        <module>sqlserver</module>
     </modules>
     <dependencies>
         <dependency>
