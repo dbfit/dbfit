@@ -9,7 +9,7 @@
     <properties>
         <fitnesse.version>20121220</fitnesse.version>
         <fitlibrary.version>20081102</fitlibrary.version>
-        <junit.version>4.6</junit.version>
+        <junit.version>4.10</junit.version>
     </properties>
     <modules>
         <module>core</module>
