@@ -2,7 +2,7 @@
   <parent>
     <artifactId>dbfit</artifactId>
     <groupId>com.neuri.dbfit</groupId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>${dbfit.version}</version>
   </parent>
   <name>DBFit MySQL engine</name>
   <modelVersion>4.0.0</modelVersion>

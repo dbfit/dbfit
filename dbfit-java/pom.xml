@@ -5,11 +5,12 @@
     <artifactId>dbfit</artifactId>
     <packaging>pom</packaging>
     <name>DBFit database testing library</name>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>${dbfit.version}</version>
     <properties>
         <fitnesse.version>20121220</fitnesse.version>
         <fitlibrary.version>20081102</fitlibrary.version>
         <junit.version>4.10</junit.version>
+        <dbfit.version>2.0.0-RC1</dbfit.version>
     </properties>
     <modules>
         <module>core</module>
