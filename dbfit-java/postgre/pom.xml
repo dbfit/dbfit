@@ -7,7 +7,7 @@
   <name>DBFit PostGreSQL engine</name>
   <modelVersion>4.0.0</modelVersion>
   <groupId>${project.parent.groupId}</groupId>
-  <artifactId>postgres</artifactId>
+  <artifactId>dbfit-postgres</artifactId>
   <version>${project.parent.version}</version>
   <properties><postgre.version>10.2.0.2.0</postgre.version></properties>
   <dependencies>
@@ -21,7 +21,7 @@
  -->
     <dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>core</artifactId>
+			<artifactId>dbfit-core</artifactId>
 			<version>${project.version}</version>
   	</dependency>  	
   </dependencies>

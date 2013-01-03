@@ -7,7 +7,7 @@
   <name>DBFit sqlserver engine</name>
   <modelVersion>4.0.0</modelVersion>
   <groupId>${project.parent.groupId}</groupId>
-  <artifactId>sqlserver</artifactId>
+  <artifactId>dbfit-sqlserver</artifactId>
   <version>${project.parent.version}</version>
   <dependencies>
 	<dependency>
@@ -17,7 +17,7 @@
 	</dependency> 
     <dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>core</artifactId>
+			<artifactId>dbfit-core</artifactId>
 			<version>${project.version}</version>
   	</dependency>  	
   </dependencies>

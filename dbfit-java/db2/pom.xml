@@ -7,7 +7,7 @@
   <name>DBFit db2 engine</name>
   <modelVersion>4.0.0</modelVersion>
   <groupId>${project.parent.groupId}</groupId>
-  <artifactId>db2</artifactId>
+  <artifactId>dbfit-db2</artifactId>
   <version>${project.parent.version}</version>
   <properties><db2.version>10.2.0.2.0</db2.version></properties>
   <dependencies>
@@ -19,7 +19,7 @@
   	</dependency>  	
  -->    <dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>core</artifactId>
+			<artifactId>dbfit-core</artifactId>
 			<version>${project.version}</version>
   	</dependency>  	
   </dependencies>

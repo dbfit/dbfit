@@ -6,7 +6,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.neuri.dbfit</groupId>
-  <artifactId>core</artifactId>
+  <artifactId>dbfit-core</artifactId>
   <name>DBFit core api and fixtures</name>
   <version>${dbfit.version}</version>
 </project>
