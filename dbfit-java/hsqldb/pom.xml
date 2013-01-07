@@ -1,27 +1,30 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <artifactId>dbfit</artifactId>
-    <groupId>com.neuri.dbfit</groupId>
-    <version>${dbfit.version}</version>
-  </parent>
-  <name>DBFit hsqldb engine</name>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>${project.parent.groupId}</groupId>
-  <artifactId>dbfit-hsqldb</artifactId>
-  <version>${project.parent.version}</version>
-  <properties><hsqldb.version>5.1.6</hsqldb.version></properties>
-  <dependencies>
-    <!-- <dependency>
-			<groupId>hsqldb</groupId>
-			<artifactId>hsqldb-connector-java</artifactId>
-			<version>${hsqldb.version}</version>
-			<scope>test</scope>
-  	</dependency>  
-  	-->	
-    <dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>dbfit-core</artifactId>
-			<version>${project.version}</version>
-  	</dependency>  	
-  </dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>dbfit</artifactId>
+        <groupId>com.neuri.dbfit</groupId>
+        <version>${dbfit.version}</version>
+    </parent>
+    <name>DBFit hsqldb engine</name>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>${project.parent.groupId}</groupId>
+    <artifactId>dbfit-hsqldb</artifactId>
+    <version>${project.parent.version}</version>
+    <properties>
+        <hsqldb.version>5.1.6</hsqldb.version>
+    </properties>
+    <dependencies>
+        <!-- <dependency>
+              <groupId>hsqldb</groupId>
+              <artifactId>hsqldb-connector-java</artifactId>
+              <version>${hsqldb.version}</version>
+              <scope>test</scope>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dbfit-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>
