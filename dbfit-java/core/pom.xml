@@ -3,11 +3,11 @@
     <parent>
         <artifactId>dbfit</artifactId>
         <groupId>com.neuri.dbfit</groupId>
-        <version>${dbfit.version}</version>
+        <version>2.0.0-RC1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.neuri.dbfit</groupId>
     <artifactId>dbfit-core</artifactId>
     <name>DBFit core api and fixtures</name>
-    <version>${dbfit.version}</version>
+    <version>${project.parent.version}</version>
 </project>
