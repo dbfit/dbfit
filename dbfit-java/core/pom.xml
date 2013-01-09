@@ -5,9 +5,49 @@
         <groupId>com.neuri.dbfit</groupId>
         <version>2.0.0-RC1</version>
     </parent>
+    <properties>
+        <fitnesse.version>20121220</fitnesse.version>
+        <fitlibrary.version>20081102</fitlibrary.version>
+    </properties>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.neuri.dbfit</groupId>
     <artifactId>dbfit-core</artifactId>
     <name>DBFit core api and fixtures</name>
     <version>${project.parent.version}</version>
+    <dependencies>
+        <dependency>
+            <groupId>org.fitnesse</groupId>
+            <artifactId>fitnesse</artifactId>
+            <version>${fitnesse.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.fitnesse</groupId>
+            <artifactId>fitlibrary</artifactId>
+            <version>${fitlibrary.version}</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <includeScope>compile</includeScope>
+                            <includeScope>runtime</includeScope>
+                            <excludeTransitive>false</excludeTransitive>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
