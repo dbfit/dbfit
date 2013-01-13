@@ -81,11 +81,6 @@ JB :
     provider : disqus
     disqus :
       short_name : dbfit
-    facebook :
-      appid : 123
-      num_posts: 5
-      width: 580
-      colorscheme: light
    
   # Settings for analytics helper
   # Set 'provider' to the analytics provider you want to use.
