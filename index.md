@@ -1,46 +1,29 @@
 ---
 layout: page
-title: Hello World!
-tagline: Supporting tagline
+title: DbFit
+tagline: Test-driven database development
 ---
 {% include JB/setup %}
 
-Read [Jekyll Quick Start](http://jekyllbootstrap.com/usage/jekyll-quick-start.html)
+## What is DbFit?
 
-Complete usage and documentation available at: [Jekyll Bootstrap](http://jekyllbootstrap.com)
+*  Write and execute database tests directly from the browser.
+*  More readable than with xUnit-style tools. Express inserts and queries as tables. 
+*  Free to use, released under the GPL license.
+*  Built on top of FitNesse, a fully integrated standalone wiki and acceptance testing framework.
+*  Out of the box support for all of the most widely-used databases:
+    * Oracle
+    * SQL Server
+    * MySQL
+    * DB2
+    * Postgres
+    * HSQLDB
+    * Derby
 
-## Update Author Attributes
+## Important links
 
-In `_config.yml` remember to specify your own data:
-    
-    title : My Blog =)
-    
-    author :
-      name : Name Lastname
-      email : blah@email.test
-      github : username
-      twitter : username
-
-The theme should reference these variables whenever needed.
-    
-## Sample Posts
-
-This blog contains sample posts which help stage pages and blog data.
-When you don't need the samples anymore just delete the `_posts/core-samples` folder.
-
-    $ rm -rf _posts/core-samples
-
-Here's a sample "posts list".
-
-<ul class="posts">
-  {% for post in site.posts %}
-    <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li>
-  {% endfor %}
-</ul>
-
-## To-Do
-
-This theme is still unfinished. If you'd like to be added as a contributor, [please fork](http://github.com/plusjade/jekyll-bootstrap)!
-We need to clean up the themes, make theme usage guides with theme-specific markup examples.
-
-
+*  [Raise bugs or make suggestions](https://github.com/benilovj/dbfit/issues)
+*  Previous release:
+    *  [DbFit 1.1 Standalone Download](http://sourceforge.net/projects/dbfit/files/dbfit/1.1/dbfit-complete-20080822.zip/download)
+    *  [DbFit 1.1 Documentation](http://sourceforge.net/projects/dbfit/files/dbfit/1.1/dbfit-20080822.pdf/download)
+   
