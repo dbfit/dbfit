@@ -106,6 +106,7 @@
                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
                             <includeScope>compile</includeScope>
                             <includeScope>runtime</includeScope>
+                            <includeScope>test</includeScope>
                             <excludeTransitive>true</excludeTransitive>
                         </configuration>
                     </execution>
