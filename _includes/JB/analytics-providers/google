@@ -9,3 +9,12 @@
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
 </script>
+<script type="text/javascript">
+  function recordOutboundLink(link, category, action) {
+    try {
+      var myTracker=_gat._getTrackerByName();
+      _gaq.push(['myTracker._trackEvent', category , action ]);
+      setTimeout('document.location = "' + link.href + '"', 100)
+    }catch(err){}
+  }
+</script>
