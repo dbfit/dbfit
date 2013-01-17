@@ -14,7 +14,7 @@
     try {
       var myTracker=_gat._getTrackerByName();
       _gaq.push(['myTracker._trackEvent', category , action ]);
-      setTimeout('document.location = "' + link.href + '"', 100)
+      setTimeout('document.location = "' + link.href + '"', 250)
     }catch(err){}
   }
 </script>
