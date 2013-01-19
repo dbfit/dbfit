@@ -1,5 +1,10 @@
 ---
 layout: default
 ---
-{% include JB/setup %}
-{% include themes/twitter/page.html %}
+{% unless page.hide_header %}
+  <div class="page-header">
+    <h1>{{ page.title }} {% if page.tagline %} <small>{{ page.tagline }}</small>{% endif %}</h1>
+  </div>
+{% endunless %}
+
+{{ content }}
