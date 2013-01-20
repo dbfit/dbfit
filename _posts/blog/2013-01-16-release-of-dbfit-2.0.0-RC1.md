@@ -4,8 +4,6 @@ category : blog
 tags : [announcements]
 title: Release of DbFit 2.0.0 RC1
 ---
-{% include JB/setup %}
-
 I am pleased to announce the release of DbFit 2.0.0 RC1. The binary and manual can be downloaded from [the homepage]({{ HOME_PATH }}).
 
 ### What's included in this release?
