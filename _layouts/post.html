@@ -1,13 +1,14 @@
 ---
 layout: default
 show_comments: true
+nav_bar_name: blog
 ---
 <div class="page-header">
   <h1>{{ page.title }} {% if page.tagline %} <small>{{ page.tagline }}</small>{% endif %}</h1>
 </div>
 
 <div class="row-fluid">
-  <div class="span8">
+  <div class="span9">
     {{ content }}
     <hr>
     <div class="pagination">
@@ -27,7 +28,7 @@ show_comments: true
     </div>
   </div>
   
-  <div class="span4">
+  <div class="span3">
     <h4>Published</h4>
     <div class="date"><span>{{ page.date | date_to_long_string }}</span></div>
 

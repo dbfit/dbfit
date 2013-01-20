@@ -2,6 +2,7 @@
 layout: page
 title: Contact
 nav_bar_name: contact
+show_comments: true
 ---
 This project is currently being maintained by Jake Benilov.
 
