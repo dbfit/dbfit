@@ -3,6 +3,8 @@ layout: page
 title: DbFit Blog
 nav_bar_name: blog
 ---
+{% include JB/setup %}
+
     {% for post in site.posts %}
       <div>
         <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
