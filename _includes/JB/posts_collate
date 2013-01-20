@@ -16,6 +16,7 @@ Usage:
         => 'post.next.date'
         
 -->{% endcomment %}
+{% include JB/setup %}
 
 {% if site.JB.posts_collate.provider == "custom" %}
   {% include custom/posts_collate %}
