@@ -1,1 +1,3 @@
 dist
+test_vm/cookbooks
+test_vm/tmp
