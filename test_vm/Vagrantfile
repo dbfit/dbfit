@@ -1,19 +1,22 @@
 Vagrant::Config.run do |config|
-  config.vm.box = "lucid64"
-  config.vm.box_url = "http://files.vagrantup.com/lucid64.box"
+  config.vm.box = "precise64"
+  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
   config.vm.host_name = "dbfitvm"
   config.vm.network :hostonly, "192.168.33.10"
 
   config.vm.provision :chef_solo do |chef|
-    chef.add_recipe "mysql::server"
+    chef.add_recipe "dbfit_test"
 
     chef.json = {
       "mysql" => {
         "server_root_password" => "",
         "server_repl_password" => "",
-        "server_debian_password" => ""
+        "server_debian_password" => "",
+        "client" => {
+          "packages" => ["mysql-client", "libmysqlclient-dev","ruby-mysql"]
+        },
       },
-      "run_list" => ["recipe[mysql::server]"]
+      "run_list" => ["recipe[dbfit_test]"]
     }
   end
 end
