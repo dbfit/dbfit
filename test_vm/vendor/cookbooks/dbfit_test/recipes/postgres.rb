@@ -12,30 +12,31 @@ postgresql_database 'dbfit' do
   action :create
 end
 
+postgresql_database_user 'dbfit' do
+  connection postgresql_connection_info
+  password 'dbfit'
+  action :create
+end
+
+postgresql_database_user 'dbfit' do
+  connection postgresql_connection_info
+  database_name 'dbfit'
+  privileges [:all]
+  action :grant
+end
+
 # needed to support DbDeploy
 postgresql_database 'dbfit' do
   connection postgresql_connection_info
   sql "CREATE TABLE IF NOT EXISTS changelog (
-         change_number INTEGER NOT NULL,
+         change_number INTEGER CONSTRAINT Pkchangelog PRIMARY KEY,
          complete_dt TIMESTAMP NOT NULL,
          applied_by VARCHAR(100) NOT NULL,
          description VARCHAR(500) NOT NULL
        );
-
-       ALTER TABLE changelog DROP CONSTRAINT Pkchangelog;
-
-       ALTER TABLE changelog ADD CONSTRAINT Pkchangelog PRIMARY KEY (change_number);
 
        ALTER TABLE changelog OWNER to dbfit;
        "
   action :query
 end
 
-postgresql_database_user 'dbfit' do
-  connection postgresql_connection_info
-  database_name 'dbfit'
-  password 'dbfit'
-  privileges [:all]
-  action :create
-  action :grant
-end

@@ -74,6 +74,17 @@ The subsequent steps need to be followed on the project folder within the VM. To
 
         dbfit-java$ mvn package
 
+### Useful development commands
+
+ *  Logging in as `root` for `mysql`:
+
+        mysql -u root
+
+ *  Logging in as the `postgres` superuser for `postgresql`:
+
+        sudo su postgres
+        psql dbfit
+
 ## License
 
 DbFit is released under the [GNU General Public License, version 2](http://www.gnu.org/licenses/gpl-2.0.txt).

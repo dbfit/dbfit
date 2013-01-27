@@ -20,12 +20,9 @@ mysql_database 'dbfit' do
         change_number INTEGER NOT NULL,
         complete_dt TIMESTAMP NOT NULL,
         applied_by VARCHAR(100) NOT NULL,
-        description VARCHAR(500) NOT NULL
-      );
-
-      ALTER TABLE changelog DROP PRIMARY KEY;
-
-      ALTER TABLE changelog ADD CONSTRAINT Pkchangelog PRIMARY KEY (change_number);"
+        description VARCHAR(500) NOT NULL,
+        CONSTRAINT Pkchangelog PRIMARY KEY (change_number)
+      );"
   action :query
 end
 
