@@ -30,7 +30,7 @@ DbFit is a set of fixtures which enables FIT/FitNesse tests to execute directly 
 
 ### Setting up to build successfully
 
-The following steps need to be taken from within the VM:
+The subsequent steps need to be followed on the project folder within the VM. To get there:
 
  1. First, ssh into the machine:
         
