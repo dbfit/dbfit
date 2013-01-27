@@ -30,6 +30,16 @@ DbFit is a set of fixtures which enables FIT/FitNesse tests to execute directly 
 
 ### Setting up to build successfully
 
+The following steps need to be taken from within the VM:
+
+ 1. First, ssh into the machine:
+        
+        vagrant ssh
+
+ 2. The development directory is NFS-mounted under `/var/dbfit`. Change into it:
+
+        cd /var/dbfit 
+
 #### The Oracle JDBC Driver
 
 1.  Download the Oracle 10g 10.2.0.2.0 Thin driver (ojdbc14.jar) from the [Oracle homepage](http://www.oracle.com/technetwork/database/features/jdbc/index-091264.html).
