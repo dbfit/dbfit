@@ -9,7 +9,11 @@ directory 'dist/lib'
 
 task :copy_local => ['dist', 'dist/lib'] do
   cp_r FileList['LICENSE', 'README.md', 'bin/*', 'FitNesseRoot'], 'dist'
-  cp_r FileList['dbfit-java/**/*.jar'].exclude('**/fitnesse*.jar').exclude('**/junit*.jar'), 'dist/lib'
+  jars_to_distribute = FileList['dbfit-java/**/*.jar'].
+                         exclude('**/fitnesse*.jar').
+                         exclude('**/junit*.jar').
+                         exclude('**/ojdbc*.jar')
+  cp_r jars_to_distribute, 'dist/lib'
 end
 
 task :copy_fitnesse => ['dist/lib'] do
