@@ -26,4 +26,38 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.dbdeploy</groupId>
+                <artifactId>maven-dbdeploy-plugin</artifactId>
+                <version>3.0M3</version>
+
+                <configuration>
+                    <scriptdirectory>./src/test/resources</scriptdirectory>
+                    <driver>com.mysql.jdbc.Driver</driver>
+                    <url>jdbc:mysql://127.0.0.1/dbfit</url>
+                    <userid>dbfit_user</userid>
+                    <password>password</password>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>update</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>${mysql.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
 </project>

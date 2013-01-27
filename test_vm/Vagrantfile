@@ -3,6 +3,7 @@ Vagrant::Config.run do |config|
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
   config.vm.host_name = "dbfitvm"
   config.vm.network :hostonly, "192.168.33.10"
+  config.vm.share_folder "dbfit", "/var/dbfit", "..", :nfs => true
 
   config.vm.provision :chef_solo do |chef|
     chef.add_recipe "dbfit_test"
@@ -12,9 +13,19 @@ Vagrant::Config.run do |config|
         "server_root_password" => "",
         "server_repl_password" => "",
         "server_debian_password" => "",
+        "bind_address" => "127.0.0.1",
         "client" => {
           "packages" => ["mysql-client", "libmysqlclient-dev","ruby-mysql"]
         },
+      },
+      "maven" => {
+        "version" => 3
+      },
+      "java" => {
+        "install_flavor" => "oracle",
+        "oracle" => {
+          "accept_oracle_download_terms" => true
+        }
       },
       "run_list" => ["recipe[dbfit_test]"]
     }

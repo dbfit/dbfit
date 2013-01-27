@@ -1,19 +1,3 @@
-create database dbfit;
-
-grant all privileges on dbfit.* to dftest@localhost identified by 'dftest';
-
-grant all privileges on dbfit.* to dftest@127.0.0.1 identified by 'dftest';
-
-grant all privileges on dbfit.* to dbfit_user@localhost identified by 'password';
-
-grant all privileges on dbfit.* to dbfit_user@127.0.0.1 identified by 'password';
-
-grant select on mysql.* to dbfit_user;
-
-flush privileges;
-
-use dbfit;
-
 create table users(name varchar(50) unique, username varchar(50), userid int auto_increment primary key) ENGINE=InnoDB;
 
 CREATE PROCEDURE ConcatenateStrings (IN firststring varchar(100), IN secondstring varchar(100), OUT concatenated varchar(200)) set concatenated = concat(firststring , concat( ' ' , secondstring ));

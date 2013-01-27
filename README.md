@@ -6,15 +6,15 @@ DbFit is a set of fixtures which enables FIT/FitNesse tests to execute directly 
 
 ### Setting up the test VM (on Mac OS or Linux)
 
-1.  You first need to [install VirtualBox](https://www.virtualbox.org/wiki/Downloads). I have been using version 4.1.18.
+1.  You first need to [install VirtualBox](https://www.virtualbox.org/wiki/Downloads). I have been using version 4.1.18. Guest additions are also required.
 
-2.  Install ruby `bundler`:
-
-        sudo gem install bundler
-
-3.  Run every subsequent command from the `test_vm` folder:
+2.  Run every subsequent command from the `test_vm` folder:
 
         cd test_vm
+
+3.  Install ruby `bundler`:
+
+        sudo gem install bundler
 
 4.  Install the necessary ruby gems (including `vagrant`):
 
@@ -27,6 +27,42 @@ DbFit is a set of fixtures which enables FIT/FitNesse tests to execute directly 
 6.  Provision and start the vagrant VM:
 
         bundle exec vagrant up
+
+### Setting up to build successfully
+
+#### The Oracle JDBC Driver
+
+1.  Download the Oracle 10g 10.2.0.2.0 Thin driver (ojdbc14.jar) from the [Oracle homepage](http://www.oracle.com/technetwork/database/features/jdbc/index-091264.html).
+
+2.  From the VM, install it into maven:
+
+        mvn install:install-file -Dfile=ojdbc14.jar -DgroupId=com.oracle \
+            -DartifactId=ojdbc14 -Dversion=10.2.0.2.0 -Dpackaging=jar
+
+#### FitLibrary 
+
+1.  Download the `fitlibrary` jar:
+
+        wget https://s3.amazonaws.com/dbfit/fitlibrary-20081102.jar
+
+2.  Install the fitlibrary JAR [...]
+
+        mvn install:install-file -Dfile=fitlibrary-20081102.jar -DgroupId=org.fitnesse \
+            -DartifactId=fitlibrary -Dversion=20081102 -Dpackaging=jar
+
+#### Building
+
+1.  Install the root project POM into the local Maven repo:
+    
+        dbfit-java$ mvn -N install
+
+2.  Install the `dbfit-core`:
+
+        core$ mvn install
+
+3.  Build and package all the subprojects:
+
+        dbfit-java$ mvn package
 
 ## License
 
