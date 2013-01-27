@@ -18,6 +18,11 @@ Vagrant::Config.run do |config|
           "packages" => ["mysql-client", "libmysqlclient-dev","ruby-mysql"]
         },
       },
+      "postgresql" => {
+        "password" => {
+          "postgres" => "postgres"
+        }
+      },
       "maven" => {
         "version" => 3
       },

@@ -11,21 +11,54 @@
     <artifactId>dbfit-postgres</artifactId>
     <version>${project.parent.version}</version>
     <properties>
-        <postgre.version>10.2.0.2.0</postgre.version>
+        <postgre.version>9.1-901.jdbc4</postgre.version>
     </properties>
     <dependencies>
-        <!--
-           <dependency>
-                   <groupId>com.postgre</groupId>
-                   <artifactId>ojdbc14</artifactId>
-                   <version>${postgre.version}</version>
-                   <scope>test</scope>
-             </dependency>
-        -->
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgre.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dbfit-core</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.dbdeploy</groupId>
+                <artifactId>maven-dbdeploy-plugin</artifactId>
+                <version>3.0M3</version>
+
+                <configuration>
+                    <scriptdirectory>./src/test/resources</scriptdirectory>
+                    <driver>org.postgresql.Driver</driver>
+                    <url>jdbc:postgresql:dbfit</url>
+                    <userid>dbfit</userid>
+                    <password>dbfit</password>
+                    <delimiterType>row</delimiterType>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>update</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>${postgre.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
 </project>

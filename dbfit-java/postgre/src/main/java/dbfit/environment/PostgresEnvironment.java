@@ -294,11 +294,11 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 	}
 
 	private void populateErrorCodeHashMap() {
-		// Class 00 — Successful Completion
+		// Class 00 Â— Successful Completion
 		errorCodeHashMap.put("00000", new Integer(0)); // SUCCESSFUL COMPLETION
 														// successful_completion
 
-		// Class 01 — Warning
+		// Class 01 Â— Warning
 		errorCodeHashMap.put("01000", new Integer(100)); // WARNING
 		errorCodeHashMap.put("0100C", new Integer(101)); // DYNAMIC RESULT SETS
 															// RETURNED
@@ -315,18 +315,18 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 															// TRUNCATION
 		errorCodeHashMap.put("01P01", new Integer(107)); // DEPRECATED FEATURE
 
-		// Class 02 — No Data (this is also a warning class per the SQL
+		// Class 02 Â— No Data (this is also a warning class per the SQL
 		// standard)
 		errorCodeHashMap.put("02000", new Integer(200)); // NO DATA
 		errorCodeHashMap.put("02001", new Integer(201)); // NO ADDITIONAL
 															// DYNAMIC RESULT
 															// SETS RETURNED
 
-		// Class 03 — SQL Statement Not Yet Complete
+		// Class 03 Â— SQL Statement Not Yet Complete
 		errorCodeHashMap.put("03000", new Integer(300)); // SQL STATEMENT NOT
 															// YET COMPLETE
 
-		// Class 08 — Connection Exception
+		// Class 08 Â— Connection Exception
 		errorCodeHashMap.put("08000", new Integer(800)); // CONNECTION EXCEPTION
 		errorCodeHashMap.put("08003", new Integer(801)); // CONNECTION DOES NOT
 															// EXIST
@@ -342,25 +342,25 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 															// UNKNOWN
 		errorCodeHashMap.put("08P01", new Integer(806)); // PROTOCOL VIOLATION
 
-		// Class 09 — Triggered Action Exception
+		// Class 09 Â— Triggered Action Exception
 		errorCodeHashMap.put("09000", new Integer(900)); // TRIGGERED ACTION
 															// EXCEPTION
 
-		// Class 0A — Feature Not Supported
+		// Class 0A Â— Feature Not Supported
 		errorCodeHashMap.put("0A000", new Integer(1000)); // FEATURE NOT
 															// SUPPORTED
 
-		// Class 0B — Invalid Transaction Initiation
+		// Class 0B Â— Invalid Transaction Initiation
 		errorCodeHashMap.put("0B000", new Integer(1100)); // INVALID TRANSACTION
 															// INITIATION
 
-		// Class 0F — Locator Exception
+		// Class 0F Â— Locator Exception
 		errorCodeHashMap.put("0F000", new Integer(1200)); // LOCATOR
 															// EXCEPTIONlocator_exception
 		errorCodeHashMap.put("0F001", new Integer(1201)); // INVALID LOCATOR
 															// SPECIFICATION
 
-		// Class 0L — Invalid Grantor
+		// Class 0L Â— Invalid Grantor
 		errorCodeHashMap.put("0L000", new Integer(1300)); // INVALID
 															// GRANTORinvalid_grantor
 		errorCodeHashMap.put("0LP01", new Integer(1301)); // INVALID GRANT
@@ -368,15 +368,15 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 
 		// abcdefghijklmnopqrstuvwxyz
 		// 01234567890123456789012345
-		// Class 0P — Invalid Role Specification
+		// Class 0P Â— Invalid Role Specification
 		errorCodeHashMap.put("0P000", new Integer(1400)); // INVALID ROLE
 															// SPECIFICATION
 
-		// Class 21 — Cardinality Violation
+		// Class 21 Â— Cardinality Violation
 		errorCodeHashMap.put("21000", new Integer(2100)); // CARDINALITY
 															// VIOLATION
 
-		// Class 22 — Data Exception
+		// Class 22 Â— Data Exception
 		errorCodeHashMap.put("22000", new Integer(2200)); // DATA EXCEPTION
 		errorCodeHashMap.put("2202E", new Integer(2201)); // ARRAY SUBSCRIPT
 															// ERROR
@@ -461,7 +461,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 															// PROCESSING
 															// INSTRUCTION
 
-		// Class 23 — Integrity Constraint Violation
+		// Class 23 Â— Integrity Constraint Violation
 		errorCodeHashMap.put("23000", new Integer(2300)); // INTEGRITY
 															// CONSTRAINT
 															// VIOLATION
@@ -472,11 +472,11 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 		errorCodeHashMap.put("23505", new Integer(2304)); // UNIQUE VIOLATION
 		errorCodeHashMap.put("23514", new Integer(2305)); // CHECK VIOLATION
 
-		// Class 24 — Invalid Cursor State
+		// Class 24 Â— Invalid Cursor State
 		errorCodeHashMap.put("24000", new Integer(2400)); // INVALID CURSOR
 															// STATE
 
-		// Class 25 — Invalid Transaction State
+		// Class 25 Â— Invalid Transaction State
 		errorCodeHashMap.put("25000", new Integer(2200)); // INVALID TRANSACTION
 															// STATE
 		errorCodeHashMap.put("25001", new Integer(2201)); // ACTIVE SQL
@@ -508,31 +508,31 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 		errorCodeHashMap.put("25P02", new Integer(2210)); // IN FAILED SQL
 															// TRANSACTION
 
-		// Class 26 — Invalid SQL Statement Name
+		// Class 26 Â— Invalid SQL Statement Name
 		errorCodeHashMap.put("26000", new Integer(2600)); // INVALID SQL
 															// STATEMENT NAME
 
-		// Class 27 — Triggered Data Change Violation
+		// Class 27 Â— Triggered Data Change Violation
 		errorCodeHashMap.put("27000", new Integer(2700)); // TRIGGERED DATA
 															// CHANGE VIOLATION
 
-		// Class 28 — Invalid Authorization Specification
+		// Class 28 Â— Invalid Authorization Specification
 		errorCodeHashMap.put("28000", new Integer(2800)); // INVALID
 															// AUTHORIZATION
 															// SPECIFICATION
 
-		// Class 2B — Dependent Privilege Descriptors Still Exist
+		// Class 2B Â— Dependent Privilege Descriptors Still Exist
 		errorCodeHashMap.put("2B000", new Integer(2900)); // DEPENDENT PRIVILEGE
 															// DESCRIPTORS STILL
 															// EXIST
 		errorCodeHashMap.put("2BP01", new Integer(2901)); // DEPENDENT OBJECTS
 															// STILL EXIST
 
-		// Class 2D — Invalid Transaction Termination
+		// Class 2D Â— Invalid Transaction Termination
 		errorCodeHashMap.put("2D000", new Integer(3000)); // INVALID TRANSACTION
 															// TERMINATION
 
-		// Class 2F — SQL Routine Exception
+		// Class 2F Â— SQL Routine Exception
 		errorCodeHashMap.put("2F000", new Integer(3100)); // SQL ROUTINE
 															// EXCEPTION
 		errorCodeHashMap.put("2F005", new Integer(3101)); // FUNCTION EXECUTED
@@ -546,10 +546,10 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 		errorCodeHashMap.put("2F004", new Integer(3104)); // READING SQL DATA
 															// NOT PERMITTED
 
-		// Class 34 — Invalid Cursor Name
+		// Class 34 Â— Invalid Cursor Name
 		errorCodeHashMap.put("34000", new Integer(3400)); // INVALID CURSOR NAME
 
-		// Class 38 — External Routine Exception
+		// Class 38 Â— External Routine Exception
 		errorCodeHashMap.put("38000", new Integer(3800)); // EXTERNAL ROUTINE
 															// EXCEPTION
 		errorCodeHashMap.put("38001", new Integer(3801)); // CONTAINING SQL NOT
@@ -562,7 +562,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 		errorCodeHashMap.put("38004", new Integer(3804)); // READING SQL DATA
 															// NOT PERMITTED
 
-		// Class 39 — External Routine Invocation Exception
+		// Class 39 Â— External Routine Invocation Exception
 		errorCodeHashMap.put("39000", new Integer(3900)); // EXTERNAL ROUTINE
 															// INVOCATION
 															// EXCEPTION
@@ -575,19 +575,19 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 		errorCodeHashMap.put("39P02", new Integer(3904)); // SRF PROTOCOL
 															// VIOLATED
 
-		// Class 3B — Savepoint Exception
+		// Class 3B Â— Savepoint Exception
 		errorCodeHashMap.put("3B000", new Integer(3950)); // SAVEPOINT EXCEPTION
 		errorCodeHashMap.put("3B001", new Integer(3951)); // INVALID SAVEPOINT
 															// SPECIFICATION
 
-		// Class 3D — Invalid Catalog Name
+		// Class 3D Â— Invalid Catalog Name
 		errorCodeHashMap.put("3D000", new Integer(3960)); // INVALID CATALOG
 															// NAME
 
-		// Class 3F — Invalid Schema Name
+		// Class 3F Â— Invalid Schema Name
 		errorCodeHashMap.put("3F000", new Integer(3970)); // INVALID SCHEMA NAME
 
-		// Class 40 — Transaction Rollback
+		// Class 40 Â— Transaction Rollback
 		errorCodeHashMap.put("40000", new Integer(4000)); // TRANSACTION
 															// ROLLBACK
 		errorCodeHashMap.put("40002", new Integer(4001)); // TRANSACTION
@@ -601,7 +601,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 															// UNKNOWN
 		errorCodeHashMap.put("40P01", new Integer(4004)); // DEADLOCK DETECTED
 
-		// Class 42 — Syntax Error or Access Rule Violation
+		// Class 42 Â— Syntax Error or Access Rule Violation
 		errorCodeHashMap.put("42000", new Integer(4200)); // SYNTAX ERROR OR
 															// ACCESS RULE
 															// VIOLATION
@@ -657,11 +657,11 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 		errorCodeHashMap.put("42P17", new Integer(4238)); // INVALID OBJECT
 															// DEFINITION
 
-		// Class 44 — WITH CHECK OPTION Violation
+		// Class 44 Â— WITH CHECK OPTION Violation
 		errorCodeHashMap.put("44000", new Integer(4400)); // WITH CHECK OPTION
 															// VIOLATION
 
-		// Class 53 — Insufficient Resources
+		// Class 53 Â— Insufficient Resources
 		errorCodeHashMap.put("53000", new Integer(5300)); // INSUFFICIENT
 															// RESOURCES
 		errorCodeHashMap.put("53100", new Integer(5301)); // DISK FULL
@@ -669,7 +669,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 		errorCodeHashMap.put("53300", new Integer(5303)); // TOO MANY
 															// CONNECTIONS
 
-		// Class 54 — Program Limit Exceeded
+		// Class 54 Â— Program Limit Exceeded
 		errorCodeHashMap.put("54000", new Integer(5400)); // PROGRAM LIMIT
 															// EXCEEDED
 		errorCodeHashMap.put("54001", new Integer(5401)); // STATEMENT TOO
@@ -677,7 +677,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 		errorCodeHashMap.put("54011", new Integer(5402)); // TOO MANY COLUMNS
 		errorCodeHashMap.put("54023", new Integer(5403)); // TOO MANY ARGUMENTS
 
-		// Class 55 — Object Not In Prerequisite State
+		// Class 55 Â— Object Not In Prerequisite State
 		errorCodeHashMap.put("55000", new Integer(5500)); // OBJECT NOT IN
 															// PREREQUISITE
 															// STATE
@@ -686,7 +686,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 															// PARAM
 		errorCodeHashMap.put("55P03", new Integer(5503)); // LOCK NOT AVAILABLE
 
-		// Class 57 — Operator Intervention
+		// Class 57 Â— Operator Intervention
 		errorCodeHashMap.put("57000", new Integer(5700)); // OPERATOR
 															// INTERVENTION
 		errorCodeHashMap.put("57014", new Integer(5701)); // QUERY CANCELED
@@ -694,22 +694,22 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 		errorCodeHashMap.put("57P02", new Integer(5703)); // CRASH SHUTDOWN
 		errorCodeHashMap.put("57P03", new Integer(5704)); // CANNOT CONNECT NOW
 
-		// Class 58 — System Error (errors external to PostgreSQL itself)
+		// Class 58 Â— System Error (errors external to PostgreSQL itself)
 		errorCodeHashMap.put("58030", new Integer(5800)); // IO ERROR
 		errorCodeHashMap.put("58P01", new Integer(5801)); // UNDEFINED FILE
 		errorCodeHashMap.put("58P02", new Integer(5802)); // DUPLICATE FILE
 
-		// Class F0 — Configuration File Error
+		// Class F0 Â— Configuration File Error
 		errorCodeHashMap.put("F0000", new Integer(5900)); // CONFIG FILE ERROR
 		errorCodeHashMap.put("F0001", new Integer(5901)); // LOCK FILE EXISTS
 
-		// Class P0 — PL/pgSQL Error
+		// Class P0 Â— PL/pgSQL Error
 		errorCodeHashMap.put("P0000", new Integer(6000)); // PLPGSQL ERROR
 		errorCodeHashMap.put("P0001", new Integer(6001)); // RAISE EXCEPTION
 		errorCodeHashMap.put("P0002", new Integer(6002)); // NO DATA FOUND
 		errorCodeHashMap.put("P0003", new Integer(6003)); // TOO MANY ROWS
 
-		// Class XX — Internal Error
+		// Class XX Â— Internal Error
 		errorCodeHashMap.put("XX000", new Integer(6100)); // INTERNAL ERROR
 		errorCodeHashMap.put("XX001", new Integer(6101)); // DATA CORRUPTED
 		errorCodeHashMap.put("XX002", new Integer(6102)); // INDEX CORRUPTED

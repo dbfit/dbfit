@@ -2,16 +2,18 @@ CREATE TABLE users (
   userid SERIAL PRIMARY KEY,
   name VARCHAR(50) UNIQUE, 
   username VARCHAR(50)
-);
+)
+;
 
-CREATE FUNCTION ConcatenateStrings (firststring varchar(100), secondstring varchar(100)) 
+CREATE FUNCTION ConcatenateStrings (firststring varchar(100), secondstring varchar(100))
 RETURNS VARCHAR AS
-$body$
+$body$ 
 BEGIN
   RETURN COALESCE(firststring, '')  || ' ' || COALESCE(secondstring, '');
 END;
 $body$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql
+;
 
 CREATE FUNCTION CalcLength(name varchar(100)) RETURNS INTEGER AS 
 $body$
@@ -19,7 +21,8 @@ BEGIN
   RETURN LENGTH(name);
 END;
 $body$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql
+;
 
 CREATE FUNCTION ConcatenateF (firststring VARCHAR(100), secondstring varchar(100)) 
 RETURNS VARCHAR(200) AS
@@ -28,7 +31,8 @@ BEGIN
   RETURN COALESCE(firststring, '') || ' ' || COALESCE(secondstring, '');
 END;
 $body$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql
+;
 
 CREATE FUNCTION makeuser() RETURNS VOID AS 
 $body$
@@ -37,7 +41,8 @@ BEGIN
        VALUES ('user1','fromproc');
 END;
 $body$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql
+;
 
 CREATE FUNCTION createuser(newname varchar(100), newusername varchar(100)) 
 RETURNS VOID AS
@@ -47,7 +52,8 @@ BEGIN
        VALUES (newname, newusername);
 END;
 $body$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql
+;
 
 CREATE FUNCTION Multiply(factor INTEGER, val INTEGER) 
 RETURNS INTEGER AS
@@ -56,5 +62,6 @@ BEGIN
   RETURN (val*factor);
 END;
 $body$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql
+;
 
