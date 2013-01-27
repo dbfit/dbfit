@@ -16,14 +16,14 @@ end
 # needed to support DbDeploy
 mysql_database 'dbfit' do
   connection mysql_connection_info
-  sql "DROP TABLE IF EXISTS changelog;
-
-       CREATE TABLE changelog (
+  sql "CREATE TABLE IF NOT EXISTS changelog (
         change_number INTEGER NOT NULL,
         complete_dt TIMESTAMP NOT NULL,
         applied_by VARCHAR(100) NOT NULL,
         description VARCHAR(500) NOT NULL
       );
+
+      ALTER TABLE changelog DROP PRIMARY KEY;
 
       ALTER TABLE changelog ADD CONSTRAINT Pkchangelog PRIMARY KEY (change_number);"
   action :query

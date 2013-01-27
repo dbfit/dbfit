@@ -15,14 +15,14 @@ end
 # needed to support DbDeploy
 postgresql_database 'dbfit' do
   connection postgresql_connection_info
-  sql "DROP TABLE IF EXISTS changelog;
-
-       CREATE TABLE changelog (
+  sql "CREATE TABLE IF NOT EXISTS changelog (
          change_number INTEGER NOT NULL,
          complete_dt TIMESTAMP NOT NULL,
          applied_by VARCHAR(100) NOT NULL,
          description VARCHAR(500) NOT NULL
        );
+
+       ALTER TABLE changelog DROP CONSTRAINT Pkchangelog;
 
        ALTER TABLE changelog ADD CONSTRAINT Pkchangelog PRIMARY KEY (change_number);
 
