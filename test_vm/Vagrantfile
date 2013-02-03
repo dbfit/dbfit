@@ -1,6 +1,6 @@
 Vagrant::Config.run do |config|
-  config.vm.box = "precise64"
-  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+  config.vm.box = "centos"
+  config.vm.box_url = "https://dl.dropbox.com/u/31081437/Berkshelf-CentOS-6.3-x86_64-minimal.box"
   config.vm.host_name = "dbfitvm"
   config.vm.network :hostonly, "192.168.33.10"
   config.vm.share_folder "dbfit", "/var/dbfit", "..", :nfs => true
@@ -14,13 +14,23 @@ Vagrant::Config.run do |config|
         "server_repl_password" => "",
         "server_debian_password" => "",
         "bind_address" => "127.0.0.1",
-        "client" => {
-          "packages" => ["mysql-client", "libmysqlclient-dev","ruby-mysql"]
-        },
       },
       "postgresql" => {
         "password" => {
           "postgres" => "postgres"
+        },
+        "version" => "9.2",
+        "enable_pgdg_yum" => true,
+        "dir" => "/var/lib/pgsql/9.2/data",
+        "client" => {
+          "packages" => ["postgresql92"]
+        },
+        "server" => {
+          "packages" => ["postgresql92-server"],
+          "service_name" => "postgresql-9.2"
+        },
+        "contrib" => {
+          "packages" => ["postgresql92-contrib"]
         }
       },
       "maven" => {
