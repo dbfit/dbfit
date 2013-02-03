@@ -10,7 +10,6 @@
 	<Suite/>
 	<Suites/>
 	<SymbolicLinks>
-		<InsertWithTableInRow>.AcceptanceTests.DotNetTests.OracleTests.StandaloneFixtures.InsertWithTableInRow</InsertWithTableInRow>
 		<CleanTableWithWhere>.AcceptanceTests.DotNetTests.OracleTests.StandaloneFixtures.CleanTableWithWhere</CleanTableWithWhere>
 		<CleanTable>.AcceptanceTests.DotNetTests.OracleTests.StandaloneFixtures.CleanTable</CleanTable>
 	</SymbolicLinks>

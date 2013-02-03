@@ -85,6 +85,10 @@ The subsequent steps need to be followed on the project folder within the VM. To
         sudo su postgres
         psql dbfit
 
+ *  Logging in as the `system` superuser for `oracle`:
+
+        sqlplus system/system
+
 ## License
 
 DbFit is released under the [GNU General Public License, version 2](http://www.gnu.org/licenses/gpl-2.0.txt).

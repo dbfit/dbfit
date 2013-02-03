@@ -2,12 +2,10 @@ package dbfit.environment;
 
 import fitnesse.junit.JUnitHelper;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 
-@Ignore
 public class OracleRegressionTest {
 
     private JUnitHelper helper;
