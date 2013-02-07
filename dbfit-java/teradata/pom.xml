@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>dbfit</artifactId>
+        <groupId>com.neuri.dbfit</groupId>
+        <version>2.0.0-RC1</version>
+    </parent>
+    <name>DBFit Teradata engine</name>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>${project.parent.groupId}</groupId>
+    <artifactId>dbfit-teradata</artifactId>
+    <version>${project.parent.version}</version>
+    <properties>
+        <teradata.version>5.1.6</teradata.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dbfit-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+</project>
