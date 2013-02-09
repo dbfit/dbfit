@@ -18,9 +18,9 @@ You can also use the keyword `NULL` to set a parameter value to `NULL`.
 
 `Query` is similar to traditional FIT `RowFixture`, but uses SQL Query results. You should specify query as the first fixture parameter, after the `Query` command. The second table row contains column names, and all subsequent rows contain data for the expected results. You do not have to list all columns in the result set — just the ones that you are interested in testing.
 
-    !|Query| select 'test' as x|
-    |x|
-    |test|
+    !|Query|select 'test' as x|
+    |x                        |
+    |test                     |
 
 ### Ordering and row matching
 
@@ -33,18 +33,18 @@ Rows in the actual result set and FitNesse table are matched from top to bottom,
 `Query` will report any rows that exist in the actual result set and not in the FitNesse table (those will be marked as *surplus*), rows that exist in the FitNesse table but not in the actual result set (marked as *missing*). All matched rows are then checked for values in columns, and any differences will be reported in individual cells. You can use a special `fail [expected value]` syntax to invert the test, making it fail if a certain value appears in the row:
 
     This will fail because the order is wrong
-    |Ordered Query|SELECT n FROM ( SELECT 1 as n union select 2 union select 3 ) x |
-    |n|
-    |fail[2]|
-    |fail[1]|
-    |3|
+    |Ordered Query|SELECT n FROM ( SELECT 1 as n union select 2 union select 3 ) x|
+    |n                                                                            |
+    |fail[2]                                                                      |
+    |fail[1]                                                                      |
+    |3                                                                            |
 
     This will pass because the order is correct
     |Ordered Query|SELECT n FROM ( SELECT 1 as n union select 2 union select 3 ) x|
-    |n|
-    |1|
-    |2|
-    |3|
+    |n                                                                            |
+    |1                                                                            |
+    |2                                                                            |
+    |3                                                                            |
 
 ### Using parameters
 
@@ -317,36 +317,35 @@ When the test is executed, FitNesse will append meta-data and results to the tes
 
 `Store Query` reads out query results and stores them into a Fixture symbol for later use. Specify the full query as the first argument and the symbol name as the second argument (without `>>`). You can then use this stored result set as a parameter of the `Query` command later:
 
-    !|Store Query|select n from ( select 1 as n union select 2 union select 3) x|
-    firsttable|
+    !|Store Query|select n from ( select 1 as n union select 2 union select 3) x|firsttable|
 
     !|query|<<firsttable|
-    |n|
-    |1|
-    |2|
-    |3|
+    |n                  |
+    |1                  |
+    |2                  |
+    |3                  |
 
 You can also directly compare two stored queries and check for differences.
 
 ## Compare Stored Queries
 
-`Compare Stored Queries` compares two previously stored query results. Specify symbol names as the first and second argument (without `<<`). The query structure must be listed in the second row. (Use Inspect Query to build it quickly if you do not want to type it.) Column structure is specified so that some columns can be ignored during comparison (just don’t list them), and for the partial row-key mapping to work. Put a question mark after the column names that do not belong to the primary key to make the compar- isons better. The comparison will print out all matching rows in green, and list rows that are in just one query with red (and fail the test if such rows exist). If some rows are matched partially, just by primary key, differences in individual value cells will also be shown and the test will fail.
+`Compare Stored Queries` compares two previously stored query results. Specify symbol names as the first and second argument (without `<<`). The query structure must be listed in the second row. (Use Inspect Query to build it quickly if you do not want to type it.) Column structure is specified so that some columns can be ignored during comparison (just don’t list them), and for the partial row-key mapping to work. Put a question mark after the column names that do not belong to the primary key to make the comparisons better. The comparison will print out all matching rows in green, and list rows that are in just one query with red (and fail the test if such rows exist). If some rows are matched partially, just by primary key, differences in individual value cells will also be shown and the test will fail.
 
     |execute|create table testtbl (n int, name varchar(100))|
 
     !|insert|testtbl|
-    |n|name|
-    |1|NAME1|
-    |3|NAME3|
-    |2|NAME2|
+    |n      |name   |
+    |1      |NAME1  |
+    |3      |NAME3  |
+    |2      |NAME2  |
 
     |Store Query|select * from testtbl|fromtable|
 
-    |Store Query|select n, concat('NAME',n) as name from ( select 1 as n union
-     select 3 union select 2) x|fromdual|
+    |Store Query|!-select n, concat('NAME',n) as name from ( select 1 as n union
+     select 3 union select 2) x-!|fromdual|
 
     |compare stored queries|fromtable|fromdual|
-    |name|n?|
+    |name                  |n?                |
 
     |execute|drop table testtbl|
 
