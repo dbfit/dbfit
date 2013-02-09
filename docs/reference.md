@@ -32,7 +32,7 @@ You can also use the keyword `NULL` to set a parameter value to `NULL`.
 
 Partial key matching is supported, like in RowFixture: columns with a question mark in their name are not used to match rows, just for value comparisons. You can use this to get better error reports in case of failed tests. It is a good practice to put a question mark after all column names that are not part of the primary key.
 
-Rows in the actual result set and FitNesse table are matched from top to bottom, looking for equal values in all cells that are not marked with a ques- tion mark. If there are no key columns, then the first row will be taken as a match (which effectively acts as the `Ordered Query`). All non-key columns are used for value comparisons, not for deciding whether or not a row exists in the result set.
+Rows in the actual result set and FitNesse table are matched from top to bottom, looking for equal values in all cells that are not marked with a question mark. If there are no key columns, then the first row will be taken as a match (which effectively acts as the `Ordered Query`). All non-key columns are used for value comparisons, not for deciding whether or not a row exists in the result set.
 
 `Query` will report any rows that exist in the actual result set and not in the FitNesse table (those will be marked as *surplus*), rows that exist in the FitNesse table but not in the actual result set (marked as *missing*). All matched rows are then checked for values in columns, and any differences will be reported in individual cells. You can use a special `fail [expected value]` syntax to invert the test, making it fail if a certain value appears in the row:
 
@@ -100,13 +100,13 @@ You can use multi-line queries by enclosing them into `!-` and `-!`. This will a
 
 ### Working with padded chars
 
-Some databases treat `CHAR` type as fixed length and fill content up to the specified length with spaces. FitNesse strips trailing spaces by default from cell contents, which makes it hard to compare `CHAR` types. DbFit provides a workaround for this, that must be enabled manually since it modifies stan- dard string parsing. To enable this option, include the following table in your tests:
+Some databases treat `CHAR` type as fixed length and fill content up to the specified length with spaces. FitNesse strips trailing spaces by default from cell contents, which makes it hard to compare `CHAR` types. DbFit provides a workaround for this, that must be enabled manually since it modifies standard string parsing. To enable this option, include the following table in your tests:
 
 <pre>
 |set option|fixed length string parsing|true|
 </pre>
 
-Afterthat,youcanenclosestringsintosingle-quotes(`'my string'`)andput trailing spaces before the closing quote. This allows you to ensure that the correct length of the string is used for comparisons. Here is an example (this example is for SQL Server, since MySql strips trailing spaces):
+After that,you can enclose strings into single-quotes (`'my string'`) and put trailing spaces before the closing quote. This allows you to ensure that the correct length of the string is used for comparisons. Here is an example (this example is for SQL Server, since MySql strips trailing spaces):
 
 <pre>
 !3 use fixed string length parsing to test blank-padded chars
@@ -156,7 +156,7 @@ use single quotes to pad to appropriate length
 
 ### Storing auto-generated values
 
-Columns with a question mark are used as outputs. When an output column is used, it will contain the value of the column in the new record. This is especially handy for retrieving an auto-generated primary key. For Oracle, this works regardless of whether the column was actually the ID or some- thing else populated with a trigger. For MySQL and SQL Server, only single- column actual primary keys can be returned. The only thing that makes sense to do at this point is to store values of the output cells into variables.
+Columns with a question mark are used as outputs. When an output column is used, it will contain the value of the column in the new record. This is especially handy for retrieving an auto-generated primary key. For Oracle, this works regardless of whether the column was actually the ID or something else populated with a trigger. For MySQL and SQL Server, only single- column actual primary keys can be returned. The only thing that makes sense to do at this point is to store values of the output cells into variables.
 
 <pre>
 !3 Use ? to mark columns that should return values
