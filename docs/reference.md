@@ -34,6 +34,6 @@ show_comments: false
 {% include manual/store-query.md %}
 {% include manual/compare-stored-queries.md %}
 {% include manual/transaction-control.md %}
-    </div>
+</div>
   </div>
 </div>
