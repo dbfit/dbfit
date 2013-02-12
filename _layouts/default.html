@@ -16,60 +16,6 @@ theme :
 
     <!-- Le styles -->
     <link href="{{ ASSET_PATH }}/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <style type="text/css">
-      body {
-        padding-top: 20px;
-        padding-bottom: 40px;
-      }
-
-      /* Custom container */
-      .container-narrow {
-        margin: 0 auto;
-        max-width: 700px;
-      }
-      .container-narrow > hr {
-        margin: 30px 0;
-      }
-
-      /* Main marketing message and sign up button */
-      .jumbotron {
-        margin: 60px 0;
-        text-align: center;
-      }
-      .jumbotron h1 {
-        font-size: 72px;
-        line-height: 1;
-      }
-      .jumbotron .btn {
-        font-size: 21px;
-        padding: 14px 24px;
-      }
-      .jumbotron p {
-        margin-bottom: 30px;
-      }
-
-      /* Supporting marketing content */
-      .marketing {
-        margin: 60px 0;
-      }
-      .marketing p + h4 {
-        margin-top: 28px;
-      }
-
-      /* Textual links in masthead */
-      .masthead-links {
-        margin: 0;
-        list-style: none;
-      }
-      .masthead-links li {
-        display: inline;
-        padding: 0 10px;
-      }
-
-      .footer {
-        text-align: center;
-      }
-    </style>
     <link href="{{ ASSET_PATH }}/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -85,44 +31,10 @@ theme :
                                    <link rel="shortcut icon" href="../assets/ico/favicon.png"> -->
   </head>
 
-  <body>
-
-    <div class="container-narrow">
-      {% include JB/setup %}
-
-      <div class="masthead">
-        <ul class="nav nav-pills pull-right">
-          <li {% if page.nav_bar_name == 'home' %}class="active"{% endif %}><a href="{{ BASE_PATH }}/index.html">Home</a></li>
-          <li {% if page.nav_bar_name == 'blog' %}class="active"{% endif %}><a href="http://quickpeople.wordpress.com/category/big-data-testing-2/" onclick="recordOutboundLink(this, 'Navbar', 'Visited blog');return false;">Blog</a></li>
-          <li {% if page.nav_bar_name == 'contact' %}class="active"{% endif %}><a href="{{ BASE_PATH }}/contact.html">Contact</a></li>
-        </ul>
-        <h3 class="muted">DbFit</h3>
-      </div>
-
-      <hr>
-
-      {{ content }}
-
-      <div class="row-fluid">
-        <div class="span12">
-          {% if page.show_comments %}
-            <hr>
-            {% include JB/comments %}
-          {% endif %}
-
-          <div class='footer'>
-            <hr>
-            <p>&copy; <a href="https://plus.google.com/114169584140971644816?rel=author">{{ site.author.name }}</a> 2013
-              with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
-              and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
-            </p>
-          </div>
-
-        </div>
-      </div>
-
-    </div> <!-- /container -->
-
+  <body data-spy="scroll" data-target=".sidebar">
+    {{ content }}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="{{ ASSET_PATH }}/bootstrap/js/bootstrap.min.js"></script>
     {% include JB/analytics %}
   </body>
 </html>

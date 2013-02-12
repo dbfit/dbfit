@@ -1,0 +1,12 @@
+{% if page.show_comments %}
+  <hr>
+  {% include JB/comments %}
+{% endif %}
+
+<div class='footer'>
+  <hr>
+  <p>&copy; <a href="https://plus.google.com/114169584140971644816?rel=author">{{ site.author.name }}</a> 2013
+    with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+    and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+  </p>
+</div>
