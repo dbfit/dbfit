@@ -10,7 +10,7 @@ show_comments: false
       <li class="active"><a href="#installing-dbfit">1. Installing DbFit</a></li>
       <li><a href="#creating-a-new-test-page">2. Creating a new test page</a></li>
       <li><a href="#setting-up-the-environment">3. Setting up the environment</a></li>
-      <li><a href="#connect-to-the-database">4. Connect to the database</a></li>
+      <li><a href="#connecting-to-the-database">4. Connecting to the database</a></li>
       <li><a href="#testing-a-simple-query">5. Testing a simple query</a></li>
       <li><a href="#running-the-test">6. Running the test</a></li>
     </ul>
@@ -80,7 +80,7 @@ In order to load the DbFit extension into FitNesse, your test pages have to load
 
     !path lib/*.jar
 
-## 4. Connect to the database
+## 4. Connecting to the database
 
 DbFit requires two commands to connect to the database. The first line specifies the database type (or test type), and the second defines connection properties. These two lines will typically be the first on every test page. Here is how to connect to a MySQL database:
 
