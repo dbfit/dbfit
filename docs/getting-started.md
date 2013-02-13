@@ -113,6 +113,10 @@ The same syntax should work for SQLServer. For Oracle, use this table:
 
 Now, click Save. FitNesse will create a new page and display it in your browser. Click on the `Test` button to make FitNesse run the test. You should see a page telling you that the test passed.
 
+----
+
+*Learn about more DbFit commands in the [Reference](/dbfit/docs/reference.html) docs.*
+
 </div>
   </div>
 </div>
