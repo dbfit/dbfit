@@ -27,7 +27,7 @@ show_comments: false
   DbFit needs the Java Runtime Environment to run - it can be downloaded from the <a href="http://www.java.com/en/download/index.jsp">Oracle's Java homepage</a>.
 </div>
 
- 1. <a class="btn btn-success" href="https://s3.amazonaws.com/dbfit/dbfit-complete-2.0.0-RC1.zip" onclick="recordOutboundLink(this, 'Getting Started', 'Download 2.0.0-RC1');return false;">Download DbFit</a>
+ 1. <a class="btn btn-success" href="https://s3.amazonaws.com/dbfit/dbfit-complete-2.0.0-RC1.zip" onclick="recordOutboundLink(this, 'Software', '2.0.0-RC1', 'Getting started');return false;">Download DbFit</a>
 
  2. Unpack `dbfit-complete-XXX.zip` somewhere on your disk, and run `startFitnesse.bat` (or `startFitnesse.sh` on Linux). When FitNesse starts, you should see a command window with this message:
 
