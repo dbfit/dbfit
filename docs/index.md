@@ -8,5 +8,8 @@ show_comments: false
 
 ## [Command reference](/dbfit/docs/reference.html) <small>The complete reference of DbFit's features.</small>
 
+## [FAQ](/dbfit/docs/faq.html) <small>Frequently asked questions and troubleshooting.</small>
+
+
 <h2><a href="https://s3.amazonaws.com/dbfit/dbfit-20080822.pdf" onclick="recordOutboundLink(this, 'Documentation', 'Manual', 'Docs');return false;">DbFit 1.1 manual</a> <small>A PDF version</small></h2>
 
