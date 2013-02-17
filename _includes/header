@@ -2,7 +2,7 @@
       <div class="masthead">
         <ul class="nav nav-pills pull-right">
           <li {% if page.nav_bar_name == 'home' %}class="active"{% endif %}><a href="{{ BASE_PATH }}/">Home</a></li>
-          <li {% if page.nav_bar_name == 'blog' %}class="active"{% endif %}><a href="http://quickpeople.wordpress.com/category/big-data-testing-2/" onclick="recordOutboundLink(this, 'Outbound links', 'Blog', '{{ page.nav_bar_name }}');return false;">Blog</a></li>
+          <li {% if page.nav_bar_name == 'blog' %}class="active"{% endif %}><a href="http://quickpeople.wordpress.com/category/big-data-2/" onclick="recordOutboundLink(this, 'Outbound links', 'Blog', '{{ page.nav_bar_name }}');return false;">Blog</a></li>
           <li {% if page.nav_bar_name == 'docs' %}class="active"{% endif %}><a href="{{ BASE_PATH }}/docs/">Docs</a></li>
           <li {% if page.nav_bar_name == 'contact' %}class="active"{% endif %}><a href="{{ BASE_PATH }}/contact.html">Contact</a></li>
         </ul>
