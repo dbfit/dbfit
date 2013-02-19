@@ -1,0 +1,18 @@
+''Previous page: [[!-Database unit tests-!][.DbFit.DbFitReference.DatabaseUnitTests]] Next page: [[!-Command reference-!][.DbFit.DbFitReference.CommandReference]] Parent page: [[!-Table of contents-!][.DbFit.DbFitReference.TableOfContents]]''
+!2 !-DbFit for Integration tests-!
+!- This chapter introduces DbFit to Java and .NET developers, and explains how to utilise DbFit to set up, modify and verify the data layer in .NET or Java FIT/FitNesse tests. I will not explain how to use or set-up and use FitNesse here, as I would expect you to already know that. If not, see -!http://www.fitnesse.org !- or my book -![[!-Test Driven .NET Development with FitNesse-!][http://gojko.net/fitnesse/book]] !-. -!
+
+# section Why use DbFit for integration tests?
+!3 !-Why use DbFit for integration tests?-!
+!- Even for projects where the database is used just as a simple persistence layer, it has an impact on automated tests. Integration and acceptance tests should run in an environment as close to the production environment as possible, which today often involves a database. This means that data needs to be set up before the test, cleaned up after, and that changes to data may need to be verified in the database. Writing code to do this in Java and .NET is not rocket science, but it is dull and error-prone, and I'd rather avoid it. -!
+
+!- DbFit is an extension library to FIT that enables tests to be executed directly against a database. DbFit fixtures take care of all the database integration plumbing, including automated transaction management, parameter declarations and selecting the right column or parameter type. Because of this, it is easier to write database tests with DbFit than it is to implement manual validations. -!
+
+# section Installing DbFit
+[[!-Installing DbFit-!][>InstallingDbFit]]
+# section Why not use generic ADO.NET/JDBC interfaces?
+[[!-Why not use generic ADO.NET/JDBC interfaces?-!][>WhyNotGeneric]]
+# section Connecting to the database
+[[!-Connecting to the database-!][>ConnectingToTheDatabase]]
+
+''Previous page: [[!-Database unit tests-!][.DbFit.DbFitReference.DatabaseUnitTests]] Next page: [[!-Command reference-!][.DbFit.DbFitReference.CommandReference]] Parent page: [[!-Table of contents-!][.DbFit.DbFitReference.TableOfContents]]''

@@ -1,9 +1,0 @@
-!3 Query Results do not have to be in the same order as table data
-
-|Query|SELECT n*5 n FROM ( select 'n' = 1 union select 'n' = 2 union select 'n' = 3 union select 'n' = 4 union select 'n' = 5) a|
-|n|
-|5|
-|25|
-|10|
-|20|
-|15|

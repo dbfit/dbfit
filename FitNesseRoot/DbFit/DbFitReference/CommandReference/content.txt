@@ -1,0 +1,53 @@
+''Previous page: [[!-DbFit for Integration tests-!][.DbFit.DbFitReference.IntegrationTests]] Next page: [[!-Frequently asked questions-!][.DbFit.DbFitReference.FrequentlyAskedQuestions]] Parent page: [[!-Table of contents-!][.DbFit.DbFitReference.TableOfContents]]''
+!2 !-Command reference-!
+!-This chapter will introduce and explain all available DbFit commands (tables, fixture types). To see more examples, get the -!'''!-dbfit-complete-!'''!- package and run the FitNesse wiki from that package. All commands, for all supported database, are shown in the -!''!-AcceptanceTests-!''!- subwiki. Examples in this chapter are, unless stated otherwise, written for MySQL. The -!''!-AcceptanceTests-!''!- subwiki contains equivalent examples for all other supported databases.-!
+
+# section Set-up Script
+[[!-Set-up Script-!][>SetupScript]]
+
+!* !-Working with parameters-!
+!-DbFit enables you to use Fixture symbols as global variables during test execution, to store or read intermediate results. The .NET syntax to access symbols (-!'''!- >>parameter -!'''!- to store a value and -!'''!- <<parameter -!'''!- to read the value) is supported in both .NET and Java versions. In addition, you can use the -!'''!- Set Parameter -!'''!- command to explicitly set a parameter value to a string.-!
+
+{{{
+|Set parameter|username|arthur|
+}}}
+!-DbFit is type sensitive, which means that comparing strings to numbers, even if both have the value 11, will fail the test. Most databases will allow you to pass strings into numeric arguments, but if you get an error that a value is different than expected and it looks the same, it is most likely due to a wrong type conversion. Keep that in mind when using -!'''!- Set parameter -!'''!-. A good practice to avoid type problems is to read out parameter values from a query. This will be explained in detail soon. -!
+
+!-You can also use the keyword -!'''!- NULL -!'''!- to set a parameter value to NULL.-!
+
+
+*!
+
+# section Query
+[[!-Query-!][>QueryCommand]]
+# section Insert
+[[!-Insert-!][>InsertCommand]]
+# section Update
+[[!-Update-!][>UpdateCommand]]
+# section Execute Procedure
+[[!-Execute Procedure-!][>ExecuteProcedureCommand]]
+# section Execute
+[[!-Execute-!][>ExecuteCommand]]
+# section Inspect
+[[!-Inspect-!][>InspectCommand]]
+# section Store Query
+[[!-Store Query-!][>StoreQueryCommand]]
+# section Compare Stored Queries
+[[!-Compare Stored Queries-!][>CompareStoredQueriesCommand]]
+
+!* !-Transaction control-!
+!- By default, each individual test (FitNesse page) in flow mode is executed in a transaction that is automatically rolled back after the test. In standalone mode, you are responsible for overall transaction control. -!
+
+!- If in flow mode, you can use the -!'''!- Commit -!'''!- and -!'''!- Rollback -!'''!- commands to control the transactions manually, but remember that a final rollback will be added at the end of the test. These commands have no additional arguments. -!
+
+!- In standalone mode, you will probably control transactions from outside DbFit. Utility commands to commit and rollback are still provided, if you need them, as part of the -!'''!- DatabaseEnvironment -!'''!- fixture. For example, use this table to rollback: -!
+
+{{{
+!|DatabaseEnvironment|
+|Rollback|
+}}}
+
+*!
+
+
+''Previous page: [[!-DbFit for Integration tests-!][.DbFit.DbFitReference.IntegrationTests]] Next page: [[!-Frequently asked questions-!][.DbFit.DbFitReference.FrequentlyAskedQuestions]] Parent page: [[!-Table of contents-!][.DbFit.DbFitReference.TableOfContents]]''

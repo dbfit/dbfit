@@ -1,0 +1,5 @@
+!|Execute Procedure |CalcLength|
+|name |?|
+|mika |  4|
+|paradajz |  8|
+|saeiluhrweurhfi7fhi7rhgf |  24|

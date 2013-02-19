@@ -1,0 +1,21 @@
+''Next page: [[!-Database unit tests-!][.DbFit.DbFitReference.DatabaseUnitTests]] Parent page: [[!-Table of contents-!][.DbFit.DbFitReference.TableOfContents]]''
+!2 !-Introduction-!
+''!-DbFit makes test driven database development easy.-!''!- Depending on whether you are primarily working in a database environment or in a .NET/Java environment, you can look at DbFit as: -!
+
+!- <ul> -!!- <li> -!!- For database developers &mdash; a neat unit-testing tool for stored procedures and database objects, which finally allows you to write database tests in a tabular, relational form, without requiring you to learn or use an object-oriented language. -!!- </li> -!!- <li> -!!- For .NET/Java developers &mdash; a set of FIT fixtures which enables FIT/FitNesse tables to execute directly against a database. -!!- </li> -!!- </ul> -!
+# section Project goals
+!3 !-Project goals-!
+!-This dual nature of DbFit is reflected in two main project goals:-!
+
+!- <ul> -!!- <li> -!!- Support efficient database acceptance and unit testing by providing database developers a good tool to express and manage tests in a relational language, without any .NET/Java knowledge required. -!!- </li> -!!- <li> -!!- Support efficient .NET/Java integration testing by providing standardised FitNesse fixtures to manage database state from FitNesse. -!!- </li> -!!- </ul> -!
+# section Features
+!3 !-Features-!
+!-Here is a quick overview of DbFit functionality:-!
+
+!- <ul> -!!- <li> -!!-Regression testing for queries and SQL statements-!!- </li> -!!- <li> -!!-Functional testing for stored procedures and functions-!!- </li> -!!- <li> -!!- Various short-cuts to make writing test scripts easier and more efficient: automatic transaction control, building regression tests for queries, inspecting database meta-data, and more. -!!- </li> -!!- <li> -!!- Support for Oracle, SQLServer 2000 and 2005, DB2, MySql 5 and Derby (MySQL and Derby are supported only in the Java version. Java version supports SqlServer partially &mdash; not all data types are implemented at the moment.) -!!- </li> -!!- </ul> -!
+# section What's wrong with xUnit
+[[!-What's wrong with xUnit-!][>WhatsWrongWithXunit]]
+# section How this document is organised
+[[!-How this document is organised-!][>HowThisIsOrganised]]
+
+''Next page: [[!-Database unit tests-!][.DbFit.DbFitReference.DatabaseUnitTests]] Parent page: [[!-Table of contents-!][.DbFit.DbFitReference.TableOfContents]]''

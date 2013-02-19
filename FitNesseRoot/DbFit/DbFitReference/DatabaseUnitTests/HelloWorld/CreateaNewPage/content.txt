@@ -1,0 +1,8 @@
+''Next page: [[!-Step 2: Setting up the environment-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.SettingUpTheEnvironment]] Parent page: [[!-Hello World from the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld]]''
+!2 !-Step 1: Creating a new test page-!
+!-Open -!http://localhost:8085/HelloWorld !- in your browser. You should see a screen telling you that there is no -!''!-HelloWorld-!''!- page and a link to create a new page. Click on the link and FitNesse opens the page editor: a big text box with several buttons. This is where we'll create our new test page. Notice that the page name is a CamelCase word. FitNesse is really strict about that. All page names have to start with a capital letter, have at least one more capital letter, and all capital letters have to be separated by at least one lowercase letter. This convention causes a lot of headaches for FitNesse newbies, but after a while you'll get used to it. Here are some good page names: -!
+
+!- <ul> -!!- <li> -!!- HelloWorld -!!- </li> -!!- <li> -!!- TestFluxCapacitor -!!- </li> -!!- <li> -!!-IsPaymentWorkingCorrectly -!!- </li> -!!- </ul> -!!-Here are some page names that will get you in trouble:-!
+
+!- <ul> -!!- <li> -!!- helloworld (no capital letters) -!!- </li> -!!- <li> -!!- Testfluxcapacitor (just one capital letter) -!!- </li> -!!- <li> -!!- isPaymentWorkingCorrectly (starts with a lowercase letter) -!!- </li> -!!- <li> -!!- TestFCapacitor (two consecutive capital letters) -!!- </li> -!!- </ul> -!
+''Next page: [[!-Step 2: Setting up the environment-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.SettingUpTheEnvironment]] Parent page: [[!-Hello World from the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld]]''

@@ -1,0 +1,5 @@
+!3 when whole query is read into variables, remember to use ? to prevent row matching as there is nothing to match the rows to - table should read out any results into parameters
+
+!|query|select getdate() as currd|
+|currd?|
+|>>tsevt|

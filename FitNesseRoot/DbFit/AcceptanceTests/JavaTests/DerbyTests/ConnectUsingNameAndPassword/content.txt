@@ -1,0 +1,6 @@
+!|dbfit.DerbyTest|
+!|Connect|localhost/dbfit;create=true|root|sa|
+
+!|Query|VALUES 1|
+|1|
+|1|

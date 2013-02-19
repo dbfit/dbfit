@@ -1,0 +1,37 @@
+|Execute|Create table Test_DBFit(name varchar(50), luckyNumber int)|
+
+|Execute|Insert into Test_DBFit values ('Obi Wan',80)|
+
+|Execute|Insert into Test_DBFit values ('Darth Maul',10)|
+
+|Rollback|
+
+|Execute|Create table Test_DBFit(name varchar(50), luckyNumber int)|
+
+|Query|Select * from Test_DBFit|
+|Name|Lucky Number|
+
+|Execute|Insert into Test_DBFit values ('Obi Wan',80)|
+
+|Execute|Insert into Test_DBFit values ('Darth Maul',10)|
+
+|Commit|
+
+|Query|Select * from Test_DBFit|
+|Name|Lucky Number|
+|Darth Maul|10|
+|Obi Wan|80|
+
+|Execute|Insert into Test_DBFit values ('Anakin Skywalker',17)|
+
+|Rollback|
+
+|Query|Select * from Test_DBFit|
+|Name|Lucky Number|
+|Darth Maul|10|
+|Obi Wan|80|
+
+|Execute|Drop table Test_DBFit|
+
+|Commit|
+

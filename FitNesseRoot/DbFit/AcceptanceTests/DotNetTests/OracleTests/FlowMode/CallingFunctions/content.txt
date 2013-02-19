@@ -1,0 +1,28 @@
+!3 Functions are tested like procedures, with ? used for the result
+
+this is a test for 
+{{{
+create function Multiply(n1 number, n2 number) return number as
+begin
+	return n1*n2;
+end;
+}}}
+
+!|execute|!-
+create or replace function Multiply(n1 number, n2 number) return number as begin return n1*n2; end;
+-!|
+
+
+|Execute procedure|Multiply|
+|n1|n2|?|
+|10|15|150|
+|2|8|16|
+
+
+!3 Order of parameters in table should not be important (does not have to match db order)
+
+
+|Execute procedure|Multiply|
+|n2|?|n1|
+|15|150|10|
+|8|16|2|

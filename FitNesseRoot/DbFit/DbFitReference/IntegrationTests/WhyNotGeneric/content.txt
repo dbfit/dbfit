@@ -1,0 +1,8 @@
+''Previous page: [[!-Installing DbFit-!][.DbFit.DbFitReference.IntegrationTests.InstallingDbFit]] Next page: [[!-Connecting to the database-!][.DbFit.DbFitReference.IntegrationTests.ConnectingToTheDatabase]] Parent page: [[!-DbFit for Integration tests-!][.DbFit.DbFitReference.IntegrationTests]]''
+!2 !-Why not use generic ADO.NET/JDBC interfaces?-!
+!- Although database interfaces in .NET and Java are in theory database-independent, several key differences in SQL syntax and in driver implementation make it virtually impossible to support effective testing with a completely generic approach. The main differences are: -!
+
+!- <ol> -!!- <li> -!!- Reading table columns and mapping their datatypes to host types -!!- </li> -!!- <li> -!!- Reading stored procedure/function parameters and mapping datatypes to host types -!!- </li> -!!- <li> -!!-Extracting parameter names from ad-hoc SQL queries-!!- </li> -!!- <li> -!!- Building plumbing SQL commands like insert/returning primary key -!!- </li> -!!- <li> -!!- Instantiating objects such as DB connection, commands, or parameters -!!- </li> -!!- </ol> -!!- To be useful, DbFit needs to provide access to vendor-specific features as well as to generic features, so the database-connectivity layer had to be abstracted one level more. -!
+
+
+''Previous page: [[!-Installing DbFit-!][.DbFit.DbFitReference.IntegrationTests.InstallingDbFit]] Next page: [[!-Connecting to the database-!][.DbFit.DbFitReference.IntegrationTests.ConnectingToTheDatabase]] Parent page: [[!-DbFit for Integration tests-!][.DbFit.DbFitReference.IntegrationTests]]''

@@ -1,0 +1,31 @@
+!3 Strings
+
+Following types map to string: "VARCHAR", "CHAR"
+|Execute|Create table datatypetest (s1 varchar(20), s2 char(4))|
+
+|Insert|datatypetest|
+|s1|s2|
+|VARCHAR|CHAR|
+
+|Ordered Query|Select * from datatypetest|
+|s1?|s2?|
+|VARCHAR|CHAR|
+
+!3 should accept fail[null]
+
+|Ordered Query|Select * from datatypetest|
+|s1?|s2?|
+|fail[null]|fail[null]|
+
+|execute|delete from datatypetest|
+
+|Insert|datatypetest|
+|s1|s2|
+|null|null|
+
+|Ordered Query|Select * from datatypetest|
+|s1?|s2?|
+|null|null|
+
+|execute|delete from datatypetest|
+

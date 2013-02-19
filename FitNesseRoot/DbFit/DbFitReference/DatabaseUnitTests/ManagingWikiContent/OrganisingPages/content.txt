@@ -1,0 +1,23 @@
+''Next page: [[!-Writing tests in Excel/Word-!][.DbFit.DbFitReference.DatabaseUnitTests.ManagingWikiContent.WritingTestsInExcel]] Parent page: [[!-Managing Wiki content-!][.DbFit.DbFitReference.DatabaseUnitTests.ManagingWikiContent]]''
+!2 !-Organising pages-!
+!- In FitNesse, subwikis are the equivalent of web folders, database schemas or C# namespaces. They can be used to manage related pages more easily as a group. Instead of a slash -!'''!- / -!'''!-, which is the separator in a web folder name, the dot symbol -!'''!- . -!'''!- is used to separate levels of hierarchy in FitNesse. -!
+
+!- For example, URL -!''!-PurchaseTicketSuite.NotEnoughFunds-!''!- leads to the -!''!-NotEnoughFunds-!''!- page in the -!''!-PurchaseTicketSuite-!''!- subwiki. Just as a page can be turned into a test via the -!''!-Properties-!''!- button, a subwiki can be turned into a test suite. A test suite is a group of related tests that allows us to control their common properties from one place. -!
+
+!- To create a subwiki (and a test suite), first create the main subwiki page. In the previous example, that would be -!''!-PurchaseTicketSuite-!''!-. You can put the environment definitions from -![[!-Step 2: Setting up the environment-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.SettingUpTheEnvironment]]!- into that page, so that you do not have to repeat them for individual tests. Instead of defining any test tables in that page, just enter -!'''!- !contents -R -!'''!- as the page content. This automatically builds and shows a table of contents for the subwiki. As the subwiki is probably empty now, the page will be empty, but as you add subpages to it, they will automatically appear in the table of contents. Click -!''!-Properties-!''!- on the left, and mark the page as a -!''!-Suite-!''!- &mdash; not as a -!''!-Test-!''!-. -!
+
+!- Next, create individual test pages under that subwiki, and mark them as tests in page properties. You will be able to run individual tests by clicking on the -!''!-Test-!''!- button. You can also run all tests in the suite together by clicking on the -!''!-Suite-!''!- button when viewing the main suite page. -!
+
+!-There are two special pages for a test suite: -!''!-SetUp-!''!- and -!''!-TearDown-!''!-. If they exist, those two pages are executed before and after every test. You can use these pages to extract common preparation and clean-up steps for all related tests and manage them together. When using DbFit, it is a good practice to include the database connection in the -!''!-SetUp-!''!- page:-!
+
+{{{
+!-!-!|dbfit.MySqlTest|
+
+!-!-!|Connect|localhost|dbfit_user|password|dbfit|
+}}}
+!-In -![[!-Command reference-!][.DbFit.DbFitReference.CommandReference]]!- you will learn how to insert data and execute procedures, and you can include those steps as well in the -!''!-SetUp-!''!- if they are common for a group of tests.-!
+
+!-A subwiki hierarchy is considered a namespace for links. So, for example, link -!''!-BasicCase-!''!- from the -!''!-PurchaseTicketSuite.SetUp-!''!- page leads directly to -!''!-PurchaseTicketSuite.BasicCase-!''!-. However, the main suite page -!''!-PurchaseTicketSuite-!''!- is not in the same namespace, but one level above. If you put a link named -!''!-BasicCase-!''!- in the main suite page, it will lead to a top-level -!''!-BasicCase-!''!- page. To reach a subpage, prefix the name with a caret (-!''!-^BasicCase-!''!-). In FitNesse release 20070619, symbols < and > are also used to point one level up or down in the hierarchy. To go to the top level, prefix a page name with a dot. So the link to -!''!-.FrontPage-!''!- always leads to the home page of the site. -!
+
+
+''Next page: [[!-Writing tests in Excel/Word-!][.DbFit.DbFitReference.DatabaseUnitTests.ManagingWikiContent.WritingTestsInExcel]] Parent page: [[!-Managing Wiki content-!][.DbFit.DbFitReference.DatabaseUnitTests.ManagingWikiContent]]''

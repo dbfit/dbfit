@@ -1,0 +1,13 @@
+!3 Bit
+
+BIT maps to boolean
+
+|Execute|Create table datatypetest (b1 bit)|
+
+|Insert|datatypetest|
+|b1|
+|true|
+
+|Query|Select b1 from datatypetest|
+|b1?|
+|true|

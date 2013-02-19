@@ -1,0 +1,12 @@
+This table matches only n, so it will report that 4 is a wrong value for 2
+
+!|Query|!- SELECT l as n, l*2 as l  FROM ( select 'l' = 1
+union
+select 'l' = 2
+union
+select 'l' = 3
+) a -!|
+|n|l?|
+|1|2|
+|2|fail[7]|
+|3|6|

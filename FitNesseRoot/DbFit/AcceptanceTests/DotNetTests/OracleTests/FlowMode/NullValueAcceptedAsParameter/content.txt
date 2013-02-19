@@ -1,0 +1,7 @@
+Null value should be accepted as parameter
+
+|Set Parameter|myid|null|
+
+|Query|Select decode(:myid,null,-1,0) as val from dual|
+|val|
+|-1|

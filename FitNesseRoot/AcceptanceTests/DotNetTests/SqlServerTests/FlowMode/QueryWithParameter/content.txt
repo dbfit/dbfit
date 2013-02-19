@@ -1,6 +1,0 @@
-|Set Parameter|depth|3|
-
-|Query|SELECT n FROM ( select 'n' = 1 union select 'n' = 2 union select 'n' = 3) a where n < @depth |
-|n|
-|2|
-|1|

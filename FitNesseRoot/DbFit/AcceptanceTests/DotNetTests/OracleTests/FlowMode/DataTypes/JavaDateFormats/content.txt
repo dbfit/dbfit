@@ -1,0 +1,18 @@
+!3 Dates should accept standard JDBC date format
+
+|Execute|Create table datatypetest (d1 date, d2 timestamp)|
+
+|insert|datatypetest|
+|d1|d2|
+|2008-03-02|2008-03-02 01:41:39.0|
+
+|Query| select * from datatypetest|
+|d1?|d2?|
+|2008-03-02|2008-03-02 01:41:39.0|
+
+
+|Query| select * from datatypetest|
+|d1?|d2?|
+|fail[null]|fail[null]|
+
+Unfortunately, Oracle JDBC driver implementation prevents Date from containing DATE/TIME information as well. See http://www.oracle.com/technology/tech/java/sqlj_jdbc/htdocs/jdbc_faq.htm#08_01
