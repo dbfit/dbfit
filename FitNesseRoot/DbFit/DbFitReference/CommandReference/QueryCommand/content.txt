@@ -1,0 +1,126 @@
+''Previous page: [[!-Set-up Script-!][.DbFit.DbFitReference.CommandReference.SetupScript]] Next page: [[!-Insert-!][.DbFit.DbFitReference.CommandReference.InsertCommand]] Parent page: [[!-Command reference-!][.DbFit.DbFitReference.CommandReference]]''
+!2 !-Query-!
+'''!- Query -!'''!- is similar to traditional FIT -!'''!- RowFixture -!'''!-, but uses SQL Query results. You should specify query as the first fixture parameter, after the -!'''!- Query -!'''!- command. The second table row contains column names, and all subsequent rows contain data for the expected results. You do not have to list all columns in the result set &mdash; just the ones that you are interested in testing. -!
+
+{{{
+!-!-!|Query| select 'test' as x|
+|x|
+|test|
+}}}
+# section Ordering and row matching
+!3 !-Ordering and row matching-!
+'''!- Query -!'''!- ignores row order by default. In flow mode, the -!'''!- Ordered Query -!'''!- command provides order checking. -!
+
+!- Partial key matching is supported, like in -!'''!- RowFixture -!'''!-: columns with a question mark in their name are not used to match rows, just for value comparisons. You can use this to get better error reports in case of failed tests. It is a good practice to put a question mark after all column names that are -!'''!-not-!'''!- part of the primary key. -!
+
+!- Rows in the actual result set and FitNesse table are matched from top to bottom, looking for equal values in all cells that are not marked with a question mark. If there are no key columns, then the first row will be taken as a match (which effectively acts as the -!'''!- Ordered Query -!'''!-). All non-key columns are used for value comparisons, not for deciding whether or not a row exists in the result set. -!
+
+''!-Query-!''!- will report any rows that exist in the actual result set and not in the FitNesse table (those will be marked as -!''!-surplus-!''!-), rows that exist in the FitNesse table but not in the actual result set (marked as -!''!-missing-!''!-). All matched rows are then checked for values in columns, and any differences will be reported in individual cells. You can use a special -!'''!- fail[expected value] -!'''!- syntax to invert the test, making it fail if a certain value appears in the row:-!
+
+{{{
+This will fail because the order is wrong
+
+|Ordered Query|SELECT n FROM ( SELECT 1 as n union select 2 union select 3 ) x |
+|n|
+|fail[2]|
+|fail[1]|
+|3|
+
+This will pass because the order is correct
+
+|Ordered Query|SELECT n FROM ( SELECT 1 as n union select 2 union select 3 ) x|
+|n|
+|1|
+|2|
+|3|
+}}}
+# section Using parameters
+!3 !-Using parameters-!
+!- You can use query parameters (DB-specific syntax is supported, eg. -!'''!- @paramname -!'''!- for SQLServer and MySQL, and -!'''!- :paramname -!'''!- for Oracle). Corresponding fixture symbol values are automatically used for named query parameters. -!
+
+{{{
+|Set Parameter|depth|3|
+
+|Query|SELECT n FROM ( SELECT 1 as n union select 2 union select 3 union select 4) x where n<@depth |
+|n|
+|2|
+|1|
+}}}
+!-You can store elements of the result set into parameters &mdash; to re-use them later in other queries and stored procedures. Use -!'''!- >>parameter -!'''!- to store a cell value into a parameter. You can also use -! ''' !- <<parameter -! ''' !- to read a cell value from a parameter (for comparisons, for example).-!
+
+!-If you use the query just to read out stuff into parameters, then make sure to mark the columns with the question mark to avoid row matching. There will be nothing to match the rows with in this case, so a proper comparison would fail.-!
+
+{{{
+!-!-!|query|select now() as currd|
+|currd?|
+|>>tsevt|
+}}}
+!-To test for an empty query, you still need to specify the second row (result set structure), but don't supply any data rows.-!
+
+# section Avoiding parameter mapping
+!3 !-Avoiding parameter mapping-!
+!- If you want to prevent DbFit from mapping parameters to bind variables (eg to execute a stored procedure definition that contains the @ symbol in Sql Server), disable -!'''!- bind symbols -!'''!- option before running the query. -!
+
+{{{
+
+|set option|bind symbols|false|
+
+|execute| insert into users (name, username) values ('@hey','uuu')|
+
+|query|select * from users|
+|name|username|
+|@hey|uuu|
+}}}
+!- Remember to re-enable the option after the query is executed. You can use the same trick with the Execute command. -!
+
+# section Multi-line queries and special characters
+!3 !-Multi-line queries and special characters-!
+!-You can use multi-line queries by enclosing them into -!'''!- !- -!'''!- and -!'''!- &ndash;! -!'''!-. This will also prevent any special character formatting. This trick can also be used with Oracle to prevent the concatenation operator -!'''!- || -!'''!- from being treated as a FitNesse cell boundary.-!
+
+{{{
+|Ordered Query|!-!-!-
+select n from (
+ select 1 as n union
+ select 2 union 
+ select 3) 
+x
+-!-!-!|
+|n|
+|1|
+|2|
+|3|
+}}}
+# section Working with padded chars
+!3 !-Working with padded chars-!
+!-Some databases treat -!'''!- CHAR -!'''!- type as fixed length and fill content up to the specified length with spaces. FitNesse strips trailing spaces by default from cell contents, which makes it hard to compare -!'''!- CHAR -!'''!- types. DbFit provides a workaround for this, that must be enabled manually since it modifies standard string parsing. To enable this option, include the following table in your tests:-!
+
+{{{
+|set option|fixed length string parsing|true|
+}}}
+!-After that, you can enclose strings into single-quotes (-!'''!- 'my string' -!'''!-) and put trailing spaces before the closing quote. This allows you to ensure that the correct length of the string is used for comparisons. Here is an example (this example is for SQL Server, since MySql strips trailing spaces):-!
+
+{{{
+!-!-!3 use fixed string length parsing to test blank-padded chars
+
+|Execute|Create table datatypetest (s1 char(10), s2 nchar(10))|
+
+|set option|fixed length string parsing|true|
+
+|insert|datatypetest|
+|s1|s2|
+|testch|testnch|
+
+direct comparison will fail
+
+|query|select * from datatypetest|
+|s1?|s2?|
+|fail[testch]|fail[testnch]|
+
+use single quotes to pad to appropriate length
+
+|query|select * from datatypetest|
+|s1?|s2?|
+|'testch    '|'testnch   '|
+}}}
+
+''Previous page: [[!-Set-up Script-!][.DbFit.DbFitReference.CommandReference.SetupScript]] Next page: [[!-Insert-!][.DbFit.DbFitReference.CommandReference.InsertCommand]] Parent page: [[!-Command reference-!][.DbFit.DbFitReference.CommandReference]]''

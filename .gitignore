@@ -3,3 +3,6 @@ dist
 test_vm/cookbooks
 test_vm/.vagrant
 test_vm/tmp
+# FitNesse history files and excluded folders
+[0-9]*-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].zip
+[A-Za-z0-9]*-[0-9]*-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].zip

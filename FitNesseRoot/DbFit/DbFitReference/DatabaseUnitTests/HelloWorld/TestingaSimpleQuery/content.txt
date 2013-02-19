@@ -1,0 +1,18 @@
+''Previous page: [[!-Step 3: Connect to the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.ConnectToTheDatabase]] Next page: [[!-Step 5: Running the test-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.RunningTheTest]] Parent page: [[!-Hello World from the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld]]''
+!2 !-Step 4: Testing a simple query-!
+!-Now let's write a simple query test. We will send a request to the database, pull out the result set, and compare it with our expectations. In DbFit, that is done with the -!'''!- Query -!'''!- command. The second cell of the first table row, after the -!'''!- Query -!'''!- keyword, should contain the query we are executing. The second row then contains the result set structure &mdash; names of the columns that we want to inspect. You don't have to specify the full result set here, just the columns that are interesting for a particular test. All rows after that contain expected results. -!'''!- Query -!'''!- disregards result set order &mdash; if the order is important you can use -!'''!- OrderedQuery -!'''!-. Here is a simple MySql query:-!
+
+{{{
+!-!-!|Query| select 'test' as x|
+|x|
+|test|
+}}}
+!-The same syntax should work for SQLServer. For Oracle, use this table:-!
+
+{{{
+!-!-!|Query| select 'test' as x from dual|
+|x|
+|test|
+}}}
+
+''Previous page: [[!-Step 3: Connect to the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.ConnectToTheDatabase]] Next page: [[!-Step 5: Running the test-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.RunningTheTest]] Parent page: [[!-Hello World from the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld]]''

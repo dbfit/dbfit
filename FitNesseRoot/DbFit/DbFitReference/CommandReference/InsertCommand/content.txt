@@ -1,0 +1,59 @@
+''Previous page: [[!-Query-!][.DbFit.DbFitReference.CommandReference.QueryCommand]] Next page: [[!-Update-!][.DbFit.DbFitReference.CommandReference.UpdateCommand]] Parent page: [[!-Command reference-!][.DbFit.DbFitReference.CommandReference]]''
+!2 !-Insert-!
+'''!- Insert -!'''!- is the database equivalent of FitLibrary -!'''!- SetupFixture -!'''!- &mdash; it builds an insert command from the parameters in a data table (and executes the insert once for each row of the table). The view or table name is given as the first fixture parameter. The second row contains column names, and all subsequent rows contain data to be inserted. -!
+
+{{{
+|Execute|Create table Test_DBFit(name varchar(50), luckyNumber int)|
+
+|Insert|Test_DBFit|
+|name|luckyNumber|
+|pera|1|
+|nuja|2|
+|nnn|3|
+
+|Query|Select * from Test_DBFit|
+|name|lucky Number|
+|pera|1|
+|nuja|2|
+|nnn|3|
+
+
+|Execute|Drop table Test_DBFit|
+}}}
+# section Storing auto-generated values
+!3 !-Storing auto-generated values-!
+!-Columns with a question mark are used as outputs. When an output column is used, it will contain the value of the column in the new record. This is especially handy for retrieving an auto-generated primary key. For Oracle, this works regardless of whether the column was actually the ID or something else populated with a trigger. For MySQL and SQL Server, only single-column actual primary keys can be returned. The only thing that makes sense to do at this point is to store values of the output cells into variables. -!
+
+{{{
+!-!-!3 Use ? to mark columns that should return values
+
+!-!-!|Insert|users|
+|username|name|userid?|
+|pera|Petar Detlic|>>pera|
+|Mika|Mitar Miric|>>mika|
+|Zeka|Dusko Dugousko|>>zeka|
+|DevNull|null|>>nll|
+
+!-!-!3 Confirm that IDs are the same as in the database
+
+!-!-!|Ordered Query|Select * from users|
+|username|name|userid|
+|pera|Petar Detlic|<<pera|
+|Mika|Mitar Miric|<<mika|
+|Zeka|Dusko Dugousko|<<zeka|
+|DevNull|null|<<nll|
+
+!-!-!3 Stored values can be used in queries directly
+
+|Query|Select * from users where userid=@zeka|
+|username|name|userid|
+|Zeka|Dusko Dugousko|<<zeka|
+}}}
+!-When the test runs, you will see actual values being stored into variables -![[!-Figure 10-!][.DbFit.DbFitReference.CommandReference.InsertCommand#figreferenceinsert]]!-).-!
+
+
+!anchor figreferenceinsert
+!3 Figure 10: !-Insert can return auto-generated keys-!
+!img http://files/images/reference-insert.png
+
+''Previous page: [[!-Query-!][.DbFit.DbFitReference.CommandReference.QueryCommand]] Next page: [[!-Update-!][.DbFit.DbFitReference.CommandReference.UpdateCommand]] Parent page: [[!-Command reference-!][.DbFit.DbFitReference.CommandReference]]''

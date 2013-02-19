@@ -1,0 +1,25 @@
+''Previous page: [[!-Insert-!][.DbFit.DbFitReference.CommandReference.InsertCommand]] Next page: [[!-Execute Procedure-!][.DbFit.DbFitReference.CommandReference.ExecuteProcedureCommand]] Parent page: [[!-Command reference-!][.DbFit.DbFitReference.CommandReference]]''
+!2 !-Update-!
+!- Update allows you to quickly script data updates. It builds the update command from the parameters in a data table and executes the update once for each row of the table. Columns ending with -!'''!- = -!'''!- are used to update records (cell specifies new data value). Columns without -!'''!- = -!'''!- on the end are used to select rows (cell specifies expected column value for the select part of update command). The view or table name is given as the first fixture parameter. The second row contains column names, and all subsequent rows contain data to be updated or queried. This example updates the -!'''!- username -!'''!- column where the name matches -!'''!- arthur dent -!'''!-. -!
+
+{{{
+|insert|users|
+|name|username|
+|arthur dent|adent|
+|ford prefect|fpref|
+|zaphod beeblebrox|zaphod|
+
+|update|users|
+|username=|name|
+|adent2|arthur dent|
+
+|query|select * from users|
+|name|username|
+|arthur dent|adent2|
+|ford prefect|fpref|
+|zaphod beeblebrox|zaphod|
+}}}
+!-You can use multiple columns for both updating and selecting, and even use the same column for both operations. You can also use parameters &mdash; eg. -!'''!- <<paramname -!'''!- &mdash; in any cell. -!
+
+
+''Previous page: [[!-Insert-!][.DbFit.DbFitReference.CommandReference.InsertCommand]] Next page: [[!-Execute Procedure-!][.DbFit.DbFitReference.CommandReference.ExecuteProcedureCommand]] Parent page: [[!-Command reference-!][.DbFit.DbFitReference.CommandReference]]''

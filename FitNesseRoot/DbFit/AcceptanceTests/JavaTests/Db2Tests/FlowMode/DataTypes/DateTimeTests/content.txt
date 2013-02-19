@@ -1,0 +1,58 @@
+!3 Dates
+
+Following types map to Date/Time: "TIMESTAMP" ,"DATE"
+
+|Execute|Create table datatypetest (d1 date, d2 timestamp)|
+
+|Ordered Query| select current date as dat, current timestamp as ts from sysibm.sysdummy1|
+|dat|ts|
+|>>dat1|>>ts1|
+
+|insert|datatypetest|
+|d1|d2|
+|<<dat1|<<ts1|
+
+|ordered query|select * from datatypetest|
+|d1?|d2?|
+|<<dat1|<<ts1|
+
+!3 dates accept literals in standard jdbc date format
+
+|execute|delete from datatypetest|
+
+|insert|datatypetest|
+|d1|d2|
+|2007-01-01|2007-01-02 11:12:22|
+
+|query|select * from datatypetest|
+|d1?|d2?|
+|2007-01-01|2007-01-02 11:12:22|
+
+!3 should accept fail[null]
+|query|select * from datatypetest|
+|d1?|d2?|
+|fail[null]|fail[null]|
+
+!3 timestamp should also accept short date format
+
+|execute|delete from datatypetest|
+
+|insert|datatypetest|
+|d1|d2|
+|2007-01-01|2007-01-01|
+
+|query|select * from datatypetest|
+|d1?|d2?|
+|2007-01-01|2007-01-01|
+
+!3 dates will accept nulls
+
+|execute|delete from datatypetest|
+
+|insert|datatypetest|
+|d1|d2|
+|null|null|
+
+|query|select * from datatypetest|
+|d1?|d2?|
+|null|null|

@@ -1,0 +1,14 @@
+''Previous page: [[!-Hello World from the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld]] Parent page: [[!-Database unit tests-!][.DbFit.DbFitReference.DatabaseUnitTests]]''
+!2 !-Managing Wiki content-!
+!- Those are the basics of FitNesse. Tables describe commands, inputs and expected outputs. You can use DbFit commands in FitNesse tables to do things such as execute stored procedures, and execute and compare queries. The rest of this chapter will focus on managing content in FitNesse &mdash; see -![[!-Command reference-!][.DbFit.DbFitReference.CommandReference]]!- for detailed information on all available DbFit commands and their table syntax. -!
+
+# section Organising pages
+[[!-Organising pages-!][>OrganisingPages]]
+# section Writing tests in Excel/Word
+[[!-Writing tests in Excel/Word-!][>WritingTestsInExcel]]
+# section Formatting text
+[[!-Formatting text-!][>FormattingText]]
+# section Preventing unwanted formatting
+[[!-Preventing unwanted formatting-!][>PreventingUnwantedFormatting]]
+
+''Previous page: [[!-Hello World from the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld]] Parent page: [[!-Database unit tests-!][.DbFit.DbFitReference.DatabaseUnitTests]]''

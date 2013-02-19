@@ -1,0 +1,32 @@
+''Previous page: [[!-Execute-!][.DbFit.DbFitReference.CommandReference.ExecuteCommand]] Next page: [[!-Store Query-!][.DbFit.DbFitReference.CommandReference.StoreQueryCommand]] Parent page: [[!-Command reference-!][.DbFit.DbFitReference.CommandReference]]''
+!2 !-Inspect-!
+'''!- Inspect -!'''!- is a utility fixture class used to quickly extract meta-data information from the database, and print it out in a form which can be easily converted into a test. It can work in three modes: -!'''!- Query -!'''!-, -!'''!- Table -!'''!- or -!'''!- Procedure -!'''!-. In the -!'''!- Query -!'''!- mode, it expects a full query as argument (bound variables are supported), and prints out both the result structure and result data. In the -!'''!- Table -!'''!- mode, it expects a table or view name as an argument and prints out the table or view column names (without actual data, just the structure). In -!'''!- Procedure -!'''!- mode, it expects a procedure name as an argument and prints out the procedure parameter names. These tables can be easily converted into -!'''!- Query -!'''!-, -!'''!- Execute Procedure -!'''!-, -!'''!- Insert -!'''!- or -!'''!- Update -!'''!- tables. -!
+
+!- In flow mode, these three inspections are available as individual commands -!'''!- Inspect query -!'''!-, -!'''!- Inspect table -!'''!- and -!'''!- Inspect procedure -!'''!-. In standalone mode, you can extend the -!'''!- Inspect -!'''!- fixture and set the appropriate mode manually while calling the constructor. -!
+
+{{{
+!-!-!3 Inspect Procedure prints procedure arguments to be used for Execute procedure
+ 
+!-!-!|Inspect Procedure|ConcatenateStrings|
+
+!-!-!3 Inspect Table prints table/view columns to be used for Insert/Update/Query procedure
+ 
+!-!-!|Inspect Table|users|
+
+!-!-!3 Inspect query prints columns and data
+
+|Insert|users|
+|name|username|
+|david haselhoff|dhoff|
+|arthur dent|adent|
+
+!-!-!|Inspect query|select * from users|
+}}}
+
+!anchor figreferenceinspect
+!3 Figure 11: !-Inspect makes regression tests easier to write-!
+!img http://files/images/reference-inspect.png
+!- When the test is executed, FitNesse will append meta-data and results to the test tables in gray color (-![[!-Figure 11-!][.DbFit.DbFitReference.CommandReference.InspectCommand#figreferenceinspect]]!-). To convert the results into a new test, select the entire table in the browser, directly from the -!''!-rendered results-!''!- page (not from the HTML source or wiki source), and copy it. Internet Explorer allows you to get just a few rows at a time, while in some versions of Firefox you have to select the entire table in order to copy it properly. Edit the test page, delete the old table and paste the contents of the clipboard into the page editor. You should see the results table with column values separated by tabs. Click the -!''!-Spreadsheet to FitNesse-!''!- button below the editor text box. This turns the tab-separated results table into a FitNesse test table, converting the tabs into pipes to separate cells and even putting the exclamation mark before the first row automatically. -!
+
+
+''Previous page: [[!-Execute-!][.DbFit.DbFitReference.CommandReference.ExecuteCommand]] Next page: [[!-Store Query-!][.DbFit.DbFitReference.CommandReference.StoreQueryCommand]] Parent page: [[!-Command reference-!][.DbFit.DbFitReference.CommandReference]]''

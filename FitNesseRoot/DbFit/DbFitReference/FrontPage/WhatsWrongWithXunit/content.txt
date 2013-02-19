@@ -1,0 +1,32 @@
+''Next page: [[!-How this document is organised-!][.DbFit.DbFitReference.FrontPage.HowThisIsOrganised]] Parent page: [[!-Introduction-!][.DbFit.DbFitReference.FrontPage]]''
+!2 !-What's wrong with xUnit-!
+!- DbFit is the result of a three year long effort to apply agile development practices in a database-centric environment. Lack of proper tools for database-level testing was one of the major obstacles in that effort, and DbFit finally solved that issue. Here is a very short summary of that journey and reasons why DbFit was originally created. If you are interested in finding out more about the wider problem and applying agile practices to databases, see my article -![[!-Fighting the monster-!][http://gojko.net/2007/11/20/fighting-the-monster/]] !- and Scott Ambler's site -!http://www.agiledata.org !-. -!
+
+!- Agile practices and databases do not often go hand in hand. For starters, most of the innovation today is in the object-oriented and web space, so database tools are a bit behind. Compared to say Idea or Eclipse, the best IDE available for Oracle PL/SQL development is still in the ice ages. This has influenced the database testing tools and libraries &mdash; most of the tools currently available are copies of JUnit translated into the database environment. Examples are utPLSQL-![[!-<sup>1</sup>-!][#footnote1]]!- and TSQLUnit.-![[!-<sup>2</sup>-!][#footnote2]]!- Some other tools, like DbUnit-![[!-<sup>3</sup>-!][#footnote3]]!- just focus on setting the stage for Java or .NET integration tests, not really for executing tests directly against database code. -!
+
+!- The problem with xUnit-like database testing tools is that they require too much boilerplate code. I could never get database developers to really use them when no one was looking over their shoulders. Writing tests was simply seen as too much overhead. All the buzz about object-relational mismatch over the last few years was mostly about relational models getting in the way of object development. This is effectively the other side of the problem, with object tools getting in the way of relational testing. -!
+
+!- FIT testing framework, on the other hand, does not suffer from that mismatch. FIT is an acceptance testing framework developed by Ward Cunningham, which is customer oriented and has nothing to do with database unit testing whatsoever. But FIT tests are described as tables, which is much more like the relational model than Java code. FIT also has a nice Web-wiki front-end called FitNesse, which allows database developers to write tests on their own without help from Java or .NET developers. DbFit utilises the power of these two tools to make database tests easy. -!
+
+!- My goal with DbFit was not just to enable efficient database testing &mdash; it was to motivate database developers to use an automated testing framework. That is why DbFit has quite a few shortcuts to make database testing easier through DbFit than even doing manual validations in PL/SQL or TSQL. I will explain these later on, but for starters &mdash; DbFit automatically manages transactions for you (rolling back by default to make tests repeatable), retrieves the correct data types from metadata, and declares variables and parameters. -!
+
+!- Here is a preview of what you will able to do with DbFit (everything will be explained in more detail later). To call stored procedures, just create a table with the -!'''!- Execute Procedure -!'''!- command, put the procedure name after the command, and list your procedure parameters in second row. Put a question mark after output parameter names. Then put different combinations of inputs and expected values for output parameters into the table. The table in -![[!-Figure 1-!][.DbFit.DbFitReference.FrontPage.WhatsWrongWithXunit#figintroductionprocs]]!- shows three tests for the -!'''!- ConcatenateStrings -!'''!- stored procedure. Notice that there are no variable declarations, no type guessing, no special code to compare values. Just the table. -!
+
+
+!anchor figintroductionprocs
+!3 Figure 1: !-Test stored procedures by just listing parameter values-!
+!img http://files/images/introduction-procs.png
+!- Relational data access is very similar &mdash; again using tables. The -!'''!- Insert -!'''!- command puts data into a table or a view. It again reads the table, looking for the column names in the second row, and data in all subsequent rows. There is again no type information or any kind of any boilerplate code. The -!'''!- Query -!'''!- command will execute any SQL query you specify and compare the actual results with what you specified in the table below the command. See -![[!-Figure 2-!][.DbFit.DbFitReference.FrontPage.WhatsWrongWithXunit#figintroductiondata]]!-. This is database testing in a pure relational form, very close to how you are used to thinking about database objects. -!
+
+
+!anchor figintroductiondata
+!3 Figure 2: !-Manage data in a tabular form, like you are used to thinking about it-!
+!img http://files/images/introduction-data.png
+
+----
+!3 Footnotes
+!anchor footnote1
+1. http://utplsql.sourceforge.net/ !anchor footnote2
+2. http://tsqlunit.sourceforge.net/ !anchor footnote3
+3. http://www.dbunit.org/ 
+''Next page: [[!-How this document is organised-!][.DbFit.DbFitReference.FrontPage.HowThisIsOrganised]] Parent page: [[!-Introduction-!][.DbFit.DbFitReference.FrontPage]]''

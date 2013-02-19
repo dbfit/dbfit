@@ -1,0 +1,47 @@
+''Next page: [[!-Hello World from the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld]] Parent page: [[!-Database unit tests-!][.DbFit.DbFitReference.DatabaseUnitTests]]''
+!2 !-Installing DbFit-!
+!- There are two ways to run DbFit &mdash; through Java or through .NET. As a database developer, you -!''!-do not have to know Java or .NET to write and run the tests-!''!-. The only significant difference between the two implementations is that the Java and .NET versions support different databases. Microsoft SQL Server is fully supported only in the .NET version, and MySQL and Derby is supported only in the Java version. Both .NET and Java versions support Oracle and DB2. -!
+
+
+!anchor figfordbdevssupporteddbs
+!3 Figure 3: !-Databases supported in DbFit-!
+!img http://files/images/fordbdevs-supporteddbs.png
+!- If you decide to use the Java version, you need only Java JRE 5 or later (get it from -!http//java.sun.com !-). To use the .NET version, you need both the Java JRE and Microsoft's .NET Framework runtime 2 or later (you should have that already installed if you are running Windows, but if you do not, get it from -!http://msdn.microsoft.com/netframework !-). -!
+
+!- To install DbFit for database unit testing, I suggest that you download the -!'''!-dbfit-complete-!'''!- package from -!http://sourceforge.net/projects/dbfit !-. That package includes DbFit libraries and all required dependencies, including .NET and Java test runners for FitNesse, and the FitNesse server itself. It also contains this document in a Wiki form and lots of examples for all supported functions and databases in the -!'''!-AcceptanceTests-!'''!- test suites. (The package does not include Java JRE or the .NET Framework, so you'll have to download those separately). If you already know your way around FitNesse, or want to upgrade an existing installation, then you can get only the DbFit library without any dependencies by downloading either the -!'''!-dbfit-dotnet-binaries-!'''!- or -!'''!-dbfit-java-binaries-!'''!- package from the DbFit SourceForge site. In this chapter, I presume that you are using the -!'''!-dbfit-complete-!'''!- package. -!
+
+!- There is no special installation procedure required &mdash; just unpack -!'''!-dbfit-complete-XXX.zip-!'''!- somewhere on your disk, and run -!'''!-startFitnesse.bat-!'''!- (or -!'''!-startFitnesse.sh-!'''!- on Linux). FitNesse works as a web application with its own web server. The batch file you started will try to set up FitNesse on port 8085 by default. If this port is already taken on your machine, open -!'''!-startFitnesse.bat-!'''!- in any editor and change -!'''!- 8085 -!'''!- to some other free port number. I use 8085 in the examples, so if you use another one, remember to enter the correct port when you try out the examples. When FitNesse starts, you should see a command window with this message: -!
+
+{{{
+FitNesse (20070619) Started... 
+	port:				8085 
+	root page:			FitNesse.wiki.FileSystemPage at ./FitNesseRoot 
+	logger:				none
+	authenticator:		FitNesse.authentication.PromiscuousAuthenticator 
+	html page factory:	FitNesse.html.HtmlPageFactory 
+	page version expiration set to 14 days.
+}}}
+!- Open -!http://localhost:8085/ !- and you should see the welcome page (-![[!-Figure 4-!][.DbFit.DbFitReference.DatabaseUnitTests.InstallingDbFit#figfordbdevswelcome]]!-). -!
+
+!- FitNesse is up and running. When you want to shut it down later, just press -!'''!- Ctrl+C -!'''!- in the command window (or close the command window). -!
+
+!- You might want to set up a test database to try out some examples. There are no specific requirements for anything to be in the database for DbFit to work, but you might want to create a database user for testing and grant the user privileges to connect and create resources. If you want to try out examples from the -!'''!- AcceptanceTests -!'''!- suite in the -!'''!-dbfit-complete-!'''!- package, you'll need to create some test objects as well. Scripts to create the objects can be found in the -!'''!-scripts-!'''!- folder of the release &mdash; Oracle, SQL Server, DB2 and MySQL scripts are provided. -!
+
+
+!anchor secgetstartedrunbat
+
+!* !-FitNesse.bat failed. What's wrong?-!
+!img-l http://files/images/tip.png
+!- Read the exception from the command window. If the error mentions versions, check that you have Java 5 or 6 installed and that the correct version is being executed when you run -!'''!-java.exe-!'''!-. Run -!'''!-java.exe -version-!'''!- from a command window to see which version of Java is being executed by default. You can run FitNesse with a different Java version either by pointing to the correct JRE in the system executable path (right-click -!'''!-My Computer-!'''!-, select -!'''!-Properties-!'''!-, then go to the -!'''!-Advanced-!'''!- tab, click -!'''!-Environment Variables-!'''!-, and edit the -!'''!-Path-!'''!- variable), or by entering the full path to a different -!'''!-java.exe-!'''!- in -!'''!-startFitnesse.bat-!'''!-. -!
+
+!- If the error report states that there is a security problem or the port is unavailable, enter a different port number in -!'''!-startFitnesse.bat-!'''!- and try again. -!
+
+
+*!
+
+
+!anchor figfordbdevswelcome
+!3 Figure 4: !-DbFit/FitNesse welcome page-!
+!img http://files/images/fordbdevs-welcome.png
+
+''Next page: [[!-Hello World from the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld]] Parent page: [[!-Database unit tests-!][.DbFit.DbFitReference.DatabaseUnitTests]]''

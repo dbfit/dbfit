@@ -1,5 +1,0 @@
-|import fixture|
-|dbfit.fixture|
-
-!|DatabaseEnvironment|postgres|
-|Connect|localhost:5432|dbfit|dbfit|dbfit|

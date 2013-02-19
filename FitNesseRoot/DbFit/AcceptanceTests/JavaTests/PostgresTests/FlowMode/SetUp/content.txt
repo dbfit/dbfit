@@ -1,0 +1,3 @@
+!|dbfit.PostgresTest|
+
+!|Connect|localhost:5432|dbfit|dbfit|dbfit|

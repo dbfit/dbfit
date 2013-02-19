@@ -1,0 +1,8 @@
+''Previous page: [[!-Organising pages-!][.DbFit.DbFitReference.DatabaseUnitTests.ManagingWikiContent.OrganisingPages]] Next page: [[!-Formatting text-!][.DbFit.DbFitReference.DatabaseUnitTests.ManagingWikiContent.FormattingText]] Parent page: [[!-Managing Wiki content-!][.DbFit.DbFitReference.DatabaseUnitTests.ManagingWikiContent]]''
+!2 !-Writing tests in Excel/Word-!
+!- Although FitNesse Wiki syntax is really simple, you do not have to use it to write scripts. You can write your tables in Excel (or almost any other spreadsheet program), and then just copy them into the FitNesse page editor. Clipboard automatically picks up data from most spreadsheet programs in tab-separated format, which can be directly converted to FitNesse with the -!''!-Spreadsheet to FitNesse-!''!- button that is available when editing a page. If your spreadsheet program behaves differently, it should be able to export tab-separated files. -!
+
+!- You can also convert a FitNesse table to tab-separated data with the -!''!-FitNesse to Spreadsheet-!''!- button in the page editor, and then copy that into Excel for editing. -!
+
+
+''Previous page: [[!-Organising pages-!][.DbFit.DbFitReference.DatabaseUnitTests.ManagingWikiContent.OrganisingPages]] Next page: [[!-Formatting text-!][.DbFit.DbFitReference.DatabaseUnitTests.ManagingWikiContent.FormattingText]] Parent page: [[!-Managing Wiki content-!][.DbFit.DbFitReference.DatabaseUnitTests.ManagingWikiContent]]''

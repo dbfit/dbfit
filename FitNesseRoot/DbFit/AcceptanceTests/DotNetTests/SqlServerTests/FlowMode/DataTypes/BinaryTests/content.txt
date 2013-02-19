@@ -1,0 +1,18 @@
+!3 Binary/Varbinary types map to array of bytes
+
+ByteArrayHandler must be loaded for 0xXXX syntax to work
+
+!|CellHandlerLoader|
+|Load|dbfit.util.ByteArrayHandler|
+
+|Execute|Create table datatypetest (d1 BINARY(2), d2 VARBINARY(10),d3 IMAGE,d4 varbinary(max))|
+
+|insert|datatypetest|
+|d1|d2|d3|d4|
+|0x1020|0x1020304050|0x102030|0x122222|
+
+|query|select * from datatypetest|
+|d1?|d2?|d3?|d4?|
+|0x1020|0x1020304050|0x102030|0x122222|
+
+

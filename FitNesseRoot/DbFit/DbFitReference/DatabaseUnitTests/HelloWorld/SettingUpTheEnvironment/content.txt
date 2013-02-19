@@ -1,0 +1,17 @@
+''Previous page: [[!-Step 1: Creating a new test page-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.CreateaNewPage]] Next page: [[!-Step 3: Connect to the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.ConnectToTheDatabase]] Parent page: [[!-Hello World from the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld]]''
+!2 !-Step 2: Setting up the environment-!
+!- In order to load the DbFit extension into FitNesse, your test pages have to load the correct libraries. To run the .NET version of DbFit, paste the following into your test page: -!
+
+{{{
+!define COMMAND_PATTERN {%m %p}
+!define TEST_RUNNER {dotnet2\FitServer.exe}
+!define PATH_SEPARATOR {;}
+!path dotnet2\*.dll
+}}}
+!-To run the Java version, paste this into your test page:-!
+
+{{{
+!path lib/*.jar
+}}}
+
+''Previous page: [[!-Step 1: Creating a new test page-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.CreateaNewPage]] Next page: [[!-Step 3: Connect to the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.ConnectToTheDatabase]] Parent page: [[!-Hello World from the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld]]''

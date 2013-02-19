@@ -1,0 +1,26 @@
+|execute|create table TESTTBL (N int, TWON int)|
+
+|execute|create table TESTTBLA (N int, TWON int)|
+
+!|insert|TESTTBL|
+|N|TWON|
+|1|2|
+|3|6|
+|2|4|
+
+!|insert|TESTTBLA|
+|N|TWON|
+|1|2|
+|3|6|
+|2|4|
+
+|Store Query|select * from TESTTBL|FROMTABLE|
+
+|Store Query|select * from TESTTBLA|FROMTABLEA|
+
+|compare stored queries|FROMTABLE|FROMTABLEA|
+|TWON|N?|
+
+|execute|drop table TESTTBL|
+
+|execute|drop table TESTTBLA|

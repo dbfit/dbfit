@@ -1,0 +1,27 @@
+!3 Strings
+
+Following types map to string: "VARCHAR", "NVARCHAR", "CHAR", "NCHAR","TEXT","NTEXT", "SQL_VARIANT"
+
+|Execute|Create table datatypetest (s1 varchar(20), s2 nvarchar(20), s3 char(4), s4 nchar(5), s5 text, s6 ntext, s7 SQL_VARIANT,s8 xml)|
+
+|Insert|datatypetest|
+|s1|s2|s3|s4|s5|s6|s7|s8|
+|VARCHAR|NVARCHAR|CHAR|NCHAR|TEXT|NTEXT|SQL_VARIANT|XML|
+|null|null|null|null|null|null|null|null|
+
+|Query|Select * from datatypetest|
+|s1|s2?|s3?|s4?|s5?|s6?|s7|s8|
+|VARCHAR|NVARCHAR|CHAR|NCHAR|TEXT|NTEXT|SQL_VARIANT|XML|
+|null|null|null|null|null|null|null|null|
+
+
+|execute|delete from datatypetest|
+
+|Insert|datatypetest|
+|s5|s6|
+|this string is longer than twelve characters|this string is longer than twelve characters|
+
+|Query|Select s5, s6 from datatypetest|
+|s5?|s6?|
+|this string is longer than twelve characters|this string is longer than twelve characters|
+

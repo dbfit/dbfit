@@ -1,0 +1,6 @@
+(override setup so that parent setup does not load)
+
+!|dbfit.PostgresTest|
+
+|Connect using file|DbfitPostgresDBConnection.properties|
+

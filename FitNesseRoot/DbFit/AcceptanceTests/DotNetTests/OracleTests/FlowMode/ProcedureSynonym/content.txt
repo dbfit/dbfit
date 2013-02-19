@@ -1,0 +1,11 @@
+!3 synonyms are taken into consideration when selecting procedure metadata
+
+!|execute procedure|synstandaloneproc|
+|num1|num2?|
+|2|4|
+
+
+!|execute procedure|synpkg.pkgproc|
+|num1|num2?|
+|2|4|
+
