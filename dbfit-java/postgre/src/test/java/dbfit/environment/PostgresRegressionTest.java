@@ -18,11 +18,11 @@ public class PostgresRegressionTest {
 
     @Test
     public void flowMode() throws Exception {
-        helper.assertSuitePasses("AcceptanceTests.JavaTests.PostgresTests.FlowMode");
+        helper.assertSuitePasses("DbFit.AcceptanceTests.JavaTests.PostgresTests.FlowMode");
     }
 
     @Test
     public void standaloneMode() throws Exception {
-        helper.assertSuitePasses("AcceptanceTests.JavaTests.PostgresTests.StandaloneFixtures");
+        helper.assertSuitePasses("DbFit.AcceptanceTests.JavaTests.PostgresTests.StandaloneFixtures");
     }
 }
