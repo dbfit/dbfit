@@ -25,7 +25,7 @@ public class DerbyRegressionTest {
 
     @Test
     public void flowMode() throws Exception {
-        helper.assertSuitePasses("AcceptanceTests.JavaTests.DerbyTests.FlowMode");
+        helper.assertSuitePasses("DbFit.AcceptanceTests.JavaTests.DerbyTests.FlowMode");
     }
 
     @After
