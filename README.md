@@ -4,7 +4,9 @@ DbFit is a set of fixtures which enables FIT/FitNesse tests to execute directly 
 
 ## Contributing
 
-### Setting up the test VM (on Mac OS or Linux)
+### Setting up the test VM
+
+*Note: the following instructions are Mac OS/Linux specific but the same approach should work under Windows as well, since vagrant and VirtualBox run on Windows.*
 
 1.  You first need to [install VirtualBox](https://www.virtualbox.org/wiki/Downloads). I have been using version 4.1.18. Guest additions are also required.
 
