@@ -1,0 +1,12 @@
+''Previous page: [[!-Step 5: Running the test-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.RunningTheTest]] Parent page: [[!-Hello World from the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld]]''
+!2 !-Traffic lights-!
+!- Click the -!''!-Edit-!''!- button on the left and add another row to the expected results, so that you can see how FitNesse prints the results when a test fails. -!
+
+!- FitNesse is a traffic light which can tell you whether your code is ready to be released or not. If a test fails, the light turns red, and FitNesse will show both expected and actual results. In the case of queries, it will compare the contents of the FitNesse table with what actually came out from the database, and print out missing or suprlus rows (-![[!-Figure 8-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.TrafficLights#figfordbdevstestnok]]!-). -!
+
+
+!anchor figfordbdevstestnok
+!3 Figure 8: !-FitNesse clearly shows what's wrong-!
+!img http://files/images/fordbdevs-testnok.png
+
+''Previous page: [[!-Step 5: Running the test-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.RunningTheTest]] Parent page: [[!-Hello World from the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld]]''

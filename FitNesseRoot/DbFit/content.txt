@@ -1,0 +1,15 @@
+!c !3 !-DbFit-! makes test driven database development easy
+!img-l http://files/images/trainers.jpg 
+!-<div >-!
+This Wiki contains the [[reference documentation][>DbFitReference]] and [[acceptance tests][>AcceptanceTests]] for the [[!-DbFit-!][http://benilovj.github.com/dbfit/]] project. 
+
+!3 Start by browsing the following pages:
+!-<ul>-!
+!-<li>-!For a quick Tutorial, see the [[Hello World example][>DbFitReference.DatabaseUnitTests.HelloWorld]].!-</li>-!
+!-<li>-!For more detailed information on using !-DbFit-!, see the [[Reference Documentation][>DbFitReference]]!-</li>-!
+!-<li>-!For more .NET examples see [[.NET Acceptance tests][>AcceptanceTests.DotNetTests]].!-</li>-!
+!-<li>-!For more Java examples see [[Java Acceptance tests][>AcceptanceTests.JavaTests]].!-</li>-!
+!-</ul>-!
+
+For a detailed introduction on how to use !- FitNesse -!, see [[!-Test Driven .NET Development With FitNesse-!][http://gojko.net/fitnesse/book]]. See http://benilovj.github.com/dbfit/ for more information on !-DbFit-!. You can leave your comments and feedback [[here][http://benilovj.github.com/dbfit/]].
+!-</div>-!

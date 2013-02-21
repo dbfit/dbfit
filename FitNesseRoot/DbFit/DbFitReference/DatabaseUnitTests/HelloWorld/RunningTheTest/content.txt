@@ -1,0 +1,22 @@
+''Previous page: [[!-Step 4: Testing a simple query-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.TestingaSimpleQuery]] Next page: [[!-Traffic lights-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.TrafficLights]] Parent page: [[!-Hello World from the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld]]''
+!2 !-Step 5: Running the test-!
+!-Now, click -!''!-Save-!''!-. FitNesse will create a new page and display it in your browser. Next, you have to tell FitNesse that this is a test page (-![[!-Figure 5-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.RunningTheTest#figfordbdevsnewpage]]!-) &mdash; click the -!''!-Properties-!''!- button on the left, check the -!''!-Test-!''!- check-box and then click -!''!-Save Properties-!''!- (-![[!-Figure 6-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.RunningTheTest#figfordbdevsproperties]]!-). -!
+
+
+!anchor figfordbdevsnewpage
+!3 Figure 5: !-Our new page is stored in FitNesse-!
+!img http://files/images/fordbdevs-newpage.png
+
+!anchor figfordbdevsproperties
+!3 Figure 6: !-Use page properties to tell FitNesse that the page contains a test-!
+!img http://files/images/fordbdevs-properties.png
+!- Page properties define what the user can do with the page &mdash; more precisely, which buttons will be offered in the left-hand menu. When the page reloads, you will notice a new button on the left: -!''!-Test-!''!-. Click it to make FitNesse run the test. You should see a page similar to -![[!-Figure 7-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.RunningTheTest#figfordbdevstestok]]!- telling you that the test passed.-!
+
+
+!anchor figfordbdevstestok
+!3 Figure 7: !-Our first test passed. Hurrah!-!
+!img http://files/images/fordbdevs-testok.png
+!-If the test result is green, your setup works, you can connect to the database, and we can continue. If the test was result yellow, something is wrong. Read the error messages to check if the database connection properties are wrong. Double-check that you have entered correct paths to DbFit library files. The paths are relative to the folder in which you started FitNesse, so if you use the -!'''!-dbfit-complete-!'''!- package, Java libraries will be in the -!'''!-lib-!'''!- folder, and .NET libraries will be in the -!'''!-dotnet2-!'''!- folder. If the test result did not contain a table at all, you probably wanted to use the .NET test runner but specified the wrong path in the -!'''!- TEST_RUNNER -!'''!- variable.-!
+
+
+''Previous page: [[!-Step 4: Testing a simple query-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.TestingaSimpleQuery]] Next page: [[!-Traffic lights-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.TrafficLights]] Parent page: [[!-Hello World from the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld]]''

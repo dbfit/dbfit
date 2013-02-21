@@ -1,0 +1,39 @@
+''Previous page: [[!-Step 2: Setting up the environment-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.SettingUpTheEnvironment]] Next page: [[!-Step 4: Testing a simple query-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.TestingaSimpleQuery]] Parent page: [[!-Hello World from the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld]]''
+!2 !-Step 3: Connect to the database-!
+!- DbFit requires two commands to connect to the database. The first line specifies the database type (or test type), and the second defines connection properties. These two lines will typically be the first on every test page. Here is how to connect to a MySQL database:-!
+
+{{{
+!-!-!|dbfit.MySqlTest|
+
+!-!-!|Connect|localhost|dbfit_user|password|dbfit|
+}}}
+!- Notice the -!'''!- MySqlTest -!'''!- in the first line above. That tells DbFit which type of database driver to use. For SQL Server 2005, you should use -!'''!- SQLServerTest -!'''!-. For MySql use -!'''!- MySqlTest -!'''!-. For Oracle, use -!'''!- OracleTest -!'''!-. For Db2, use -!'''!- DB2Test -!'''!-. For Derby (JavaDB), use -!'''!- DerbyTest -!'''!-. If you are using an older version of -!'''!- SqlServer -!'''!-, try -!'''!- SqlServer2000Test -!'''!-. -![[!-<sup>1</sup>-!][#footnote1]]!- The -!'''!- Connect -!'''!- command has several flavours. The default is to use four parameters: -!
+
+{{{
+!|Connect|SERVICE_NAME|USER_NAME|PASSWORD|DATABASE_NAME|
+}}}
+'''!- SERVICE_NAME -!'''!- is the host, instance, or service name, depending on the type of driver used. For Oracle in .NET, this can be a TNS name as well (in that case, the fourth argument can be omitted). In the Java version, Oracle Thin driver is used, so the second argument should be the host name (with optional port separated by a colon), and you will have to specify the database SID as fourth argument as well. -!
+
+!- If you want to use non-standard connection properties, or initialise your connection differently, call -!'''!- Connect -!'''!- with a single argument &mdash; the full ADO.NET or JDBC connection string. Here is an example: -!
+
+{{{
+!|Connect|data source=Instance;user id=User;password=Pwd;database=TestDB;|
+}}}
+!- You can use this feature, for example, to utilise Windows integrated authentication or to use the OCI driver for Oracle under Java. A typical database developer will not know these settings directly, but you can ask Java or .NET developers on your team to help out with the correct connection string. -!
+
+!-There is one more option to connect to the database &mdash; store connection properties in a file on the server. You can use this, for example, if your administrators require that the database password is not shown in plain text on the test pages. See -![[!-Section Storing connection properties in a file-!][.DbFit.DbFitReference.IntegrationTests.ConnectingToTheDatabase#secforoodevsfromfile]]!- for more information. -!
+
+
+!* !-Command structure-!
+!img-l http://files/images/important.png
+!-Notice how each command starts with an exclamation mark (-!'''!- ! -!'''!-), followed by a pipe symbol (-!'''!- | -!'''!-). Command arguments are then separated by the pipe symbol as well. In FitNesse, tables are used to describe commands, tests, inputs and expected results (you will see the table when the page is saved). In the FitNesse wiki syntax, tables are described simply by separating cells with the pipe symbol. The exclamation mark before the first row of the table is optional, and tells FitNesse not to apply any smart formatting to table contents. -!
+
+
+*!
+
+
+----
+!3 Footnotes
+!anchor footnote1
+1. !- SQLServer2000 is only supported in the .NET version of DbFit. -!
+''Previous page: [[!-Step 2: Setting up the environment-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.SettingUpTheEnvironment]] Next page: [[!-Step 4: Testing a simple query-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld.TestingaSimpleQuery]] Parent page: [[!-Hello World from the database-!][.DbFit.DbFitReference.DatabaseUnitTests.HelloWorld]]''

@@ -1,9 +1,0 @@
-Only parameters which are defined in the query string will be used - additional parameters can be defined at that time, but will just be ignored
-
-|Set parameter|notInvolved|10|
-
-|Set parameter|involved|5|
-
-|Query|Select @involved as what|
-|what|
-|5|

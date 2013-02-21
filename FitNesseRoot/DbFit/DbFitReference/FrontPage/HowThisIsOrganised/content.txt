@@ -1,0 +1,8 @@
+''Previous page: [[!-What's wrong with xUnit-!][.DbFit.DbFitReference.FrontPage.WhatsWrongWithXunit]] Parent page: [[!-Introduction-!][.DbFit.DbFitReference.FrontPage]]''
+!2 !-How this document is organised-!
+!- As database developers and .NET/Java developers would use DbFit somewhat differently, the following two chapters will introduce DbFit to each of those groups. It will not harm you to read both chapters, but you might as well skip one if you want and then come back at a later time. The introduction for database developers focuses more on how to use FitNesse generally. The introduction for .NET/Java developers focuses more on how DbFit works with FIT/FitNesse and discusses integration tests. -!
+
+!- After those introductory chapters, we review all test table types (fixtures) available in DbFit. The document ends with a list of frequently asked questions and some pointers about where to go next. -!
+
+
+''Previous page: [[!-What's wrong with xUnit-!][.DbFit.DbFitReference.FrontPage.WhatsWrongWithXunit]] Parent page: [[!-Introduction-!][.DbFit.DbFitReference.FrontPage]]''

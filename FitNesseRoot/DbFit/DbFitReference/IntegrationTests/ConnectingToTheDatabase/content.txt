@@ -1,0 +1,113 @@
+''Previous page: [[!-Why not use generic ADO.NET/JDBC interfaces?-!][.DbFit.DbFitReference.IntegrationTests.WhyNotGeneric]] Parent page: [[!-DbFit for Integration tests-!][.DbFit.DbFitReference.IntegrationTests]]''
+!2 !-Connecting to the database-!
+!-DbFit fixtures can work in two modes:-!
+
+!- <ul> -!!- <li> -!!- Flow mode: a -!'''!- DatabaseTest -!'''!- fixture controls the whole page and coordinates testing. You can use other fixtures as well, but no other fixture can take over flow mode processing. In flow mode, DbFit automatically rolls back the current transaction at the end to make tests repeatable, and provides some additional features such as inspections of stored procedure error results. -!!- </li> -!!- <li> -!!- Standalone: you can use individual fixtures without a -!'''!- DatabaseTest -!'''!- coordinating the whole page. In this case, you are responsible for transaction management. This enables you to have more control over the database testing process, and even supply your own database connection to make sure that Java/.NET integration tests are running in the same transaction. -!!- </li> -!!- </ul> -!!- The mode in which you are using DbFit fixtures affects how you connect to the database and how the connection is shared between fixtures. Note that in flow mode, the methods of the -!'''!- DatabaseTest -!'''!- class have the same names as the fixtures they relate to. If you import the namespace/package for standalone fixtures, the table syntax in both modes is the same in most cases. The flow mode is there to provide you with better isolation and automated transaction management. Standalone mode is there to allow you to have greater control over the database calls and to allow you to embed DbFit fixtures in your flow-style tests. -!
+
+
+!* !-Which mode should I use?-!
+!img-l http://files/images/tip.png
+!- If you can, use flow mode. It gives you automatic transaction management and some other shortcuts. If your test relies on some other fixture controlling the page in flow mode, use standalone fixtures. The syntax is, in most cases, the same. -!
+
+
+*!
+
+# section Connecting in flow mode
+!3 !-Connecting in flow mode-!
+!- In flow mode, the current database connection is kept in a protected field of the -!'''!- DatabaseTest -!'''!- instance. -!'''!- SqlServerTest -!'''!- is a subclass of -!'''!- DatabaseTest -!'''!- that just initialises it to work with SqlServer 2005. Similarly, -!'''!- SqlServer2000Test -!'''!- initialises -!'''!- DatabaseTest -!'''!- such that it will work with SqlServer 2000. -!'''!- OracleTest -!'''!- works with Oracle databases, -!'''!- DB2Test -!'''!- with IBM DB2, -!'''!- DerbyTest -!'''!- with Derby (JavaDB) and -!'''!- MySQLTest -!'''!- connects to MySQL. All of these fixture classes are in the -!'''!- dbfit -!'''!- namespace/package. -!
+
+!- Use the -!'''!- Connect -!'''!- method to initialise the database connection. Pass the server (optionally followed by the instance name), username, password, and the database name as arguments. This is how I connect to a SqlServer 2005 Express-![[!-<sup>1</sup>-!][#footnote1]]!- instance on my laptop: -!
+
+{{{
+!|dbfit.SqlServerTest|
+!|Connect|LAPTOP\SQLEXPRESS|FitNesseUser|Password|TestDB|
+}}}
+!- If you are connecting to a default database, you can omit the fourth parameter. For the .NET version, you can do this for Oracle, because the second argument is the TNS Name. The Java version of DbFit uses the Thin driver for Oracle, and expects the second argument to be the host name (with an optional port) and the fourth argument to be the service identifier. -!
+
+!- If you want to use non-standard connection properties, or initialise your connection differently, call -!'''!- Connect -!'''!- with a single argument &mdash; the full ADO.NET or JDBC connection string. Here is an example: -!
+
+{{{
+|Connect|data source=Instance;user id=User;password=Pwd;database=TestDB;|
+}}}
+!- You can use this feature, for example, to utilise Windows integrated authentication or to use the OCI driver for Oracle under Java. -!
+
+!- For flow mode to work correctly, the -!'''!- SqlServerTest -!'''!- fixture must be the first one on the page &mdash; not even -!'''!- import -!'''!- can be before it. This is why we explicitly specify the namespace. -!
+
+!-DbFit does not require any special database privileges other than what is required to execute the commands that you specify directly. DbFit will attempt to read the schema meta-data, but select access to those tables should be allowed in most cases by default. For a detailed list of meta-data tables accessed, see -![[!-Section Does DbFit require any special database privileges?-!][.DbFit.DbFitReference.FrequentlyAskedQuestions#secfaqprivileges]]!-. -!
+
+
+!* !-Fixture class is more important than connection string-!
+!img-l http://files/images/important.png
+!- Connection strings in both .NET and Java may allow you to specify the type of database provider &mdash; effectively the kind of database you are connecting to. Theoretically you could instantiate a SQL Server test fixture and pass an Oracle connection string, but this will not work in practice. Test fixture already contains database-specific logic, so it will not work with an incompatible connection string. -!
+
+
+*!
+
+# section Connecting in standalone mode
+!3 !-Connecting in standalone mode-!
+!- In standalone mode, the connection properties are stored in the public -!'''!- DefaultEnvironment -!'''!- singleton field inside -!'''!- dbfit.DbEnvironmentFactory -!'''!-. You can initialise it from your own fixtures if you want to pass an existing database connection (to make sure that your .NET tests are using the same transaction as DbFit fixtures). From FitNesse pages, you can use the -!'''!- DatabaseEnvironment -!'''!- fixture from the -!'''!- dbfit.fixture -!'''!- package to define the connection. To change the default environment (or initialise it for the first time), pass the new environment type as the first argument to the fixture. Environment type values are as follows: -!
+
+!- <ul> -!!- <li> -!!-SQLServer 2005 &mdash; -!'''!- SQLSERVER -!'''!- </li> -!!- <li> -!!-Earlier versions of SQL Server &mdash; -!'''!- SQLSERVER2000 -!'''!- </li> -!!- <li> -!!-Oracle &mdash; -!'''!- ORACLE -!'''!- </li> -!!- <li> -!!- MySQL &mdash; -!'''!- MYSQL -!'''!- </li> -!!- <li> -!!- DB2 &mdash; -!'''!- DB2 -!'''!- </li> -!!- <li> -!!- Derby (JavaDB) &mdash; -!'''!- DERBY -!'''!- </li> -!!- </ul> -!'''!- DatabaseEnvironment -!'''!- is a -!'''!- SequenceFixture -!'''!- that wraps the -!'''!- DefaultEnvironment -!'''!- singleton as a system under test, so that you can then call all of its public methods directly &mdash; including the -!'''!- Connect -!'''!- method explained earlier. -!
+
+{{{
+|import|
+|dbfit.fixture|
+
+!|DatabaseEnvironment|SQLSERVER|
+|Connect|LAPTOP\SQLEXPRESS|FitNesseUser|Password|TestDB|
+}}}
+!- Notice that there is no space between -!'''!- DatabaseEnvironment -!'''!- and -!'''!- Connect -!'''!- &mdash; they have to be in the same table. Because we are not using flow mode, we can use the -!'''!- import -!'''!- fixture as well. Most DbFit fixtures are in the -!'''!- dbfit.fixture -!'''!- namespace, so it is a good practice to include this namespace. -!
+
+# section Storing connection properties in a file
+
+!anchor secforoodevsfromfile
+!3 !-Storing connection properties in a file-!
+!- You can also store connection properties in a file, then initialise the connection using the -!'''!- ConnectUsingFile -!'''!- method. This allows you to hide actual database usernames and passwords from FitNesse users, should you need to do so. -!
+
+'''!- ConnectUsingFile -!'''!- has only one argument &mdash; the path of the file on the server, either absolute or relative to the folder from which you started FitNesse (the one containing -!'''!-run.bat-!'''!-. The connection properties file is a plain text file, containing key/value pairs separarted by the equals symbol (-!'''!- = -!'''!-). Lines starting with a hash (-!'''!- # -!'''!-) are ignored. Use the following keys (they care case-sensitive): -!
+
+!- <ol> -!!- <li> -!'''!- service -!'''!- &mdash; service name. In the previous example, it was -!'''!- LAPTOP\SQLEXPRESS -!'''!-. -!!- </li> -!!- <li> -!'''!- username -!'''!- &mdash; username to connect to the database. In the previous example, it was -!'''!- FitNesseUser -!'''!-. -!!- </li> -!!- <li> -!'''!- password -!'''!- &mdash; password to connect to the database. In the previous example, it was -!'''!- Password -!'''!-. -!!- </li> -!!- <li> -!'''!- database -!'''!- &mdash; optional fourth argument, allowing you to choose the active database. In the previous example, it was -!'''!- TestDB -!'''!-. -!!- </li> -!!- <li> -!'''!- connection-string -!'''!- &mdash; alternative to the four previous parameters, this allows you to specify the full connection string. This parameter should not be mixed with any of the four other keys. Use either the full string or specify individual properties. -!!- </li> -!!- </ol> -!!-Here is an example:-!
+
+{{{
+# DBFit connection properties file
+#
+#1) Either specify full connection string
+#connection-string=
+#
+#2) OR specify service, username and password as separate properties
+service=localhost
+username=root
+password=
+#optionally specify a database name
+database=dbfit
+}}}
+# section Transaction management
+!3 !-Transaction management-!
+!- In flow mode, the current transaction is automatically rolled back at the end of the page. If you want to commit it to make changes permanent, put the -!'''!- Commit -!'''!- table on the page. There are no arguments or additional parameters &mdash; the table contents contain just this one word. Likewise, you can roll back manually in your test using the -!'''!- Rollback -!'''!- table. -!
+
+!- In standalone mode, use the -!'''!- DatabaseEnvironment -!'''!- fixture again, but do not specify a fixture argument. This tells the -!'''!- DatabaseEnvironment -!'''!- to use the current default database connection, without attempting to initialise it. Call -!'''!- Commit -!'''!- or -!'''!- Rollback -!'''!- in the second row. -!
+
+{{{
+!|DatabaseEnvironment|
+|rollback|
+}}}
+!- It is a very good idea to put this table in a -!''!-TearDown-!''!- page for your test suite when you use standalone DbFit fixtures. This will make sure that your tests are repeatable. -!
+
+
+!* !-Can I use both modes in the      same test suite?-!
+!img-l http://files/images/tip.png
+!- Yes, in different tests. Note that the imported namespace may give you some problems in flow mode. If you want to mix and match, then either do not import the -!'''!- dbfit.fixture -!'''!- namespace for standalone tests, or use the utility -!'''!- Export -!'''!- fixture to cancel the namespace import after the standalone test. -!
+
+{{{
+!|dbfit.util.Export|
+|dbfit.fixture|
+}}}
+
+*!
+
+
+----
+!3 Footnotes
+!anchor footnote1
+1. !- free version of SqlServer 2005 for developers. See -!http://www.microsoft.com/sql/editions/express/ !-. -!
+''Previous page: [[!-Why not use generic ADO.NET/JDBC interfaces?-!][.DbFit.DbFitReference.IntegrationTests.WhyNotGeneric]] Parent page: [[!-DbFit for Integration tests-!][.DbFit.DbFitReference.IntegrationTests]]''

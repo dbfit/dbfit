@@ -1,0 +1,31 @@
+!3 Numbers
+
+
+|Execute|Create table datatypetest (n1 SMALLINT, n2 INT, n3 INTEGER,n4 BIGINT,n5 FLOAT,n6 DOUBLE,N7 DECIMAL(10,2))|
+
+|Insert|datatypetest|
+|n1|n2|n3|n4|n5|n6|n7|
+|1|2|3|4|55.5|66.6|77.77|
+
+|Ordered Query|select * from datatypetest|
+|n1|n2|n3|n4|n5|n6|n7|
+|1|2|3|4|55.5|66.6|77.77|
+
+!3 should accept fail[null]
+
+|Ordered Query|select * from datatypetest|
+|n1|n2|n3|n4|n5|n6|n7|
+|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|
+
+|execute|delete from datatypetest|
+
+
+|Insert|datatypetest|
+|n1|n2|n3|n4|n5|n6|n7|
+|null|null|null|null|null|null|null|
+
+|Ordered Query|select * from datatypetest|
+|n1|n2|n3|n4|n5|n6|n7|
+|null|null|null|null|null|null|null|
+
+

@@ -1,0 +1,25 @@
+''Previous page: [[!-Installing DbFit-!][.DbFit.DbFitReference.DatabaseUnitTests.InstallingDbFit]] Next page: [[!-Managing Wiki content-!][.DbFit.DbFitReference.DatabaseUnitTests.ManagingWikiContent]] Parent page: [[!-Database unit tests-!][.DbFit.DbFitReference.DatabaseUnitTests]]''
+!2 !-Hello World from the database-!
+!- Let's run a quick test to make sure that you have everything set up correctly and that FitNesse can connect to your test database. In doing so, we'll also explain how to manage tests with FitNesse. FitNesse is a collaborative Wiki site for building and executing tests. Tests are described by tables that contain both input values and expected results. FitNesse runs tests by reading HTML files, looking for tables, and using data in the tables to execute tests and compare results to expectations. To keep things simple for now, we'll just run a query and verify the results. -!
+
+# section Step 1: Creating a new test page
+[[!-Step 1: Creating a new test page-!][>CreateaNewPage]]
+# section Step 2: Setting up the environment
+[[!-Step 2: Setting up the environment-!][>SettingUpTheEnvironment]]
+# section Step 3: Connect to the database
+[[!-Step 3: Connect to the database-!][>ConnectToTheDatabase]]
+# section Step 4: Testing a simple query
+[[!-Step 4: Testing a simple query-!][>TestingaSimpleQuery]]
+# section Step 5: Running the test
+[[!-Step 5: Running the test-!][>RunningTheTest]]
+# section Traffic lights
+[[!-Traffic lights-!][>TrafficLights]]
+
+!* !-A note on transaction management-!
+!- To make tests automatically repeatable, DbFit executes each test in a separate transaction, and rolls back on the end of the test. You can commit or rollback manually as well if you want to persist the effects of a test (this will be explained in -![[!-Command reference-!][.DbFit.DbFitReference.CommandReference]]!-). Note, however, that it is a very good practice to make tests repeatable. If you intend to persist anything, make sure that unique constraints do not prevent the test from repeating. -!
+
+
+*!
+
+
+''Previous page: [[!-Installing DbFit-!][.DbFit.DbFitReference.DatabaseUnitTests.InstallingDbFit]] Next page: [[!-Managing Wiki content-!][.DbFit.DbFitReference.DatabaseUnitTests.ManagingWikiContent]] Parent page: [[!-Database unit tests-!][.DbFit.DbFitReference.DatabaseUnitTests]]''

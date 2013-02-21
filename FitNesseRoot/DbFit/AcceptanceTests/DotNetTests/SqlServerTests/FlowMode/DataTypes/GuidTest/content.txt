@@ -1,0 +1,34 @@
+!3 GUID/uniqueidentifier
+
+GuidHandler must be loaded for GUID conversion to work
+
+!|CellHandlerLoader|
+|Load|GuidHandler|
+
+!|dbfit.util.GuidTest|
+|field|field?|
+|B4776BBC-7941-4028-BC91-5CA0A8CF3254|B4776BBC-7941-4028-BC91-5CA0A8CF3254|
+
+|Execute|Create table datatypetest (d1 uniqueidentifier not null DEFAULT NEWID(), d2 varchar(255))|
+
+|insert|datatypetest|
+|d2|
+|zeka|
+
+|query|select * from datatypetest|
+|d1?|d2?|
+||zeka|
+
+|execute|update datatypetest set d1='d6e13fd0-c056-42fa-987a-b42d7572fd72'|
+|query|select * from datatypetest|
+|d1?|d2?|
+|d6e13fd0-c056-42fa-987a-b42d7572fd72|zeka|
+
+|insert|datatypetest|
+|d2|d1|
+|zeka2|B4776BBC-7941-4028-BC91-5CA0A8CF3254|
+
+|query|select * from datatypetest where d2='zeka2'|
+|d1?|
+|B4776BBC-7941-4028-BC91-5CA0A8CF3254|
+

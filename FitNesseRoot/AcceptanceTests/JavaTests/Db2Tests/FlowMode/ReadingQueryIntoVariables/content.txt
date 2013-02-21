@@ -1,3 +1,0 @@
-!|query|select current date as currd from sysibm.sysdummy1|
-|currd?|
-|>>tsevt|

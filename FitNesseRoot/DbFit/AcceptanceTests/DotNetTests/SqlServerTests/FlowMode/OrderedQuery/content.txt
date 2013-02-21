@@ -1,0 +1,15 @@
+This will fail because the order is wrong
+
+|Ordered Query|select 'n' = 1 union select 'n' = 2 union select 'n' = 3|
+|n|
+|fail[2]|
+|fail[1]|
+|3|
+
+This will pass because the order is wrong
+
+|Ordered Query|select 'n' = 1 union select 'n' = 2 union select 'n' = 3|
+|n|
+|1|
+|2|
+|3|

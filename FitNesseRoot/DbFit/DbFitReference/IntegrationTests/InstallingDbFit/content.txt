@@ -1,0 +1,20 @@
+''Next page: [[!-Why not use generic ADO.NET/JDBC interfaces?-!][.DbFit.DbFitReference.IntegrationTests.WhyNotGeneric]] Parent page: [[!-DbFit for Integration tests-!][.DbFit.DbFitReference.IntegrationTests]]''
+!2 !-Installing DbFit-!
+!- To use DbFit fixtures in your tests, download the -!''!-dbfit-dotnet-binaries-!''!- package or -!''!-dbfit-java-binaries-!''!- package from -!http://sourceforge.net/projects/dbfit !-, depending on which platform you are using for development. The features and fixtures are more or less the same, but they support different databases. DB2, Oracle and Microsoft SQL Server are supported in both .NET and Java versions. Derby (JavaDB) and MySQL are supported only in the Java version. Microsoft JDBC driver is not redistributable, so you'll have to download it from -![[!-their web site-!][http://www.microsoft.com/downloads/details.aspx?FamilyId=C47053EB-3B64-4794-950D-81E1EC91C1BA&displaylang=en]] !- and deploy in the same folder as the dbfit JAR archive. -!
+
+
+!anchor figforoodevssupporteddbs
+!3 Figure 9: !-Databases supported in DbFit-!
+!img http://files/images/fordbdevs-supporteddbs.png
+!- To install DbFit, just unpack the ZIP and copy -!'''!-dbfit.dll-!'''!- or -!'''!-dbfit-XXX.jar-!'''!- into your fixture path. All the test fixtures that manipulate database objects (which will be explained in the following chapter) are in the -!'''!- dbfit.fixture -!'''!- package/namespace. Flow-style fixtures that provide automated transaction control are in the -!'''!- dbfit -!'''!- package/namespace. There are also some utility classes and fixtures in the -!'''!- dbfit.util -!'''!- namespace/package. -!
+
+!- All FitNesse features, such as symbols and markup variables, work with DbFit fixtures as well. In addition to that, .NET symbol syntax (using >> and << to access symbols directly in cells) and the -!'''!- fail -!'''!- keyword work in the Java version with DbFit fixtures. -!
+
+!- DbFit aims to use the same fixture classes and table structure/syntax for all supported databases, but still provide full access to vendor-specific database features. That is why all database-flavour specific information is abstracted into a -!'''!- DBEnvironment -!'''!- instance (-!'''!- IDBEnvironment -!'''!- in .NET). This class is used to connect to the database, fetch meta-data like procedure parameters or column types, prepare and parse native queries and serve as a factory for related object types. A database environment instance is used as configuration for all DbFit fixtures. That is why all test fixtures have two constructors &mdash; one default, which will use the default environment, and one which allows the caller to specify the environment. -!
+
+!- This is important if you want to integrate your own fixtures into the same transaction as DbFit fixtures &mdash; you can either use the active environment object from DbFit to retrieve the JDBC/ADO.NET connection object or implement your own -!'''!- DbEnvironment -!'''!- instance and pass that to DbFit fixtures. If the flow mode is used (modes will be explained shortly), the environment is stored in a protected field of the -!'''!- DatabaseTest -!'''!- class, so you can easily access it by extending that class (or the appropriate subclass like -!'''!- OracleTest -!'''!-). In standalone mode, the active environment can be set or retrieved by using -!'''!- DbEnvironmentFactory -!'''!- class. -!
+
+!- If you want to extend DbFit to support a new type of database, then you just need to implement the -!'''!- DbEnvironment -!'''!- interface. -!'''!- AbstractDbEnvironment -!'''!- has some stubs that are re-used in all current implementations, so it may be a good idea to start looking at that first. -!
+
+
+''Next page: [[!-Why not use generic ADO.NET/JDBC interfaces?-!][.DbFit.DbFitReference.IntegrationTests.WhyNotGeneric]] Parent page: [[!-DbFit for Integration tests-!][.DbFit.DbFitReference.IntegrationTests]]''

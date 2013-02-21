@@ -1,0 +1,8 @@
+''Previous page: [[!-Formatting text-!][.DbFit.DbFitReference.DatabaseUnitTests.ManagingWikiContent.FormattingText]] Parent page: [[!-Managing Wiki content-!][.DbFit.DbFitReference.DatabaseUnitTests.ManagingWikiContent]]''
+!2 !-Preventing unwanted formatting-!
+!- FitNesse does a lot of formatting on its own, most of the times guessing the right thing to do. However, in some cases you explicitly want to prevent "smart" formatting. For example, formatting should not be applied to code examples, class names, and generally to test tables. -!
+
+!- You already know that you can use an exclamation mark (-!'''!- ! -!'''!-) to prevent any smart formatting of table contents. However, some basic formatting (such as variable replacement) will still be done. If you want to prevent all formatting, enclose the text into -!'''!- !- -!'''!- and -!'''!- &ndash;! -!'''!-. To prevent FitNesse from parsing and formatting large blocks of text, enclose those blocks into three curly braces (-!'''!- {{{ -!'''!- and -!'''!- }}} -!'''!-) – you should typically do this with code examples, but you can use that trick to enclose any pre-formatted block of text. -!
+
+
+''Previous page: [[!-Formatting text-!][.DbFit.DbFitReference.DatabaseUnitTests.ManagingWikiContent.FormattingText]] Parent page: [[!-Managing Wiki content-!][.DbFit.DbFitReference.DatabaseUnitTests.ManagingWikiContent]]''

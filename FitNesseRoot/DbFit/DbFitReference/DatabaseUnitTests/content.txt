@@ -1,0 +1,20 @@
+''Previous page: [[!-Introduction-!][.DbFit.DbFitReference.FrontPage]] Next page: [[!-DbFit for Integration tests-!][.DbFit.DbFitReference.IntegrationTests]] Parent page: [[!-Table of contents-!][.DbFit.DbFitReference.TableOfContents]]''
+!2 !-Database unit tests-!
+!- This chapter introduces DbFit to database developers, and explains how to use DbFit for database unit testing. DbFit is an extension to -![[!-FitNesse-!][http://www.fitnesse.org]] !-, so you will use the FitNesse server to manage and run DbFit tests. This chapter will give you a brief introduction to installing and using FitNesse to write and manage tests. We will also do a quick sanity check to make sure that you installed and set up everything properly, and then you can continue with -![[!-Command reference-!][.DbFit.DbFitReference.CommandReference]]!- where you will learn what types of test tables are available and how to use them. -!
+
+!- I will not explain how DbFit works under the hood or how it fits into the larger picture of FitNesse fixtures &mdash; if you are interested in that topic read the next chapter as well. For more information on using FitNesse, tips and tricks for test management, and information about how to include FitNesse tests into your version control and continuous build system, see my book -![[!-Test Driven .NET Development with FitNesse-!][http://gojko.net/fitnesse/book]] !-. -!
+
+# section Installing DbFit
+[[!-Installing DbFit-!][>InstallingDbFit]]
+# section Hello World from the database
+[[!-Hello World from the database-!][>HelloWorld]]
+# section Managing Wiki content
+[[!-Managing Wiki content-!][>ManagingWikiContent]]
+# section A note on flow and standalone modes before we continue
+!3 !-A note on flow and standalone modes before we continue-!
+!-If you just want to use DbFit for database tests, and not integrate them with .NET/Java tests, then you can skip the next chapter. However, you will see references to flow and standalone mode in -![[!-Command reference-!][.DbFit.DbFitReference.CommandReference]]!- which might confuse you, so here is a short explanation.-!
+
+!-If you connect to the database as suggested in this chapter, using -!'''!- SqlServerTest -!'''!-, -!'''!- MySQLTest -!'''!- or a similar table, then you are using flow mode. In that case, the test type you choose is controlling the whole test page. The standalone mode is used if you need to mix DbFit tables with other .NET and Java tables, and transaction and database environment control should come from outside of DbFit. In that case, a -!'''!- DatabaseEnvironment -!'''!- table is used to connect to the database.-!
+
+
+''Previous page: [[!-Introduction-!][.DbFit.DbFitReference.FrontPage]] Next page: [[!-DbFit for Integration tests-!][.DbFit.DbFitReference.IntegrationTests]] Parent page: [[!-Table of contents-!][.DbFit.DbFitReference.TableOfContents]]''

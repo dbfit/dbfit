@@ -18,11 +18,11 @@ public class OracleRegressionTest {
 
     @Test
     public void flowMode() throws Exception {
-        helper.assertSuitePasses("AcceptanceTests.JavaTests.OracleTests.FlowMode");
+        helper.assertSuitePasses("DbFit.AcceptanceTests.JavaTests.OracleTests.FlowMode");
     }
 
     @Test
     public void standaloneMode() throws Exception {
-        helper.assertSuitePasses("AcceptanceTests.JavaTests.OracleTests.StandaloneFixtures");
+        helper.assertSuitePasses("DbFit.AcceptanceTests.JavaTests.OracleTests.StandaloneFixtures");
     }
 }

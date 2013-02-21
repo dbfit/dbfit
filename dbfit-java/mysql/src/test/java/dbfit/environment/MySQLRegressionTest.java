@@ -18,11 +18,11 @@ public class MySQLRegressionTest {
 
     @Test
     public void flowMode() throws Exception {
-        helper.assertSuitePasses("AcceptanceTests.JavaTests.MySqlTests.FlowMode");
+        helper.assertSuitePasses("DbFit.AcceptanceTests.JavaTests.MySqlTests.FlowMode");
     }
 
     @Test
     public void standaloneMode() throws Exception {
-        helper.assertSuitePasses("AcceptanceTests.JavaTests.MySqlTests.StandaloneFixtures");
+        helper.assertSuitePasses("DbFit.AcceptanceTests.JavaTests.MySqlTests.StandaloneFixtures");
     }
 }

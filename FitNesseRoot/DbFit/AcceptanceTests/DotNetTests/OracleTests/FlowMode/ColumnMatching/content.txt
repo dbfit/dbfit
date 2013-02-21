@@ -1,0 +1,8 @@
+
+This table matches only n, so it will report that 4 is a wrong value for 2
+
+|Query|SELECT ROWNUM n, l  FROM ( SELECT level*2 l FROM dual CONNECT BY LEVEL <= 3 )|
+|n|l?|
+|1|2|
+|2|fail[7]|
+|3|6|

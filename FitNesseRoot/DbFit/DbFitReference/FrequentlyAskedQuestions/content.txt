@@ -1,0 +1,96 @@
+''Previous page: [[!-Command reference-!][.DbFit.DbFitReference.CommandReference]] Parent page: [[!-Table of contents-!][.DbFit.DbFitReference.TableOfContents]]''
+!2 !-Frequently asked questions-!
+# section I'd like to use DbFit with Sybase/PostGRE. Is that possible?
+!3 !-I'd like to use DbFit with Sybase/PostGRE. Is that possible?-!
+!- Implementing support for a new database takes less than one working day, if you know your way around the database internals. Just implement a new -!'''!- DbEnvironment -!'''!- variant and fire away. Sybase, PostGRE and similar databases are not supported simply because I do not have a test database at hand and do not know enough about those systems to extract all relevant meta-data. If you need can provide a test database and one person who can help with database meta-data extraction, please contact me and I'll help with implementing support for your database. -!
+
+# section NULLs and blank cells
+!3 !-NULLs and blank cells-!
+''!- I need to insert null values to several columns, but I get an error message if a column is empty ‘Cannot use input parameters as output values. Please remove the question mark after ‘.-!''
+
+!- In FitNesse, empty cell generally means "print the current value, don’t test". That is why you get the message that the input parameter (insert value) cannot be used for output. Use the keyword -!'''!- NULL -!'''!- to insert nulls. -!
+
+# section DbFit complains that it cannot read columns or parameters. What's wrong?
+!3 !-DbFit complains that it cannot read columns or parameters. What's wrong?-!
+''!-When I try to insert (or execute a procedure), DbFit complains that it "Cannot read columns/parameters for object". What's wrong?-!''
+
+!-There are two possible causes of this problem:-!
+
+!- The first is that you misspelled the procedure or table name (it is obvious, but people keep reporting problems caused by this, so I'd like to suggest double-checking that first). Keep in mind that DbFit is executing under the privileges of the user that you supplied in the -!'''!- Connect -!'''!- command, so it may need a schema prefix to see your objects.-!
+
+!-The second possible cause is that the current user does not have access to table or procedure metadata. See -![[!-Section Does DbFit require any special database privileges?-!][.DbFit.DbFitReference.FrequentlyAskedQuestions#secfaqprivileges]]!- for detailed information on required privileges.-!
+
+# section Does DbFit require any special database privileges?
+
+!anchor secfaqprivileges
+!3 !-Does DbFit require any special database privileges?-!
+!- DbFit generally goes not require any special privileges for the database. The only important thing is that the user whose credentials you are using to run the test pages has at least read-only access to the schema meta-data. For MySql, that means select grants on -!'''!- mysql.proc -!'''!- and -!'''!- information_schema.columns -!'''!- tables. For Oracle, that means access to -!'''!- all_arguments -!'''!-, -!'''!- all_tab_columns -!'''!- and -!'''!- all_synonyms -!'''!-. For SqlServer, that means access to -!'''!- sys.columns -!'''!- and -!'''!- sys.parameters -!'''!- tables. -!
+
+# section Does DbFit support VARBINARY columns?
+!3 !-Does DbFit support VARBINARY columns?-!
+!- Yes, and it treats them as arrays of bytes. You can use the standard FitNesse syntax for byte arrays (comma-separated list of values), or you can use the 0xHEXDIGITS syntax if you activate the byte array handler. -!'''!- 
+|CellHandlerLoader|
+|Load|dbfit.util.ByteArrayHandler| -!'''
+
+# section My stored procedure returns a result set. How do I use it?
+
+!anchor secfaqstoredprocquery
+!3 !-My stored procedure returns a result set. How do I use it?-!
+!- In Oracle, you can store the -!'''!- REF CURSOR -!'''!- output parameter into a variable (using -!'''!- >>varname -!'''!-) and then execute a query with that variable: -!
+
+{{{
+|Query|<<varname|
+}}}
+!- With SQL Server, there are no typically output arguments, but a stored procedure just opens a cursor. You can use the -!'''!- Query -!'''!- table directly against it. If you would like to use a parameter, put -!'''!- exec -!'''!- before the procedure name: -!
+
+{{{
+|set parameter|hm|3|
+
+|query|exec listusers_p @hm|
+|name|username|
+|user1|user name 1|
+|user2|user name 2|
+|user3|user name 3|
+}}}
+# section DbFit says that my VARBINARY is System.Byte[]
+!3 !-DbFit says that my VARBINARY is System.Byte[]-!
+!- You see System.Byte[] because that is how .NET prints a byte array. The object should have been stored correctly as a byte array, and you should be able to use 0xHEXDIGITS syntax for comparisons. See BinaryTests acceptance test for examples. -!
+
+# section Does DbFit support GUID columns?
+!3 !-Does DbFit support GUID columns?-!
+!- Yes, but you may need to activate that support manually. DbFit has a non-standard extension for FIT.NET which allows it to "understand" GUID fields. That is being implemented now in the standard FIT.NET test runner, so you may not need to load it manually in the future. In any case, put this table in your test to load the GUID handler: -!
+
+{{{
+|CellHandlerLoader|
+|Load|dbfit.util.GuidHandler|
+}}}
+!- This table should come below the test type definition (below -!'''!- SQLServerTest -!'''!-). -!
+
+# section DbFit complains about an unsupported type. What's wrong?
+!3 !-DbFit complains about an unsupported type. What's wrong?-!
+!- To handle types properly, DbFit requires a bit of additional information that does not come from typical database driver meta-data. That is why there is some small amount of work involved in supporting each column type. You can see a list of supported data types for each database server in the -!''!-AcceptanceTests-!''!- suite. If you are using a column/parameter type that is not there, then no one asked for that yet. Please contact me and I'll be happy to extend DbFit to support that type. -!
+
+# section Can you extend DbFit to support Oracle collection types?
+!3 !-Can you extend DbFit to support Oracle collection types?-!
+!- A short answer is "Not easily". The .NET version uses Microsoft's Oracle .NET driver because Oracle ODP requires binary client compatibility (if DbFit is compiled for ODP 9, it will not work with Oracle 10 or 11, and vice-versa). If you really desperately need this, I can create a version-specific variant of ODP driver support for you, with support for Oracle collection types. I started implementing this in the Java version, but it turned out that proper use of Oracle collections in JDBC requires Oracle-specific extensions and meta-data which currently does not get loaded in DbFit. This would require restructuring in the way that DbFit handles types, so it is on my roadmap for some future release, but not a priority. If you need it sooner, contact me. -!
+
+# section How can we use Windows-integrated authentication?
+!3 !-How can we use Windows-integrated authentication?-!
+!- Instead of calling -!'''!- connect -!'''!- with three or four separate arguments, call it with just one argument and specify the full .NET or JDBC connection string. If you are a database develeoper and don't know about those things, ask a .NET or Java developer in your organisation to help you out. -!
+
+# section DBFit complains about invalid fixtures/methods
+!3 !-DBFit complains about invalid fixtures/methods-!
+!- If you want to use DbFit in flow mode, then DbFit test name should be the first table on the page &mdash; not even imports, cell handler loaders or any set-up can come before it. If you want to use some other fixture to control the flow, then use DbFit in standalone mode. -!
+
+# section Why does DbFit not see the time portion of my Date fields?
+!3 !-Why does DbFit not see the time portion of my Date fields?-!
+!- This issue affects Oracle users on the Java version of DbFit. Oracle's JDBC driver strips the time from Date columns since version 9, so no amount of magic on the client side can fix that. see -![[!-Oracle JDBC FAQ-!][http://www.oracle.com/technology/tech/java/sqlj_jdbc/htdocs/jdbc_faq.htm#08_01]] !- for more information. -!
+
+!-In the JDBC FAQ, Oracle suggests setting -!'''!- -Doracle.jdbc.V8Compatible="true" -!'''!- to map dates to timestamps. That should instantly solve your problem, but I don't know what else is triggered by that flag. If you want to experiment, change the batch file that starts FitNesse and add that before the FitNesse class name. -!
+
+# section DbFit complains about registering a SQL Server driver
+!3 !-DbFit complains about registering a SQL Server driver-!
+!-This issue affects SQL Server users in the Java version of DbFit, and the message displayed on the screen after the Connect command is -!'''!- Cannot register SQL driver com.microsoft.sqlserver.jdbc.SQLServerDriver -!'''!-. You need to download Microsoft SQL Server JDBC driver from -![[!-their  site-!][http://www.microsoft.com/downloads/details.aspx?FamilyId=C47053EB-3B64-4794-950D-81E1EC91C1BA&displaylang=en]] !-, it is not opensource and I cannot distribute it with DbFit. Deploy the JAR in the same folder as dbfit-XXX.jar. If you specify the full JDBC connection string explicitly, use Microsoft’s driver in JDBC URL. DbFit does not support 3rd party SQL Server drivers at the moment. -!
+
+
+''Previous page: [[!-Command reference-!][.DbFit.DbFitReference.CommandReference]] Parent page: [[!-Table of contents-!][.DbFit.DbFitReference.TableOfContents]]''

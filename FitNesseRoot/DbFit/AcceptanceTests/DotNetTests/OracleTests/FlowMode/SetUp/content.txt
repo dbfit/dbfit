@@ -1,0 +1,2 @@
+!|dbfit.OracleTest|
+|Connect |testdb|dftest|dftest|

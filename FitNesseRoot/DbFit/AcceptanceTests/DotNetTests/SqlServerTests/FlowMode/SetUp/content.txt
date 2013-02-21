@@ -1,0 +1,3 @@
+!|dbfit.SqlServerTest|
+
+!|Connect|MALI\SQLEXPRESS|FitNesseUser|FitNesseUser|FitNesseTestDB|
