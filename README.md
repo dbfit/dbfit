@@ -62,6 +62,18 @@ The subsequent steps need to be followed on the project folder within the VM. To
         mvn install:install-file -Dfile=fitlibrary-20081102.jar -DgroupId=org.fitnesse \
             -DartifactId=fitlibrary -Dversion=20081102 -Dpackaging=jar
 
+#### Installing Oracle XE
+
+*Note: These instructions are work in progress.*
+
+ 1. Download the `Oracle XE 11g for Linux x64` RPM from [Oracle](http://www.oracle.com/technetwork/products/express-edition/downloads/index.html) from inside the VM.
+
+ 2. Install the RPM:
+        
+        sudo yum install <rpm-name.rpm>
+
+ 3. TODO...
+
 #### Building
 
 1.  Install the root project POM into the local Maven repo:
