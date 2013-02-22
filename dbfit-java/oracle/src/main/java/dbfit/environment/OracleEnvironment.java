@@ -215,7 +215,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 		return allParams;
 	}
 	// List interface has sequential search, so using list instead of array to map types
-	private static List<String> stringTypes = Arrays.asList(new String[] { "VARCHAR", "VARCHAR2", "NVARCHAR2", "CHAR", "NCHAR", "CLOB","ROWID" });
+	private static List<String> stringTypes = Arrays.asList(new String[] { "VARCHAR", "VARCHAR2", "NVARCHAR2", "CHAR", "NCHAR", "CLOB", "NCLOB", "ROWID" });
 	private static List<String> decimalTypes = Arrays.asList(new String[] { "BINARY_INTEGER","NUMBER","FLOAT" });
 	private static List<String> dateTypes = Arrays.asList(new String[] {  });
 	private static List<String> timestampTypes=Arrays.asList(new String[]{"DATE","TIMESTAMP"});
