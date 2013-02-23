@@ -35,7 +35,7 @@ DbFit is a set of fixtures which enables FIT/FitNesse tests to execute directly 
 The subsequent steps need to be followed on the project folder within the VM. To get there:
 
  1. First, ssh into the machine:
-        
+
         vagrant ssh
 
  2. The development directory is NFS-mounted under `/var/dbfit`. Change into it:
@@ -50,6 +50,27 @@ The subsequent steps need to be followed on the project folder within the VM. To
 
         mvn install:install-file -Dfile=ojdbc14.jar -DgroupId=com.oracle \
             -DartifactId=ojdbc14 -Dversion=10.2.0.2.0 -Dpackaging=jar
+
+#### FitNesse
+
+Because the edge builds of FitNesse don't get pushed to the Maven Repository, it needs to be manually pushed into the local repo.
+
+ 1. Download the `fitnesse` jar:
+
+        wget https://cleancoder.ci.cloudbees.com/job/fitnesse/278/artifact/dist/fitnesse.jar
+
+ 2. Download the `fitnesse` POM file:
+
+        wget http://repo1.maven.org/maven2/org/fitnesse/fitnesse/20121220/fitnesse-20121220.pom
+
+ 3. Update the version string in the POM file:
+
+        sed -i 's/20121220/20130216/g' fitnesse-20121220.pom
+
+ 2. Install the jar:
+
+        mvn install:install-file -Dfile=fitnesse.jar -DgroupId=org.fitnesse \
+            -DartifactId=fitnesse -Dversion=20130216 -Dpackaging=jar -DpomFile=fitnesse-20121220.pom
 
 #### FitLibrary 
 

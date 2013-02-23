@@ -17,7 +17,7 @@ task :copy_local => ['dist', 'dist/lib'] do
 end
 
 task :copy_fitnesse => ['dist/lib'] do
-  fitnesse_url = 'http://fitnesse.org/fitnesse-standalone.jar?responder=releaseDownload&release=20121220'
+  fitnesse_url = 'https://cleancoder.ci.cloudbees.com/job/fitnesse/278/artifact/dist/fitnesse-standalone.jar'
   sh "wget \"#{fitnesse_url}\" -O dist/lib/fitnesse-standalone.jar"
 end
 
