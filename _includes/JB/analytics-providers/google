@@ -9,9 +9,9 @@
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
 
-  function recordOutboundLink(link, category, action) {
+  function recordOutboundLink(link, category, action, label) {
     try {
-      _gaq.push(['_trackEvent', category , action ]);
+      _gaq.push(['_trackEvent', category, action, label ]);
       setTimeout('document.location = "' + link.href + '"', 250)
     } catch(err){
       console.log(err);
