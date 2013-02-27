@@ -42,6 +42,7 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
 
     @Override
     protected DbObject getTargetDbObject() throws SQLException {
+        if (procName==null) procName=args[0];
         return new DbStoredProcedure(environment, procName);
     }
 
