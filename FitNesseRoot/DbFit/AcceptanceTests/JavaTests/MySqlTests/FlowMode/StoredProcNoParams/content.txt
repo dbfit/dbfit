@@ -2,6 +2,6 @@
 
 !|Execute Procedure|MakeUser|
 
-|query|select * from users|
+|Query|select * from users|
 |name|username|
 |user1|fromproc|
