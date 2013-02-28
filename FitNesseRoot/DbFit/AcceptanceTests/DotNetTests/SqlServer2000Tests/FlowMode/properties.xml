@@ -10,29 +10,29 @@
 	<Suite/>
 	<Suites/>
 	<SymbolicLinks>
-		<NullValueAcceptedAsParameter>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.NullValueAcceptedAsParameter</NullValueAcceptedAsParameter>
-		<QueryWithParameter>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.QueryWithParameter</QueryWithParameter>
-		<ParametersAreLoadedAutomaticallyFromVariables>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ParametersAreLoadedAutomaticallyFromVariables</ParametersAreLoadedAutomaticallyFromVariables>
-		<DataTypes>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.DataTypes</DataTypes>
-		<ExpectingErrors>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ExpectingErrors</ExpectingErrors>
-		<BulkInsert>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsert</BulkInsert>
-		<OrderedQuery>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.OrderedQuery</OrderedQuery>
-		<ColumnMatching>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ColumnMatching</ColumnMatching>
-		<SimpleSelect>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.SimpleSelect</SimpleSelect>
-		<ExecutingStatements>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ExecutingStatements</ExecutingStatements>
-		<MultiLineQueries>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.MultiLineQueries</MultiLineQueries>
-		<StoredProcedureWithException>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.StoredProcedureWithException</StoredProcedureWithException>
-		<SequenceSelect>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.SequenceSelect</SequenceSelect>
-		<InspectTests>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.InspectTests</InspectTests>
-		<ParametersArePersistent>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ParametersArePersistent</ParametersArePersistent>
-		<ReadingQueryIntoVariables>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ReadingQueryIntoVariables</ReadingQueryIntoVariables>
-		<StoreAndCompareQueries>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.StoreAndCompareQueries</StoreAndCompareQueries>
-		<TransactionsTest>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.TransactionsTest</TransactionsTest>
-		<BulkInsertWithReturning>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsertWithReturning</BulkInsertWithReturning>
-		<UpdateTest>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.UpdateTest</UpdateTest>
-		<CallingFunctions>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.CallingFunctions</CallingFunctions>
-		<UnknownParametersAreIgnored>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.UnknownParametersAreIgnored</UnknownParametersAreIgnored>
-		<SimpleStoredProc>.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.SimpleStoredProc</SimpleStoredProc>
+		<NullValueAcceptedAsParameter>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.NullValueAcceptedAsParameter</NullValueAcceptedAsParameter>
+		<QueryWithParameter>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.QueryWithParameter</QueryWithParameter>
+		<ParametersAreLoadedAutomaticallyFromVariables>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ParametersAreLoadedAutomaticallyFromVariables</ParametersAreLoadedAutomaticallyFromVariables>
+		<DataTypes>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.DataTypes</DataTypes>
+		<ExpectingErrors>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ExpectingErrors</ExpectingErrors>
+		<BulkInsert>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsert</BulkInsert>
+		<OrderedQuery>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.OrderedQuery</OrderedQuery>
+		<ColumnMatching>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ColumnMatching</ColumnMatching>
+		<SimpleSelect>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.SimpleSelect</SimpleSelect>
+		<ExecutingStatements>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ExecutingStatements</ExecutingStatements>
+		<MultiLineQueries>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.MultiLineQueries</MultiLineQueries>
+		<StoredProcedureWithException>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.StoredProcedureWithException</StoredProcedureWithException>
+		<SequenceSelect>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.SequenceSelect</SequenceSelect>
+		<InspectTests>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.InspectTests</InspectTests>
+		<ParametersArePersistent>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ParametersArePersistent</ParametersArePersistent>
+		<ReadingQueryIntoVariables>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ReadingQueryIntoVariables</ReadingQueryIntoVariables>
+		<StoreAndCompareQueries>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.StoreAndCompareQueries</StoreAndCompareQueries>
+		<TransactionsTest>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.TransactionsTest</TransactionsTest>
+		<BulkInsertWithReturning>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsertWithReturning</BulkInsertWithReturning>
+		<UpdateTest>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.UpdateTest</UpdateTest>
+		<CallingFunctions>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.CallingFunctions</CallingFunctions>
+		<UnknownParametersAreIgnored>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.UnknownParametersAreIgnored</UnknownParametersAreIgnored>
+		<SimpleStoredProc>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.SimpleStoredProc</SimpleStoredProc>
 	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>

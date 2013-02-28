@@ -10,7 +10,7 @@
 	<Suite/>
 	<Suites/>
 	<SymbolicLinks>
-		<SimpleSelect>.AcceptanceTests.DotNetTests.OracleTests.FlowMode.SimpleSelect</SimpleSelect>
+		<SimpleSelect>.DbFit.AcceptanceTests.DotNetTests.OracleTests.FlowMode.SimpleSelect</SimpleSelect>
 	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>

@@ -9,7 +9,7 @@
 	<Search/>
 	<Suite/>
 	<SymbolicLinks>
-		<Db2Tests>.AcceptanceTests.JavaTests.Db2Tests</Db2Tests>
+		<Db2Tests>.DbFit.AcceptanceTests.JavaTests.Db2Tests</Db2Tests>
 	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>

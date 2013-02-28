@@ -10,7 +10,7 @@
 	<Suite/>
 	<Suites>null</Suites>
 	<SymbolicLinks>
-		<OrderedQuery>AcceptanceTests.JavaTests.MySqlTests.FlowMode.OrderedQuery</OrderedQuery>
+		<OrderedQuery>.DbFit.AcceptanceTests.JavaTests.MySqlTests.FlowMode.OrderedQuery</OrderedQuery>
 	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>
