@@ -7,5 +7,6 @@ test_vm/tmp
 FitNesseRoot/ErrorLogs
 FitNesseRoot/files/testResults
 FitNesseRoot/update*
+FitNesseRoot/RecentChanges
 [0-9]*-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].zip
 [A-Za-z0-9]*-[0-9]*-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].zip
