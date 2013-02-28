@@ -2,15 +2,16 @@
 <properties>
 	<Edit/>
 	<Files/>
-	<LastModified>20080301172638</LastModified>
+	<Help/>
 	<Properties/>
 	<RecentChanges/>
 	<Refactor/>
 	<Search/>
 	<Suite/>
-	<Suites>null</Suites>
+	<Suites/>
 	<SymbolicLinks>
 		<OrderedQuery>.DbFit.AcceptanceTests.JavaTests.MySqlTests.FlowMode.OrderedQuery</OrderedQuery>
+		<StoredProcNoParams>.DbFit.AcceptanceTests.CoreTests.StoredProcNoParams</StoredProcNoParams>
 	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>
