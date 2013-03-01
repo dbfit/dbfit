@@ -4,6 +4,18 @@ DbFit is a set of fixtures which enables FIT/FitNesse tests to execute directly 
 
 ## Contributing
 
+The easiest way to get a DbFit test environment is to provision a Linux virtual machine image. The instructions below describe how to do this.
+
+The fully-built VM includes:
+
+ *  working installs of Maven, MySQL, PostgreSQL, Derby and HSQLDB
+ *  the pre-requisites to easily install Oracle
+
+The VM doesn't include:
+ *  a working Oracle installation (fetching and installing the Oracle binaries and JDBC jar hasn't been automated yet, but is partially described below)
+ *  a working DB2 installation
+ *  a working SQL Server installation (obviously)
+
 ### Setting up the test VM
 
 *Note: the following instructions are Mac OS/Linux specific but the same approach should work under Windows as well, since vagrant and VirtualBox run on Windows.*
