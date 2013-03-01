@@ -1,16 +1,12 @@
 package dbfit.api;
 
+import dbfit.util.DbParameterAccessor;
+import dbfit.util.NameNormaliser;
+
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-
-import dbfit.util.DbParameterAccessor;
-import dbfit.util.NameNormaliser;
+import java.util.*;
 
 public class DbStoredProcedure implements DbObject {
 	private DBEnvironment environment;
@@ -54,27 +50,10 @@ public class DbStoredProcedure implements DbObject {
 	public CallableStatement buildCommand(String procName,
 			DbParameterAccessor[] accessors) throws SQLException {
 		List<String> accessorNames = getSortedAccessorNames(accessors);
-		boolean isFunction = containsReturnValue(accessors);
+        boolean isFunction = containsReturnValue(accessors);
+        String callString = buildCallString(procName, isFunction, accessorNames);
 
-		StringBuilder ins = new StringBuilder("{ ");
-		if (isFunction) {
-			ins.append("? =");
-		}
-		ins.append("call ").append(procName);
-		String comma = "(";
-		boolean hasArguments = false;
-		for (int i = (isFunction ? 1 : 0); i < accessorNames.size(); i++) {
-			ins.append(comma);
-			ins.append("?");
-			comma = ",";
-			hasArguments = true;
-		}
-		if (hasArguments)
-			ins.append(")");
-		ins.append("}");
-
-		CallableStatement cs = environment.getConnection().prepareCall(
-				ins.toString());
+		CallableStatement cs = environment.getConnection().prepareCall(callString);
 		for (DbParameterAccessor ac : accessors) {
 			int realindex = accessorNames.indexOf(ac.getName());
 			ac.bindTo(cs, realindex + 1); // jdbc params are 1-based
@@ -85,7 +64,27 @@ public class DbStoredProcedure implements DbObject {
 		return cs;
 	}
 
-	public PreparedStatement buildPreparedStatement(
+    String buildCallString(String procName, boolean isFunction, List<String> accessorNames) {
+        StringBuilder ins = new StringBuilder("{ ");
+        if (isFunction) {
+            ins.append("? =");
+        }
+        ins.append("call ").append(procName);
+        String comma = "(";
+        boolean hasArguments = false;
+        for (int i = (isFunction ? 1 : 0); i < accessorNames.size(); i++) {
+            ins.append(comma);
+            ins.append("?");
+            comma = ",";
+            hasArguments = true;
+        }
+        if (hasArguments)
+            ins.append(")");
+        ins.append("}");
+        return ins.toString();
+    }
+
+    public PreparedStatement buildPreparedStatement(
 			DbParameterAccessor[] accessors) throws SQLException {
 		return buildCommand(storedProcName, accessors);
 	}
