@@ -51,7 +51,7 @@ public class DbStoredProcedure implements DbObject {
 			DbParameterAccessor[] accessors) throws SQLException {
 		List<String> accessorNames = getSortedAccessorNames(accessors);
         boolean isFunction = containsReturnValue(accessors);
-        String callString = buildCallString(procName, isFunction, accessorNames);
+        String callString = buildPreparedStatementString(procName, isFunction, accessorNames.size());
 
 		CallableStatement cs = environment.getConnection().prepareCall(callString);
 		for (DbParameterAccessor ac : accessors) {
@@ -64,22 +64,19 @@ public class DbStoredProcedure implements DbObject {
 		return cs;
 	}
 
-    String buildCallString(String procName, boolean isFunction, List<String> accessorNames) {
+    String buildPreparedStatementString(String procName, boolean isFunction, int numberOfAccessors) {
         StringBuilder ins = new StringBuilder("{ ");
         if (isFunction) {
             ins.append("? =");
         }
         ins.append("call ").append(procName);
-        String comma = "(";
-        boolean hasArguments = false;
-        for (int i = (isFunction ? 1 : 0); i < accessorNames.size(); i++) {
-            ins.append(comma);
+        ins.append("(");
+        for (int i = (isFunction ? 1 : 0); i < numberOfAccessors; i++) {
             ins.append("?");
-            comma = ",";
-            hasArguments = true;
+            if (i < numberOfAccessors - 1)
+                ins.append(",");
         }
-        if (hasArguments)
-            ins.append(")");
+        ins.append(")");
         ins.append("}");
         return ins.toString();
     }

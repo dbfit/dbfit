@@ -9,6 +9,9 @@
 	<Search/>
 	<Suite/>
 	<Suites></Suites>
+	<SymbolicLinks>
+		<StoredProcNoParams>.DbFit.AcceptanceTests.CoreTests.StoredProcNoParams</StoredProcNoParams>
+	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>
 	<saveId>1186164334513</saveId>
