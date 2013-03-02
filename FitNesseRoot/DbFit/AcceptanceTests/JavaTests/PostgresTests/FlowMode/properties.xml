@@ -10,7 +10,7 @@
 	<Suite/>
 	<Suites></Suites>
 	<SymbolicLinks>
-		<StoredProcNoParams>.DbFit.AcceptanceTests.CoreTests.StoredProcNoParams</StoredProcNoParams>
+		<CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
 	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>

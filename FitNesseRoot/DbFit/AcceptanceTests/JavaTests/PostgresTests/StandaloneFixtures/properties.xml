@@ -11,6 +11,7 @@
 	<Suites>null</Suites>
 	<SymbolicLinks>
 		<OrderedQuery>.DbFit.AcceptanceTests.JavaTests.MySqlTests.FlowMode.OrderedQuery</OrderedQuery>
+		<CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
 	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>

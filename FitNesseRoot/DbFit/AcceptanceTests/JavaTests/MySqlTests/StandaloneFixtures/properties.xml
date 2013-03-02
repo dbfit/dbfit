@@ -11,7 +11,7 @@
 	<Suites/>
 	<SymbolicLinks>
 		<OrderedQuery>.DbFit.AcceptanceTests.JavaTests.MySqlTests.FlowMode.OrderedQuery</OrderedQuery>
-		<StoredProcNoParams>.DbFit.AcceptanceTests.CoreTests.StoredProcNoParams</StoredProcNoParams>
+		<CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
 	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>
