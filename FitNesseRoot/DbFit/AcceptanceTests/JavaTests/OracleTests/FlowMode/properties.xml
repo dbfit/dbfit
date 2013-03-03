@@ -15,7 +15,7 @@
 		<QueryWithParameter>.DbFit.AcceptanceTests.DotNetTests.OracleTests.FlowMode.QueryWithParameter</QueryWithParameter>
 		<ParametersAreLoadedAutomaticallyFromVariables>.DbFit.AcceptanceTests.DotNetTests.OracleTests.FlowMode.ParametersAreLoadedAutomaticallyFromVariables</ParametersAreLoadedAutomaticallyFromVariables>
 		<UpdateTests>.DbFit.AcceptanceTests.DotNetTests.OracleTests.FlowMode.UpdateTests</UpdateTests>
-		<BulkInsert>.DbFit.AcceptanceTests.DotNetTests.OracleTests.FlowMode.BulkInsert</BulkInsert>
+		<CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
 		<SimpleSelect>.DbFit.AcceptanceTests.DotNetTests.OracleTests.FlowMode.SimpleSelect</SimpleSelect>
 		<SequenceSelect>.DbFit.AcceptanceTests.DotNetTests.OracleTests.FlowMode.SequenceSelect</SequenceSelect>
 		<InOutParams>.DbFit.AcceptanceTests.DotNetTests.OracleTests.FlowMode.InOutParams</InOutParams>

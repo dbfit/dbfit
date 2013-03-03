@@ -42,6 +42,11 @@ create sequence s1 start with 1;
 
 create table users(name varchar2(50), username varchar2(50), userid number primary key);
 
+create or replace procedure makeuser as
+begin
+	insert into users (name,username) values ('user1','fromproc');
+end;
+/
  
 CREATE OR REPLACE TRIGGER USERS_BIE
 BEFORE INSERT ON USERS
