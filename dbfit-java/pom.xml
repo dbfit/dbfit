@@ -5,7 +5,7 @@
     <artifactId>dbfit</artifactId>
     <packaging>pom</packaging>
     <name>DBFit database testing library</name>
-    <version>2.0.0-RC2</version>
+    <version>2.0.0-RC3</version>
     <properties>
         <junit.version>4.10</junit.version>
     </properties>
