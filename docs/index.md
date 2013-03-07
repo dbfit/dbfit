@@ -8,6 +8,8 @@ show_comments: false
 
 ## [Command reference](/dbfit/docs/reference.html) <small>The complete reference of DbFit's features.</small>
 
+## [Writing tests](/dbfit/docs/writing-tests.html) <small>How to write different test types with DbFit.</small>
+
 <hr/>
 
 ## [What's new](/dbfit/docs/whats-new.html) <small>What's changed in the released versions.</small>
