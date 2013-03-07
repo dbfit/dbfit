@@ -8,6 +8,10 @@ directory 'dist'
 directory 'dist/lib'
 directory 'dist/fitsharp'
 
+task :cleanse_fitnesseroot do
+  sh "git clean -d -x -f FitNesseRoot/"
+end
+
 task :copy_local => ['dist', 'dist/lib'] do
   cp_r FileList['LICENSE', 'README.md', 'bin/*', 'FitNesseRoot'], 'dist'
   jars_to_distribute = FileList['dbfit-java/**/*.jar'].
@@ -31,7 +35,7 @@ task :bundle_fitnesse => ['dist/lib'] do
   sh "wget \"#{fitnesse_url}\" -O dist/lib/fitnesse-standalone.jar"
 end
 
-task :package => [:clobber, :copy_local, :bundle_fitnesse, :bundle_fitsharp] do
+task :package => [:clobber, :cleanse_fitnesseroot, :copy_local, :bundle_fitnesse, :bundle_fitsharp] do
   cd 'dist' do
     archive_name = "dbfit-complete-#{VERSION}.zip"
     sh "zip -r #{archive_name} *"
