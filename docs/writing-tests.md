@@ -9,6 +9,7 @@ show_comments: false
     <ul id="sidenav" class="nav nav-list affix">
       <li class="active"><a href="#unit-test">Unit Test</a></li>
       <li><a href="#data-diff-test">Data Diff Test</a></li>
+      <li><a href="#invariant-test">Invariant Test</a></li>
     </ul>
   </div>
   <div class="span9">
@@ -117,6 +118,44 @@ When a data diff test fails, understanding the root cause of the failure is a ma
  *  [Query](/dbfit/docs/reference.html#query)
  *  [Store query](/dbfit/docs/reference.html#store-query)
  *  [Compare stored queries](/dbfit/docs/reference.html#compare-stored-queries)
+
+----
+
+## Invariant Test
+
+### Example
+
+    |query   |select * from table where non_negative_col < 0|
+    |col1    |col2    |col3                                 |
+
+### Description
+
+Invariant tests detect when an invariant (a rule or statement about the data that should always be true) no longer holds.
+
+Examples of invariants:
+
+ *  The transformation preserves the rowcount
+ *  There are no gaps in a group of time intervals
+ *  Some numeric column is never negative
+ *  Some string column is never null or empty
+
+These tests can executed after a transformation (in which case they are just a query table), or can trigger the invocation. They can even be included in the teardown for unit tests, to make sure that the invariants hold in various scenarios.
+
+### Pre-requisites
+
+None.
+
+### When are such tests useful?
+
+Invariant tests are very useful as regression tests, when executed on production-like datasets.
+
+### When are such tests not appropriate?
+
+-
+
+### Useful table types
+
+ *  [Query](/dbfit/docs/reference.html#query)
 
 </div>
   </div>
