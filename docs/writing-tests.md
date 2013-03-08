@@ -102,7 +102,7 @@ While the fundamental concept remains the same for large and small datasets, the
 
 ### Pre-requisites
 
-Nothing specifically.
+None.
 
 ### When are such tests useful?
 
@@ -111,6 +111,12 @@ When the test coverage provided by unit or regression tests is very low, data di
 ### When are such tests not appropriate?
 
 When a data diff test fails, understanding the root cause of the failure is a manual proess which can be prohibitively expensive, since even one difference between the production and release candidate code can produce millions of differences in the results. It is generally a sounder strategy to rely on a large suite of unit tests to provide precise feedback and move away from data diff tests as the test coverage increases.
+
+### Useful table types
+
+ *  [Query](/dbfit/docs/reference.html#query)
+ *  [Store query](/dbfit/docs/reference.html#store-query)
+ *  [Compare stored queries](/dbfit/docs/reference.html#compare-stored-queries)
 
 </div>
   </div>
