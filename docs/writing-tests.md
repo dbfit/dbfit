@@ -10,6 +10,7 @@ show_comments: false
       <li class="active"><a href="#unit-test">Unit Test</a></li>
       <li><a href="#data-diff-test">Data Diff Test</a></li>
       <li><a href="#invariant-test">Invariant Test</a></li>
+      <li><a href="#schema-test">Schema Test</a></li>
     </ul>
   </div>
   <div class="span9">
@@ -162,6 +163,30 @@ Invariant tests are very useful as regression tests, when executed on production
 ### Useful table types
 
  *  [Query](/dbfit/docs/reference.html#query)
+
+----
+
+## Schema Test
+
+### Example
+
+Currently, DbFit does not have any specific functionality to support this test type.
+
+### Description
+
+If run after a change to the schema, schema tests can ensure that the environment is in the state assumed by the subsequent tests, and failure provides early feedback that the environment itself is not set up correctly.
+
+### Pre-requisites
+
+None.
+
+### When are such tests useful?
+
+In legacy environments, it is common for databases to be upgraded by making an anonymised clone of some production-like system, rather than using [schema migrations](http://en.wikipedia.org/wiki/Schema_migration).
+
+### When are such tests not appropriate?
+
+If the risk around schema upgrades is low, schema tests are probably an overhead.
 
 </div>
   </div>
