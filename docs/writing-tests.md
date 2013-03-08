@@ -17,6 +17,12 @@ show_comments: false
       <h1>{{ page.title }}</h1>
     </div>
     <div markdown="1">
+This page catalogues:
+
+ *  different types of tests for data-driven systems
+ *  the context within which they are/aren't useful
+ *  examples of how they would look like in DbFit.
+
 ## Unit Test
 
 ### Example
