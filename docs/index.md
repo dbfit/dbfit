@@ -9,9 +9,9 @@ show_comments: false
     <h2>High level</h2>
   </div>
   <div class="span6" markdown="1">
-### [Writing tests](/dbfit/docs/writing-tests.html) <small>How to write different test types with DbFit.</small>
+### [Writing tests](/dbfit/docs/writing-tests.html) <small>What different test types look like in DbFit.</small>
 
-### [What's new](/dbfit/docs/whats-new.html) <small>What's changed in each release.</small>
+### [What's new](/dbfit/docs/whats-new.html) <small>The changes in each release.</small>
 
   </div>
 </div>
