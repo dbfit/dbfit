@@ -25,6 +25,8 @@ This page catalogues:
  *  the context within which they are/aren't useful
  *  examples of how they would look like in DbFit.
 
+----
+
 ## Unit Test
 
 ### Example
