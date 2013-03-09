@@ -11,6 +11,7 @@ show_comments: false
       <li><a href="#data-diff-test">Data Diff Test</a></li>
       <li><a href="#invariant-test">Invariant Test</a></li>
       <li><a href="#schema-test">Schema Test</a></li>
+      <li><a href="#timing-test">Timing Test</a></li>
     </ul>
   </div>
   <div class="span9">
@@ -187,6 +188,52 @@ In legacy environments, it is common for databases to be upgraded by making an a
 ### When are such tests not appropriate?
 
 If the risk around schema upgrades is low, schema tests are probably an overhead.
+
+----
+
+## Timing Test
+
+### Example
+
+<span class="label label-warning">Note:</span> this example is Oracle-specific, but can easily be adapted to any database.
+
+    |Set parameter|threshold|10|
+
+    !|Query|select TO_CHAR(SYSTIMESTAMP, 'SSSSS.SS') AS start_time FROM DUAL|
+    |start_time?                                                            |
+    |>>start_time                                                           |
+
+    !|Execute procedure|some_procedure|
+
+    !|Query|SELECT (TO_CHAR(SYSTIMESTAMP, 'SSSSS.SS') - :start_time) AS duration FROM DUAL|
+    |duration?                                                                            |
+    |>>duration                                                                           |
+
+    !|query stats                               |
+    |table name|where                 |is empty?|
+    |DUAL      |:duration > :threshold|yes      |
+
+### Description
+
+This test measures the time it takes to run a transformation and fails if the time exceeds a certian threshold.
+
+### Pre-requisites
+
+For stable timings, it's best to run such tests on large datasets.
+
+### When are such tests useful?
+
+Such tests are useful to measure/track trends in performance and to flag potential performance problems.
+
+### When are such tests not appropriate?
+
+As there is an overhead of executing stored procedures through DbFit (1-2 seconds), this mechanism for measuring executing time is not accurate if the stored procedure finishes quickly.
+
+### Useful table types
+
+ *  [Set parameter](/dbfit/docs/reference.html#working-with-parameters)
+ *  [Query](/dbfit/docs/reference.html#query)
+ *  [Execute procedure](/dbfit/docs/reference.html#execute-procedure)
 
 </div>
   </div>
