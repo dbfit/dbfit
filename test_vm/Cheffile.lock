@@ -33,8 +33,8 @@ PATH
       postgresql (>= 0.0.0)
 
 GIT
-  remote: https://github.com/opscode-cookbooks/postgresql
-  sha: 7fbfa9911d3c8d566c85bc83600a4c4eb16f6859
+  remote: https://github.com/benilovj/postgresql
+  sha: f866a8290ef021923deafc37012a91bee027ee92
   specs:
     postgresql (2.2.0)
       openssl (>= 0.0.0)
