@@ -3,4 +3,4 @@
 
 site 'http://community.opscode.com/api/v1'
 
-cookbook 'dbfit_test', path: "vendor/cookbooks/dbfit_test"
+cookbook 'dbfit_test', :path => "vendor/cookbooks/dbfit_test"
