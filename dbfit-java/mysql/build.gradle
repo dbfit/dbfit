@@ -1,0 +1,8 @@
+
+
+description = 'DBFit MySQL engine'
+
+dependencies {
+  compile project(':dbfit-core')
+    testCompile group: 'mysql', name: 'mysql-connector-java', version:'5.1.6'
+  }
