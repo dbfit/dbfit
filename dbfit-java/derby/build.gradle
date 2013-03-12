@@ -1,0 +1,10 @@
+
+
+description = 'DBFit derby engine'
+
+dependencies {
+  compile project(':dbfit-core')
+    testCompile group: 'org.apache.derby', name: 'derby', version:'10.9.1.0'
+    testCompile group: 'org.apache.derby', name: 'derbynet', version:'10.9.1.0'
+    testCompile group: 'org.apache.derby', name: 'derbyclient', version:'10.9.1.0'
+  }
