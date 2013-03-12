@@ -1,7 +1,7 @@
 require 'rake/clean'
 require 'rake/packagetask'
 
-VERSION = File.read('dbfit-java/pom.xml').scan(/<version>(.*?)<\/version>/)[0][0]
+VERSION = File.read('dbfit-java/build.gradle').scan(/version\ =\ \'(.*)\'/)[0][0]
 
 CLOBBER << 'dist'
 directory 'dist'
