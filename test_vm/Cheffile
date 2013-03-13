@@ -4,3 +4,5 @@
 site 'http://community.opscode.com/api/v1'
 
 cookbook 'dbfit_test', :path => "vendor/cookbooks/dbfit_test"
+cookbook 'postgres', :git => "https://github.com/benilovj/postgresql",
+  :ref => "f866a8290ef021923deafc37012a91bee027ee92"
