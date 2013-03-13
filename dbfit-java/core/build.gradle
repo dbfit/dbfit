@@ -3,6 +3,5 @@
 description = 'DBFit core api and fixtures'
 
 dependencies {
-    compile group: 'org.fitnesse', name: 'fitnesse', version:'20130216'
-    compile group: 'org.fitnesse', name: 'fitlibrary', version:'20081102'
+    compile files("$rootDir/download/fitnesse.jar", "$rootDir/download/fitlibrary-20081102.jar")
   }
