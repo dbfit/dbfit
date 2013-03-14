@@ -20,7 +20,7 @@ The VM doesn't include:
 
 *Note: the following instructions are Mac OS/Linux specific but the same approach should work under Windows as well, since vagrant and VirtualBox run on Windows.*
 
-1.  You first need to [install VirtualBox](https://www.virtualbox.org/wiki/Downloads). I have been using version 4.1.18. Guest additions are also required.
+1.  You first need to [install VirtualBox](https://www.virtualbox.org/wiki/Downloads). I have been using version 4.1.18.
 
 2.  You need to have ruby installed, version 1.8.7 or 1.9.X (I haven't tested with ruby 2.0). The Windows installed can be found [here](http://rubyinstaller.org/downloads/).
 
