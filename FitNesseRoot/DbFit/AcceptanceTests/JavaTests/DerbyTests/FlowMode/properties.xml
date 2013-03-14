@@ -9,6 +9,9 @@
 	<Search/>
 	<Suite/>
 	<Suites/>
+	<SymbolicLinks>
+		<BulkInsert>.DbFit.AcceptanceTests.CoreTests.BulkInsert</BulkInsert>
+	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>
 	<saveId>1211976567031</saveId>
