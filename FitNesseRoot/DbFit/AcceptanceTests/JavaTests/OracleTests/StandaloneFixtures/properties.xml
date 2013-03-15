@@ -9,10 +9,6 @@
 	<Search/>
 	<Suite/>
 	<Suites/>
-	<SymbolicLinks>
-		<CleanTableWithWhere>.DbFit.AcceptanceTests.DotNetTests.OracleTests.StandaloneFixtures.CleanTableWithWhere</CleanTableWithWhere>
-		<CleanTable>.DbFit.AcceptanceTests.DotNetTests.OracleTests.StandaloneFixtures.CleanTable</CleanTable>
-	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>
 	<saveId>1186987801659</saveId>
