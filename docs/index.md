@@ -43,6 +43,8 @@ show_comments: false
     <h3><a href="https://s3.amazonaws.com/dbfit/dbfit-20080822.pdf" onclick="recordOutboundLink(this, 'Documentation', 'Manual', 'Docs');return false;">DbFit 1.1 manual</a> <small>A PDF version of the original manual.</small></h3>
 
     <h3><a href="http://blogs.perficient.com/businessintelligence/2012/06/07/bi-tools-testing-with-dbfit/" onclick="recordOutboundLink(this, 'Outbound links', 'Perficient blog', 'Docs');return false;">Testing with DBFit</a> <small>Short, sharp DbFit overview, plus how to integrate with SSIS.</small></h3>
+
+    <h3><a href="http://gojko.net/FitNesse/book/" onclick="recordOutboundLink(this, 'Outbound links', 'Gojko Fitnesse Book', 'Docs');return false;">Test Driven .NET Development with FitNesse</a> <small>Gojko's free FitNesse book.</small></h3>
   </div>
 
 </div>
