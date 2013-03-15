@@ -1,0 +1,11 @@
+---
+layout: narrow
+---
+{% unless page.hide_header %}
+  <div class="page-header">
+    <h1>{{ page.title }} {% if page.tagline %} <small>{{ page.tagline }}</small>{% endif %}</h1>
+    {% if page.author_name and page.author_url %}By <a href="{{ page.author_url }}" rel="author">{{ page.author_name }}</a>{% endif %}{% if page.created_at %}, {{ page.created_at }}{% endif %}
+  </div>
+{% endunless %}
+
+{{ content }}
