@@ -4,7 +4,7 @@ Test-driven database development. Write readable, easy-to-maintain unit and inte
 
 ## Contributing
 
-See the [CONTRIBUTING file](dbfit/blob/master/CONTRIBUTING.md) for details on how to set up a test environment, contributing etc.
+See the [CONTRIBUTING file](CONTRIBUTING.md) for details on how to set up a test environment, contributing etc.
 
 ## License
 
