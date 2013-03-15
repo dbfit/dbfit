@@ -9,6 +9,8 @@ show_comments: false
     <h2>High level</h2>
   </div>
   <div class="span8" markdown="1">
+### [What's wrong with xUnit](/dbfit/docs/whats-wrong-with-xunit.html) <small>Why you should use DbFit.</small>
+
 ### [Writing tests](/dbfit/docs/writing-tests.html) <small>What different test types look like in DbFit.</small>
 
 ### [What's new](/dbfit/docs/whats-new.html) <small>The changes in each release.</small>
