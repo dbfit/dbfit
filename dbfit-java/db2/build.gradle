@@ -4,4 +4,4 @@ description = 'DBFit db2 engine'
 
 dependencies {
   compile project(':dbfit-core')
-  }
+}
