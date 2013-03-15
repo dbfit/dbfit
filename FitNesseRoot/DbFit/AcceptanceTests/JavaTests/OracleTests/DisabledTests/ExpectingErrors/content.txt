@@ -21,4 +21,3 @@ Add Reject Before Execute to assume an error
 cleanup
 
 |Execute|Drop table Test_DBFit|
-
