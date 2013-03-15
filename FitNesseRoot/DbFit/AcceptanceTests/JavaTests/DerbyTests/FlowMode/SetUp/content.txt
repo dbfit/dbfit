@@ -1,2 +1,3 @@
 !|dbfit.DerbyTest|
+
 !|Connect|jdbc:derby://localhost/dbfit;create=true|
