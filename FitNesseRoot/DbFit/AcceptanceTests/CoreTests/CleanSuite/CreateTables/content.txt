@@ -1,0 +1,3 @@
+|Execute|Create table Test_DBFit(name varchar(50), luckyNumber int)|
+
+|Execute|Create table Test_DBFit2(name varchar(50), luckyNumber int)|

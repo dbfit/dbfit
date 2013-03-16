@@ -1,0 +1,3 @@
+|Execute|Drop table Test_DBFit|
+
+|Execute|Drop table Test_DBFit2|

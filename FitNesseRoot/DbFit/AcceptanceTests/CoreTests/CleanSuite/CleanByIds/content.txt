@@ -1,6 +1,4 @@
-!*> create Test_DBFit table
-|Execute|Create table Test_DBFit(name varchar(50), luckyNumber int)|
-*!
+!include -c <CleanSuite.CreateTables
 
 |Insert|Test_DBFit |
 |name  |luckyNumber|
@@ -16,6 +14,4 @@
 |name |lucky Number            |
 |nnn  |3                       |
 
-!*> delete Test_DBFit table
-|Execute|Drop table Test_DBFit|
-*!
+!include -c <CleanSuite.DropTables
