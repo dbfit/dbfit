@@ -3,6 +3,7 @@ import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -162,7 +163,18 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 		}		
 		return readIntoParams(qualifiers, qry);
 	}
+
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName) throws SQLException
+	{
+		if (Options.is(SKIP_ORACLE_SYNONYMS)) {
+			return getAllColumnsSkipSynonyms(tableOrViewName);
+		}
+		else {
+			return readColumnsListFromMetaData("select * from " + tableOrViewName + " where 1 = 2");
+		}
+	}
+
+    public Map<String, DbParameterAccessor> getAllColumnsSkipSynonyms(String tableOrViewName) throws SQLException
     {
 		String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName).split("\\.");
 		String qry = " select column_name, data_type, data_length, " +
@@ -222,6 +234,35 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
 		return allParams;
 	}
+
+	private Map<String, DbParameterAccessor> readColumnsListFromMetaData(String query) 
+		throws SQLException{
+		Log.log("preparing metadata call "+query);
+		CallableStatement dc=currentConnection.prepareCall(query);
+		Log.log("executing metadata query");
+		ResultSet rs=dc.executeQuery();	
+
+		ResultSetMetaData md = rs.getMetaData();
+		int columnCount = md.getColumnCount();
+
+		Map<String, DbParameterAccessor>
+			allParams = new HashMap<String, DbParameterAccessor>();
+		int position=0;
+		Log.log("reading out");
+
+		for ( int i = 1; i <= columnCount; ++i )
+		{
+			String paramName=md.getColumnName(i);
+			String dataType = md.getColumnTypeName(i);
+			String direction = "IN";
+
+			position = addSingleParam(allParams, paramName, dataType, direction, position);
+		}
+		dc.close();
+
+		return allParams;
+	}
+		
 	// List interface has sequential search, so using list instead of array to map types
 	private static List<String> stringTypes = Arrays.asList(new String[] { "VARCHAR", "VARCHAR2", "NVARCHAR2", "CHAR", "NCHAR", "CLOB", "NCLOB", "ROWID" });
 	private static List<String> decimalTypes = Arrays.asList(new String[] { "BINARY_INTEGER","NUMBER","FLOAT" });
