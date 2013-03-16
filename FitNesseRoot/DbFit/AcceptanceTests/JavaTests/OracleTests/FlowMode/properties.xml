@@ -2,13 +2,15 @@
 <properties>
 	<Edit/>
 	<Files/>
-	<LastModified>20080301173003</LastModified>
 	<Properties/>
 	<RecentChanges/>
 	<Refactor/>
 	<Search/>
 	<Suite/>
 	<Suites/>
+	<SymbolicLinks>
+		<CleanSuite>.DbFit.AcceptanceTests.CoreTests.CleanSuite</CleanSuite>
+	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>
 	<saveId>1185178825007</saveId>
