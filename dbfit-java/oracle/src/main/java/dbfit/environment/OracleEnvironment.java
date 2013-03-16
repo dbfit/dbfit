@@ -176,6 +176,27 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 		return readIntoParams(qualifiers, qry);
 	}
 
+	private int addSingleParam(Map<String, DbParameterAccessor> allParams,
+			String paramName, String dataType, String direction, int position) {
+		if (paramName==null) paramName="";
+		int paramDirection;
+		if (paramName.trim().length()==0) 
+			paramDirection=DbParameterAccessor.RETURN_VALUE;
+		else
+			paramDirection=getParameterDirection(direction);
+
+		Log.log("read out "+paramName+" of "+ dataType);
+
+		DbParameterAccessor dbp=new DbParameterAccessor (paramName,paramDirection,
+				getSqlType(dataType), getJavaClass(dataType),
+				paramDirection==DbParameterAccessor.RETURN_VALUE?
+						-1:position++);	
+		allParams.put(NameNormaliser.normaliseName(paramName),
+			dbp);
+
+		return position;
+	}
+
 	private Map<String, DbParameterAccessor> readIntoParams(String[] queryParameters, String query) 
 		throws SQLException{
 		
@@ -193,25 +214,12 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 		Log.log("reading out");
 		while (rs.next()) {
 			String paramName=rs.getString(1);			
-			if (paramName==null) paramName="";
 			String dataType = rs.getString(2);
-//			int length = rs.getInt(3);
 			String direction = rs.getString(4);
-			int paramDirection;
-			if (paramName.trim().length()==0) 
-				paramDirection=DbParameterAccessor.RETURN_VALUE;
-			else
-				paramDirection=getParameterDirection(direction);
-//			Class javaType=getJavaClass(dataType);
-
-			Log.log("read out "+paramName+" of "+ dataType);
-			DbParameterAccessor dbp=new DbParameterAccessor (paramName,paramDirection,
-					getSqlType(dataType), getJavaClass(dataType),
-					paramDirection==DbParameterAccessor.RETURN_VALUE?
-							-1:position++);			
-			allParams.put(NameNormaliser.normaliseName(paramName),
-				dbp);
+			position = addSingleParam(allParams, paramName, dataType, direction, position);
 		}
+		dc.close();
+
 		return allParams;
 	}
 	// List interface has sequential search, so using list instead of array to map types
