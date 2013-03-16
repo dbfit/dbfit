@@ -124,7 +124,7 @@ grant execute on synstandaloneproc to dftest;
 grant execute on dfsyntest.pkg to dftest;
 
 create table dfsyntest.animals(id number, name varchar2(100 char), arrival_tstamp timestamp);
-grant select on dfsyntest.animals to dftest;
+grant select,insert,update on dfsyntest.animals to dftest;
 create or replace synonym dftest.prv_syn_animals for dfsyntest.animals;
 create or replace public synonym pub_syn_animals for dfsyntest.animals;
 
