@@ -110,6 +110,10 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         int position = -1;
     }
 
+    private static boolean isReturnValueParameter(String paramName) {
+        return (paramName == null) || paramName.trim().isEmpty();
+    }
+
     public OracleEnvironment() {
         // TypeAdapter.registerParseDelegate(oracle.sql.TIMESTAMP.class,
         // OracleTimestampParser.class);
@@ -250,15 +254,18 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         if (paramName == null)
             paramName = "";
         int paramDirection;
-        if (paramName.trim().length() == 0)
+        int paramPosition = position;
+        if (isReturnValueParameter(paramName)) {
             paramDirection = DbParameterAccessor.RETURN_VALUE;
-        else
+            paramPosition = -1;
+        }
+        else {
             paramDirection = getParameterDirection(direction);
+        }
 
         DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                 paramDirection, getSqlType(dataType), getJavaClass(dataType),
-                paramDirection == DbParameterAccessor.RETURN_VALUE ? -1
-                        : position);
+                paramPosition);
 
         return dbp;
     }
