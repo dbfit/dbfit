@@ -3,4 +3,7 @@ description = 'DBFit core api and fixtures'
 dependencies {
     compile "dummy:fitnesse:0.0.0@jar"
     compile "dummy:fitlibrary:20081102@jar"
+    compile "org.htmlparser:htmlparser:2.1"
+    compile "org.apache.velocity:velocity:1.7"
+    compile "org.json:json:20090211"
 }
