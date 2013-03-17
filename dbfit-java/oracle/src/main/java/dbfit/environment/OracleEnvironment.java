@@ -425,26 +425,15 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                     String query) throws SQLException {
         CallableStatement dc = openDbCallWithParameters(query, new String[]{});
         ResultSet rs = dc.executeQuery();
+        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
 
         ResultSetMetaData md = rs.getMetaData();
-        int columnCount = md.getColumnCount();
 
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-        DbParameterOrColumnInfo info = new DbParameterOrColumnInfo();
-        int position = 0;
-        Log.log("reading out");
+        ResultSetMetaDataParameterOrColumnInfoIterator iter =
+            ResultSetMetaDataParameterOrColumnInfoIterator.newInstance(md);
 
-        for (int i = 1; i <= columnCount; ++i) {
-            info.name = md.getColumnName(i);
-            info.dataType = md.getColumnTypeName(i);
-            info.direction = "IN";
-            info.position = position;
-
-            DbParameterAccessor dbp = addSingleParam(allParams, info);
-
-            if (dbp.getPosition() >= 0) {
-                ++position;
-            }
+        while (iter.hasNext()) {
+            addSingleParam(allParams, iter.next());
         }
         dc.close();
 
