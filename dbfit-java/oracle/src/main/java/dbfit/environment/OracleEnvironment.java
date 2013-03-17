@@ -266,12 +266,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     private Map<String, DbParameterAccessor> readIntoParams(
             String[] queryParameters, String query) throws SQLException {
 
-        Log.log("preparing call " + query, queryParameters);
-        CallableStatement dc = currentConnection.prepareCall(query);
-        Log.log("setting parameters");
-        for (int i = 0; i < queryParameters.length; i++) {
-            dc.setString(i + 1, queryParameters[i].toUpperCase());
-        }
+        CallableStatement dc = openDbCallWithParameters(query, queryParameters);
         Log.log("executing query");
         ResultSet rs = dc.executeQuery();
         Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
@@ -296,10 +291,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     }
 
     private Map<String, DbParameterAccessor> readColumnsListFromMetaData(
-            String query) throws SQLException {
-        Log.log("preparing metadata call " + query);
-        CallableStatement dc = currentConnection.prepareCall(query);
-        Log.log("executing metadata query");
+                    String query) throws SQLException {
+        CallableStatement dc = openDbCallWithParameters(query, new String[]{});
         ResultSet rs = dc.executeQuery();
 
         ResultSetMetaData md = rs.getMetaData();
@@ -326,6 +319,19 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
         return allParams;
     }
+
+    private CallableStatement openDbCallWithParameters(String query,
+            String[] queryParameters) throws SQLException {
+        Log.log("preparing call " + query, queryParameters);
+        CallableStatement dc = currentConnection.prepareCall(query);
+        Log.log("setting parameters");
+        for (int i = 0; i < queryParameters.length; i++) {
+            dc.setString(i + 1, queryParameters[i].toUpperCase());
+        }
+
+        return dc;
+    }
+
 
     // List interface has sequential search, so using list instead of array to
     // map types
