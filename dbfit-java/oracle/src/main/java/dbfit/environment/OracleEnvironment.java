@@ -436,40 +436,12 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
     private Map<String, DbParameterAccessor> readIntoParams(
             String[] queryParameters, String query) throws SQLException {
-
-        CallableStatement dc = openDbCallWithParameters(query, queryParameters);
-        Log.log("executing query");
-        ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-
-        DirectResultSetParameterOrColumnInfoIterator iter =
-            DirectResultSetParameterOrColumnInfoIterator.newInstance(rs);
-
-        while (iter.hasNext()) {
-            addSingleParam(allParams, iter.next());
-        }
-        dc.close();
-
-        return allParams;
+        return readIntoParams(queryParameters, query, DB_DICTIONARY);
     }
 
     private Map<String, DbParameterAccessor> readColumnsListFromMetaData(
-                    String query) throws SQLException {
-        CallableStatement dc = openDbCallWithParameters(query, new String[]{});
-        ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-
-        ResultSetMetaData md = rs.getMetaData();
-
-        ResultSetMetaDataParameterOrColumnInfoIterator iter =
-            ResultSetMetaDataParameterOrColumnInfoIterator.newInstance(md);
-
-        while (iter.hasNext()) {
-            addSingleParam(allParams, iter.next());
-        }
-        dc.close();
-
-        return allParams;
+            String query) throws SQLException {
+        return readIntoParams(queryParameters, query, new String[]{}, JDBC_RESULT_SET_META_DATA); 
     }
 
     private CallableStatement openDbCallWithParameters(String query,
