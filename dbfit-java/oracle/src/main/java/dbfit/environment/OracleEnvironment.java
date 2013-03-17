@@ -361,12 +361,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
-        if (Options.is(SKIP_ORACLE_SYNONYMS)) {
-            return getAllColumnsSkipSynonyms(tableOrViewName);
-        } else {
-            return readColumnsListFromMetaData("select * from "
-                    + tableOrViewName + " where 1 = 2");
-        }
+        String query = "select * from " + tableOrViewName + " where 1 = 2";
+        return readIntoParams(new String[]{}, query, InfoSource.JDBC_RESULT_SET_META_DATA); 
     }
 
     public Map<String, DbParameterAccessor> getAllColumnsSkipSynonyms(
