@@ -223,18 +223,19 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         return readIntoParams(qualifiers, qry);
     }
 
-    private int addSingleParam(Map<String, DbParameterAccessor> allParams,
+    private DbParameterAccessor addSingleParam(Map<String, DbParameterAccessor> allParams,
             String paramName, String dataType, String direction, int position) {
         DbParameterAccessor dbp = makeSingleParam(paramName, dataType, direction, position);
 
         Log.log("read out " + dbp.getName() + " of " + dataType);
+
         allParams.put(NameNormaliser.normaliseName(dbp.getName()), dbp);
 
         if (dbp.getPosition() >= 0) {
             ++position;
         }
 
-        return position;
+        return dbp;
     }
 
     private DbParameterAccessor makeSingleParam(
@@ -273,8 +274,12 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             String paramName = rs.getString(1);
             String dataType = rs.getString(2);
             String direction = rs.getString(4);
-            position = addSingleParam(allParams, paramName, dataType,
-                    direction, position);
+
+            DbParameterAccessor dbp = addSingleParam(allParams, paramName, dataType, direction, position);
+
+            if (dbp.getPosition() >= 0) {
+                ++position;
+            }
         }
         dc.close();
 
@@ -300,8 +305,11 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             String dataType = md.getColumnTypeName(i);
             String direction = "IN";
 
-            position = addSingleParam(allParams, paramName, dataType,
-                    direction, position);
+            DbParameterAccessor dbp = addSingleParam(allParams, paramName, dataType, direction, position);
+
+            if (dbp.getPosition() >= 0) {
+                ++position;
+            }
         }
         dc.close();
 
