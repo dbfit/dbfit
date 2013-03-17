@@ -177,6 +177,75 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         }
     }
 
+    /**
+     * Iterator over ResultSetMetaData of columns
+     */
+    static class ResultSetMetaDataParameterOrColumnInfoIterator implements Iterator<DbParameterOrColumnInfo> {
+        private ResultSetMetaData md;
+        private int position;
+        private DbParameterOrColumnInfo info = null;
+        private int currentColumn = -1;
+        private int columnCount;
+        
+        private ResultSetMetaDataParameterOrColumnInfoIterator(ResultSetMetaData md) throws SQLException {
+            this.md = md;
+            this.position = 0;
+            this.info = null;
+            this.currentColumn = 0;
+            this.columnCount = md.getColumnCount();
+        }
+
+        public static ResultSetMetaDataParameterOrColumnInfoIterator newInstance(ResultSetMetaData md) throws SQLException {
+            return new ResultSetMetaDataParameterOrColumnInfoIterator(md);
+        }
+
+        private void readToInfo() throws SQLException {
+            info = new DbParameterOrColumnInfo();
+
+            info.name = md.getColumnName(currentColumn + 1);
+            info.dataType = md.getColumnTypeName(currentColumn + 1);
+            info.direction = "IN";
+            info.position = position;
+
+            if (!isReturnValueParameter(info.name)) {
+                ++position;
+            }
+            ++currentColumn;
+        }
+
+        @Override
+        public boolean hasNext() {
+            try {
+                if (info != null) {
+                    return true;
+                } else if (currentColumn < columnCount) {
+                    readToInfo();
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Override
+        public DbParameterOrColumnInfo next() {
+            if (hasNext()) {
+                DbParameterOrColumnInfo result = info;
+                info = null;
+                return result;
+            } else {
+                throw new java.util.NoSuchElementException();
+            }
+        }
+
+        @Override
+        public void remove() throws UnsupportedOperationException {
+            throw new UnsupportedOperationException();
+        }
+    }
+
     public OracleEnvironment() {
         // TypeAdapter.registerParseDelegate(oracle.sql.TIMESTAMP.class,
         // OracleTimestampParser.class);
