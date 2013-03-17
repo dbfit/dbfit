@@ -120,7 +120,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         return (paramName == null) || paramName.trim().isEmpty();
     }
 
-    static abstract class AbstractParameterOrColumnInfoIterator implements Iterator<DbParameterOrColumnInfo> {
+    static abstract class AbstractParamsOrColumnsIterator implements Iterator<DbParameterOrColumnInfo> {
         protected int position;
         protected DbParameterOrColumnInfo info;
 
@@ -173,19 +173,19 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     /**
      * Iterate over ResultSet with db dictionary meta data about parameters or columns
      */
-    static class DirectResultSetParameterOrColumnInfoIterator extends AbstractParameterOrColumnInfoIterator
+    static class DbDictionaryParamsOrColumnsIterator extends AbstractParamsOrColumnsIterator
             implements Iterator<DbParameterOrColumnInfo> {
 
         private ResultSet rs;
         
-        private DirectResultSetParameterOrColumnInfoIterator(ResultSet rs) {
+        private DbDictionaryParamsOrColumnsIterator(ResultSet rs) {
             this.rs = rs;
             this.position = 0;
             this.info = null;
         }
 
-        public static DirectResultSetParameterOrColumnInfoIterator newInstance(ResultSet rs) {
-            return new DirectResultSetParameterOrColumnInfoIterator(rs);
+        public static DbDictionaryParamsOrColumnsIterator newInstance(ResultSet rs) {
+            return new DbDictionaryParamsOrColumnsIterator(rs);
         }
 
         @Override
@@ -208,15 +208,15 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     }
 
     /**
-     * Iterator over ResultSetMetaData of columns
+     * Iterator over JdbcRsMeta of columns
      */
-    static class ResultSetMetaDataParameterOrColumnInfoIterator extends AbstractParameterOrColumnInfoIterator
+    static class JdbcRsMetaParamsOrColumnsIterator extends AbstractParamsOrColumnsIterator
             implements Iterator<DbParameterOrColumnInfo> {
         private ResultSetMetaData md;
         private int currentColumn = -1;
         private int columnCount;
         
-        private ResultSetMetaDataParameterOrColumnInfoIterator(ResultSetMetaData md) throws SQLException {
+        private JdbcRsMetaParamsOrColumnsIterator(ResultSetMetaData md) throws SQLException {
             this.md = md;
             this.position = 0;
             this.info = null;
@@ -224,8 +224,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             this.columnCount = md.getColumnCount();
         }
 
-        public static ResultSetMetaDataParameterOrColumnInfoIterator newInstance(ResultSetMetaData md) throws SQLException {
-            return new ResultSetMetaDataParameterOrColumnInfoIterator(md);
+        public static JdbcRsMetaParamsOrColumnsIterator newInstance(ResultSetMetaData md) throws SQLException {
+            return new JdbcRsMetaParamsOrColumnsIterator(md);
         }
 
         @Override
@@ -249,14 +249,14 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         }
     }
 
-    private static Iterator<DbParameterOrColumnInfo> createParameterOrColumnInfoIterator(
+    private static Iterator<DbParameterOrColumnInfo> createParamsOrColumnsIterator(
             ResultSet rs, InfoSource infoSrc) throws SQLException {
 
         switch (infoSrc) {
             case DB_DICTIONARY:
-                return DirectResultSetParameterOrColumnInfoIterator.newInstance(rs);
+                return DbDictionaryParamsOrColumnsIterator.newInstance(rs);
             case JDBC_RESULT_SET_META_DATA:
-                return ResultSetMetaDataParameterOrColumnInfoIterator.newInstance(rs.getMetaData());
+                return JdbcRsMetaParamsOrColumnsIterator.newInstance(rs.getMetaData());
             default:
                 return null;
         }
@@ -406,7 +406,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         Log.log("executing query");
         ResultSet rs = dc.executeQuery();
         Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-        Iterator<DbParameterOrColumnInfo> iter = createParameterOrColumnInfoIterator(rs, infoSrc);
+        Iterator<DbParameterOrColumnInfo> iter = createParamsOrColumnsIterator(rs, infoSrc);
 
         while (iter.hasNext()) {
             addSingleParam(allParams, iter.next());
