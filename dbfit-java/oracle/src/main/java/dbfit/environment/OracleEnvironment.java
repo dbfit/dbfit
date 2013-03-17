@@ -225,6 +225,20 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
     private int addSingleParam(Map<String, DbParameterAccessor> allParams,
             String paramName, String dataType, String direction, int position) {
+        DbParameterAccessor dbp = makeSingleParam(paramName, dataType, direction, position);
+
+        Log.log("read out " + dbp.getName() + " of " + dataType);
+        allParams.put(NameNormaliser.normaliseName(dbp.getName()), dbp);
+
+        if (dbp.getPosition() >= 0) {
+            ++position;
+        }
+
+        return position;
+    }
+
+    private DbParameterAccessor makeSingleParam(
+            String paramName, String dataType, String direction, int position) {
         if (paramName == null)
             paramName = "";
         int paramDirection;
@@ -233,15 +247,12 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         else
             paramDirection = getParameterDirection(direction);
 
-        Log.log("read out " + paramName + " of " + dataType);
-
         DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                 paramDirection, getSqlType(dataType), getJavaClass(dataType),
                 paramDirection == DbParameterAccessor.RETURN_VALUE ? -1
-                        : position++);
-        allParams.put(NameNormaliser.normaliseName(paramName), dbp);
+                        : position);
 
-        return position;
+        return dbp;
     }
 
     private Map<String, DbParameterAccessor> readIntoParams(
