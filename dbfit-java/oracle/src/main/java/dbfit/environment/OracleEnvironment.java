@@ -120,33 +120,24 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         return (paramName == null) || paramName.trim().isEmpty();
     }
 
-    /**
-     * Iterate over ResultSet with db dictionary meta data about parameters or columns
-     */
-    static class DirectResultSetParameterOrColumnInfoIterator implements Iterator<DbParameterOrColumnInfo> {
-        private ResultSet rs;
-        private int position;
-        private DbParameterOrColumnInfo info = null;
-        
-        private DirectResultSetParameterOrColumnInfoIterator(ResultSet rs) {
-            this.rs = rs;
-            this.position = 0;
-            this.info = null;
-        }
+    static abstract class AbstractParameterOrColumnInfoIterator implements Iterator<DbParameterOrColumnInfo> {
+        protected int position;
+        protected DbParameterOrColumnInfo info;
 
-        public static DirectResultSetParameterOrColumnInfoIterator newInstance(ResultSet rs) {
-            return new DirectResultSetParameterOrColumnInfoIterator(rs);
-        }
+        abstract protected boolean readNext() throws SQLException;
 
-        private void readToInfo() throws SQLException {
-            info = new DbParameterOrColumnInfo();
-            info.name = rs.getString(1);
-            info.dataType = rs.getString(2);
-            info.direction = rs.getString(4);
-            info.position = position;
+        protected void incrementPosition() {
             if (!isReturnValueParameter(info.name)) {
                 ++position;
             }
+        }
+
+        protected boolean fetchNext() throws SQLException {
+            if (readNext()) {
+                incrementPosition();
+                return true;
+            }
+            return false;
         }
 
         @Override
@@ -154,11 +145,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             try {
                 if (info != null) {
                     return true;
-                } else if (rs.next()) {
-                    readToInfo();
-                    return true;
                 } else {
-                    return false;
+                    return fetchNext();
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -183,12 +171,48 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     }
 
     /**
+     * Iterate over ResultSet with db dictionary meta data about parameters or columns
+     */
+    static class DirectResultSetParameterOrColumnInfoIterator extends AbstractParameterOrColumnInfoIterator
+            implements Iterator<DbParameterOrColumnInfo> {
+
+        private ResultSet rs;
+        
+        private DirectResultSetParameterOrColumnInfoIterator(ResultSet rs) {
+            this.rs = rs;
+            this.position = 0;
+            this.info = null;
+        }
+
+        public static DirectResultSetParameterOrColumnInfoIterator newInstance(ResultSet rs) {
+            return new DirectResultSetParameterOrColumnInfoIterator(rs);
+        }
+
+        @Override
+        protected boolean readNext() throws SQLException {
+            if (rs.next()) {
+                readToInfo();
+                return true;
+            }
+
+            return false;
+        }
+
+        private void readToInfo() throws SQLException {
+            info = new DbParameterOrColumnInfo();
+            info.name = rs.getString(1);
+            info.dataType = rs.getString(2);
+            info.direction = rs.getString(4);
+            info.position = position;
+        }
+    }
+
+    /**
      * Iterator over ResultSetMetaData of columns
      */
-    static class ResultSetMetaDataParameterOrColumnInfoIterator implements Iterator<DbParameterOrColumnInfo> {
+    static class ResultSetMetaDataParameterOrColumnInfoIterator extends AbstractParameterOrColumnInfoIterator
+            implements Iterator<DbParameterOrColumnInfo> {
         private ResultSetMetaData md;
-        private int position;
-        private DbParameterOrColumnInfo info = null;
         private int currentColumn = -1;
         private int columnCount;
         
@@ -204,6 +228,17 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             return new ResultSetMetaDataParameterOrColumnInfoIterator(md);
         }
 
+        @Override
+        protected boolean readNext() throws SQLException {
+            if (currentColumn < columnCount) {
+                readToInfo();
+                ++currentColumn;
+                return true;
+            }
+            
+            return false;
+        }
+
         private void readToInfo() throws SQLException {
             info = new DbParameterOrColumnInfo();
 
@@ -211,43 +246,6 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             info.dataType = md.getColumnTypeName(currentColumn + 1);
             info.direction = "IN";
             info.position = position;
-
-            if (!isReturnValueParameter(info.name)) {
-                ++position;
-            }
-            ++currentColumn;
-        }
-
-        @Override
-        public boolean hasNext() {
-            try {
-                if (info != null) {
-                    return true;
-                } else if (currentColumn < columnCount) {
-                    readToInfo();
-                    return true;
-                } else {
-                    return false;
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public DbParameterOrColumnInfo next() {
-            if (hasNext()) {
-                DbParameterOrColumnInfo result = info;
-                info = null;
-                return result;
-            } else {
-                throw new java.util.NoSuchElementException();
-            }
-        }
-
-        @Override
-        public void remove() throws UnsupportedOperationException {
-            throw new UnsupportedOperationException();
         }
     }
 
