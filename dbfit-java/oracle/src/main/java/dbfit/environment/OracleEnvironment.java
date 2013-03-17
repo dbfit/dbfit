@@ -340,20 +340,12 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         Log.log("executing query");
         ResultSet rs = dc.executeQuery();
         Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-        DbParameterOrColumnInfo info = new DbParameterOrColumnInfo();
-        int position = 0;
-        Log.log("reading out");
-        while (rs.next()) {
-            info.name = rs.getString(1);
-            info.dataType = rs.getString(2);
-            info.direction = rs.getString(4);
-            info.position = position;
 
-            DbParameterAccessor dbp = addSingleParam(allParams, info);
-               
-            if (dbp.getPosition() >= 0) {
-                ++position;
-            }
+        DirectResultSetParameterOrColumnInfoIterator iter =
+            DirectResultSetParameterOrColumnInfoIterator.newInstance(rs);
+
+        while (iter.hasNext()) {
+            addSingleParam(allParams, iter.next());
         }
         dc.close();
 
