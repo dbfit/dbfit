@@ -104,6 +104,11 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         }
     }
 
+    private static enum InfoSource {
+        DB_DICTIONARY,
+        JDBC_RESULT_SET_META_DATA
+    }
+
     private static class DbParameterOrColumnInfo {
         String name = null;
         String direction = null;
@@ -400,6 +405,33 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                 paramPosition);
 
         return dbp;
+    }
+
+    private Map<String, DbParameterAccessor> readIntoParams(
+            String[] queryParameters, String query, InfoSource infoSrc) throws SQLException {
+
+        CallableStatement dc = openDbCallWithParameters(query, queryParameters);
+        Log.log("executing query");
+        ResultSet rs = dc.executeQuery();
+        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+        Iterator<DbParameterOrColumnInfo> iter = null;
+
+        switch (infoSrc) {
+            case DB_DICTIONARY:
+                iter = DirectResultSetParameterOrColumnInfoIterator.newInstance(rs);
+                break;
+            case JDBC_RESULT_SET_META_DATA:
+                iter = ResultSetMetaDataParameterOrColumnInfoIterator.newInstance(rs.getMetaData());
+                break;
+        }
+
+        while (iter.hasNext()) {
+            addSingleParam(allParams, iter.next());
+        }
+
+        dc.close();
+
+        return allParams;
     }
 
     private Map<String, DbParameterAccessor> readIntoParams(
