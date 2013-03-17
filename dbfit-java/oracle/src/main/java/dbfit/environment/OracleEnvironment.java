@@ -365,21 +365,6 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         return readIntoParams(new String[]{}, query, InfoSource.JDBC_RESULT_SET_META_DATA); 
     }
 
-    public Map<String, DbParameterAccessor> getAllColumnsSkipSynonyms(
-            String tableOrViewName) throws SQLException {
-        String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
-                .split("\\.");
-        String qry = " select column_name, data_type, data_length, "
-                + " 'IN' as direction, column_id from all_tab_columns where ";
-        if (qualifiers.length == 2) {
-            qry += " owner=? and table_name=? ";
-        } else {
-            qry += " (owner=user and table_name=?)";
-        }
-        qry += " order by column_id ";
-        return readIntoParams(qualifiers, qry);
-    }
-
     private DbParameterAccessor addSingleParam(Map<String, DbParameterAccessor> allParams,
             DbParameterOrColumnInfo info) {
         DbParameterAccessor dbp = makeSingleParam(info);
@@ -437,11 +422,6 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     private Map<String, DbParameterAccessor> readIntoParams(
             String[] queryParameters, String query) throws SQLException {
         return readIntoParams(queryParameters, query, InfoSource.DB_DICTIONARY);
-    }
-
-    private Map<String, DbParameterAccessor> readColumnsListFromMetaData(
-            String query) throws SQLException {
-        return readIntoParams(new String[]{}, query, InfoSource.JDBC_RESULT_SET_META_DATA); 
     }
 
     private CallableStatement openDbCallWithParameters(String query,
