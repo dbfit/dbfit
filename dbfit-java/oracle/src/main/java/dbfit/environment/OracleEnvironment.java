@@ -251,6 +251,19 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         }
     }
 
+    private static Iterator<DbParameterOrColumnInfo> createParameterOrColumnInfoIterator(
+            ResultSet rs, InfoSource infoSrc) throws SQLException {
+
+        switch (infoSrc) {
+            case DB_DICTIONARY:
+                return DirectResultSetParameterOrColumnInfoIterator.newInstance(rs);
+            case JDBC_RESULT_SET_META_DATA:
+                return ResultSetMetaDataParameterOrColumnInfoIterator.newInstance(rs.getMetaData());
+            default:
+                return null;
+        }
+    }
+
     public OracleEnvironment() {
         // TypeAdapter.registerParseDelegate(oracle.sql.TIMESTAMP.class,
         // OracleTimestampParser.class);
@@ -414,16 +427,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         Log.log("executing query");
         ResultSet rs = dc.executeQuery();
         Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-        Iterator<DbParameterOrColumnInfo> iter = null;
-
-        switch (infoSrc) {
-            case DB_DICTIONARY:
-                iter = DirectResultSetParameterOrColumnInfoIterator.newInstance(rs);
-                break;
-            case JDBC_RESULT_SET_META_DATA:
-                iter = ResultSetMetaDataParameterOrColumnInfoIterator.newInstance(rs.getMetaData());
-                break;
-        }
+        Iterator<DbParameterOrColumnInfo> iter = createParameterOrColumnInfoIterator(rs, infoSrc);
 
         while (iter.hasNext()) {
             addSingleParam(allParams, iter.next());
@@ -436,12 +440,12 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
     private Map<String, DbParameterAccessor> readIntoParams(
             String[] queryParameters, String query) throws SQLException {
-        return readIntoParams(queryParameters, query, DB_DICTIONARY);
+        return readIntoParams(queryParameters, query, InfoSource.DB_DICTIONARY);
     }
 
     private Map<String, DbParameterAccessor> readColumnsListFromMetaData(
             String query) throws SQLException {
-        return readIntoParams(queryParameters, query, new String[]{}, JDBC_RESULT_SET_META_DATA); 
+        return readIntoParams(new String[]{}, query, InfoSource.JDBC_RESULT_SET_META_DATA); 
     }
 
     private CallableStatement openDbCallWithParameters(String query,
