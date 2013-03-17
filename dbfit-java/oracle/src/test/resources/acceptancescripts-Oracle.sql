@@ -5,6 +5,7 @@ accept syspw prompt "Enter Sys password ->"
 
 connect sys/&&syspw@&&dbhost as sysdba
 
+define tbs_data = USERS
 set define off
 
 create user dftest identified by dftest;
@@ -89,10 +90,11 @@ set define on
 
 connect sys/&&syspw@&&dbhost as sysdba
 
-set define off
+set verify off
 
+create user dfsyntest identified by dfsyntest default tablespace &&tbs_data;
 
-create user dfsyntest identified by dfsyntest;
+alter user dfsyntest quota unlimited on &&tbs_data;
 
 create or replace procedure dfsyntest.standaloneproc(num1 number, num2 out number) as
 begin
@@ -114,11 +116,16 @@ create or replace package body dfsyntest.pkg as
 	end;
 end;
 /
-	 
+
 create or replace public synonym synpkg for dfsyntest.pkg;
 
 grant execute on synstandaloneproc to dftest;
 
 grant execute on dfsyntest.pkg to dftest;
+
+create table dfsyntest.animals(id number, name varchar2(100 char), arrival_tstamp timestamp);
+grant select,insert,update on dfsyntest.animals to dftest;
+create or replace synonym dftest.prv_syn_animals for dfsyntest.animals;
+create or replace public synonym pub_syn_animals for dfsyntest.animals;
 
 exit
