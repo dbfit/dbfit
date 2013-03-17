@@ -1,0 +1,24 @@
+!3 synonyms are taken into consideration when selecting table or view metadata
+
+!4 Private synonyms
+
+|insert|prv_syn_animals           |
+|id    |name|arrival_tstamp       |
+|1     |Lion|2012-03-16 16:23:13.0|
+
+|Query|select * from prv_syn_animals|
+|id   |name  |arrival_tstamp        |
+|1    |Lion  |2012-03-16 16:23:13.0 |
+
+
+!4 Public synonyms
+
+|insert|pub_syn_animals            |
+|id    |name|arrival_tstamp        |
+|2     |Tiger|2012-03-16 17:23:13.0|
+
+|Query|select * from pub_syn_animals|
+|id   |name  |arrival_tstamp        |
+|1    |Lion  |2012-03-16 16:23:13.0 |
+|2    |Tiger |2012-03-16 17:23:13.0 |
+
