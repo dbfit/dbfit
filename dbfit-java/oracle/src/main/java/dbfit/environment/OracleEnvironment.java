@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.Iterator;
 
 import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.rowset.OracleCachedRowSet;
@@ -103,7 +104,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         }
     }
 
-    class DbParameterOrColumnInfo {
+    private static class DbParameterOrColumnInfo {
         String name = null;
         String direction = null;
         String dataType = null;
@@ -112,6 +113,68 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
     private static boolean isReturnValueParameter(String paramName) {
         return (paramName == null) || paramName.trim().isEmpty();
+    }
+
+    /**
+     * Iterate over ResultSet with db dictionary meta data about parameters or columns
+     */
+    static class DirectResultSetParameterOrColumnInfoIterator implements Iterator<DbParameterOrColumnInfo> {
+        private ResultSet rs;
+        private int position;
+        private DbParameterOrColumnInfo info = null;
+        
+        private DirectResultSetParameterOrColumnInfoIterator(ResultSet rs) {
+            this.rs = rs;
+            this.position = 0;
+            this.info = null;
+        }
+
+        public static DirectResultSetParameterOrColumnInfoIterator newInstance(ResultSet rs) {
+            return new DirectResultSetParameterOrColumnInfoIterator(rs);
+        }
+
+        private void readToInfo() throws SQLException {
+            info = new DbParameterOrColumnInfo();
+            info.name = rs.getString(1);
+            info.dataType = rs.getString(2);
+            info.direction = rs.getString(4);
+            info.position = position;
+            if (!isReturnValueParameter(info.name)) {
+                ++position;
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            try {
+                if (info != null) {
+                    return true;
+                } else if (rs.next()) {
+                    readToInfo();
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Override
+        public DbParameterOrColumnInfo next() {
+            if (hasNext()) {
+                DbParameterOrColumnInfo result = info;
+                info = null;
+                return result;
+            } else {
+                throw new java.util.NoSuchElementException();
+            }
+        }
+
+        @Override
+        public void remove() throws UnsupportedOperationException {
+            throw new UnsupportedOperationException();
+        }
     }
 
     public OracleEnvironment() {
