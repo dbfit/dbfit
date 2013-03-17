@@ -103,6 +103,13 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         }
     }
 
+    class DbParameterOrColumnInfo {
+        String name = null;
+        String direction = null;
+        String dataType = null;
+        int position = -1;
+    }
+
     public OracleEnvironment() {
         // TypeAdapter.registerParseDelegate(oracle.sql.TIMESTAMP.class,
         // OracleTimestampParser.class);
@@ -224,18 +231,18 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     }
 
     private DbParameterAccessor addSingleParam(Map<String, DbParameterAccessor> allParams,
-            String paramName, String dataType, String direction, int position) {
-        DbParameterAccessor dbp = makeSingleParam(paramName, dataType, direction, position);
+            DbParameterOrColumnInfo info) {
+        DbParameterAccessor dbp = makeSingleParam(info);
 
-        Log.log("read out " + dbp.getName() + " of " + dataType);
+        Log.log("read out " + dbp.getName() + " of " + info.dataType);
 
         allParams.put(NameNormaliser.normaliseName(dbp.getName()), dbp);
 
-        if (dbp.getPosition() >= 0) {
-            ++position;
-        }
-
         return dbp;
+    }
+
+    private DbParameterAccessor makeSingleParam(DbParameterOrColumnInfo info) {
+        return makeSingleParam(info.name, info.dataType, info.direction, info.position);
     }
 
     private DbParameterAccessor makeSingleParam(
@@ -268,15 +275,17 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         Log.log("executing query");
         ResultSet rs = dc.executeQuery();
         Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+        DbParameterOrColumnInfo info = new DbParameterOrColumnInfo();
         int position = 0;
         Log.log("reading out");
         while (rs.next()) {
-            String paramName = rs.getString(1);
-            String dataType = rs.getString(2);
-            String direction = rs.getString(4);
+            info.name = rs.getString(1);
+            info.dataType = rs.getString(2);
+            info.direction = rs.getString(4);
+            info.position = position;
 
-            DbParameterAccessor dbp = addSingleParam(allParams, paramName, dataType, direction, position);
-
+            DbParameterAccessor dbp = addSingleParam(allParams, info);
+               
             if (dbp.getPosition() >= 0) {
                 ++position;
             }
@@ -297,15 +306,17 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         int columnCount = md.getColumnCount();
 
         Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+        DbParameterOrColumnInfo info = new DbParameterOrColumnInfo();
         int position = 0;
         Log.log("reading out");
 
         for (int i = 1; i <= columnCount; ++i) {
-            String paramName = md.getColumnName(i);
-            String dataType = md.getColumnTypeName(i);
-            String direction = "IN";
+            info.name = md.getColumnName(i);
+            info.dataType = md.getColumnTypeName(i);
+            info.direction = "IN";
+            info.position = position;
 
-            DbParameterAccessor dbp = addSingleParam(allParams, paramName, dataType, direction, position);
+            DbParameterAccessor dbp = addSingleParam(allParams, info);
 
             if (dbp.getPosition() >= 0) {
                 ++position;
