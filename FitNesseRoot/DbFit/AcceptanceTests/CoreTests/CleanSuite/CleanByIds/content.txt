@@ -1,0 +1,17 @@
+!include -c <CleanSuite.CreateTables
+
+|Insert|Test_DBFit |
+|name  |luckyNumber|
+|pera  |1          |
+|nuja  |2          |
+|nnn   |3          |
+
+|Clean                                           |
+|table     |column name|ids |delete rows for ids?|
+|Test_DBFit|luckyNumber|1, 2|true                |
+
+|Query|Select * from Test_DBFit|
+|name |lucky Number            |
+|nnn  |3                       |
+
+!include -c <CleanSuite.DropTables

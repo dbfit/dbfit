@@ -1,5 +1,9 @@
 package dbfit.environment;
 
+import dbfit.api.AbstractDbEnvironment;
+import dbfit.util.DbParameterAccessor;
+import dbfit.util.NameNormaliser;
+
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,10 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import dbfit.api.AbstractDbEnvironment;
-
-import dbfit.util.*;
 /**
  * Encapsulates support for the Derby database (also known as JavaDB). Operates
  * in Client mode.
@@ -50,7 +50,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
 	public Map<String, DbParameterAccessor> getAllColumns(final String tableOrViewName) throws SQLException {
 		String qry = "SELECT COLUMNNAME, COLUMNDATATYPE " + "FROM SYS.SYSCOLUMNS WHERE REFERENCEID = "
 				+ "(SELECT TABLEID FROM SYS.SYSTABLES WHERE TABLENAME = ?)";
-		return readIntoParams(tableOrViewName, qry);
+		return readIntoParams(tableOrViewName.toUpperCase(), qry);
 	}
 
 	private Map<String, DbParameterAccessor> readIntoParams(String tableOrViewName, String query) throws SQLException {

@@ -1,5 +1,0 @@
-|import|
-|dbfit.fixture|
-
-!|DatabaseEnvironment|oracle|
-|connect|Data Source=testdb;User=dftest;Password=dftest;|

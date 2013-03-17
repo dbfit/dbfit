@@ -1,0 +1,23 @@
+!3 queries
+
+Add Reject in front of query to assume that an error will occur
+
+|reject|Query|select 1/0 from dual|
+
+
+!3 statements
+
+just setting up a test table
+
+|Execute|Create table Test_DBFit(name varchar2(50) not null, luckyNumber number)|
+
+Add Reject Before Execute to assume an error
+
+|Not|Execute|Insert into Test_DBFit values (null,90)|
+
+|Query|Select * from Test_DBFit|
+|Name|Lucky Number|
+
+cleanup
+
+|Execute|Drop table Test_DBFit|
