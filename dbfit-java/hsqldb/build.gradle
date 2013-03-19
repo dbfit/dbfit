@@ -3,5 +3,5 @@
 description = 'DBFit hsqldb engine'
 
 dependencies {
-  compile project(':dbfit-core')
+  compile project(':core')
   }
