@@ -1,10 +1,10 @@
 rootProject.name = 'dbfit'
-include ':dbfit-core', ':dbfit-mysql', ':dbfit-derby', ':dbfit-db2', ':dbfit-postgres', ':dbfit-hsqldb', ':dbfit-sqlserver'
+include ':core', ':mysql', ':derby', ':db2', ':postgres', ':hsqldb', ':sqlserver'
 
-project(':dbfit-core').projectDir = "$rootDir/core" as File
-project(':dbfit-mysql').projectDir = "$rootDir/mysql" as File
-project(':dbfit-derby').projectDir = "$rootDir/derby" as File
-project(':dbfit-db2').projectDir = "$rootDir/db2" as File
-project(':dbfit-postgres').projectDir = "$rootDir/postgre" as File
-project(':dbfit-hsqldb').projectDir = "$rootDir/hsqldb" as File
-project(':dbfit-sqlserver').projectDir = "$rootDir/sqlserver" as File
+project(':core').projectDir = "$rootDir/core" as File
+project(':mysql').projectDir = "$rootDir/mysql" as File
+project(':derby').projectDir = "$rootDir/derby" as File
+project(':db2').projectDir = "$rootDir/db2" as File
+project(':postgres').projectDir = "$rootDir/postgre" as File
+project(':hsqldb').projectDir = "$rootDir/hsqldb" as File
+project(':sqlserver').projectDir = "$rootDir/sqlserver" as File

@@ -1,7 +1,7 @@
 description = 'DBFit PostGreSQL engine'
 
 dependencies {
-  compile project(':dbfit-core')
+  compile project(':core')
   compile group: 'postgresql', name: 'postgresql', version:'9.1-901.jdbc4'
 }
 
