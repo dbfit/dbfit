@@ -1,23 +1,14 @@
 package dbfit.environment;
 
-import java.math.BigDecimal;
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
-import java.util.Iterator;
-
-import oracle.jdbc.driver.OracleTypes;
-import oracle.jdbc.rowset.OracleCachedRowSet;
-
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.*;
+import oracle.jdbc.OracleTypes;
+import oracle.jdbc.rowset.OracleCachedRowSet;
+
+import java.math.BigDecimal;
+import java.sql.*;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class OracleEnvironment extends AbstractDbEnvironment {
     private static String SKIP_ORACLE_SYNONYMS = "SKIPORACLESYNONYMS";
