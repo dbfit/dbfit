@@ -27,7 +27,7 @@ subprojects {
     testCompile 'junit:junit:4.10'
   }
   
-  dbdeploy = { dbDriver, url, userid, password ->
+  ext.dbdeploy = { dbDriver, url, userid, password ->
     ant.taskdef(name: 'dbdeploy', 
                 classname: 'com.dbdeploy.AntTarget', 
                 classpath: configurations.compile.asPath)
