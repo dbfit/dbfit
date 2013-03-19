@@ -271,8 +271,6 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                 new OracleDateNormaliser());
         TypeNormaliserFactory.setNormaliser(oracle.sql.CLOB.class,
                 new OracleClobNormaliser());
-        TypeNormaliserFactory.setNormaliser("oracle.sql.NCLOB",
-                new OracleClobNormaliser());
         TypeNormaliserFactory.setNormaliser(java.sql.Date.class,
                 new SqlDateNormaliser());
         try {
