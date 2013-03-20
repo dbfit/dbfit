@@ -1,7 +1,0 @@
-
-
-description = 'DBFit hsqldb engine'
-
-dependencies {
-  compile project(':core')
-  }

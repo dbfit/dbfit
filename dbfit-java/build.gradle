@@ -1,42 +1,113 @@
-allprojects  {
-  apply plugin: 'maven'
+allprojects {
+    apply plugin: 'maven'
 
-  group = 'com.neuri.dbfit'
-  version = '2.0.0-RC3'
+    group = 'com.neuri.dbfit'
+    version = '2.0.0-RC3'
 }
 
 subprojects {
-  apply plugin: 'java'
+    apply plugin: 'java'
 
-  sourceCompatibility = 1.6
-  targetCompatibility = 1.6
-  repositories {
-    mavenRepo url: "http://repo1.maven.org/maven2"
-    mavenRepo url: "http://repo.maven.apache.org/maven2"
-    ivy {
-        artifactPattern "https://cleancoder.ci.cloudbees.com/job/fitnesse/278/artifact/dist/[artifact].[ext]"
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
+    repositories {
+        mavenRepo url: "http://repo1.maven.org/maven2"
+        mavenRepo url: "http://repo.maven.apache.org/maven2"
+        ivy {
+            artifactPattern "https://cleancoder.ci.cloudbees.com/job/fitnesse/278/artifact/dist/[artifact].[ext]"
+        }
+        ivy {
+            artifactPattern "https://s3.amazonaws.com/dbfit/[artifact]-[revision].[ext]"
+            ivyPattern "https://aws.amazon.com/s3/ivy.xml"
+        }
     }
-    ivy {
-        artifactPattern "https://s3.amazonaws.com/dbfit/[artifact]-[revision].[ext]"
-    	ivyPattern "https://aws.amazon.com/s3/ivy.xml"
-    }
-  }
 
-  dependencies {
-    compile 'com.dbdeploy:dbdeploy-ant:3.0M3'
-    testCompile 'junit:junit:4.10'
-  }
-  
-  ext.dbdeploy = { dbDriver, url, userid, password ->
-    ant.taskdef(name: 'dbdeploy', 
-                classname: 'com.dbdeploy.AntTarget', 
+    dependencies {
+        compile 'com.dbdeploy:dbdeploy-ant:3.0M3'
+        testCompile 'junit:junit:4.10'
+    }
+
+    ext.dbdeploy = { dbDriver, url, userid, password ->
+        ant.taskdef(name: 'dbdeploy',
+                classname: 'com.dbdeploy.AntTarget',
                 classpath: configurations.compile.asPath)
-    ant.dbdeploy(driver: dbDriver, 
-      url: url,
-      userid: userid, 
-      password: password, 
-      dir: "$projectDir/src/test/resources",
-    )
-  }
+        ant.dbdeploy(driver: dbDriver,
+                url: url,
+                userid: userid,
+                password: password,
+                dir: "$projectDir/src/test/resources",
+        )
+    }
+}
+
+project('core') {
+    description = 'DBFit core api and fixtures'
+
+    dependencies {
+        compile "dummy:fitnesse:0.0.0@jar"
+        compile "dummy:fitlibrary:20081102@jar"
+        compile "org.htmlparser:htmlparser:2.1"
+        compile "org.apache.velocity:velocity:1.7"
+        compile "org.json:json:20090211"
+    }
+}
+
+project('db2') {
+    description = 'DBFit db2 engine'
+
+    dependencies {
+        compile project(':core')
+    }
+}
+
+project('derby') {
+    description = 'DBFit derby engine'
+    dependencies {
+        compile project(':core')
+        testCompile group: 'org.apache.derby', name: 'derby', version: '10.9.1.0'
+        testCompile group: 'org.apache.derby', name: 'derbynet', version: '10.9.1.0'
+        testCompile group: 'org.apache.derby', name: 'derbyclient', version: '10.9.1.0'
+    }
+}
+
+project('hsqldb') {
+    dependencies {
+        compile project(':core')
+    }
+}
+
+project('mysql') {
+    description = 'DBFit MySQL engine'
+
+    dependencies {
+        compile project(':core')
+        compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+    }
+
+    test.doFirst {
+        dbdeploy('com.mysql.jdbc.Driver', 'jdbc:mysql://127.0.0.1/dbfit', 'dbfit_user', 'password')
+    }
+}
+
+project('postgres') {
+    description = 'DBFit PostGreSQL engine'
+
+    dependencies {
+        compile project(':core')
+        compile group: 'postgresql', name: 'postgresql', version: '9.1-901.jdbc4'
+    }
+
+    test.doFirst {
+        dbdeploy('org.postgresql.Driver', 'jdbc:postgresql:dbfit', 'dbfit', 'dbfit')
+    }
+}
+
+project('sqlserver') {
+    description = 'DBFit sqlserver engine'
+
+    dependencies {
+        compile group: 'net.sourceforge.jtds', name: 'jtds', version: '1.2.2'
+        compile project(':core')
+    }
 }
 

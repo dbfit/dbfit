@@ -1,7 +1,0 @@
-
-
-description = 'DBFit db2 engine'
-
-dependencies {
-  compile project(':core')
-}
