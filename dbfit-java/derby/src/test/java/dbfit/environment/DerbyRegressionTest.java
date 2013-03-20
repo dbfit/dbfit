@@ -9,6 +9,8 @@ import org.junit.Test;
 import java.io.File;
 import java.io.PrintWriter;
 
+// Can't seem to convert this to use the FitNesseSuite runner
+// since setUp and tearDown didn't seem to work
 public class DerbyRegressionTest {
 
     private JUnitHelper helper;
