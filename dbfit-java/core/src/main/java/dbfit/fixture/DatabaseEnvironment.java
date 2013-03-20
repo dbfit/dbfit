@@ -2,6 +2,7 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
+import dbfit.util.FitNesseTestHost;
 import fit.Parse;
 
 import java.io.FileNotFoundException;
@@ -11,6 +12,10 @@ import java.sql.SQLException;
 public class DatabaseEnvironment extends fitlibrary.SequenceFixture {
     private static final String[] environments = new String[]
             {"Oracle", "MySql", "SqlServer", "DB2", "Derby", "Postgres", "HSQLDB"};
+
+    public DatabaseEnvironment() {
+        FitNesseTestHost.getInstance();
+    }
 
     private static String getEnvironmentClassName(String requestedEnv) {
         for (String environment : environments) {
