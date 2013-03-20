@@ -62,6 +62,7 @@ project('db2') {
 
 project('derby') {
     description = 'DBFit derby engine'
+
     dependencies {
         compile project(':core')
         testCompile group: 'org.apache.derby', name: 'derby', version: '10.9.1.0'
@@ -71,6 +72,8 @@ project('derby') {
 }
 
 project('hsqldb') {
+    description = 'DBFit hsqldb engine'
+
     dependencies {
         compile project(':core')
     }
