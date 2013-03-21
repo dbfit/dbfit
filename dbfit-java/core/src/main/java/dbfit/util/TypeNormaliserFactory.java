@@ -15,10 +15,13 @@ public class TypeNormaliserFactory {
         TypeNormaliser normaliser = normalisers.get(targetClass);
 
         if (normaliser == null) {
-            Class bestCandidate = targetClass;
+            Class bestCandidate = null;
             for (Class c: normalisers.keySet()) {
-                if (c.isAssignableFrom(bestCandidate)) {
-                    // c is parent
+                if (bestCandidate == null) {
+                    if (c.isAssignableFrom(targetClass)) {
+                        bestCandidate = c;
+                    }
+                } else if (bestCandidate.isAssignableFrom(c)) {
                     bestCandidate = c;
                 }
             }
