@@ -75,6 +75,14 @@ The subsequent steps need to be followed on the project folder within the VM. To
 
  3. TODO...
 
+#### IDE Integration
+
+##### IntelliJ
+
+An IntelliJ project can be created by running:
+
+    dbfit-java$ gradle idea
+
 #### Building
 
 1.  Install the root project POM into the local Maven repo:
