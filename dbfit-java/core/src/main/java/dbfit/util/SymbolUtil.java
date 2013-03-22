@@ -9,11 +9,11 @@ import java.sql.SQLException;
  */
 public class SymbolUtil {
 	private static final Object dbNull=new Object();
-	public static void setSymbol(String name, Object value){		
-		fit.Fixture.setSymbol(name, value==null?dbNull:value);
+	public static void setSymbol(String name, Object value){
+		fit.Fixture.setSymbol(getSymbolName(name), value==null?dbNull:value);
 	}
 	public static Object getSymbol(String name){
-		Object value=fit.Fixture.getSymbol(name);
+		Object value=fit.Fixture.getSymbol(getSymbolName(name));
 		if (value==dbNull) return null;
 		return value;
 	}
@@ -22,7 +22,7 @@ public class SymbolUtil {
 	}
 
     public static DataTable getDataTable(String symbolName){
-        Object o= getSymbol(getSymbolName(symbolName));
+        Object o= getSymbol(symbolName);
         if (o==null) throw new UnsupportedOperationException("Cannot load a stored query from "+symbolName);
         if (o instanceof DataTable) return (DataTable) o;
         try{
@@ -35,7 +35,7 @@ public class SymbolUtil {
     }
 
     public static String getSymbolName(String symbolFullName) {
-        return (isSymbolGetter(symbolFullName) ? symbolFullName.substring(2) : symbolFullName);
+        return ((isSymbolGetter(symbolFullName) || isSymbolSetter(symbolFullName)) ? symbolFullName.substring(2) : symbolFullName).trim();
     }
 
     public static boolean isSymbolGetter(String text) {

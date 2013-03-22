@@ -30,7 +30,7 @@ public class ParseHelper {
 		}
 	}
 	private Object parseSymbol(String s) throws Exception{
-		Object value=dbfit.util.SymbolUtil.getSymbol(s.substring(2).trim());
+		Object value=dbfit.util.SymbolUtil.getSymbol(s);
 		if (value.getClass().equals(type))
 			return value;
 		// else try to convert

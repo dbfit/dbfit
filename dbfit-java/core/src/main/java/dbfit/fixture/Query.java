@@ -41,7 +41,7 @@ public class Query extends RowSetFixture {
 	}
 
 	private DataTable getFromSymbol() throws SQLException {
-		Object o = dbfit.util.SymbolUtil.getSymbol(query.substring(2).trim());
+		Object o = dbfit.util.SymbolUtil.getSymbol(query);
 		if (o instanceof ResultSet) {
 			return new DataTable((ResultSet) o);
 		} else if (o instanceof DataTable) {

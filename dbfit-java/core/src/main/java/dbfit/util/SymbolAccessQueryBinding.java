@@ -13,7 +13,7 @@ public class SymbolAccessQueryBinding extends Binding.QueryBinding {
 		try{
 			if (isSymbolSetter(content)){
 				Object value=this.adapter.get();
-				dbfit.util.SymbolUtil.setSymbol(content.substring(2).trim(), value);
+				dbfit.util.SymbolUtil.setSymbol(content, value);
 				cell.addToBody(Fixture.gray("= "+String.valueOf(value)));
 //				fixture.ignore(cell);
 				return;

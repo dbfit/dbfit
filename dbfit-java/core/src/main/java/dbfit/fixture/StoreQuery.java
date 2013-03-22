@@ -4,7 +4,6 @@ import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
 import dbfit.util.DataTable;
 import dbfit.util.FitNesseTestHost;
-import dbfit.util.SymbolUtil;
 import fit.Parse;
 
 import java.sql.PreparedStatement;
@@ -31,7 +30,6 @@ public class StoreQuery extends fit.Fixture{
 			query=args[0];
 			symbolName=args[1];			
 		}
-		if (SymbolUtil.isSymbolSetter(symbolName)) symbolName=symbolName.substring(2);
 		try {
 			PreparedStatement st=dbEnvironment.createStatementWithBoundFixtureSymbols(FitNesseTestHost.getInstance(),query);
 			ResultSet rs= st.executeQuery();
