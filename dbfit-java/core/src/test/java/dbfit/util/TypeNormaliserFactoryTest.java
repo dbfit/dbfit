@@ -3,7 +3,12 @@ package dbfit.util;
 import org.junit.Test;
 import org.junit.Before;
 
+import java.util.ArrayList;
+import java.util.AbstractCollection;
+import java.util.AbstractList;
+
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 public class TypeNormaliserFactoryTest {
     private static TypeNormaliser createTypeNormaliserFake(final String tag) {
@@ -20,20 +25,38 @@ public class TypeNormaliserFactoryTest {
         };
     }
 
-    private final TypeNormaliser objectNormaliser = createTypeNormaliserFake("objectNormaliser");
-    private final TypeNormaliser numberNormaliser = createTypeNormaliserFake("numberNormaliser");
-    private final TypeNormaliser doubleNormaliser = createTypeNormaliserFake("doubleNormaliser");
+    private final Class ctop = AbstractCollection.class;
+    private final Class cmid = AbstractList.class;
+    private final Class clow = ArrayList.class;
+
+    private final TypeNormaliser normaliserTop = createTypeNormaliserFake("normaliser Top");
+    private final TypeNormaliser normaliserMid = createTypeNormaliserFake("normaliser Mid");
+    private final TypeNormaliser normaliserLow = createTypeNormaliserFake("normaliser Low");
 
     @Before
     public void init() {
-        TypeNormaliserFactory.setNormaliser(Object.class, objectNormaliser);
-        TypeNormaliserFactory.setNormaliser(Number.class, numberNormaliser);
+        TypeNormaliserFactory.setNormaliser(ctop, normaliserTop);
+        TypeNormaliserFactory.setNormaliser(cmid, normaliserMid);
     }
 
     @Test
-    public void normaliserLookupReturnsClosestParent() {
-        TypeNormaliser normaliser = TypeNormaliserFactory.getNormaliser(Double.class);
-        assertEquals(numberNormaliser, normaliser);
+    public void normaliserLookupReturnsClosestParentIfNoExactMatch() {
+        TypeNormaliser normaliser = TypeNormaliserFactory.getNormaliser(clow);
+        assertEquals(normaliserMid, normaliser);
+    }
+
+    @Test
+    public void normaliserLookupReturnsExactMatchIfAny() {
+        TypeNormaliser normaliser = TypeNormaliserFactory.getNormaliser(cmid);
+        assertEquals(normaliserMid, normaliser);
+        normaliser = TypeNormaliserFactory.getNormaliser(ctop);
+        assertEquals(normaliserTop, normaliser);
+    }
+
+    @Test
+    public void normaliserLookupReturnsNullWhenNolExactMatchNorParents() {
+        TypeNormaliser normaliser = TypeNormaliserFactory.getNormaliser(String.class);
+        assertNull(normaliser);
     }
 
 }
