@@ -33,8 +33,15 @@ public class SymbolUtil {
         }
         throw new UnsupportedOperationException("Cannot load stored query from "+symbolName + " - object type is "+o.getClass().getName());
     }
-    
+
     public static String getSymbolName(String symbolFullName) {
-        return (symbolFullName.startsWith("<<") ? symbolFullName.substring(2) : symbolFullName);
+        return (isSymbolGetter(symbolFullName) ? symbolFullName.substring(2) : symbolFullName);
+    }
+
+    public static boolean isSymbolGetter(String text) {
+        return text != null && text.startsWith("<<");
+    }
+    public static boolean isSymbolSetter(String text) {
+        return text != null && text.startsWith(">>");
     }
 }

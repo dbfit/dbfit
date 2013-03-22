@@ -2,6 +2,8 @@ package dbfit.util;
 
 import fit.Fixture;
 import fit.TypeAdapter;
+
+import static dbfit.util.SymbolUtil.isSymbolGetter;
 /* this class addresses several issues with parsing, and is used as a base for any other dbfit type adapters:
  * 1: TypeAdapter does not check the parse delegates directly when parsing, it relies on appropriate delegate
  * 	being selected when adapter is created; this creates problems for dbfit adapters which need to delegate parsing
@@ -40,7 +42,7 @@ public class ParseHelper {
 		}
 	}
 	public Object parse(String s) throws Exception {
-		if (s.startsWith("<<")){
+		if (isSymbolGetter(s)){
 			return parseSymbol(s);
 		}
 		String trim=s.trim();

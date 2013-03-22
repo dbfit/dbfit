@@ -1,16 +1,14 @@
 package dbfit.fixture;
 
+import dbfit.api.DBEnvironment;
+import dbfit.api.DbEnvironmentFactory;
+import dbfit.util.*;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
-import dbfit.api.DBEnvironment;
-import dbfit.api.DbEnvironmentFactory;
-import dbfit.util.DataColumn;
-import dbfit.util.DataTable;
-import dbfit.util.FitNesseTestHost;
-import dbfit.util.Log;
+import static dbfit.util.SymbolUtil.isSymbolGetter;
 
 public class Query extends RowSetFixture {
 	private DBEnvironment dbEnvironment;
@@ -35,7 +33,7 @@ public class Query extends RowSetFixture {
 	public DataTable getDataTable() throws SQLException {
 		if (query == null)
 			query = args[0];
-		if (query.startsWith("<<"))
+		if (isSymbolGetter(query))
 			return getFromSymbol();
 		Log.log("Query: '%s'", query);
 		PreparedStatement st = dbEnvironment.createStatementWithBoundFixtureSymbols(FitNesseTestHost.getInstance(),query);

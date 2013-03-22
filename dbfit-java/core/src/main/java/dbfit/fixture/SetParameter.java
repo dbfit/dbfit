@@ -2,6 +2,8 @@ package dbfit.fixture;
 
 import fit.Parse;
 
+import static dbfit.util.SymbolUtil.isSymbolGetter;
+
 /** 
  * simple wrapper for fixture symbol value setting, 
  * which takes care of NULL keyword and symbol loading
@@ -11,7 +13,7 @@ public class SetParameter extends fit.Fixture{
 	public static void setParameter(String name, String value){
 		if (value == null || "null".equals(value.toString().toLowerCase())) {
 			dbfit.util.SymbolUtil.setSymbol(name, null);
-		} else if (value != null && value.toString().startsWith("<<")) {
+		} else if (isSymbolGetter(value)) {
 			String varname = value.toString().substring(2);
 			if (!name.equals(varname)) {
 				dbfit.util.SymbolUtil.setSymbol(name, dbfit.util.SymbolUtil.getSymbol(varname));
