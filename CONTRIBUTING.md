@@ -83,6 +83,12 @@ An IntelliJ project can be created by running:
 
     dbfit-java$ gradle idea
 
+##### Eclipse
+
+An Eclipse project can be created by running:
+
+    dbfit-java$ gradle eclipse
+
 #### Building
 
 1.  Install the root project POM into the local Maven repo:
