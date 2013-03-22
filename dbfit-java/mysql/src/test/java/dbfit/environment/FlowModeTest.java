@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import static fitnesse.junit.FitNesseSuite.*;
 
 @RunWith(FitNesseSuite.class)
-@Name("DbFit.AcceptanceTests.JavaTests.MysqlTests.FlowMode")
+@Name("DbFit.AcceptanceTests.JavaTests.MySqlTests.FlowMode")
 @FitnesseDir("../..")
 @OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "fitnesse")
 @Port(1234)
