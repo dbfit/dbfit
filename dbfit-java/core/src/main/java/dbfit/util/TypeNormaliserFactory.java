@@ -26,7 +26,7 @@ public class TypeNormaliserFactory {
                 }
             }
 
-            if (bestCandidate != targetClass) {
+            if (bestCandidate != null) {
                 normaliser = normalisers.get(bestCandidate);
                 normalisers.put(targetClass, normaliser);
             }
