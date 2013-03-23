@@ -123,3 +123,11 @@ project('sqlserver') {
     }
 }
 
+project('teradata') {
+    description = 'DBFit Teradata engine'
+
+    dependencies {
+        compile project(':core')
+    }
+}
+

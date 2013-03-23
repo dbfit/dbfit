@@ -1,5 +1,5 @@
 rootProject.name = 'dbfit'
-include ':core', ':mysql', ':oracle', ':derby', ':db2', ':postgres', ':hsqldb', ':sqlserver'
+include ':core', ':mysql', ':oracle', ':derby', ':db2', ':postgres', ':hsqldb', ':sqlserver', ':teradata'
 
 project(':core').projectDir = "$rootDir/core" as File
 project(':mysql').projectDir = "$rootDir/mysql" as File
@@ -9,3 +9,4 @@ project(':db2').projectDir = "$rootDir/db2" as File
 project(':postgres').projectDir = "$rootDir/postgre" as File
 project(':hsqldb').projectDir = "$rootDir/hsqldb" as File
 project(':sqlserver').projectDir = "$rootDir/sqlserver" as File
+project(':teradata').projectDir = "$rootDir/teradata" as File
