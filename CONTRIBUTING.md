@@ -62,12 +62,12 @@ The subsequent steps need to be followed on the project folder within the VM. To
 
 #### The Oracle JDBC Driver
 
-1.  Download the Oracle 10g 10.2.0.2.0 Thin driver (ojdbc14.jar) from the [Oracle homepage](http://www.oracle.com/technetwork/database/features/jdbc/index-091264.html).
+1.  Download the Oracle 11gR2 11.2.0.3 Thin driver (ojdbc6.jar) from the [Oracle homepage](http://www.oracle.com/technetwork/database/features/jdbc/index-091264.html).
 
 2.  From the VM, install it into maven:
 
-        mvn install:install-file -Dfile=ojdbc14.jar -DgroupId=com.oracle \
-            -DartifactId=ojdbc14 -Dversion=10.2.0.2.0 -Dpackaging=jar
+        mvn install:install-file -Dfile=ojdbc6.jar -DgroupId=com.oracle \
+            -DartifactId=ojdbc6 -Dversion=11.2.0.3.0 -Dpackaging=jar
 
 #### FitNesse
 
