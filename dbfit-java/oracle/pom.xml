@@ -11,12 +11,12 @@
     <artifactId>dbfit-oracle</artifactId>
     <version>${project.parent.version}</version>
     <properties>
-        <oracle.version>10.2.0.2.0</oracle.version>
+        <oracle.version>11.2.0.3.0</oracle.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>com.oracle</groupId>
-            <artifactId>ojdbc14</artifactId>
+            <artifactId>ojdbc6</artifactId>
             <version>${oracle.version}</version>
         </dependency>
         <dependency>
