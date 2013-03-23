@@ -72,8 +72,19 @@ project('derby') {
 }
 
 project('hsqldb') {
+    description = 'DBFit HSQLDB engine'
+
     dependencies {
         compile project(':core')
+    }
+}
+
+project('oracle') {
+    description = 'DBFit Oracle engine'
+
+    dependencies {
+        compile project(':core')
+        compile 'dummy:ojdbc14:10.2.0.2.0@jar'
     }
 }
 
