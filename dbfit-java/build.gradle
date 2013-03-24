@@ -14,11 +14,10 @@ subprojects {
         mavenRepo url: "http://repo1.maven.org/maven2"
         mavenRepo url: "http://repo.maven.apache.org/maven2"
         ivy {
-            artifactPattern "https://cleancoder.ci.cloudbees.com/job/fitnesse/278/artifact/dist/[artifact].[ext]"
+            artifactPattern "https://cleancoder.ci.cloudbees.com/job/fitnesse/279/artifact/dist/[artifact].[ext]"
         }
         ivy {
-            artifactPattern "https://s3.amazonaws.com/dbfit/[artifact]-[revision].[ext]"
-            ivyPattern "https://aws.amazon.com/s3/ivy.xml"
+            artifactPattern "http://crasu.de/dbfit/[artifact]-[revision].[ext]"
         }
     }
 
