@@ -15,9 +15,6 @@ subprojects {
         mavenRepo url: "http://repo1.maven.org/maven2"
         mavenRepo url: "http://repo.maven.apache.org/maven2"
         ivy {
-            artifactPattern "https://cleancoder.ci.cloudbees.com/job/fitnesse/278/artifact/dist/[artifact].[ext]"
-        }
-        ivy {
             artifactPattern "https://s3.amazonaws.com/dbfit/[artifact]-[revision].[ext]"
             ivyPattern "https://aws.amazon.com/s3/ivy.xml"
         }
@@ -45,11 +42,8 @@ project('core') {
     description = 'DBFit core api and fixtures'
 
     dependencies {
-        compile "dummy:fitnesse:0.0.0@jar"
+        compile "dummy:fitnesse-standalone:20130321@jar"
         compile "dummy:fitlibrary:20081102@jar"
-        compile "org.htmlparser:htmlparser:2.1"
-        compile "org.apache.velocity:velocity:1.7"
-        compile "org.json:json:20090211"
     }
 }
 
