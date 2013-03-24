@@ -11,6 +11,7 @@ allprojects {
 subprojects {
     sourceCompatibility = 1.6
     targetCompatibility = 1.6
+    jar.baseName = "dbfit-" + project.archivesBaseName
     repositories {
         mavenRepo url: "http://repo1.maven.org/maven2"
         mavenRepo url: "http://repo.maven.apache.org/maven2"
@@ -18,6 +19,11 @@ subprojects {
             artifactPattern "https://s3.amazonaws.com/dbfit/[artifact]-[revision].[ext]"
             ivyPattern "https://aws.amazon.com/s3/ivy.xml"
         }
+    }
+
+    task libs(type: Sync) {
+        from configurations.runtime
+        into "$buildDir/libs"
     }
 
     dependencies {
