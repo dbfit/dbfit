@@ -84,7 +84,7 @@ project('oracle') {
 
     dependencies {
         compile project(':core')
-        compile 'dummy:ojdbc14:10.2.0.2.0@jar'
+        compile 'dummy:ojdbc6:11.2.0.3.0@jar'
     }
 }
 
