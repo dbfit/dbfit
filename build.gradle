@@ -1,0 +1,19 @@
+task copyLocal(type: Copy) {
+    from 'LICENSE', 'README.md', 'bin/buildDbFit.sh', 'FitNesseRoot'
+    into 'dist'
+}
+
+task copyJars(type: Copy, dependsOn: copyLocal) {
+    from 'dbfit-java'
+    include '**/*.jar'
+    exclude '**/fitnesse*.jar', 'dbfit-java/teradata/**/*.jar', '**/junit*.jar', '**/ojdbc*.jar'
+    into 'dist/lib'
+    eachFile {details ->
+        details.path = flattenPath(details.path)
+    }
+    includeEmptyDirs = false 
+}
+
+def flattenPath(def path) {
+    path.replaceAll('.*/([^/]*?\\.jar)', {"${it[1]}"})
+}
