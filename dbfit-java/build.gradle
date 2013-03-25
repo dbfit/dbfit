@@ -31,7 +31,7 @@ subprojects {
         testCompile 'junit:junit:4.10'
     }
 
-    ext.dbdeploy = { dbDriver, url, userid, password ->
+    ext.dbdeploy = { dbDriver, url, userid, password, delimiterType = 'normal' ->
         ant.taskdef(name: 'dbdeploy',
                 classname: 'com.dbdeploy.AntTarget',
                 classpath: configurations.testRuntime.asPath)
@@ -40,7 +40,7 @@ subprojects {
                 userid: userid,
                 password: password,
                 dir: "$projectDir/src/test/resources",
-                delimiterType: "row",
+                delimiterType: delimiterType,
         )
     }
 }
@@ -111,7 +111,7 @@ project('postgres') {
     }
 
     test.doFirst {
-        dbdeploy('org.postgresql.Driver', 'jdbc:postgresql:dbfit', 'dbfit', 'dbfit')
+        dbdeploy('org.postgresql.Driver', 'jdbc:postgresql:dbfit', 'dbfit', 'dbfit', 'row')
     }
 }
 
