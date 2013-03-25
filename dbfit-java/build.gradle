@@ -1,35 +1,40 @@
 allprojects {
     apply plugin: 'maven'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+    apply plugin: 'java'
 
     group = 'com.neuri.dbfit'
     version = '2.0.0-RC3'
 }
 
 subprojects {
-    apply plugin: 'java'
-
     sourceCompatibility = 1.6
     targetCompatibility = 1.6
+    jar.baseName = "dbfit-" + project.archivesBaseName
     repositories {
         mavenRepo url: "http://repo1.maven.org/maven2"
         mavenRepo url: "http://repo.maven.apache.org/maven2"
         ivy {
-            artifactPattern "https://cleancoder.ci.cloudbees.com/job/fitnesse/279/artifact/dist/[artifact].[ext]"
-        }
-        ivy {
-            artifactPattern "http://crasu.de/dbfit/[artifact]-[revision].[ext]"
+            artifactPattern "https://s3.amazonaws.com/dbfit/[artifact]-[revision].[ext]"
+            ivyPattern "https://aws.amazon.com/s3/ivy.xml"
         }
     }
 
+    task libs(type: Sync) {
+        from configurations.runtime
+        into "$buildDir/libs"
+    }
+
     dependencies {
-        compile 'com.dbdeploy:dbdeploy-ant:3.0M3'
+        testRuntime 'com.dbdeploy:dbdeploy-ant:3.0M3'
         testCompile 'junit:junit:4.10'
     }
 
     ext.dbdeploy = { dbDriver, url, userid, password ->
         ant.taskdef(name: 'dbdeploy',
                 classname: 'com.dbdeploy.AntTarget',
-                classpath: configurations.compile.asPath)
+                classpath: configurations.testRuntime.asPath)
         ant.dbdeploy(driver: dbDriver,
                 url: url,
                 userid: userid,
@@ -43,11 +48,8 @@ project('core') {
     description = 'DBFit core api and fixtures'
 
     dependencies {
-        compile "dummy:fitnesse:0.0.0@jar"
+        compile "dummy:fitnesse-standalone:20130321@jar"
         compile "dummy:fitlibrary:20081102@jar"
-        compile "org.htmlparser:htmlparser:2.1"
-        compile "org.apache.velocity:velocity:1.7"
-        compile "org.json:json:20090211"
     }
 }
 
@@ -71,10 +73,19 @@ project('derby') {
 }
 
 project('hsqldb') {
-    description = 'DBFit hsqldb engine'
+    description = 'DBFit HSQLDB engine'
 
     dependencies {
         compile project(':core')
+    }
+}
+
+project('oracle') {
+    description = 'DBFit Oracle engine'
+
+    dependencies {
+        compile project(':core')
+        compile 'dummy:ojdbc6:11.2.0.3.0@jar'
     }
 }
 
@@ -109,6 +120,14 @@ project('sqlserver') {
 
     dependencies {
         compile group: 'net.sourceforge.jtds', name: 'jtds', version: '1.2.2'
+        compile project(':core')
+    }
+}
+
+project('teradata') {
+    description = 'DBFit Teradata engine'
+
+    dependencies {
         compile project(':core')
     }
 }

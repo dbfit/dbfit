@@ -12,7 +12,7 @@ The easiest way to get a DbFit test environment is to provision a Linux virtual 
 
 The fully-built VM includes:
 
- *  working installs of Maven, MySQL, PostgreSQL, Derby and HSQLDB
+ *  working installs of Gradle, MySQL, PostgreSQL, Derby and HSQLDB
  *  the pre-requisites to easily install Oracle
 
 The VM doesn't include:
@@ -26,7 +26,7 @@ The VM doesn't include:
 
 1.  You first need to [install VirtualBox](https://www.virtualbox.org/wiki/Downloads).
 
-2.  You need to have ruby installed, version 1.8.7 or 1.9.X (I haven't tested with ruby 2.0). The Windows installed can be found [here](http://rubyinstaller.org/downloads/).
+2.  You need to have ruby installed, version 1.8.7, 1.9.X or 2.0.x. The Windows installed can be found [here](http://rubyinstaller.org/downloads/).
 
 3. [Install vagrant](http://docs.vagrantup.com/v2/installation/). Versions 1.1+ are preferable.
    (If for some reason 1.0.x should be used - add it as a dependency to Gemfile)
@@ -63,47 +63,6 @@ The subsequent steps need to be followed on the project folder within the VM. To
 
         cd /var/dbfit 
 
-#### The Oracle JDBC Driver
-
-1.  Download the Oracle 10g 10.2.0.2.0 Thin driver (ojdbc14.jar) from the [Oracle homepage](http://www.oracle.com/technetwork/database/features/jdbc/index-091264.html).
-
-2.  From the VM, install it into maven:
-
-        mvn install:install-file -Dfile=ojdbc14.jar -DgroupId=com.oracle \
-            -DartifactId=ojdbc14 -Dversion=10.2.0.2.0 -Dpackaging=jar
-
-#### FitNesse
-
-Because the edge builds of FitNesse don't get pushed to the Maven Repository, it needs to be manually pushed into the local repo.
-
- 1. Download the `fitnesse` jar:
-
-        wget https://cleancoder.ci.cloudbees.com/job/fitnesse/278/artifact/dist/fitnesse.jar
-
- 2. Download the `fitnesse` POM file:
-
-        wget http://repo1.maven.org/maven2/org/fitnesse/fitnesse/20121220/fitnesse-20121220.pom
-
- 3. Update the version string in the POM file:
-
-        sed -i 's/20121220/20130216/g' fitnesse-20121220.pom
-
- 2. Install the jar:
-
-        mvn install:install-file -Dfile=fitnesse.jar -DgroupId=org.fitnesse \
-            -DartifactId=fitnesse -Dversion=20130216 -Dpackaging=jar -DpomFile=fitnesse-20121220.pom
-
-#### FitLibrary 
-
-1.  Download the `fitlibrary` jar:
-
-        wget https://s3.amazonaws.com/dbfit/fitlibrary-20081102.jar
-
-2.  Install the fitlibrary JAR [...]
-
-        mvn install:install-file -Dfile=fitlibrary-20081102.jar -DgroupId=org.fitnesse \
-            -DartifactId=fitlibrary -Dversion=20081102 -Dpackaging=jar
-
 #### Installing Oracle XE
 
 *Note: These instructions are work in progress.*
@@ -115,6 +74,20 @@ Because the edge builds of FitNesse don't get pushed to the Maven Repository, it
         sudo yum install <rpm-name.rpm>
 
  3. TODO...
+
+#### IDE Integration
+
+##### IntelliJ
+
+An IntelliJ project can be created by running:
+
+    dbfit-java$ gradle idea
+
+##### Eclipse
+
+An Eclipse project can be created by running:
+
+    dbfit-java$ gradle eclipse
 
 #### Building
 
