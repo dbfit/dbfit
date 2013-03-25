@@ -1,16 +1,17 @@
 allprojects {
-    apply plugin: 'maven'
     apply plugin: 'idea'
     apply plugin: 'eclipse'
-    apply plugin: 'java'
 
+    apply plugin: 'maven'
     group = 'com.neuri.dbfit'
     version = '2.0.0-RC3'
+    
+    apply plugin: 'java'
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
 }
 
 subprojects {
-    sourceCompatibility = 1.6
-    targetCompatibility = 1.6
     jar.baseName = "dbfit-" + project.archivesBaseName
     repositories {
         mavenRepo url: "http://repo1.maven.org/maven2"
@@ -42,6 +43,10 @@ subprojects {
                 dir: "$projectDir/src/test/resources",
                 delimiterType: delimiterType,
         )
+    }
+    
+    test << {
+        println outputs
     }
 }
 
