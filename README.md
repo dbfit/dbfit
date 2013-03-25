@@ -2,6 +2,8 @@
 
 Test-driven database development. Write readable, easy-to-maintain unit and integration tests for your database code.
 
+Website: [benilovj.github.com/dbfit](http://benilovj.github.com/dbfit/).
+
 ## Contributing
 
 See the [CONTRIBUTING file](CONTRIBUTING.md) for details on how to set up a test environment, contributing etc.
