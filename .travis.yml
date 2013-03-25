@@ -1,4 +1,4 @@
 language: java
-script: "gradle -p ./dbfit-java/ clean derby:check"
+script: "gradle -p ./dbfit-java/ clean derby:test"
 jdk:
   - oraclejdk6
