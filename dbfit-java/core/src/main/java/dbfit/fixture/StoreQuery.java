@@ -1,15 +1,14 @@
 package dbfit.fixture;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
 import dbfit.util.DataTable;
 import dbfit.util.FitNesseTestHost;
 import fit.Parse;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class StoreQuery extends fit.Fixture{
 
@@ -31,7 +30,6 @@ public class StoreQuery extends fit.Fixture{
 			query=args[0];
 			symbolName=args[1];			
 		}
-		if (symbolName.startsWith(">>")) symbolName=symbolName.substring(2);
 		try {
 			PreparedStatement st=dbEnvironment.createStatementWithBoundFixtureSymbols(FitNesseTestHost.getInstance(),query);
 			ResultSet rs= st.executeQuery();

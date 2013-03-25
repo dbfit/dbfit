@@ -4,18 +4,21 @@ import fit.Binding;
 import fit.Fixture;
 import fit.Parse;
 
+import static dbfit.util.SymbolUtil.isSymbolGetter;
+import static dbfit.util.SymbolUtil.isSymbolSetter;
+
 public class SymbolAccessQueryBinding extends Binding.QueryBinding {
 	public void doCell(Fixture fixture, Parse cell) {
 		String content=cell.text();
 		try{
-			if (content.startsWith(">>")){
+			if (isSymbolSetter(content)){
 				Object value=this.adapter.get();
-				dbfit.util.SymbolUtil.setSymbol(content.substring(2).trim(), value);
+				dbfit.util.SymbolUtil.setSymbol(content, value);
 				cell.addToBody(Fixture.gray("= "+String.valueOf(value)));
 //				fixture.ignore(cell);
 				return;
 			}
-			if (content.startsWith("<<")){
+			if (isSymbolGetter(content)){
 				Object value=this.adapter.get();
 				Object expected=this.adapter.parse(content);
 				cell.addToBody(Fixture.gray("= "+String.valueOf(expected)));

@@ -1,20 +1,18 @@
 package dbfit.fixture;
 
+import dbfit.api.DBEnvironment;
+import dbfit.api.DbEnvironmentFactory;
+import dbfit.util.*;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
-import dbfit.api.DBEnvironment;
-import dbfit.api.DbEnvironmentFactory;
-import dbfit.util.DataColumn;
-import dbfit.util.DataTable;
-import dbfit.util.FitNesseTestHost;
-import dbfit.util.Log;
+import static dbfit.util.SymbolUtil.isSymbolGetter;
 
 public class Query extends RowSetFixture {
 	private DBEnvironment dbEnvironment;
-	private String query;
+	private String queryOrSymbol;
 	private boolean isOrdered;
 
 	public Query() {
@@ -22,28 +20,28 @@ public class Query extends RowSetFixture {
 		isOrdered = false;
 	}
 
-	public Query(DBEnvironment environment, String query) {
-		this(environment, query, false);
+	public Query(DBEnvironment environment, String queryOrSymbol) {
+		this(environment, queryOrSymbol, false);
 	}
 
-	public Query(DBEnvironment environment, String query, boolean isOrdered) {
+	public Query(DBEnvironment environment, String queryOrSymbol, boolean isOrdered) {
 		this.dbEnvironment = environment;
-		this.query = query;
+		this.queryOrSymbol = queryOrSymbol;
 		this.isOrdered = isOrdered;
 	}
 
 	public DataTable getDataTable() throws SQLException {
-		if (query == null)
-			query = args[0];
-		if (query.startsWith("<<"))
+		if (queryOrSymbol == null)
+			queryOrSymbol = args[0];
+		if (isSymbolGetter(queryOrSymbol))
 			return getFromSymbol();
-		Log.log("Query: '%s'", query);
-		PreparedStatement st = dbEnvironment.createStatementWithBoundFixtureSymbols(FitNesseTestHost.getInstance(),query);
+		Log.log("Query: '%s'", queryOrSymbol);
+		PreparedStatement st = dbEnvironment.createStatementWithBoundFixtureSymbols(FitNesseTestHost.getInstance(), queryOrSymbol);
 		return new DataTable(st.executeQuery());
 	}
 
 	private DataTable getFromSymbol() throws SQLException {
-		Object o = dbfit.util.SymbolUtil.getSymbol(query.substring(2).trim());
+		Object o = dbfit.util.SymbolUtil.getSymbol(queryOrSymbol);
 		if (o instanceof ResultSet) {
 			return new DataTable((ResultSet) o);
 		} else if (o instanceof DataTable) {
