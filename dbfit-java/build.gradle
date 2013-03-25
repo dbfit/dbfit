@@ -44,10 +44,8 @@ subprojects {
                 delimiterType: "row",
         )
     }
-    
-    test << {
-        println outputs
-    }
+
+    test.inputs.dir file("$projectDir/../../FitNesseRoot/DbFit/AcceptanceTests/JavaTests")
 }
 
 project('core') {
