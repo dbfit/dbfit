@@ -1,0 +1,134 @@
+allprojects {
+    apply plugin: 'maven'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+    apply plugin: 'java'
+
+    group = 'com.neuri.dbfit'
+    version = '2.0.0-RC3'
+}
+
+subprojects {
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
+    jar.baseName = "dbfit-" + project.archivesBaseName
+    repositories {
+        mavenRepo url: "http://repo1.maven.org/maven2"
+        mavenRepo url: "http://repo.maven.apache.org/maven2"
+        ivy {
+            artifactPattern "https://s3.amazonaws.com/dbfit/[artifact]-[revision].[ext]"
+            ivyPattern "https://aws.amazon.com/s3/ivy.xml"
+        }
+    }
+
+    task libs(type: Sync) {
+        from configurations.runtime
+        into "$buildDir/libs"
+    }
+
+    dependencies {
+        testRuntime 'com.dbdeploy:dbdeploy-ant:3.0M3'
+        testCompile 'junit:junit:4.10'
+    }
+
+    ext.dbdeploy = { dbDriver, url, userid, password, delimiterType = 'normal' ->
+        ant.taskdef(name: 'dbdeploy',
+                classname: 'com.dbdeploy.AntTarget',
+                classpath: configurations.testRuntime.asPath)
+        ant.dbdeploy(driver: dbDriver,
+                url: url,
+                userid: userid,
+                password: password,
+                dir: "$projectDir/src/test/resources",
+                delimiterType: delimiterType,
+        )
+    }
+}
+
+project('core') {
+    description = 'DBFit core api and fixtures'
+
+    dependencies {
+        compile "dummy:fitnesse-standalone:20130321@jar"
+        compile "dummy:fitlibrary:20081102@jar"
+    }
+}
+
+project('db2') {
+    description = 'DBFit db2 engine'
+
+    dependencies {
+        compile project(':core')
+    }
+}
+
+project('derby') {
+    description = 'DBFit derby engine'
+    dependencies {
+        compile project(':core')
+        testCompile group: 'org.apache.derby', name: 'derby', version: '10.9.1.0'
+        testCompile group: 'org.apache.derby', name: 'derbynet', version: '10.9.1.0'
+        testCompile group: 'org.apache.derby', name: 'derbyclient', version: '10.9.1.0'
+    }
+}
+
+project('hsqldb') {
+    description = 'DBFit HSQLDB engine'
+
+    dependencies {
+        compile project(':core')
+    }
+}
+
+project('oracle') {
+    description = 'DBFit Oracle engine'
+
+    dependencies {
+        compile project(':core')
+        compile 'dummy:ojdbc6:11.2.0.3.0@jar'
+    }
+}
+
+project('mysql') {
+    description = 'DBFit MySQL engine'
+
+    dependencies {
+        compile project(':core')
+        compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+    }
+
+    test.doFirst {
+        dbdeploy('com.mysql.jdbc.Driver', 'jdbc:mysql://127.0.0.1/dbfit', 'dbfit_user', 'password')
+    }
+}
+
+project('postgres') {
+    description = 'DBFit PostGreSQL engine'
+
+    dependencies {
+        compile project(':core')
+        compile group: 'postgresql', name: 'postgresql', version: '9.1-901.jdbc4'
+    }
+
+    test.doFirst {
+        dbdeploy('org.postgresql.Driver', 'jdbc:postgresql:dbfit', 'dbfit', 'dbfit', 'row')
+    }
+}
+
+project('sqlserver') {
+    description = 'DBFit sqlserver engine'
+
+    dependencies {
+        compile group: 'net.sourceforge.jtds', name: 'jtds', version: '1.2.2'
+        compile project(':core')
+    }
+}
+
+project('teradata') {
+    description = 'DBFit Teradata engine'
+
+    dependencies {
+        compile project(':core')
+    }
+}
+

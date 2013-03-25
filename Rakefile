@@ -1,7 +1,7 @@
 require 'rake/clean'
 require 'rake/packagetask'
 
-VERSION = File.read('dbfit-java/pom.xml').scan(/<version>(.*?)<\/version>/)[0][0]
+VERSION = File.read('dbfit-java/build.gradle').scan(/version\ =\ \'(.*)\'/)[0][0]
 
 CLOBBER << 'dist'
 directory 'dist'
@@ -13,13 +13,15 @@ task :cleanse_fitnesseroot do
 end
 
 task :copy_local => ['dist', 'dist/lib'] do
-  cp_r FileList['LICENSE', 'README.md', 'bin/*', 'FitNesseRoot'], 'dist'
+  cp_r FileList['LICENSE', 'README.md', 'bin/startFitnesse*', 'FitNesseRoot'], 'dist'
   jars_to_distribute = FileList['dbfit-java/**/*.jar'].
-                         exclude('**/fitnesse*.jar').
+                         exclude('dbfit-java/build/**/*.jar').
                          exclude('dbfit-java/teradata/**/*.jar').
-                         exclude('**/junit*.jar').
                          exclude('**/ojdbc*.jar')
   cp_r jars_to_distribute, 'dist/lib'
+  cd 'dist/lib' do
+    FileList['fitnesse-standalone*.jar'].each { |f| mv f, "fitnesse-standalone.jar" }
+  end
 end
 
 task :bundle_fitsharp => ['dist/fitsharp'] do
@@ -30,12 +32,7 @@ task :bundle_fitsharp => ['dist/fitsharp'] do
   sh 'echo "<configuration><runtime><loadFromRemoteSources enabled=\"true\"/></runtime></configuration>" > dist/fitsharp/Runner.exe.config'
 end
 
-task :bundle_fitnesse => ['dist/lib'] do
-  fitnesse_url = 'https://cleancoder.ci.cloudbees.com/job/fitnesse/278/artifact/dist/fitnesse-standalone.jar'
-  sh "wget \"#{fitnesse_url}\" -O dist/lib/fitnesse-standalone.jar"
-end
-
-task :package => [:clobber, :cleanse_fitnesseroot, :copy_local, :bundle_fitnesse, :bundle_fitsharp] do
+task :package => [:clobber, :cleanse_fitnesseroot, :copy_local, :bundle_fitsharp] do
   cd 'dist' do
     archive_name = "dbfit-complete-#{VERSION}.zip"
     sh "zip -r #{archive_name} *"

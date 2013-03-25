@@ -12,7 +12,7 @@ The easiest way to get a DbFit test environment is to provision a Linux virtual 
 
 The fully-built VM includes:
 
- *  working installs of Maven, MySQL, PostgreSQL, Derby and HSQLDB
+ *  working installs of Gradle, MySQL, PostgreSQL, Derby and HSQLDB
  *  the pre-requisites to easily install Oracle
 
 The VM doesn't include:
@@ -63,47 +63,6 @@ The subsequent steps need to be followed on the project folder within the VM. To
 
         cd /var/dbfit 
 
-#### The Oracle JDBC Driver
-
-1.  Download the Oracle 11gR2 11.2.0.3 Thin driver (ojdbc6.jar) from the [Oracle homepage](http://www.oracle.com/technetwork/database/features/jdbc/index-091264.html).
-
-2.  From the VM, install it into maven:
-
-        mvn install:install-file -Dfile=ojdbc6.jar -DgroupId=com.oracle \
-            -DartifactId=ojdbc6 -Dversion=11.2.0.3.0 -Dpackaging=jar
-
-#### FitNesse
-
-Because the edge builds of FitNesse don't get pushed to the Maven Repository, it needs to be manually pushed into the local repo.
-
- 1. Download the `fitnesse` jar:
-
-        wget https://cleancoder.ci.cloudbees.com/job/fitnesse/278/artifact/dist/fitnesse.jar
-
- 2. Download the `fitnesse` POM file:
-
-        wget http://repo1.maven.org/maven2/org/fitnesse/fitnesse/20121220/fitnesse-20121220.pom
-
- 3. Update the version string in the POM file:
-
-        sed -i 's/20121220/20130216/g' fitnesse-20121220.pom
-
- 2. Install the jar:
-
-        mvn install:install-file -Dfile=fitnesse.jar -DgroupId=org.fitnesse \
-            -DartifactId=fitnesse -Dversion=20130216 -Dpackaging=jar -DpomFile=fitnesse-20121220.pom
-
-#### FitLibrary 
-
-1.  Download the `fitlibrary` jar:
-
-        wget https://s3.amazonaws.com/dbfit/fitlibrary-20081102.jar
-
-2.  Install the fitlibrary JAR [...]
-
-        mvn install:install-file -Dfile=fitlibrary-20081102.jar -DgroupId=org.fitnesse \
-            -DartifactId=fitlibrary -Dversion=20081102 -Dpackaging=jar
-
 #### Installing Oracle XE
 
 *Note: These instructions are work in progress.*
@@ -116,19 +75,33 @@ Because the edge builds of FitNesse don't get pushed to the Maven Repository, it
 
  3. TODO...
 
+#### IDE Integration
+
+##### IntelliJ
+
+An IntelliJ project can be created by running:
+
+    dbfit-java$ gradle idea
+
+##### Eclipse
+
+An Eclipse project can be created by running:
+
+    dbfit-java$ gradle eclipse
+
 #### Building
 
 1.  Install the root project POM into the local Maven repo:
     
-        dbfit-java$ mvn -N install
+        dbfit-java$ gradle clean install
 
 2.  Install the `dbfit-core`:
 
-        core$ mvn install
+        core$ gradle install
 
 3.  Build and package all the subprojects:
 
-        dbfit-java$ mvn package
+        dbfit-java$ gradle assemble
 
 ### Useful development commands
 
