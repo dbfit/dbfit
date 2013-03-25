@@ -40,6 +40,7 @@ subprojects {
                 userid: userid,
                 password: password,
                 dir: "$projectDir/src/test/resources",
+                delimiterType: "row",
         )
     }
 }
