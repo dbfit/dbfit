@@ -81,7 +81,9 @@ The subsequent steps need to be followed on the project folder within the VM. To
 
 An IntelliJ project can be created by running:
 
-    dbfit-java$ gradle idea
+ 1. dbfit-java$ gradle idea
+
+ 2. set gradle.java.home=<gradle jdk path> in $IDEA_HOME/bin/idea.properties    
 
 ##### Eclipse
 
