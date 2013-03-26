@@ -1,7 +1,2 @@
-target
-build
-.idea
-*.iml
-*.log
-.gradle
 download
+*.log
