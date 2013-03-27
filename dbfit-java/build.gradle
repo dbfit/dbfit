@@ -61,14 +61,14 @@ project('db2') {
     description = 'DBFit db2 engine'
 
     dependencies {
-        compile project(':core')
+        compile project(':dbfit-java:core')
     }
 }
 
 project('derby') {
     description = 'DBFit derby engine'
     dependencies {
-        compile project(':core')
+        compile project(':dbfit-java:core')
         testCompile group: 'org.apache.derby', name: 'derby', version: '10.9.1.0'
         testCompile group: 'org.apache.derby', name: 'derbynet', version: '10.9.1.0'
         testCompile group: 'org.apache.derby', name: 'derbyclient', version: '10.9.1.0'
@@ -79,7 +79,7 @@ project('hsqldb') {
     description = 'DBFit HSQLDB engine'
 
     dependencies {
-        compile project(':core')
+        compile project(':dbfit-java:core')
     }
 }
 
@@ -87,7 +87,7 @@ project('oracle') {
     description = 'DBFit Oracle engine'
 
     dependencies {
-        compile project(':core')
+        compile project(':dbfit-java:core')
         compile 'dummy:ojdbc6:11.2.0.3.0@jar'
     }
 }
@@ -96,7 +96,7 @@ project('mysql') {
     description = 'DBFit MySQL engine'
 
     dependencies {
-        compile project(':core')
+        compile project(':dbfit-java:core')
         compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
     }
 
@@ -109,7 +109,7 @@ project('postgres') {
     description = 'DBFit PostGreSQL engine'
 
     dependencies {
-        compile project(':core')
+        compile project(':dbfit-java:core')
         compile group: 'postgresql', name: 'postgresql', version: '9.1-901.jdbc4'
     }
 
@@ -123,7 +123,7 @@ project('sqlserver') {
 
     dependencies {
         compile group: 'net.sourceforge.jtds', name: 'jtds', version: '1.2.2'
-        compile project(':core')
+        compile project(':dbfit-java:core')
     }
 }
 
@@ -131,7 +131,7 @@ project('teradata') {
     description = 'DBFit Teradata engine'
 
     dependencies {
-        compile project(':core')
+        compile project(':dbfit-java:core')
     }
 }
 
