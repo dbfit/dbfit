@@ -1,19 +1,46 @@
-task copyLocal(type: Copy) {
-    from 'LICENSE', 'README.md', 'bin/buildDbFit.sh', 'FitNesseRoot'
-    into 'dist'
+task cleanFitnesseroot(type:Exec) {
+    executable "/bin/sh"
+    args "-c", "git clean -d -x -f FitNesseRoot/"
 }
 
-task copyJars(type: Copy, dependsOn: copyLocal) {
-    from 'dbfit-java'
-    include '**/*.jar'
-    exclude '**/fitnesse*.jar', 'dbfit-java/teradata/**/*.jar', '**/junit*.jar', '**/ojdbc*.jar'
-    into 'dist/lib'
-    eachFile {details ->
-        details.path = flattenPath(details.path)
+task copyLocal << {
+    copy {
+        delete('dist')
+        from 'LICENSE', 'README.md', 'bin/startFitnesse.bat', 'bin/startFitnesse.sh', 'FitNesseRoot'
+        into 'dist'
     }
-    includeEmptyDirs = false 
+    copy {
+        from 'dbfit-java'
+        include '**/*.jar'
+        exclude 'dbfit-java/build/**/*.jar', 'dbfit-java/teradata/**/*.jar', '**/ojdbc*.jar'
+        into 'dist/lib'
+        eachFile {details ->
+            details.path = flattenPath(details.path)
+        }
+        includeEmptyDirs = false 
+    }
 }
 
 def flattenPath(def path) {
     path.replaceAll('.*/([^/]*?\\.jar)', {"${it[1]}"})
 }
+
+task downloadFitness(dependsOn: copyLocal) << {
+    ant.get(src: 'https://s3.amazonaws.com/dbfit/fitnesse-standalone-20130321.jar',
+            dest: 'dist/lib/fitnesse-standalone.jar',
+            verbose: true)
+}
+
+task bundleFitsharp(dependsOn: copyLocal) << {
+    mkdir 'dist/fitsharp/'
+    ant.get(src: 'http://cloud.github.com/downloads/jediwhale/fitsharp/release.2.2.net.40.zip',
+            dest: 'dist/fitsharp/',
+            verbose: true)
+    copy {
+        from zipTree('dist/fitsharp/release.2.2.net.40.zip')
+        into 'dist/fitsharp/'
+    }
+    delete 'dist/fitsharp/fitsharp.zip'
+    file('dist/fitsharp/Runner.exe.config') << '<configuration><runtime><loadFromRemoteSources enabled="true"/></runtime></configuration>'
+}
+
