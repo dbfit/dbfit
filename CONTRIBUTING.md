@@ -97,7 +97,7 @@ An Eclipse project can be created by running:
     
         dbfit-java$ gradle clean check install
 
-*  Build and package all the subprojects:
+*  Build and package all java projects:
 
         dbfit$ gradle assemble
 

@@ -3,7 +3,7 @@ task cleanFitnesseroot(type:Exec) {
     args "-c", "git clean -d -x -f FitNesseRoot/"
 }
 
-task copyLocal(dependsOn: cleanFitnesseroot) << {
+task copyLocal(dependsOn: [cleanFitnesseroot, ':dbfit-java:assembleAll']) << {
     delete('dist')
     copy {
         from 'FitNesseRoot'
@@ -29,14 +29,13 @@ def flattenPath(def path) {
     path.replaceAll('.*/([^/]*?\\.jar)', {"${it[1]}"})
 }
 
-task downloadFitness << {
-    mkdir 'dist'
+task downloadFitness(dependsOn: copyLocal) << {
     ant.get(src: 'https://s3.amazonaws.com/dbfit/fitnesse-standalone-20130321.jar',
             dest: 'dist/lib/fitnesse-standalone.jar',
             verbose: true)
 }
 
-task bundleFitsharp << {
+task bundleFitsharp(dependsOn: copyLocal) << {
     mkdir 'dist/fitsharp/'
     ant.get(src: 'http://cloud.github.com/downloads/jediwhale/fitsharp/release.2.2.net.40.zip',
             dest: 'dist/fitsharp/',

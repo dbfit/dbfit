@@ -48,6 +48,10 @@ subprojects {
     test.inputs.dir file("$projectDir/../../FitNesseRoot/DbFit/AcceptanceTests/JavaTests")
 }
 
+task assembleAll(dependsOn: subprojects.assemble) {
+
+}
+
 project('core') {
     description = 'DBFit core api and fixtures'
 
