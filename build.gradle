@@ -3,16 +3,20 @@ task cleanFitnesseroot(type:Exec) {
     args "-c", "git clean -d -x -f FitNesseRoot/"
 }
 
-task copyLocal << {
+task copyLocal(dependsOn: cleanFitnesseroot) << {
+    delete('dist')
     copy {
-        delete('dist')
-        from 'LICENSE', 'README.md', 'bin/startFitnesse.bat', 'bin/startFitnesse.sh', 'FitNesseRoot'
+        from 'FitNesseRoot'
+        into 'dist/FitNesseRoot'
+    }
+    copy {
+        from 'LICENSE', 'README.md', 'bin/startFitnesse.bat', 'bin/startFitnesse.sh'
         into 'dist'
     }
     copy {
         from 'dbfit-java'
         include '**/*.jar'
-        exclude 'dbfit-java/build/**/*.jar', 'dbfit-java/teradata/**/*.jar', '**/ojdbc*.jar'
+        exclude 'build/**/*.jar', 'teradata/**/*.jar', '**/ojdbc*.jar'
         into 'dist/lib'
         eachFile {details ->
             details.path = flattenPath(details.path)
@@ -40,7 +44,11 @@ task bundleFitsharp(dependsOn: copyLocal) << {
         from zipTree('dist/fitsharp/release.2.2.net.40.zip')
         into 'dist/fitsharp/'
     }
-    delete 'dist/fitsharp/fitsharp.zip'
+    delete 'dist/fitsharp/release.2.2.net.40.zip'
     file('dist/fitsharp/Runner.exe.config') << '<configuration><runtime><loadFromRemoteSources enabled="true"/></runtime></configuration>'
 }
 
+task bundle(type: Zip, dependsOn: [bundleFitsharp, downloadFitness]) {
+    from 'dist'
+    archiveName 'dbfit-complete-2.0.0-RC3.zip'
+}
