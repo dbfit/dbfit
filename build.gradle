@@ -5,8 +5,11 @@ task cleanFitnesseroot(type:Exec) {
     args '-c', 'git clean -d -x -f FitNesseRoot/'
 }
 
-task copyLocal(dependsOn: [cleanFitnesseroot, ':dbfit-java:assembleAll', ':dbfit-java:core:libs']) << {
-    delete('dist')
+task cleanDist << {
+    delete 'dist'
+}
+
+task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAll', ':dbfit-java:libs']) << {
     copy {
         from 'FitNesseRoot'
         into 'dist/FitNesseRoot'

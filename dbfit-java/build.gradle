@@ -22,7 +22,7 @@ subprojects {
         }
     }
 
-    task libs(type: Sync) {
+    task libs(type: Copy) {
         from configurations.runtime
         into "$buildDir/libs"
     }
@@ -48,7 +48,9 @@ subprojects {
     test.inputs.dir file("$projectDir/../../FitNesseRoot/DbFit/AcceptanceTests/JavaTests")
 }
 
+
 task assembleAll(dependsOn: subprojects.assemble) { }
+task libs(dependsOn: subprojects.libs) { }
 
 project('core') {
     description = 'DBFit core api and fixtures'
