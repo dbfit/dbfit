@@ -5,7 +5,7 @@ task cleanFitnesseroot(type:Exec) {
     args "-c", "git clean -d -x -f FitNesseRoot/"
 }
 
-task copyLocal(dependsOn: [cleanFitnesseroot, ':dbfit-java:assembleAll']) << {
+task copyLocal(dependsOn: [cleanFitnesseroot, ':dbfit-java:assembleAll', ':dbfit-java:core:libs']) << {
     delete('dist')
     copy {
         from 'FitNesseRoot'
@@ -23,18 +23,15 @@ task copyLocal(dependsOn: [cleanFitnesseroot, ':dbfit-java:assembleAll']) << {
         eachFile {details ->
             details.path = flattenPath(details.path)
         }
+        rename { String fileName ->
+             fileName.replace('fitnesse-standalone-20130321.jar', 'fitnesse-standalone.jar')
+        }
         includeEmptyDirs = false 
     }
 }
 
 def flattenPath(def path) {
     path.replaceAll('.*/([^/]*?\\.jar)', {"${it[1]}"})
-}
-
-task downloadFitness(dependsOn: copyLocal) << {
-    ant.get(src: 'https://s3.amazonaws.com/dbfit/fitnesse-standalone-20130321.jar',
-            dest: 'dist/lib/fitnesse-standalone.jar',
-            verbose: true)
 }
 
 task bundleFitsharp(dependsOn: copyLocal) << {
