@@ -105,6 +105,10 @@ An Eclipse project can be created by running:
 
         dbfit$ gradle bundle
 
+*  Start fitness as a webservice on http://localhost:8085
+
+        dbfit$ gradle start
+
 ### Useful development commands
 
  *  Logging in as `root` for `mysql`:

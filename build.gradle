@@ -50,9 +50,17 @@ task bundleFitsharp(dependsOn: copyLocal) << {
     file('dist/fitsharp/Runner.exe.config') << '<configuration><runtime><loadFromRemoteSources enabled="true"/></runtime></configuration>'
 }
 
-task bundle(type: Zip, dependsOn: [copyLocal, bundleFitsharp, downloadFitness]) {
+task bundle(type: Zip, dependsOn: [copyLocal, bundleFitsharp]) {
+    description = 'creates the zip file for distributing dbfit'
     from 'dist'
     baseName 'dbfit-complete'
     version dbfitVersion 
     destinationDir = file('dist')
+}
+
+task start(type: Exec, dependsOn: [copyLocal, bundleFitsharp]) {
+    workingDir './dist'
+    description = 'starts fitness with dbfit'
+    executable '/bin/sh'
+    args '-c', './startFitnesse.sh'
 }
