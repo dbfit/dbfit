@@ -1,3 +1,5 @@
+ext.dbfitVersion = '2.0.0-RC4'
+
 task cleanFitnesseroot(type:Exec) {
     executable "/bin/sh"
     args "-c", "git clean -d -x -f FitNesseRoot/"
@@ -50,5 +52,7 @@ task bundleFitsharp(dependsOn: copyLocal) << {
 
 task bundle(type: Zip, dependsOn: [copyLocal, bundleFitsharp, downloadFitness]) {
     from 'dist'
-    archiveName 'dbfit-complete-2.0.0-RC3.zip'
+    baseName 'dbfit-complete'
+    version dbfitVersion 
+    destinationDir = file('dist')
 }

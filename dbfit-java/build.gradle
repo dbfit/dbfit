@@ -4,7 +4,7 @@ allprojects {
 
     apply plugin: 'maven'
     group = 'com.neuri.dbfit'
-    version = '2.0.0-RC4'
+    version = rootProject.dbfitVersion
     
     apply plugin: 'java'
     sourceCompatibility = 1.6
@@ -48,9 +48,7 @@ subprojects {
     test.inputs.dir file("$projectDir/../../FitNesseRoot/DbFit/AcceptanceTests/JavaTests")
 }
 
-task assembleAll(dependsOn: subprojects.assemble) {
-
-}
+task assembleAll(dependsOn: subprojects.assemble) { }
 
 project('core') {
     description = 'DBFit core api and fixtures'
