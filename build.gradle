@@ -1,8 +1,8 @@
 ext.dbfitVersion = '2.0.0-RC4'
 
 task cleanFitnesseroot(type:Exec) {
-    executable "/bin/sh"
-    args "-c", "git clean -d -x -f FitNesseRoot/"
+    executable '/bin/sh'
+    args '-c', 'git clean -d -x -f FitNesseRoot/'
 }
 
 task copyLocal(dependsOn: [cleanFitnesseroot, ':dbfit-java:assembleAll', ':dbfit-java:core:libs']) << {
