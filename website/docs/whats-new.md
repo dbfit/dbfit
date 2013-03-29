@@ -7,12 +7,13 @@ show_comments: false
 ## In 2.0.0 RC4 <small>28th Mar 2013</small>
 
  *  Features:
-     *  Support for using the Oracle 11g JDBC driver (issues [#67](https://github.com/benilovj/dbfit/pull/67), [#56](https://github.com/benilovj/dbfit/pull/56), [#54](https://github.com/benilovj/dbfit/issues/54), [#53](https://github.com/benilovj/dbfit/issues/53), [#52](https://github.com/benilovj/dbfit/pull/52), [#50](https://github.com/benilovj/dbfit/issues/50), [#28](https://github.com/benilovj/dbfit/issues/28))
+     *  Support for using the Oracle 11g JDBC driver (issues [#67](https://github.com/benilovj/dbfit/pull/67), [#56](https://github.com/benilovj/dbfit/pull/56), [#54](https://github.com/benilovj/dbfit/issues/54), [#53](https://github.com/benilovj/dbfit/issues/53), [#28](https://github.com/benilovj/dbfit/issues/28))
  *  Documentation improvements:
      *  Reinstated [What's wrong with xUnit](http://benilovj.github.com/dbfit/docs/whats-wrong-with-xunit.html)
      *  Added the [DbFit test catalog](http://benilovj.github.com/dbfit/docs/writing-tests.html)
  *  Bugfixes:
      *  Exception for stored procedure input parameters of type NUMBER in standalone mode ([#58](https://github.com/benilovj/dbfit/issues/58))
+     *  Synonyms followed properly when using Oracle ([#52](https://github.com/benilovj/dbfit/pull/52), [#50](https://github.com/benilovj/dbfit/issues/50))
      *  Derby: inconsistent handling of case across different fixtures ([#22](https://github.com/benilovj/dbfit/issues/22))
      *  Inconsistent syntax for calling stored proc without parameters ([#21](https://github.com/benilovj/dbfit/issues/21))
 
