@@ -1,19 +1,65 @@
-task copyLocal(type: Copy) {
-    from 'LICENSE', 'README.md', 'bin/buildDbFit.sh', 'FitNesseRoot'
-    into 'dist'
+ext.dbfitVersion = '2.0.0-RC4'
+
+task cleanFitnesseroot(type:Exec) {
+    executable '/bin/sh'
+    args '-c', 'git clean -d -x -f FitNesseRoot/'
 }
 
-task copyJars(type: Copy, dependsOn: copyLocal) {
-    from 'dbfit-java'
-    include '**/*.jar'
-    exclude '**/fitnesse*.jar', 'dbfit-java/teradata/**/*.jar', '**/junit*.jar', '**/ojdbc*.jar'
-    into 'dist/lib'
-    eachFile {details ->
-        details.path = flattenPath(details.path)
+task cleanDist << {
+    delete 'dist'
+}
+
+task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAll', ':dbfit-java:libs']) << {
+    copy {
+        from 'FitNesseRoot'
+        into 'dist/FitNesseRoot'
     }
-    includeEmptyDirs = false 
+    copy {
+        from 'LICENSE', 'README.md', 'bin/startFitnesse.bat', 'bin/startFitnesse.sh'
+        into 'dist'
+    }
+    copy {
+        from 'dbfit-java'
+        include '**/*.jar'
+        exclude 'build/**/*.jar', 'teradata/**/*.jar', '**/ojdbc*.jar'
+        into 'dist/lib'
+        eachFile {details ->
+            details.path = flattenPath(details.path)
+        }
+        rename { String fileName ->
+             fileName.replace('fitnesse-standalone-20130321.jar', 'fitnesse-standalone.jar')
+        }
+        includeEmptyDirs = false 
+    }
 }
 
 def flattenPath(def path) {
     path.replaceAll('.*/([^/]*?\\.jar)', {"${it[1]}"})
+}
+
+task bundleFitsharp(dependsOn: copyLocal) << {
+    mkdir 'dist/fitsharp/'
+    ant.get(src: 'http://cloud.github.com/downloads/jediwhale/fitsharp/release.2.2.net.40.zip',
+            dest: 'dist/fitsharp/',
+            verbose: true)
+    copy {
+        from zipTree('dist/fitsharp/release.2.2.net.40.zip')
+        into 'dist/fitsharp/'
+    }
+    delete 'dist/fitsharp/release.2.2.net.40.zip'
+    file('dist/fitsharp/Runner.exe.config') << '<configuration><runtime><loadFromRemoteSources enabled="true"/></runtime></configuration>'
+}
+
+task bundle(type: Zip, dependsOn: [copyLocal, bundleFitsharp]) {
+    description = 'creates the zip file for distributing dbfit'
+    from 'dist'
+    baseName 'dbfit-complete'
+    version dbfitVersion 
+}
+
+task start(type: Exec, dependsOn: [copyLocal, bundleFitsharp]) {
+    workingDir './dist'
+    description = 'starts fitness with dbfit'
+    executable '/bin/sh'
+    args '-c', './startFitnesse.sh'
 }
