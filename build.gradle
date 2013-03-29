@@ -55,7 +55,6 @@ task bundle(type: Zip, dependsOn: [copyLocal, bundleFitsharp]) {
     from 'dist'
     baseName 'dbfit-complete'
     version dbfitVersion 
-    destinationDir = file('dist')
 }
 
 task start(type: Exec, dependsOn: [copyLocal, bundleFitsharp]) {
