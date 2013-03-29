@@ -93,17 +93,21 @@ An Eclipse project can be created by running:
 
 #### Building
 
-1.  Install the root project POM into the local Maven repo:
+*  Clean, build, test and install to local maven repo
     
-        dbfit-java$ gradle clean install
+        dbfit-java$ gradle clean check install
 
-2.  Install the `dbfit-core`:
+*  Build and package all java projects:
 
-        core$ gradle install
+        dbfit$ gradle assemble
 
-3.  Build and package all the subprojects:
+*  Create release zip
 
-        dbfit-java$ gradle assemble
+        dbfit$ gradle bundle
+
+*  Start fitness as a webservice on http://localhost:8085
+
+        dbfit$ gradle start
 
 ### Useful development commands
 
