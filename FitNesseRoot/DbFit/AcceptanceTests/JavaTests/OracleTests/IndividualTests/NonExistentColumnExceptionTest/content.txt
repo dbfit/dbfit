@@ -1,0 +1,6 @@
+!3 Insert into non existent column
+
+|insert|users|
+|non_existent_column|
+|some text|
+
