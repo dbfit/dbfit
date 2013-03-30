@@ -36,8 +36,13 @@ public class DbTable implements DbObject {
 
     public DbParameterAccessor getDbParameterAccessor(String paramName,
             int expectedDirection) {
-        DbParameterAccessor accessor = allParams.get(NameNormaliser
-                .normaliseName(paramName));
+        String normalisedName = NameNormaliser.normaliseName(paramName);
+        DbParameterAccessor accessor = allParams.get(normalisedName);
+        if (null == accessor) {
+            throw new RuntimeException(
+                    "No such database column or parameter: '" + normalisedName + "'");
+        }
+
         if (accessor.getDirection() == DbParameterAccessor.INPUT
                 && expectedDirection == DbParameterAccessor.OUTPUT) {
             accessor = dbEnvironment
