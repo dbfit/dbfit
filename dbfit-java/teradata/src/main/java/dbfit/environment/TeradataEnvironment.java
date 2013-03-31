@@ -87,7 +87,9 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         }
     }
 
-    public TeradataEnvironment() {
+    public TeradataEnvironment(String driverClassName) {
+        super(driverClassName);
+
         TypeAdapter.registerParseDelegate(TeradataDatePeriod.class,
                 TeradataDatePeriodParseDelegate.class);
         TypeAdapter.registerParseDelegate(TeradataTimestampPeriod.class,
@@ -109,10 +111,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
     public boolean supportsOuputOnInsert() {
         return false;
-    }
-
-    protected String getDriverClassName() {
-        return "com.teradata.jdbc.TeraDriver";
     }
 
     protected String getConnectionString(String dataSource) {
@@ -546,3 +544,4 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         return sb.toString();
     }
 }
+

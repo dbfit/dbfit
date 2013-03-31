@@ -253,7 +253,10 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         }
     }
 
-    public OracleEnvironment() {
+
+    public OracleEnvironment(String driverClassName) {
+        super(driverClassName);
+
         // TypeAdapter.registerParseDelegate(oracle.sql.TIMESTAMP.class,
         // OracleTimestampParser.class);
         TypeNormaliserFactory.setNormaliser(oracle.sql.TIMESTAMP.class,
@@ -275,10 +278,6 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
     public boolean supportsOuputOnInsert() {
         return true;
-    }
-
-    protected String getDriverClassName() {
-        return "oracle.jdbc.OracleDriver";
     }
 
     protected String getConnectionString(String dataSource) {

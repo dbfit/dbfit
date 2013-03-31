@@ -87,8 +87,8 @@ public class DbEnvironmentFactory {
 
         try {
             Class<?> envClass = Class.forName(descriptor.getEnvironmentClassName());
-            Constructor ctor = envClass.getConstructor();
-            DBEnvironment oe = (DBEnvironment) ctor.newInstance();
+            Constructor ctor = envClass.getConstructor(String.class);
+            DBEnvironment oe = (DBEnvironment) ctor.newInstance(descriptor.driverClassName);
             return oe;
         } catch (Exception e) {
             throw new Error(e);

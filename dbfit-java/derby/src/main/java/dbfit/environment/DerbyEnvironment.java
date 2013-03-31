@@ -25,6 +25,10 @@ import java.util.regex.Pattern;
 public class DerbyEnvironment extends AbstractDbEnvironment {
     private TypeMapper typeMapper = new DerbyTypeMapper();
 
+    public DerbyEnvironment(String driverClassName) {
+        super(driverClassName);
+    }
+
     @Override
     protected String getConnectionString(String dataSource) {
         return String.format("jdbc:derby://%s", dataSource);
@@ -33,11 +37,6 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
     @Override
     protected String getConnectionString(String dataSource, String database) {
         return String.format("jdbc:derby://%s/%s", dataSource, database);
-    }
-
-    @Override
-    protected String getDriverClassName() {
-        return "org.apache.derby.jdbc.ClientDriver";
     }
 
     private static final String paramNamePattern = "@([A-Za-z0-9_]+)";
@@ -200,3 +199,4 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
         }
     }
 }
+
