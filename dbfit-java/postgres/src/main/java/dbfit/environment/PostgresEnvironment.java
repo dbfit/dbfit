@@ -11,7 +11,9 @@ import javax.sql.RowSet;
 
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.*;
+import dbfit.annotations.DatabaseEnvironment;
 
+@DatabaseEnvironment(name="Postgres", driver="org.postgresql.Driver")
 public class PostgresEnvironment extends AbstractDbEnvironment {
     private static HashMap<String, Integer> errorCodeHashMap = new HashMap<String, Integer>();
 

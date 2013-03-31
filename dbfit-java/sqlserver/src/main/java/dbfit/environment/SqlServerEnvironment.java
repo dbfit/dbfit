@@ -13,7 +13,9 @@ import java.util.regex.Pattern;
 import dbfit.api.AbstractDbEnvironment;
 
 import dbfit.util.*;
+import dbfit.annotations.DatabaseEnvironment;
 
+@DatabaseEnvironment(name="SqlServer", driver="com.microsoft.sqlserver.jdbc.SQLServerDriver")
 public class SqlServerEnvironment extends AbstractDbEnvironment {
 
     public SqlServerEnvironment(String driverClassName) {

@@ -10,6 +10,9 @@ import java.sql.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import dbfit.annotations.DatabaseEnvironment;
+
+@DatabaseEnvironment(name="Oracle", driver="oracle.jdbc.OracleDriver")
 public class OracleEnvironment extends AbstractDbEnvironment {
     private static String SKIP_ORACLE_SYNONYMS = "SKIPORACLESYNONYMS";
 

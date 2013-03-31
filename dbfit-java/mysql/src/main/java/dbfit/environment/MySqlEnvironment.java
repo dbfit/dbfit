@@ -13,7 +13,9 @@ import java.util.regex.Pattern;
 import javax.sql.RowSet;
 import dbfit.util.*;
 import dbfit.api.*;
+import dbfit.annotations.DatabaseEnvironment;
 
+@DatabaseEnvironment(name="MySql", driver="com.mysql.jdbc.Driver")
 public class MySqlEnvironment extends AbstractDbEnvironment {
     public MySqlEnvironment(String driverClassName) {
         super(driverClassName);

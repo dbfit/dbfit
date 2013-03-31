@@ -2,6 +2,7 @@ package dbfit.environment;
 
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.*;
+import dbfit.annotations.DatabaseEnvironment;
 import fit.TypeAdapter;
 
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+@DatabaseEnvironment(name="Teradata", driver="com.teradata.jdbc.TeraDriver")
 public class TeradataEnvironment extends AbstractDbEnvironment {
 
     public static class TeradataClobNormaliser implements TypeNormaliser {

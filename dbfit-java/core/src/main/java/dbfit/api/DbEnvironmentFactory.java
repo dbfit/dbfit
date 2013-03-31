@@ -1,21 +1,19 @@
 package dbfit.api;
 
 import dbfit.api.DBEnvironment;
+import dbfit.annotations.DatabaseEnvironment;
 import java.util.Map;
 import java.util.HashMap;
 import java.lang.reflect.Constructor;
+import org.atteo.evo.classindex.ClassIndex;
 
 public class DbEnvironmentFactory {
     private void initDefaultEnvironments() {
-        registerEnv("Oracle", "oracle.jdbc.OracleDriver");
-        registerEnv("Teradata", "com.teradata.jdbc.TeraDriver");
-        registerEnv("MySql", "com.mysql.jdbc.Driver");
-        registerEnv("SqlServer", "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        registerEnv("DB2", "com.ibm.db2.jcc.DB2Driver");
-        registerEnv("Derby", "org.apache.derby.jdbc.ClientDriver");
-        registerEnv("EmbeddedDerby", "org.apache.derby.jdbc.EmbeddedDriver");
-        registerEnv("Postgres", "org.postgresql.Driver");
-        registerEnv("HSQLDB", "org.hsqldb.jdbcDriver");
+        for (Class<?> c: ClassIndex.getAnnotated(DatabaseEnvironment.class)) {
+            DatabaseEnvironment envAnnotation =
+                c.getAnnotation(DatabaseEnvironment.class);
+            registerEnv(envAnnotation.name(), envAnnotation.driver());
+        }
     }
 
     private static DBEnvironment environment;

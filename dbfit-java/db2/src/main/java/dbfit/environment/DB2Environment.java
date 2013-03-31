@@ -12,7 +12,9 @@ import java.util.regex.Pattern;
 
 import dbfit.api.*;
 import dbfit.util.*;
+import dbfit.annotations.DatabaseEnvironment;
 
+@DatabaseEnvironment(name="DB2", driver="com.ibm.db2.jcc.DB2Driver")
 public class DB2Environment extends AbstractDbEnvironment {
 
     public DB2Environment(String driverClassName) {
