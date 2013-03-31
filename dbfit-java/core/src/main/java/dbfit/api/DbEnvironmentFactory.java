@@ -72,8 +72,19 @@ public class DbEnvironmentFactory {
         return environments.get(normalise(requestedEnv));
     }
 
+    private void checkDriver(EnvironmentDescriptor descriptor) {
+        try {
+            Class.forName(descriptor.driverClassName);
+        } catch (Exception e) {
+            throw new Error("Cannot load " + descriptor.environmentName
+                + " database driver " + descriptor.driverClassName, e);
+        }
+    }
+
     private DBEnvironment createEnvironmentInstance(
                 EnvironmentDescriptor descriptor) {
+        checkDriver(descriptor);
+
         try {
             Class<?> envClass = Class.forName(descriptor.getEnvironmentClassName());
             Constructor ctor = envClass.getConstructor();

@@ -33,7 +33,6 @@ public class DbEnvironmentFactoryTest {
         factory.createEnvironmentInstance(NE_DB_ENVIRONMENT_NAME);
     }
 
-    @Ignore("Implementation not ready yet")
     @Test
     public void newDbEnvironmentWithMissingDriverShouldRaiseSelfExplainingException() throws Exception {
         expectedEx.expectMessage("Cannot load " + SOME_ENVIRONMENT_NAME
