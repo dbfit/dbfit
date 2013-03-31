@@ -24,8 +24,8 @@ public class DatabaseEnvironment extends fitlibrary.SequenceFixture {
 
     public void setDatabaseEnvironment(String requestedEnv) {
         try {
-            DBEnvironment oe = DbEnvironmentFactory.newFactoryInstance()
-                .createEnvironmentInstance(requestedEnv);
+            DBEnvironment oe =
+                DbEnvironmentFactory.newEnvironmentInstance(requestedEnv);
             DbEnvironmentFactory.setDefaultEnvironment(oe);
         } catch (Exception e) {
             throw new Error(e);

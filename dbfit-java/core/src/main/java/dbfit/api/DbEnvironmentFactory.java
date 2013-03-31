@@ -92,5 +92,9 @@ public class DbEnvironmentFactory {
 
         return createEnvironmentInstance(descriptor);
     }
+
+    public static DBEnvironment newEnvironmentInstance(String requestedEnv) {
+        return newFactoryInstance().createEnvironmentInstance(requestedEnv);
+    }
 }
 
