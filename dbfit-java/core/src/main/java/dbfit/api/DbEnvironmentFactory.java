@@ -37,6 +37,15 @@ public class DbEnvironmentFactory {
         public String environmentName;
         public String driverClassName;
 
+        private void checkDriver() {
+            try {
+                Class.forName(driverClassName);
+            } catch (Exception e) {
+                throw new Error("Cannot load " + environmentName
+                    + " database driver " + driverClassName, e);
+            }
+        }
+
         public String getEnvironmentClassName() {
             return "dbfit.environment." + environmentName + "Environment";
         }
@@ -44,6 +53,19 @@ public class DbEnvironmentFactory {
         public EnvironmentDescriptor(String environmentName, String driverClassName) {
             this.environmentName = environmentName;
             this.driverClassName = driverClassName;
+        }
+
+        public DBEnvironment createEnvironmentInstance() {
+            checkDriver();
+
+            try {
+                Class<?> envClass = Class.forName(getEnvironmentClassName());
+                Constructor ctor = envClass.getConstructor(String.class);
+                DBEnvironment oe = (DBEnvironment) ctor.newInstance(driverClassName);
+                return oe;
+            } catch (Exception e) {
+                throw new Error(e);
+            }
         }
     }
 
@@ -70,36 +92,13 @@ public class DbEnvironmentFactory {
         return environments.get(normalise(requestedEnv));
     }
 
-    private void checkDriver(EnvironmentDescriptor descriptor) {
-        try {
-            Class.forName(descriptor.driverClassName);
-        } catch (Exception e) {
-            throw new Error("Cannot load " + descriptor.environmentName
-                + " database driver " + descriptor.driverClassName, e);
-        }
-    }
-
-    private DBEnvironment createEnvironmentInstance(
-                EnvironmentDescriptor descriptor) {
-        checkDriver(descriptor);
-
-        try {
-            Class<?> envClass = Class.forName(descriptor.getEnvironmentClassName());
-            Constructor ctor = envClass.getConstructor(String.class);
-            DBEnvironment oe = (DBEnvironment) ctor.newInstance(descriptor.driverClassName);
-            return oe;
-        } catch (Exception e) {
-            throw new Error(e);
-        }
-    }
-
     public DBEnvironment createEnvironmentInstance(String requestedEnv) {
         EnvironmentDescriptor descriptor = getEnvironmentDescriptor(requestedEnv);
         if (null == descriptor) {
             throw new IllegalArgumentException("DB Environment not supported:" + requestedEnv);
         }
 
-        return createEnvironmentInstance(descriptor);
+        return descriptor.createEnvironmentInstance();
     }
 
     public static DBEnvironment newEnvironmentInstance(String requestedEnv) {
