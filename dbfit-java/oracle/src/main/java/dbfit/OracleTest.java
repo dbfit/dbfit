@@ -1,10 +1,8 @@
 package dbfit;
 
-import dbfit.environment.OracleEnvironment;
-
 public class OracleTest extends DatabaseTest {
     public OracleTest() {
-        super(new OracleEnvironment());
+        super(dbfit.api.DbEnvironmentFactory.newEnvironmentInstance("Oracle"));
     }
 }
 
