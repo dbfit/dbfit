@@ -10,7 +10,10 @@ import static org.junit.Assert.*;
 import org.junit.rules.ExpectedException;
 
 public class DbEnvironmentFactoryTest {
-    private static final String DB_ENVIRONMENT_NAME = "NonexistentDbEnvironment";
+    private static final String NE_DB_ENVIRONMENT_NAME = "NonexistentDbEnvironment";
+    private static final String SOME_ENVIRONMENT_NAME = "SomeDbEnvironment";
+    private static final String NE_DRIVER_CLASS_NAME = "non.existent.Db.Driver";
+
     private final DbEnvironmentFactory factory = DbEnvironmentFactory.newFactoryInstance();
 
     @Rule
@@ -18,15 +21,25 @@ public class DbEnvironmentFactoryTest {
 
     @Before
     public void prepare() {
-        factory.unregisterEnv(DB_ENVIRONMENT_NAME);
+        factory.unregisterEnv(NE_DB_ENVIRONMENT_NAME);
+        factory.registerEnv(SOME_ENVIRONMENT_NAME, NE_DRIVER_CLASS_NAME);
     }
 
     @Test
     public void unsupportedEnvironmentInstantiationShouldRaiseException() throws Exception {
         expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("DB Environment not supported:" + DB_ENVIRONMENT_NAME);
+        expectedEx.expectMessage("DB Environment not supported:" + NE_DB_ENVIRONMENT_NAME);
 
-        factory.createEnvironmentInstance(DB_ENVIRONMENT_NAME);
+        factory.createEnvironmentInstance(NE_DB_ENVIRONMENT_NAME);
+    }
+
+    @Ignore("Implementation not ready yet")
+    @Test
+    public void newDbEnvironmentWithMissingDriverShouldRaiseSelfExplainingException() throws Exception {
+        expectedEx.expectMessage("Cannot load " + SOME_ENVIRONMENT_NAME
+                + " database driver " + NE_DRIVER_CLASS_NAME);
+
+        DBEnvironment env = factory.createEnvironmentInstance(SOME_ENVIRONMENT_NAME);
     }
 }
 
