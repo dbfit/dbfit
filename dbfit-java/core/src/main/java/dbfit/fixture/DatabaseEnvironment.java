@@ -10,19 +10,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class DatabaseEnvironment extends fitlibrary.SequenceFixture {
-    private static final String[] environments = new String[]
-            {"Oracle", "MySql", "SqlServer", "DB2", "Derby", "Postgres", "HSQLDB"};
 
     public DatabaseEnvironment() {
         FitNesseTestHost.getInstance();
-    }
-
-    private static String getEnvironmentClassName(String requestedEnv) {
-        for (String environment : environments) {
-            if (environment.equalsIgnoreCase(requestedEnv))
-                return "dbfit.environment." + environment + "Environment";
-        }
-        throw new IllegalArgumentException("DB Environment not supported:" + requestedEnv);
     }
 
     public void doTable(Parse table) {
@@ -33,9 +23,9 @@ public class DatabaseEnvironment extends fitlibrary.SequenceFixture {
     }
 
     public void setDatabaseEnvironment(String requestedEnv) {
-        requestedEnv = requestedEnv.trim().toUpperCase();
         try {
-            DBEnvironment oe = (DBEnvironment) Class.forName(getEnvironmentClassName(requestedEnv)).newInstance();
+            DBEnvironment oe = DbEnvironmentFactory.newFactoryInstance()
+                .createEnvironmentInstance(requestedEnv);
             DbEnvironmentFactory.setDefaultEnvironment(oe);
         } catch (Exception e) {
             throw new Error(e);

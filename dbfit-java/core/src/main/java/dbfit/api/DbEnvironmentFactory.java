@@ -75,7 +75,7 @@ public class DbEnvironmentFactory {
     private DBEnvironment createEnvironmentInstance(
                 EnvironmentDescriptor descriptor) {
         try {
-            Class envClass = Class.forName(descriptor.getEnvironmentClassName());
+            Class<?> envClass = Class.forName(descriptor.getEnvironmentClassName());
             Constructor ctor = envClass.getConstructor();
             DBEnvironment oe = (DBEnvironment) ctor.newInstance();
             return oe;
@@ -86,6 +86,10 @@ public class DbEnvironmentFactory {
 
     public DBEnvironment createEnvironmentInstance(String requestedEnv) {
         EnvironmentDescriptor descriptor = getEnvironmentDescriptor(requestedEnv);
+        if (null == descriptor) {
+            throw new IllegalArgumentException("DB Environment not supported:" + requestedEnv);
+        }
+
         return createEnvironmentInstance(descriptor);
     }
 }
