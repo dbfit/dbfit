@@ -11,10 +11,11 @@ import dbfit.environment.*;
  */
 public class DerbyTest extends DatabaseTest {
 
-	public DerbyTest() {
-		super(new DerbyEnvironment());
-	}
-	protected DerbyTest(DBEnvironment env) {
-		super(env);
-	}
+    public DerbyTest() {
+        super(new DerbyEnvironment());
+    }
+    protected DerbyTest(DBEnvironment env) {
+        super(env);
+    }
 }
+
