@@ -58,8 +58,7 @@ project('core') {
     dependencies {
         compile "dummy:fitnesse-standalone:20130321@jar"
         compile "dummy:fitlibrary:20081102@jar"
-        compile "org.atteo:evo-classindex:1.4"
-        // compile "org.atteo:evo-classindex:1.4@jar"
+        compile "org.atteo:evo-classindex:1.4" // @jar suffix here doesn't pull dependencies (fails build)
         testCompile "org.mockito:mockito-all:1.9.5"
     }
 }
