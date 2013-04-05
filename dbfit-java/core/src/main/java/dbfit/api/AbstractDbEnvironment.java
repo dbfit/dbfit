@@ -15,10 +15,17 @@ import java.util.regex.Pattern;
 public abstract class AbstractDbEnvironment implements DBEnvironment {
 
     protected Connection currentConnection;
+    protected String driverClassName;
 
-    protected abstract String getDriverClassName();
+    protected String getDriverClassName() {
+        return driverClassName;
+    }
 
     private boolean driverRegistered = false;
+
+    protected AbstractDbEnvironment(String driverClassName) {
+        this.driverClassName = driverClassName;
+    }
 
     private void registerDriver() throws SQLException {
         String driverName = getDriverClassName();

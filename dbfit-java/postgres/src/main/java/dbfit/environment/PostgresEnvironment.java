@@ -11,11 +11,14 @@ import javax.sql.RowSet;
 
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.*;
+import dbfit.annotations.DatabaseEnvironment;
 
+@DatabaseEnvironment(name="Postgres", driver="org.postgresql.Driver")
 public class PostgresEnvironment extends AbstractDbEnvironment {
     private static HashMap<String, Integer> errorCodeHashMap = new HashMap<String, Integer>();
 
-    public PostgresEnvironment() {
+    public PostgresEnvironment(String driverClassName) {
+        super(driverClassName);
         populateErrorCodeHashMap();
     }
 
@@ -45,10 +48,6 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
     protected String parseCommandText(String commandText) {
         commandText = commandText.replaceAll(paramNamePattern, "?");
         return super.parseCommandText(commandText);
-    }
-
-    protected String getDriverClassName() {
-        return "org.postgresql.Driver";
     }
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
@@ -728,3 +727,4 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
                 .intValue();
     }
 }
+
