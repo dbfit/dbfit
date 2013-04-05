@@ -13,8 +13,14 @@ import java.util.regex.Pattern;
 import javax.sql.RowSet;
 import dbfit.util.*;
 import dbfit.api.*;
+import dbfit.annotations.DatabaseEnvironment;
 
+@DatabaseEnvironment(name="MySql", driver="com.mysql.jdbc.Driver")
 public class MySqlEnvironment extends AbstractDbEnvironment {
+    public MySqlEnvironment(String driverClassName) {
+        super(driverClassName);
+    }
+
     public boolean supportsOuputOnInsert() {
         return false;
     }
@@ -39,10 +45,6 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
     protected String parseCommandText(String commandText) {
         commandText = commandText.replaceAll(paramNamePattern, "?");
         return super.parseCommandText(commandText);
-    }
-
-    protected String getDriverClassName() {
-        return "com.mysql.jdbc.Driver";
     }
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
@@ -222,3 +224,4 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
         return allParams;
     }
 }
+

@@ -4,7 +4,7 @@ import dbfit.environment.PostgresEnvironment;
 
 public class PostgresTest extends DatabaseTest {
     public PostgresTest(){
-        super(new PostgresEnvironment());
+        super(dbfit.api.DbEnvironmentFactory.newEnvironmentInstance("Postgres"));
     }
 }
 

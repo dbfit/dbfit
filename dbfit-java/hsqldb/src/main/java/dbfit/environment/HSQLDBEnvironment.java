@@ -12,16 +12,21 @@ import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
 
 import dbfit.api.AbstractDbEnvironment;
+import dbfit.annotations.DatabaseEnvironment;
 
 /**
  * Provides support for testing HSQLDB databases.
  * 
  * @author Jerome Mirc, jerome.mirc@gmail.com
  */
-
+@DatabaseEnvironment(name="HSQLDB", driver="org.hsqldb.jdbcDriver")
 public class HSQLDBEnvironment extends AbstractDbEnvironment {
 
     private TypeMapper typeMapper = new HsqldbTypeMapper();
+
+    public HSQLDBEnvironment(String driverClassName) {
+        super(driverClassName);
+    }
 
     /**
      * This method has been overwrided as currently the
@@ -34,11 +39,6 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
             DbParameterAccessor[] accessors) throws SQLException {
         return getConnection().prepareStatement(
                 buildInsertCommand(tableName, accessors));
-    }
-
-    @Override
-    protected String getDriverClassName() {
-        return "org.hsqldb.jdbcDriver";
     }
 
     @Override
@@ -212,3 +212,4 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
         }
     }
 }
+

@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import dbfit.annotations.DatabaseEnvironment;
 
 /**
  * Encapsulates support for the Derby database (also known as JavaDB). Operates
@@ -22,8 +23,13 @@ import java.util.regex.Pattern;
  * @see EmbeddedDerbyEnvironment
  * @author P&aring;l Brattberg, pal.brattberg@acando.com
  */
+@DatabaseEnvironment(name="Derby", driver="org.apache.derby.jdbc.ClientDriver")
 public class DerbyEnvironment extends AbstractDbEnvironment {
     private TypeMapper typeMapper = new DerbyTypeMapper();
+
+    public DerbyEnvironment(String driverClassName) {
+        super(driverClassName);
+    }
 
     @Override
     protected String getConnectionString(String dataSource) {
@@ -33,11 +39,6 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
     @Override
     protected String getConnectionString(String dataSource, String database) {
         return String.format("jdbc:derby://%s/%s", dataSource, database);
-    }
-
-    @Override
-    protected String getDriverClassName() {
-        return "org.apache.derby.jdbc.ClientDriver";
     }
 
     private static final String paramNamePattern = "@([A-Za-z0-9_]+)";
@@ -200,3 +201,4 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
         }
     }
 }
+

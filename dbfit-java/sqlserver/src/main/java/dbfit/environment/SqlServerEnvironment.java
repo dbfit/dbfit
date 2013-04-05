@@ -13,8 +13,14 @@ import java.util.regex.Pattern;
 import dbfit.api.AbstractDbEnvironment;
 
 import dbfit.util.*;
+import dbfit.annotations.DatabaseEnvironment;
 
+@DatabaseEnvironment(name="SqlServer", driver="com.microsoft.sqlserver.jdbc.SQLServerDriver")
 public class SqlServerEnvironment extends AbstractDbEnvironment {
+
+    public SqlServerEnvironment(String driverClassName) {
+        super(driverClassName);
+    }
 
     public boolean supportsOuputOnInsert() {
         return false;
@@ -54,10 +60,6 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
     protected String parseCommandText(String commandText) {
         commandText = commandText.replaceAll(paramNamePattern, "?");
         return super.parseCommandText(commandText);
-    }
-
-    protected String getDriverClassName() {
-        return "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     }
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
@@ -219,3 +221,4 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
 
     }
 }
+

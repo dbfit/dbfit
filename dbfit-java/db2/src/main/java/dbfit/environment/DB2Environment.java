@@ -12,8 +12,14 @@ import java.util.regex.Pattern;
 
 import dbfit.api.*;
 import dbfit.util.*;
+import dbfit.annotations.DatabaseEnvironment;
 
+@DatabaseEnvironment(name="DB2", driver="com.ibm.db2.jcc.DB2Driver")
 public class DB2Environment extends AbstractDbEnvironment {
+
+    public DB2Environment(String driverClassName) {
+        super(driverClassName);
+    }
 
     protected String parseCommandText(String commandText) {
         commandText = commandText.replaceAll(paramNamePattern, "?");
@@ -33,10 +39,6 @@ public class DB2Environment extends AbstractDbEnvironment {
 
     protected String getConnectionString(String dataSource, String database) {
         return "jdbc:db2://" + dataSource + "/" + database;
-    }
-
-    protected String getDriverClassName() {
-        return "com.ibm.db2.jcc.DB2Driver";
     }
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
@@ -184,3 +186,4 @@ public class DB2Environment extends AbstractDbEnvironment {
         return readIntoParams(qualifiers, qry);
     }
 }
+

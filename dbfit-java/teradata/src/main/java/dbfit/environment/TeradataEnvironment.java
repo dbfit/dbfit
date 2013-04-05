@@ -2,6 +2,7 @@ package dbfit.environment;
 
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.*;
+import dbfit.annotations.DatabaseEnvironment;
 import fit.TypeAdapter;
 
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+@DatabaseEnvironment(name="Teradata", driver="com.teradata.jdbc.TeraDriver")
 public class TeradataEnvironment extends AbstractDbEnvironment {
 
     public static class TeradataClobNormaliser implements TypeNormaliser {
@@ -87,7 +89,9 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         }
     }
 
-    public TeradataEnvironment() {
+    public TeradataEnvironment(String driverClassName) {
+        super(driverClassName);
+
         TypeAdapter.registerParseDelegate(TeradataDatePeriod.class,
                 TeradataDatePeriodParseDelegate.class);
         TypeAdapter.registerParseDelegate(TeradataTimestampPeriod.class,
@@ -109,10 +113,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
     public boolean supportsOuputOnInsert() {
         return false;
-    }
-
-    protected String getDriverClassName() {
-        return "com.teradata.jdbc.TeraDriver";
     }
 
     protected String getConnectionString(String dataSource) {
@@ -546,3 +546,4 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         return sb.toString();
     }
 }
+

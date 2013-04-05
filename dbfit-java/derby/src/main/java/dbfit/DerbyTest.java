@@ -2,7 +2,6 @@ package dbfit;
 
 
 import dbfit.api.DBEnvironment;
-import dbfit.environment.*;
 
 /**
  * Provides support for testing Derby databases (also known as JavaDB).
@@ -12,7 +11,7 @@ import dbfit.environment.*;
 public class DerbyTest extends DatabaseTest {
 
     public DerbyTest() {
-        super(new DerbyEnvironment());
+        super(dbfit.api.DbEnvironmentFactory.newEnvironmentInstance("Derby"));
     }
     protected DerbyTest(DBEnvironment env) {
         super(env);
