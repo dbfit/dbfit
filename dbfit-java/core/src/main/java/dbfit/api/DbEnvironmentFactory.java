@@ -42,7 +42,7 @@ public class DbEnvironmentFactory {
                 Class.forName(driverClassName);
             } catch (Exception e) {
                 throw new Error("Cannot load " + environmentName
-                    + " database driver " + driverClassName, e);
+                        + " database driver " + driverClassName + ". Is the JDBC driver on the classpath?", e);
             }
         }
 
