@@ -64,3 +64,5 @@ task start(type: Exec, dependsOn: [copyLocal, bundleFitsharp]) {
     executable '/bin/sh'
     args '-c', './startFitnesse.sh'
 }
+
+task fastbuild(dependsOn: [':dbfit-java:core:check', ':dbfit-java:derby:check'])
