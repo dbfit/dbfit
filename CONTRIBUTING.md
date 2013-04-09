@@ -6,12 +6,39 @@ Please raise pull requests against master; the `gh-pages` branch is used only fo
 
 ### Code changes
 
-Pull requests are most welcome, but please try to test them with the existing tests.
+Pull requests are most welcome, but please try to test them with the existing tests first.
+
+#### Fast build
+
+The quickest way to get feedback on your code changes is to run the fast build:
+
+    $ gradle clean fastbuild
+
+This is a pure-Java build that runs the `core` unit tests and the Derby integration tests (with Derby running embedded).
+
+#### Integration tests
+
+If you make changes to any database adapter, it's sufficient to make sure that the tests for only that adapter run eg if you make any changes to the Oracle adapter, you can run the Oracle integration tests:
+
+    $ gradle :dbfit-java:oracle:test
+
+If you have to make changes to `core`, please run all integration tests (because `core` changes can affect any of the adapters). This is easiest done from the test virtual machine.
+
+__Note:__ At the moment, the Oracle test database needs to be set up manually using the test script found under `dbfit-oracle/src/test/resources`.
+
+#### Integration tests without a VM
+
+You can set up an integration test environment without a VM by:
+ *  installing the appropriate database locally
+ *  executing the SQL scripts found in `src/test/resources` of the respective DB driver
+
+However, unlike the VM, this approach doesn't necessarily create all the users and permissions needed for the tests.
+
+### The test virtual machine
 
 The easiest way to get a DbFit test environment is to provision a Linux virtual machine image. The instructions below describe how to do this.
 
 The fully-built VM includes:
-
  *  working installs of Gradle, MySQL, PostgreSQL, Derby and HSQLDB
  *  the pre-requisites to easily install Oracle
 
