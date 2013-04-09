@@ -31,6 +31,8 @@ show_comments: false
 
 ### [FAQ and troubleshooting](/dbfit/docs/faq.html)
 
+### [Contributing](https://github.com/benilovj/dbfit/blob/master/CONTRIBUTING.md) <small>Contributing code or documentation improvements to DbFit.</small>
+
 </div>
 </div>
 
