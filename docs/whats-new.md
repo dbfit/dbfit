@@ -9,8 +9,8 @@ show_comments: false
  *  Features:
      *  Support for using the Oracle 11g JDBC driver (issues [#67](https://github.com/benilovj/dbfit/pull/67), [#56](https://github.com/benilovj/dbfit/pull/56), [#54](https://github.com/benilovj/dbfit/issues/54), [#53](https://github.com/benilovj/dbfit/issues/53), [#28](https://github.com/benilovj/dbfit/issues/28))
  *  Documentation improvements:
-     *  Reinstated [What's wrong with xUnit](http://benilovj.github.com/dbfit/docs/whats-wrong-with-xunit.html)
-     *  Added the [DbFit test catalog](http://benilovj.github.com/dbfit/docs/writing-tests.html)
+     *  Reinstated [What's wrong with xUnit](http://benilovj.github.io/dbfit/docs/whats-wrong-with-xunit.html)
+     *  Added the [DbFit test catalog](http://benilovj.github.io/dbfit/docs/writing-tests.html)
  *  Bugfixes:
      *  Exception for stored procedure input parameters of type NUMBER in standalone mode ([#58](https://github.com/benilovj/dbfit/issues/58))
      *  Synonyms followed properly when using Oracle ([#52](https://github.com/benilovj/dbfit/pull/52), [#50](https://github.com/benilovj/dbfit/issues/50))
@@ -60,6 +60,6 @@ For the full list of solved issues, see the [milestone on GitHub](https://github
      *  a snazzy WISYWIG editor (which makes page editing a lot easier)
      *  a slew of FitNesse fixes
 
- *  [New home on GitHub](https://benilovj.github.com/dbfit/) for the project sources and documentation
+ *  [New home on GitHub](https://benilovj.github.io/dbfit/) for the project sources and documentation
 
 *Note: this release only includes Java fixtures*

@@ -31,7 +31,7 @@ markdown: kramdown
 # Else if you are pushing to username.github.com, replace with your username.
 # Finally if you are pushing to a GitHub project page, include the project name at the end.
 #
-production_url : http://benilovj.github.com/dbfit
+production_url : http://benilovj.github.io/dbfit
 
 # All Jekyll-Bootstrap specific configurations are namespaced into this hash
 #
@@ -60,7 +60,7 @@ JB :
   #   - Only the following values are falsy: ["", null, false]
   #   - When setting BASE_PATH it must be a valid url.
   #     This means always setting the protocol (http|https) or prefixing with "/"
-  BASE_PATH : http://benilovj.github.com/dbfit
+  BASE_PATH : http://benilovj.github.io/dbfit
 
   # By default, the asset_path is automatically defined relative to BASE_PATH plus the enabled theme.
   # ex: [BASE_PATH]/assets/themes/[THEME-NAME]
