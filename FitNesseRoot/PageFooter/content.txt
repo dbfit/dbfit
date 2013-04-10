@@ -1,7 +1,2 @@
-!-
-<br clear="all" />
--!
-----
-
 !c  [[!-DbFit Project on GitHub-!][https://github.com/benilovj/dbfit]] | [[!-DbFit documentation and reference-!][http://benilovj.github.com/dbfit]] | [[!-Comments and feedback-!][http://groups.google.com/group/dbfit]] 
 !c copyright (c) 2006-2008 [[Gojko Adzic][http://gojko.net/]], 2013 [[Jake Benilov][http://quickpeople.wordpress.com]] | Cover photo by [[Michael Hall][http://www.sxc.hu/profile/cwcav]]
