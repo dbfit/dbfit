@@ -47,7 +47,7 @@ public class DbStoredProcedure implements DbObject {
         return false;
     }
 
-    public CallableStatement buildCommand(String procName,
+    private CallableStatement buildCommand(String procName,
             DbParameterAccessor[] accessors) throws SQLException {
         List<String> accessorNames = getSortedAccessorNames(accessors);
         boolean isFunction = containsReturnValue(accessors);
