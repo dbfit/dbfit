@@ -1,6 +1,7 @@
 package dbfit.api;
 
 import dbfit.util.DbParameterAccessor;
+import dbfit.util.DbParameterAccessorUtils;
 import dbfit.util.NameNormaliser;
 
 import java.sql.CallableStatement;
@@ -12,39 +13,20 @@ public class DbStoredProcedure implements DbObject {
     private DBEnvironment environment;
     private String storedProcName;
     private Map<String, DbParameterAccessor> allParams;
+    private DbParameterAccessorUtils accessorUtils =
+                                DbParameterAccessorUtils.newInstance();
     
     public DbStoredProcedure(DBEnvironment environment, String storedProcName) {
         this.environment = environment;
         this.storedProcName = storedProcName;
     }
     
-    private class PositionComparator implements Comparator<DbParameterAccessor> {
-        public int compare(DbParameterAccessor o1, DbParameterAccessor o2) {
-            return (int) Math.signum(o1.getPosition() - o2.getPosition());
-        }
-    }
-
     private List<String> getSortedAccessorNames(DbParameterAccessor[] accessors) {
-        DbParameterAccessor[] newacc = new DbParameterAccessor[accessors.length];
-        System.arraycopy(accessors, 0, newacc, 0, accessors.length);
-        Arrays.sort(newacc, new PositionComparator());
-        List<String> nameList = new ArrayList<String>();
-        String lastName = null;
-        for (DbParameterAccessor p : newacc) {
-            if (lastName != p.getName()) {
-                lastName = p.getName();
-                nameList.add(p.getName());
-            }
-        }
-        return nameList;
+        return accessorUtils.getSortedAccessorNames(accessors);
     }
 
     private boolean containsReturnValue(DbParameterAccessor[] accessors) {
-        for (DbParameterAccessor ac : accessors) {
-            if (ac.getDirection() == DbParameterAccessor.RETURN_VALUE)
-                return true;
-        }
-        return false;
+        return accessorUtils.containsReturnValue(accessors);
     }
 
     private CallableStatement buildCommand(String procName,
