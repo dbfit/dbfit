@@ -13,59 +13,16 @@ public class DbStoredProcedure implements DbObject {
     private DBEnvironment environment;
     private String storedProcName;
     private Map<String, DbParameterAccessor> allParams;
-    private DbParameterAccessorUtils accessorUtils =
-                                DbParameterAccessorUtils.newInstance();
     
     public DbStoredProcedure(DBEnvironment environment, String storedProcName) {
         this.environment = environment;
         this.storedProcName = storedProcName;
     }
-    
-    private List<String> getSortedAccessorNames(DbParameterAccessor[] accessors) {
-        return accessorUtils.getSortedAccessorNames(accessors);
-    }
-
-    private boolean containsReturnValue(DbParameterAccessor[] accessors) {
-        return accessorUtils.containsReturnValue(accessors);
-    }
-
-    private CallableStatement buildCommand(String procName,
-            DbParameterAccessor[] accessors) throws SQLException {
-        List<String> accessorNames = getSortedAccessorNames(accessors);
-        boolean isFunction = containsReturnValue(accessors);
-        String callString = buildPreparedStatementString(procName, isFunction, accessorNames.size());
-
-        CallableStatement cs = environment.getConnection().prepareCall(callString);
-        for (DbParameterAccessor ac : accessors) {
-            int realindex = accessorNames.indexOf(ac.getName());
-            ac.bindTo(cs, realindex + 1); // jdbc params are 1-based
-            if (ac.getDirection() == DbParameterAccessor.RETURN_VALUE) {
-                ac.bindTo(cs, Math.abs(ac.getPosition()));
-            }
-        }
-        return cs;
-    }
-
-    String buildPreparedStatementString(String procName, boolean isFunction, int numberOfAccessors) {
-        StringBuilder ins = new StringBuilder("{ ");
-        if (isFunction) {
-            ins.append("? =");
-        }
-        ins.append("call ").append(procName);
-        ins.append("(");
-        for (int i = (isFunction ? 1 : 0); i < numberOfAccessors; i++) {
-            ins.append("?");
-            if (i < numberOfAccessors - 1)
-                ins.append(",");
-        }
-        ins.append(")");
-        ins.append("}");
-        return ins.toString();
-    }
 
     public PreparedStatement buildPreparedStatement(
             DbParameterAccessor[] accessors) throws SQLException {
-        return buildCommand(storedProcName, accessors);
+        return environment.buildStoredProcedurePreparedStatement(
+                                                storedProcName, accessors);
     }
 
     public DbParameterAccessor getDbParameterAccessor(String name,
