@@ -30,10 +30,15 @@ public class DbParameterAccessorUtils {
         return nameList;
     }
 
+    public boolean isReturnValueAccessor(DbParameterAccessor ac) {
+        return (ac.getDirection() == DbParameterAccessor.RETURN_VALUE);
+    }
+
     public boolean containsReturnValue(DbParameterAccessor[] accessors) {
         for (DbParameterAccessor ac : accessors) {
-            if (ac.getDirection() == DbParameterAccessor.RETURN_VALUE)
+            if (isReturnValueAccessor(ac)) {
                 return true;
+            }
         }
         return false;
     }
