@@ -389,6 +389,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                 paramDirection, getSqlType(dataType), getJavaClass(dataType),
                 paramPosition);
 
+        dbp.setTag("ORIGINAL_DB_TYPE", dataType);
+
         return dbp;
     }
 
