@@ -1,0 +1,5 @@
+!|execute|create or replace procedure proc_bool_1(p_bool_arg in BOOLEAN, myoutput out PLS_INTEGER) is begin if ( p_bool_arg ) then myoutput := 1; else myoutput := 0; end if; end proc_bool_1;|
+
+!|execute procedure|proc_bool_1|
+|p_bool_arg        |myoutput?  |
+|true              |1          |
