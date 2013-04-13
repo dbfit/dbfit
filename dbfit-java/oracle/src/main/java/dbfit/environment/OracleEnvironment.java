@@ -433,7 +433,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     // map types
     private static List<String> stringTypes = Arrays.asList(new String[] {
             "VARCHAR", "VARCHAR2", "NVARCHAR2", "CHAR", "NCHAR", "CLOB",
-            "NCLOB", "ROWID", "PL/SQL BOOLEAN"
+            "NCLOB", "ROWID", "BOOLEAN"
         });
     private static List<String> decimalTypes = Arrays.asList(new String[] {
             "BINARY_INTEGER", "NUMBER", "FLOAT" });
@@ -446,7 +446,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     private static String normaliseTypeName(String dataType) {
         dataType = dataType.toUpperCase().trim();
         if (dataType.endsWith("BOOLEAN")) {
-            return dataType;
+            return "BOOLEAN";
         }
 
         int idx = dataType.indexOf(" ");
