@@ -445,6 +445,10 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
     private static String normaliseTypeName(String dataType) {
         dataType = dataType.toUpperCase().trim();
+        if (dataType.endsWith("BOOLEAN")) {
+            return dataType;
+        }
+
         int idx = dataType.indexOf(" ");
         if (idx >= 0)
             dataType = dataType.substring(0, idx);
