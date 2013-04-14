@@ -9,9 +9,13 @@ import java.io.IOException;
 import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.*;
+import static org.hamcrest.core.StringStartsWith.startsWith;
+import static org.hamcrest.core.IsNot.not;
 import org.apache.commons.io.IOUtils;
 
 public class OracleBooleanSpCommandTest {
+
+    private static final String SP_PROC_1 = "proc_1";
 
     private SpGeneratorOutput output;
     private OracleBooleanSpTestsFactory factory;
@@ -30,11 +34,10 @@ public class OracleBooleanSpCommandTest {
     }
 
     private OracleBooleanSpCommand createProcWithBooleanInParam() {
-        String spName = "proc_1";
         List<OracleSpParameter> args = new ArrayList<OracleSpParameter>();
         addSpParameter(args, "p_arg1", DbParameterAccessor.INPUT, "BOOLEAN", "t");
 
-        return factory.makeSpCommand(spName, args);
+        return factory.makeSpCommand(SP_PROC_1, args);
     }
 
     @Test
@@ -46,6 +49,14 @@ public class OracleBooleanSpCommandTest {
         String actual = command.toString();
 
         assertEquals(expectedResult, actual);
+    }
+
+    @Test
+    public void prefixShouldNotConflictWithSpName() throws IOException {
+        String prefix = spProc1.getPrefix().toLowerCase();
+
+        assertFalse("prefix should not be empty", prefix.isEmpty());
+        assertThat(SP_PROC_1.toLowerCase(), not(startsWith(prefix)));
     }
 
     private String loadWrapperSample(String sampleFile) throws IOException {
