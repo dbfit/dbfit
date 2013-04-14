@@ -31,6 +31,7 @@ subprojects {
         testRuntime 'com.dbdeploy:dbdeploy-ant:3.0M3'
         testCompile 'junit:junit:4.11'
         testCompile "org.hamcrest:hamcrest-all:1.3"
+        testCompile "commons-io:commons-io:2.4"
     }
 
     ext.dbdeploy = { dbDriver, url, userid, password, delimiterType = 'normal' ->
