@@ -45,6 +45,7 @@ public class OracleBooleanSpCommandTest {
         OracleBooleanSpCommand command = spProc1;
         String expectedResult = loadWrapperSample("proc_1_1_bool_in.pls");
 
+        command.setPrefix("t");
         command.generate();
         String actual = command.toString();
 

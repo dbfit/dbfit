@@ -29,7 +29,10 @@ public class OracleBooleanSpTestsFactory {
 
     public OracleBooleanSpCommand makeSpCommand(String spName,
             List<OracleSpParameter> args) {
-        return OracleBooleanSpCommand.newInstance(spName, args);
+        OracleBooleanSpCommand command = OracleBooleanSpCommand.newInstance(
+                spName, args);
+        command.setOutput(output);
+        return command;
     }
 
 }
