@@ -15,11 +15,13 @@ public class OracleBooleanSpCommandTest {
 
     private SpGeneratorOutput output;
     private OracleBooleanSpTestsFactory factory;
+    private OracleBooleanSpCommand spProc1;
 
     @Before
     public void prepare() {
         output = new SpGeneratorOutput();
         factory = new OracleBooleanSpTestsFactory(output);
+        spProc1 = createProcWithBooleanInParam();
     }
 
     private void addSpParameter(List<OracleSpParameter> params,
@@ -27,14 +29,19 @@ public class OracleBooleanSpCommandTest {
         params.add(factory.makeSpParameter(name, direction, dataType, prefix));
     }
 
-    @Test
-    public void procedureWithBooleanInputParamTest() throws IOException {
+    private OracleBooleanSpCommand createProcWithBooleanInParam() {
         String spName = "proc_1";
         List<OracleSpParameter> args = new ArrayList<OracleSpParameter>();
         addSpParameter(args, "p_arg1", DbParameterAccessor.INPUT, "BOOLEAN", "t");
-        OracleBooleanSpCommand command = factory.makeSpCommand(spName, args);
 
+        return factory.makeSpCommand(spName, args);
+    }
+
+    @Test
+    public void procedureWithBooleanInputParamTest() throws IOException {
+        OracleBooleanSpCommand command = spProc1;
         String expectedResult = loadWrapperSample("proc_1_1_bool_in.pls");
+
         command.generate();
         String actual = command.toString();
 

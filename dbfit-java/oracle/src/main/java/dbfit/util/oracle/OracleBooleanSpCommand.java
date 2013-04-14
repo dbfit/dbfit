@@ -43,6 +43,9 @@ public class OracleBooleanSpCommand {
         return out.toString();
     }
 
+    /**
+     * Generate the whole database call on the configured SpGeneratorOutput
+     */
     public void generate() {
     }
 
