@@ -15,7 +15,12 @@ public class OracleBooleanSpCommand {
     public static OracleBooleanSpCommand newInstance(String spName, 
             List<OracleSpParameter> args,
             OracleSpParameter returnValue) {
-        return null;
+        return new OracleBooleanSpCommand(spName, args, returnValue);
+    }
+
+    protected OracleBooleanSpCommand(String spName, 
+            List<OracleSpParameter> args,
+            OracleSpParameter returnValue) {
     }
 
     public void setOutput(SpGeneratorOutput out) {
