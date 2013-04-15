@@ -10,6 +10,11 @@ public class OracleSpParameter {
     protected String prefix; // prefix to be used for all names to avoid conflicts
 
     public static OracleSpParameter newInstance(String paramName, int direction,
+                            String dataType) {
+        return newInstance(paramName, direction, dataType, "x");
+    }
+
+    public static OracleSpParameter newInstance(String paramName, int direction,
                             String dataType, String prefix) {
         return new OracleSpParameter(paramName, direction, dataType, prefix);
     }
@@ -26,7 +31,7 @@ public class OracleSpParameter {
         return direction;
     }
     
-    protected boolean isReturnValue() {
+    public boolean isReturnValue() {
         return getDirection() == DbParameterAccessor.RETURN_VALUE;
     }
 

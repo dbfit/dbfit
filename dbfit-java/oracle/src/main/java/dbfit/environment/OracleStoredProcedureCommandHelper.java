@@ -3,42 +3,16 @@ package dbfit.environment;
 import dbfit.util.DbStoredProcedureCommandHelper;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbStoredProcedureCommandHelper;
+import dbfit.util.oracle.OracleSpParameter;
+import dbfit.util.oracle.OracleBooleanSpCommand;
+import dbfit.util.oracle.SpGeneratorOutput;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.util.ArrayList;
 
 public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommandHelper { 
-    private String loadWrapperTemplate() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("declare\n");
-        sb.append("    function chr2bool( p_arg varchar2 ) return boolean\n");
-        sb.append("    is\n");
-        sb.append("    begin\n");
-        sb.append("        if ( p_arg = 'true' )\n");
-        sb.append("        then\n");
-        sb.append("            return true;\n");
-        sb.append("        elsif ( p_arg = 'false' )\n");
-        sb.append("        then\n");
-        sb.append("            return false;\n");
-        sb.append("        elsif ( p_arg is null )\n");
-        sb.append("        then\n");
-        sb.append("            return null;\n");
-        sb.append("        else\n");
-        sb.append("            raise_application_error( -20013, 'Error. Expected true or false got: ' || p_arg );\n");
-        sb.append("        end if;\n");
-        sb.append("    end chr2bool;\n");
-        sb.append("\n");
-        sb.append("begin\n");
-        sb.append("    ${sp_name}(${sp_params});\n");
-        sb.append("end;\n");
-        sb.append("\n");
-
-        return sb.toString();
-    }
-
-    private String wrapperTemplate = loadWrapperTemplate();
 
     private Map<String, DbParameterAccessor> getAccessorsMap(
             DbParameterAccessor[] accessors) {
@@ -48,6 +22,49 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
         }
 
         return map;
+    }
+
+    private OracleSpParameter makeOracleSpParameter(DbParameterAccessor ac) {
+        return OracleSpParameter.newInstance(
+                ac.getName(), ac.getDirection(), ac.getTag("ORIGINAL_DB_TYPE"));
+    }
+
+    private static class SpParamsSpec {
+        public List<OracleSpParameter> arguments = new ArrayList<OracleSpParameter>();
+        public OracleSpParameter returnValue = null;
+
+        public void add(OracleSpParameter param) {
+            if (param.isReturnValue()) {
+                returnValue = param;
+            } else {
+                arguments.add(param);
+            }
+        }
+    }
+
+    private SpParamsSpec initSpParams(String procName,
+                                    DbParameterAccessor[] accessors) {
+        List<String> accessorNames = accessorUtils.getSortedAccessorNames(accessors);
+        Map<String, DbParameterAccessor> accessorsMap = getAccessorsMap(accessors);
+
+        SpParamsSpec params = new SpParamsSpec();
+
+        for (String acName: accessorNames) {
+            OracleSpParameter param = makeOracleSpParameter(accessorsMap.get(acName));
+            params.add(param);
+        }
+
+        return params;
+    }
+
+    private OracleBooleanSpCommand initSpCommand(String procName,
+                                    DbParameterAccessor[] accessors) {
+        SpParamsSpec params = initSpParams(procName, accessors);
+        OracleBooleanSpCommand command = OracleBooleanSpCommand.newInstance(
+                procName, params.arguments, params.returnValue);
+        command.setOutput(new SpGeneratorOutput());
+
+        return command;
     }
 
     @Override
@@ -63,27 +80,9 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
             throw new RuntimeException("Boolean PL/SQL functions are unsupported");
         }
 
-        List<String> accessorNames = accessorUtils.getSortedAccessorNames(accessors);
-        Map<String, DbParameterAccessor> accessorsMap = getAccessorsMap(accessors);
-
-        StringBuilder sbParams = new StringBuilder();
-        String separator = "";
-        for (String acName: accessorNames) {
-            sbParams.append(separator);
-
-            DbParameterAccessor ac = accessorsMap.get(acName);
-            if (isBooleanAccessor(ac)) {
-                sbParams.append("chr2bool( ? )");
-            } else {
-                sbParams.append("?");
-            }
-
-            separator = ",";
-        }
-
-        return wrapperTemplate
-            .replace("${sp_name}", procName)
-            .replace("${sp_params}", sbParams.toString());
+        OracleBooleanSpCommand command = initSpCommand(procName, accessors);
+        command.generate();
+        return command.toString();
     }
 
     private boolean isBooleanAccessor(DbParameterAccessor accessor) {
