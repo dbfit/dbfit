@@ -8,6 +8,7 @@ public class OracleBooleanSpCommand {
     protected SpGeneratorOutput out = null;
     protected String procName;
     protected String prefix;
+    protected List<OracleSpParameter> arguments;
 
     public static OracleBooleanSpCommand newInstance(String spName, 
             List<OracleSpParameter> args) {
@@ -24,8 +25,10 @@ public class OracleBooleanSpCommand {
             List<OracleSpParameter> args,
             OracleSpParameter returnValue) {
         this.procName = spName;
+        this.arguments = args;
 
         initPrefix();
+        initArgsPrefixes();
     }
 
     public void initPrefix() {
@@ -39,6 +42,18 @@ public class OracleBooleanSpCommand {
         prefix = String.valueOf(c);
     }
 
+    private void initArgsPrefixes() {
+        for (OracleSpParameter arg: arguments) {
+            arg.setPrefix(prefix);
+        }
+    }
+
+    private void initArgsOutputs() {
+        for (OracleSpParameter arg: arguments) {
+            arg.setOutput(out);
+        }
+    }
+
     protected void setPrefix(String prefix) {
         if (procName.toLowerCase().startsWith(prefix.toLowerCase())) {
             throw new IllegalArgumentException("Invalid prefix " + prefix +
@@ -46,10 +61,12 @@ public class OracleBooleanSpCommand {
         }
 
         this.prefix = prefix;
+        initArgsPrefixes();
     }
 
     public void setOutput(SpGeneratorOutput out) {
         this.out = out;
+        initArgsOutputs();
     }
 
     protected SpGeneratorOutput append(String s) {
@@ -76,9 +93,39 @@ public class OracleBooleanSpCommand {
     public void generate() {
         String template = loadChr2BoolTemplate();
         String result = template.replace("${sp_name}", procName);
-        result = result.replace("${sp_params}", " t_chr2bool( ? ) ");
+        result = result.replace("${sp_params}", getWrapperCallArguments());
         result = result.replace("${prefix}", getPrefix());
         out.append(result);
+    }
+
+    protected void callWhitespace() {
+        if (arguments.size() > 0) {
+            out.append(" ");
+        }
+    }
+
+    private String getWrapperCallArguments() {
+        SpGeneratorOutput savedOut = out;
+        SpGeneratorOutput wrkOut = new SpGeneratorOutput();
+        setOutput(wrkOut);
+        genWrapperCallArguments();
+        String result = toString();
+        setOutput(savedOut);
+        return result;
+    }
+
+    public void genWrapperCallArguments() {
+        String separator = "";
+
+        callWhitespace();
+
+        for (OracleSpParameter arg: arguments) {
+            out.append(separator);
+            arg.genWrapperCallArgument();
+            separator = ", ";
+        }
+
+        callWhitespace();
     }
 
     protected String loadChr2BoolTemplate() {

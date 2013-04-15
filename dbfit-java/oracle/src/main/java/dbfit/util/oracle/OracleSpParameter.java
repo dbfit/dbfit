@@ -71,6 +71,10 @@ public class OracleSpParameter {
         }
     }
 
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
     public void declareArgument() {
 
     }

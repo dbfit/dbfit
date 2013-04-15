@@ -16,16 +16,19 @@ import org.apache.commons.io.IOUtils;
 public class OracleBooleanSpCommandTest {
 
     private static final String SP_PROC_1 = "proc_1";
+    private static final String SP_PROC_2 = "proc_2";
 
     private SpGeneratorOutput output;
     private OracleBooleanSpTestsFactory factory;
     private OracleBooleanSpCommand spProc1;
+    private OracleBooleanSpCommand spProc2;
 
     @Before
     public void prepare() {
         output = new SpGeneratorOutput();
         factory = new OracleBooleanSpTestsFactory(output);
         spProc1 = createProcWithBooleanInParam();
+        spProc2 = createProcWithBooleanInAndNumInParam();
     }
 
     private void addSpParameter(List<OracleSpParameter> params,
@@ -40,10 +43,30 @@ public class OracleBooleanSpCommandTest {
         return factory.makeSpCommand(SP_PROC_1, args);
     }
 
+    private OracleBooleanSpCommand createProcWithBooleanInAndNumInParam() {
+        List<OracleSpParameter> args = new ArrayList<OracleSpParameter>();
+        addSpParameter(args, "p_arg1", DbParameterAccessor.INPUT, "BOOLEAN", "t");
+        addSpParameter(args, "p_arg2", DbParameterAccessor.INPUT, "NUMBER", "t");
+
+        return factory.makeSpCommand(SP_PROC_2, args);
+    }
+
     @Test
     public void procedureWithBooleanInputParamTest() throws IOException {
         OracleBooleanSpCommand command = spProc1;
         String expectedResult = loadWrapperSample("proc_1_1_bool_in.pls");
+
+        command.setPrefix("t");
+        command.generate();
+        String actual = command.toString();
+
+        assertEquals(expectedResult, actual);
+    }
+
+    @Test
+    public void procedureWithBooleanAndNumInputsTest() throws IOException {
+        OracleBooleanSpCommand command = spProc2;
+        String expectedResult = loadWrapperSample("proc_2_1_bool_in_1_num_in.pls");
 
         command.setPrefix("t");
         command.generate();
