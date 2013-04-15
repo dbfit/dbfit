@@ -39,6 +39,10 @@ public class OracleSpParameter {
         return dataType;
     }
 
+    private String getWrapperArgumentType() {
+        return isBoolean() ? "VARCHAR2" : getDataType();
+    }
+
     protected boolean isBoolean() {
         return getDataType().equals("BOOLEAN");
     }
@@ -68,6 +72,10 @@ public class OracleSpParameter {
         return out;
     }
 
+    private String getWrapperArgumentName() {
+        return id;
+    }
+
     public String toString() {
         if (out == null) {
             return "";
@@ -81,7 +89,9 @@ public class OracleSpParameter {
     }
 
     public void declareArgument() {
-
+        out.append(getWrapperArgumentName())
+            .append(" ").append(getDirectionName())
+            .append(" ").append(getWrapperArgumentType());
     }
 
     public void genWrapperCallArgument() {

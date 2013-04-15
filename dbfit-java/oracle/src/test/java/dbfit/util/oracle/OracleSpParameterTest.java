@@ -1,6 +1,11 @@
 package dbfit.util.oracle;
 
 import dbfit.util.DbParameterAccessor;
+import static dbfit.util.DbParameterAccessor.INPUT;
+import static dbfit.util.DbParameterAccessor.OUTPUT;
+import static dbfit.util.DbParameterAccessor.INPUT_OUTPUT;
+import static dbfit.util.DbParameterAccessor.RETURN_VALUE;
+
 
 import org.junit.Test;
 import org.junit.Before;
@@ -10,29 +15,43 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class OracleSpParameterTest {
+    private static final String SP_ARG_CHR_IN = "p_1_in";
+    private static final String SP_ARG_BOOL_IN = "p_bool_in";
+    private static final String SP_ARG_NUM_IN = "p_num_in";
+
     private Map<Integer, String> expectedDirections;
     private SpGeneratorOutput output;
     private OracleBooleanSpTestsFactory factory;
     private OracleSpParameter pin;
+    private Map<String, OracleSpParameter> spParams;
 
     public void initExpectedDirections() {
         expectedDirections = new HashMap<Integer, String>();
-        expectedDirections.put(DbParameterAccessor.INPUT, "IN");
-        expectedDirections.put(DbParameterAccessor.OUTPUT, "OUT");
-        expectedDirections.put(DbParameterAccessor.INPUT_OUTPUT, "IN OUT");
-        expectedDirections.put(DbParameterAccessor.RETURN_VALUE, "RETURN");
+        expectedDirections.put(INPUT, "IN");
+        expectedDirections.put(OUTPUT, "OUT");
+        expectedDirections.put(INPUT_OUTPUT, "IN OUT");
+        expectedDirections.put(RETURN_VALUE, "RETURN");
+    }
+
+    private void addSpParameter(String name, int direction, String type) {
+        spParams.put(name, factory.makeSpParameter(name, direction, type, "z"));
+    }
+
+    private void initOracleSpParameters() {
+        spParams = new HashMap<String, OracleSpParameter>();
+        addSpParameter(SP_ARG_CHR_IN, INPUT, "VARCHAR2");
+        addSpParameter(SP_ARG_BOOL_IN, INPUT, "BOOLEAN");
+        addSpParameter(SP_ARG_NUM_IN, INPUT, "NUMBER");
     }
 
     @Before
     public void prepare() {
-        initExpectedDirections();
-
         output = new SpGeneratorOutput();
         factory = new OracleBooleanSpTestsFactory(output);
 
-        pin = factory.makeSpParameter("p_1_in", DbParameterAccessor.INPUT);
+        initOracleSpParameters();
+        initExpectedDirections();
     }
-
 
     @Test
     public void inputParameterDirectionNameTest() {
@@ -46,18 +65,31 @@ public class OracleSpParameterTest {
         }
     }
 
+    private void checkParameterDeclaration(String paramName, String expected) {
+        OracleSpParameter arg = spParams.get(paramName);
+        arg.declareArgument();
+
+        assertEquals(expected, arg.toString());
+    }
+
     @Test
-    public void inputParameterDeclareArgumentTest() {
-        pin.declareArgument();
-        String result = pin.toString();
-        assertEquals("p_1_in IN VARCHAR2", result);
+    public void inputParameterDeclareArgumentChrTest() {
+        checkParameterDeclaration(SP_ARG_CHR_IN, SP_ARG_CHR_IN + " IN VARCHAR2");
+    }
+
+    @Test
+    public void inputParameterDeclareArgumentBooleanTest() {
+        checkParameterDeclaration(SP_ARG_BOOL_IN, SP_ARG_BOOL_IN + " IN VARCHAR2");
+    }
+
+    @Test
+    public void inputParameterDeclareArgumentNumberTest() {
+        checkParameterDeclaration(SP_ARG_NUM_IN, SP_ARG_NUM_IN + " IN NUMBER");
     }
 
     @Test
     public void boolArgInCallShouldBeWrapped() {
-        OracleSpParameter arg = factory.makeSpParameter("p_bool_in",
-                DbParameterAccessor.INPUT, "BOOLEAN", "z");
-
+        OracleSpParameter arg = spParams.get(SP_ARG_BOOL_IN);
         arg.genWrapperCallArgument();
 
         assertEquals("z_chr2bool( ? )", arg.toString());
