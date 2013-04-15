@@ -30,6 +30,14 @@ public class OracleSpParameter {
         return getDirection() == DbParameterAccessor.RETURN_VALUE;
     }
 
+    protected String getDataType() {
+        return dataType;
+    }
+
+    protected boolean isBoolean() {
+        return getDataType().equals("BOOLEAN");
+    }
+
     public String getDirectionName() {
         switch (getDirection()) {
             case DbParameterAccessor.INPUT_OUTPUT:
@@ -65,6 +73,14 @@ public class OracleSpParameter {
 
     public void declareArgument() {
 
+    }
+
+    public void genWrapperCallArgument() {
+        if (isBoolean()) {
+            out.append(prefix).append("_chr2bool( ? )");
+        } else {
+            out.append("?");
+        }
     }
 
 }

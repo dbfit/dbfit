@@ -52,5 +52,15 @@ public class OracleSpParameterTest {
         String result = pin.toString();
         assertEquals("p_1_in IN VARCHAR2", result);
     }
+
+    @Test
+    public void boolArgInCallShouldBeWrapped() {
+        OracleSpParameter arg = factory.makeSpParameter("p_bool_in",
+                DbParameterAccessor.INPUT, "BOOLEAN", "z");
+
+        arg.genWrapperCallArgument();
+
+        assertEquals("z_chr2bool( ? )", arg.toString());
+    }
 }
 
