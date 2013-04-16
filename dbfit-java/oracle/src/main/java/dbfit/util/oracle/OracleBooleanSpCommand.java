@@ -9,6 +9,7 @@ public class OracleBooleanSpCommand {
     protected String procName;
     protected String prefix;
     protected List<OracleSpParameter> arguments;
+    protected OracleSpParameter returnValue;
 
     public static OracleBooleanSpCommand newInstance(String spName, 
             List<OracleSpParameter> args) {
@@ -26,6 +27,7 @@ public class OracleBooleanSpCommand {
             OracleSpParameter returnValue) {
         this.procName = spName;
         this.arguments = args;
+        this.returnValue = returnValue;
 
         initPrefix();
         initArgsPrefixes();
@@ -87,6 +89,10 @@ public class OracleBooleanSpCommand {
 
     public String getPrefix() { return prefix; }
 
+    public boolean isFunction() {
+        return returnValue != null;
+    }
+
     /**
      * Generate the whole database call on the configured SpGeneratorOutput
      */
@@ -126,6 +132,9 @@ public class OracleBooleanSpCommand {
     }
 
     public void genWrapperCall() {
+        if (isFunction()) {
+            out.append("? := ");
+        }
         out.append(procName).append("(");
         genWrapperCallArguments();
         out.append(")");

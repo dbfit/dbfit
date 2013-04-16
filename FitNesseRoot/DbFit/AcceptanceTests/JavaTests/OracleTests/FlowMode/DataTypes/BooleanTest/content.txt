@@ -1,5 +1,26 @@
+!2 Procedure with boolean input argument and a non-boolean output one
 !|execute|create or replace procedure proc_bool_1(p_bool_arg in BOOLEAN, myoutput out PLS_INTEGER) is begin if ( p_bool_arg ) then myoutput := 1; else myoutput := 0; end if; end proc_bool_1;|
 
 !|execute procedure|proc_bool_1|
 |p_bool_arg        |myoutput?  |
 |true              |1          |
+
+!2 Functions returning non-boolean argument
+!|execute|create or replace function f_bool_2(p_bool_arg in BOOLEAN) return number is begin if ( p_bool_arg ) then return 1; else return 0; end if; end f_bool_2;|
+
+!|execute procedure|f_bool_2|
+|p_bool_arg|?|
+|false     |0|
+
+## Try an in-out non-boolean
+#!|execute|create or replace function f_bool_3(p_in in VARCHAR2, p_inout in out NUMBER) return number is begin p_out := p_out * 2; return length(p_in); end f_bool_3;|
+
+#!|execute procedure|f_bool_3|
+#|p_in|p_inout|p_inout?|?|
+#|crap|7      |14      |4|
+
+# Twisting order of attribute to make sure it's handled correctly
+#!|execute procedure|f_bool_3|
+#|?|p_inout|p_inout?|?|p_in|
+#|4|7      |14      |4|crap|
+

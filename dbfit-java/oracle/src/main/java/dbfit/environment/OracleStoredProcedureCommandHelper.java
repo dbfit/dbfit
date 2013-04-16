@@ -74,12 +74,6 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
             return super.buildPreparedStatementString(procName, accessors);
         }
 
-        boolean isFunction = accessorUtils.containsReturnValue(accessors);
-
-        if (isFunction) {
-            throw new RuntimeException("Boolean PL/SQL functions are unsupported");
-        }
-
         OracleBooleanSpCommand command = initSpCommand(procName, accessors);
         command.generate();
         return command.toString();
