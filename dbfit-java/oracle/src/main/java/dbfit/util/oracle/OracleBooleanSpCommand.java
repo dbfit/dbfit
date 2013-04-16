@@ -92,8 +92,7 @@ public class OracleBooleanSpCommand {
      */
     public void generate() {
         String template = loadChr2BoolTemplate();
-        String result = template.replace("${sp_name}", procName);
-        result = result.replace("${sp_params}", getWrapperCallArguments());
+        String result = template.replace("${sp_call}", getWrapperCall());
         result = result.replace("${prefix}", getPrefix());
         out.append(result);
     }
@@ -104,14 +103,12 @@ public class OracleBooleanSpCommand {
         }
     }
 
-    private String getWrapperCallArguments() {
-        SpGeneratorOutput savedOut = out;
-        SpGeneratorOutput wrkOut = new SpGeneratorOutput();
-        setOutput(wrkOut);
-        genWrapperCallArguments();
-        String result = toString();
-        setOutput(savedOut);
-        return result;
+    public String getWrapperCall() {
+        return getIsolatedOutput(new Generator() {
+            @Override public void generate() {
+                genWrapperCall();
+            }
+        });
     }
 
     public void genWrapperCallArguments() {
@@ -126,6 +123,12 @@ public class OracleBooleanSpCommand {
         }
 
         callWhitespace();
+    }
+
+    public void genWrapperCall() {
+        out.append(procName).append("(");
+        genWrapperCallArguments();
+        out.append(")");
     }
 
     protected String loadChr2BoolTemplate() {
@@ -150,11 +153,25 @@ public class OracleBooleanSpCommand {
         sb.append("    end ${prefix}_chr2bool;\n");
         sb.append("\n");
         sb.append("begin\n");
-        sb.append("    ${sp_name}(${sp_params});\n");
+        sb.append("    ${sp_call};\n");
         sb.append("end;\n");
         sb.append("\n");
 
         return sb.toString();
+    }
+
+    private interface Generator {
+        void generate();
+    }
+
+    private String getIsolatedOutput(Generator g) {
+        SpGeneratorOutput savedOut = out;
+        SpGeneratorOutput wrkOut = new SpGeneratorOutput();
+        setOutput(wrkOut);
+        g.generate();
+        String result = toString();
+        setOutput(savedOut);
+        return result;
     }
 }
 

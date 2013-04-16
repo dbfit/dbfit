@@ -16,6 +16,7 @@ public class OracleBooleanSpTestsFactory {
     public static final String SP_ARG_CHR_IN = "p_1_in";
     public static final String SP_ARG_BOOL_IN = "p_bool_in";
     public static final String SP_ARG_NUM_IN = "p_num_in";
+    public static final String SP_RETVAL_NUM = "";
 
     private void addSpParameter(Map<String, OracleSpParameter> spParams,
             String name, int direction, String type) {
@@ -27,6 +28,7 @@ public class OracleBooleanSpTestsFactory {
         addSpParameter(spParams, SP_ARG_CHR_IN, INPUT, "VARCHAR2");
         addSpParameter(spParams, SP_ARG_BOOL_IN, INPUT, "BOOLEAN");
         addSpParameter(spParams, SP_ARG_NUM_IN, INPUT, "NUMBER");
+        addSpParameter(spParams, SP_RETVAL_NUM, RETURN_VALUE, "NUMBER");
 
         return spParams;
     }
@@ -52,11 +54,17 @@ public class OracleBooleanSpTestsFactory {
     }
 
     public OracleBooleanSpCommand makeSpCommand(String spName,
-            List<OracleSpParameter> args) {
+            List<OracleSpParameter> args,
+            OracleSpParameter returnValue) {
         OracleBooleanSpCommand command = OracleBooleanSpCommand.newInstance(
-                spName, args);
+                spName, args, returnValue);
         command.setOutput(output);
         return command;
+    }
+
+    public OracleBooleanSpCommand makeSpCommand(String spName,
+            List<OracleSpParameter> args) {
+        return makeSpCommand(spName, args, null);
     }
 
 }
