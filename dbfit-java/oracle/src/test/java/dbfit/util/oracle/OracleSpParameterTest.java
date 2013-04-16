@@ -6,6 +6,7 @@ import static dbfit.util.DbParameterAccessor.OUTPUT;
 import static dbfit.util.DbParameterAccessor.INPUT_OUTPUT;
 import static dbfit.util.DbParameterAccessor.RETURN_VALUE;
 
+import static dbfit.util.oracle.OracleBooleanSpTestsFactory.*;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -15,9 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class OracleSpParameterTest {
-    private static final String SP_ARG_CHR_IN = "p_1_in";
-    private static final String SP_ARG_BOOL_IN = "p_bool_in";
-    private static final String SP_ARG_NUM_IN = "p_num_in";
+    public static final String SP_ARG_CHR_IN = "p_1_in";
+    public static final String SP_ARG_BOOL_IN = "p_bool_in";
+    public static final String SP_ARG_NUM_IN = "p_num_in";
 
     private Map<Integer, String> expectedDirections;
     private SpGeneratorOutput output;
@@ -33,15 +34,8 @@ public class OracleSpParameterTest {
         expectedDirections.put(RETURN_VALUE, "RETURN");
     }
 
-    private void addSpParameter(String name, int direction, String type) {
-        spParams.put(name, factory.makeSpParameter(name, direction, type, "z"));
-    }
-
     private void initOracleSpParameters() {
-        spParams = new HashMap<String, OracleSpParameter>();
-        addSpParameter(SP_ARG_CHR_IN, INPUT, "VARCHAR2");
-        addSpParameter(SP_ARG_BOOL_IN, INPUT, "BOOLEAN");
-        addSpParameter(SP_ARG_NUM_IN, INPUT, "NUMBER");
+        spParams = factory.createSampleSpParameters();
     }
 
     @Before

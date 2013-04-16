@@ -1,11 +1,35 @@
 package dbfit.util.oracle;
 
 import dbfit.util.DbParameterAccessor;
+import static dbfit.util.DbParameterAccessor.INPUT;
+import static dbfit.util.DbParameterAccessor.OUTPUT;
+import static dbfit.util.DbParameterAccessor.INPUT_OUTPUT;
+import static dbfit.util.DbParameterAccessor.RETURN_VALUE;
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OracleBooleanSpTestsFactory {
     private SpGeneratorOutput output;
+
+    public static final String SP_ARG_CHR_IN = "p_1_in";
+    public static final String SP_ARG_BOOL_IN = "p_bool_in";
+    public static final String SP_ARG_NUM_IN = "p_num_in";
+
+    private void addSpParameter(Map<String, OracleSpParameter> spParams,
+            String name, int direction, String type) {
+        spParams.put(name, makeSpParameter(name, direction, type, "z"));
+    }
+
+    public Map<String, OracleSpParameter> createSampleSpParameters() {
+        Map<String, OracleSpParameter> spParams = new HashMap<String, OracleSpParameter>();
+        addSpParameter(spParams, SP_ARG_CHR_IN, INPUT, "VARCHAR2");
+        addSpParameter(spParams, SP_ARG_BOOL_IN, INPUT, "BOOLEAN");
+        addSpParameter(spParams, SP_ARG_NUM_IN, INPUT, "NUMBER");
+
+        return spParams;
+    }
 
     public SpGeneratorOutput getSpGeneratorOutput() {
         return output;
