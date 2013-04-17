@@ -13,7 +13,7 @@
 |false     |0|
 
 ## Try an in-out non-boolean
-!|execute|create or replace function f_bool_3(p_in in VARCHAR2, p_inout in out NUMBER) return number is begin p_out := p_out * 2; return length(p_in); end f_bool_3;|
+!|execute|create or replace function f_bool_3(p_in in VARCHAR2, p_inout in out NUMBER) return number is begin p_inout := p_inout * 2; return length(p_in); end f_bool_3;|
 
 !|execute procedure|f_bool_3|
 |p_in|p_inout|p_inout?|?|
