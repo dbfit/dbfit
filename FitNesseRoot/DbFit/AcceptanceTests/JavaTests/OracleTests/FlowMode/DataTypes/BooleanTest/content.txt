@@ -24,3 +24,21 @@
 |?|p_inout|p_inout?|?|p_in|
 |4|7      |14      |4|crap|
 
+###
+!2 Procedure with boolean output arguments
+!|execute|create or replace function p_bool_out(p_arg out BOOLEAN) is begin p_arg := false; end p_bool_out;|
+
+!|execute|create or replace procedure p_bool_out_bool_in(p_arg1 out BOOLEAN, p_arg2 BOOLEAN) is begin p_arg1 := p_arg2; end p_bool_out_bool_in;|
+
+!|execute procedure|p_bool_out|
+|p_arg|
+|false|
+
+!|execute procedure|p_bool_out_bool_in|
+|p_arg1?|p_arg2|
+|false  |false |
+
+!|execute procedure|p_bool_out_bool_in|
+|p_arg1?|p_arg2|
+|true   |true  |
+
