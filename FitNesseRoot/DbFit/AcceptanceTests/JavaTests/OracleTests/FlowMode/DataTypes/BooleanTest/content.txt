@@ -13,14 +13,14 @@
 |false     |0|
 
 ## Try an in-out non-boolean
-#!|execute|create or replace function f_bool_3(p_in in VARCHAR2, p_inout in out NUMBER) return number is begin p_out := p_out * 2; return length(p_in); end f_bool_3;|
+!|execute|create or replace function f_bool_3(p_in in VARCHAR2, p_inout in out NUMBER) return number is begin p_out := p_out * 2; return length(p_in); end f_bool_3;|
 
-#!|execute procedure|f_bool_3|
-#|p_in|p_inout|p_inout?|?|
-#|crap|7      |14      |4|
+!|execute procedure|f_bool_3|
+|p_in|p_inout|p_inout?|?|
+|crap|7      |14      |4|
 
 # Twisting order of attribute to make sure it's handled correctly
-#!|execute procedure|f_bool_3|
-#|?|p_inout|p_inout?|?|p_in|
-#|4|7      |14      |4|crap|
+!|execute procedure|f_bool_3|
+|?|p_inout|p_inout?|?|p_in|
+|4|7      |14      |4|crap|
 
