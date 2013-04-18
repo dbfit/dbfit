@@ -59,6 +59,19 @@ public class OracleSpParameterTest {
         }
     }
 
+    private void checkShortDirectionName(int direction, String expected) {
+        OracleSpParameter p = factory.makeSpParameter("p1", direction);
+        assertEquals(p.getShortDirectionName(), expected);
+    }
+
+    @Test
+    public void inputParameterShortDirectionNameTest() {
+        checkShortDirectionName(INPUT, "in");
+        checkShortDirectionName(OUTPUT, "out");
+        checkShortDirectionName(INPUT_OUTPUT, "inout");
+        checkShortDirectionName(RETURN_VALUE, "ret");
+    }
+
     private void checkParameterDeclaration(String paramName, String expected) {
         OracleSpParameter arg = spParams.get(paramName);
         arg.declareArgument();

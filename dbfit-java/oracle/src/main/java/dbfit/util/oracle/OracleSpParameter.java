@@ -71,6 +71,19 @@ public class OracleSpParameter {
         }
     }
 
+    public String getShortDirectionName() {
+        switch (getDirection()) {
+            case DbParameterAccessor.INPUT_OUTPUT:
+                return "inout";
+            case DbParameterAccessor.OUTPUT:
+                return "out";
+            case DbParameterAccessor.INPUT:
+                return "in";
+            default:
+                return "ret";
+        }
+    }
+
     public void setId(String id) {
         this.id = id;
     }
