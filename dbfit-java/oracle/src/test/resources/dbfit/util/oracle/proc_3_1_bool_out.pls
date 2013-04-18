@@ -13,13 +13,14 @@ declare
         end if;
     end t_bool2chr;
 
-    procedure t_wrapper( t_p_1 OUT VARCHAR2 )
+    procedure t_wrapper( t_p_1_out OUT VARCHAR2 )
     is
-        tt_v_out_1 BOOLEAN;
+        t_v_p_1_out BOOLEAN;
     begin
-        proc_3_bool_out( tt_v_out_1 );
-        t_p_1 := t_bool2chr( tt_v_out_1 );
+        proc_3_bool_out( t_v_p_1_out );
+        t_p_1_out := t_bool2chr( t_v_p_1_out );
     end t_wrapper;
+
 begin
     t_wrapper( ? );
 end;
