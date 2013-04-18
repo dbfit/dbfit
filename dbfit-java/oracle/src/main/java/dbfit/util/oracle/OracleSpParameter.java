@@ -104,6 +104,10 @@ public class OracleSpParameter {
         return prefix + "_" + id;
     }
 
+    public String getWrapperVarName() {
+        return prefix + "_v_" + id + "_" + getShortDirectionName();
+    }
+
     public String toString() {
         if (out == null) {
             return "";
@@ -122,17 +126,49 @@ public class OracleSpParameter {
             .append(" ").append(getWrapperArgumentType());
     }
 
+    public void declareVariable() {
+        if (isBoolean() && isOutputOtReturnValue()) {
+            out.append("        ")
+                .append(getWrapperVarName())
+                .append(" ").append(getDataType())
+                .append(";\n");
+        }
+    }
+
+    public void assignOutputVariable() {
+        if (isBoolean() && isOutputOtReturnValue()) {
+            out.append("        ")
+                .append(getWrapperArgumentName())
+                .append(" := ")
+                .append(prefix).append("_bool2chr( ")
+                .append(getWrapperVarName())
+                .append(" );\n");
+        }
+    }
+
     public void genWrapperCallArgument() {
         genWrapperCallArgument("?");
     }
 
     public void genWrapperCallArgument(String varname) {
-        if (isBoolean()) {
+        if (isBoolean() && !isOutputOtReturnValue()) {
             out.append(prefix).append("_chr2bool( ");
             out.append(varname);
             out.append(" )");
         } else {
             out.append(varname);
+        }
+    }
+
+    public void genSpCallArgumentWithinWrapper() {
+        if (!isBoolean()) {
+            out.append(getWrapperArgumentName());
+        } else if (isOutputOtReturnValue()) {
+            out.append(getWrapperVarName());
+        } else {
+            out.append(prefix).append("_chr2bool( ");
+            out.append(getWrapperVarName());
+            out.append(" )");
         }
     }
 

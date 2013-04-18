@@ -72,7 +72,7 @@ public class OracleBooleanSpCommandTest {
         List<OracleSpParameter> args = new ArrayList<OracleSpParameter>();
         args.add(spParams.get(SP_ARG_BOOL_OUT));
 
-        return factory.makeSpCommand(SP_ARG_BOOL_OUT, args);
+        return factory.makeSpCommand(SP_PROC_BOOL_OUT, args);
     }
 
     @Test

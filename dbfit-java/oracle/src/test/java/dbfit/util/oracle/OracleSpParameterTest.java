@@ -101,5 +101,21 @@ public class OracleSpParameterTest {
 
         assertEquals("z_chr2bool( ? )", arg.toString());
     }
+
+    @Test
+    public void boolArgOutCallShouldNotBeWrapped() {
+        OracleSpParameter arg = spParams.get(SP_ARG_BOOL_OUT);
+        arg.genWrapperCallArgument();
+
+        assertEquals("?", arg.toString());
+    }
+
+   @Test
+    public void testAssignVariable() {
+        OracleSpParameter p = factory.makeSpParameter("p", OUTPUT, "BOOLEAN", "z");
+
+        p.assignOutputVariable();
+        assertEquals("z_p := z_bool2chr( z_v_p_out );", p.toString().trim());
+    }
 }
 
