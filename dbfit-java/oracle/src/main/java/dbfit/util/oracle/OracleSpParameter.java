@@ -35,6 +35,17 @@ public class OracleSpParameter {
         return getDirection() == DbParameterAccessor.RETURN_VALUE;
     }
 
+    public boolean isOutputOtReturnValue() {
+        switch (getDirection()) {
+            case DbParameterAccessor.RETURN_VALUE:
+            case DbParameterAccessor.OUTPUT:
+            case DbParameterAccessor.INPUT_OUTPUT:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     protected String getDataType() {
         return dataType;
     }
@@ -43,7 +54,7 @@ public class OracleSpParameter {
         return isBoolean() ? "VARCHAR2" : getDataType();
     }
 
-    protected boolean isBoolean() {
+    public boolean isBoolean() {
         return getDataType().equals("BOOLEAN");
     }
 
@@ -60,6 +71,10 @@ public class OracleSpParameter {
         }
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public void setOutput(SpGeneratorOutput out) {
         this.out = out;
     }
@@ -73,7 +88,7 @@ public class OracleSpParameter {
     }
 
     private String getWrapperArgumentName() {
-        return id;
+        return prefix + "_" + id;
     }
 
     public String toString() {
@@ -95,10 +110,16 @@ public class OracleSpParameter {
     }
 
     public void genWrapperCallArgument() {
+        genWrapperCallArgument("?");
+    }
+
+    public void genWrapperCallArgument(String varname) {
         if (isBoolean()) {
-            out.append(prefix).append("_chr2bool( ? )");
+            out.append(prefix).append("_chr2bool( ");
+            out.append(varname);
+            out.append(" )");
         } else {
-            out.append("?");
+            out.append(varname);
         }
     }
 

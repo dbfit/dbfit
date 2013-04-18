@@ -68,17 +68,17 @@ public class OracleSpParameterTest {
 
     @Test
     public void inputParameterDeclareArgumentChrTest() {
-        checkParameterDeclaration(SP_ARG_CHR_IN, SP_ARG_CHR_IN + " IN VARCHAR2");
+        checkParameterDeclaration(SP_ARG_CHR_IN, "z_" + SP_ARG_CHR_IN + " IN VARCHAR2");
     }
 
     @Test
     public void inputParameterDeclareArgumentBooleanTest() {
-        checkParameterDeclaration(SP_ARG_BOOL_IN, SP_ARG_BOOL_IN + " IN VARCHAR2");
+        checkParameterDeclaration(SP_ARG_BOOL_IN, "z_" + SP_ARG_BOOL_IN + " IN VARCHAR2");
     }
 
     @Test
     public void inputParameterDeclareArgumentNumberTest() {
-        checkParameterDeclaration(SP_ARG_NUM_IN, SP_ARG_NUM_IN + " IN NUMBER");
+        checkParameterDeclaration(SP_ARG_NUM_IN, "z_" + SP_ARG_NUM_IN + " IN NUMBER");
     }
 
     @Test
