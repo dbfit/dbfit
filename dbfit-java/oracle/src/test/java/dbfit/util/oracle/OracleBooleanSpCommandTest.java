@@ -20,12 +20,14 @@ public class OracleBooleanSpCommandTest {
     private static final String SP_PROC_1 = "proc_1";
     private static final String SP_PROC_2 = "proc_2";
     private static final String SP_F_BOOL_IN_RET_NUM = "f_bool_in_ret_num";
+    private static final String SP_PROC_BOOL_OUT = "proc_3_bool_out";
 
     private SpGeneratorOutput output;
     private OracleBooleanSpTestsFactory factory;
     private OracleBooleanSpCommand spProc1;
     private OracleBooleanSpCommand spProc2;
     private OracleBooleanSpCommand funcBoolInRetNum;
+    private OracleBooleanSpCommand spProc3BoolOut;
     private Map<String, OracleSpParameter> spParams;
 
     @Before
@@ -36,6 +38,7 @@ public class OracleBooleanSpCommandTest {
         spProc1 = createProcWithBooleanInParam();
         spProc2 = createProcWithBooleanInAndNumInParam();
         funcBoolInRetNum = createFuncBoolInRetNum();
+        spProc3BoolOut = createProcWithBooleanOutParam();
     }
 
     private void addSpParameter(List<OracleSpParameter> params,
@@ -65,6 +68,13 @@ public class OracleBooleanSpCommandTest {
                spParams.get(SP_RETVAL_NUM));
     }
 
+    private OracleBooleanSpCommand createProcWithBooleanOutParam() {
+        List<OracleSpParameter> args = new ArrayList<OracleSpParameter>();
+        args.add(spParams.get(SP_ARG_BOOL_OUT));
+
+        return factory.makeSpCommand(SP_ARG_BOOL_OUT, args);
+    }
+
     @Test
     public void procedureWithBooleanInputParamTest() throws IOException {
         OracleBooleanSpCommand command = spProc1;
@@ -81,6 +91,18 @@ public class OracleBooleanSpCommandTest {
     public void procedureWithBooleanAndNumInputsTest() throws IOException {
         OracleBooleanSpCommand command = spProc2;
         String expectedResult = loadWrapperSample("proc_2_1_bool_in_1_num_in.pls");
+
+        command.setPrefix("t");
+        command.generate();
+        String actual = command.toString();
+
+        assertEquals(expectedResult, actual);
+    }
+
+    @Test
+    public void procedureWithBooleanOutTest() throws IOException {
+        OracleBooleanSpCommand command = spProc3BoolOut;
+        String expectedResult = loadWrapperSample("proc_3_1_bool_out.pls");
 
         command.setPrefix("t");
         command.generate();
@@ -109,6 +131,17 @@ public class OracleBooleanSpCommandTest {
         String expectedResult = "? := " + SP_F_BOOL_IN_RET_NUM + "( t_chr2bool( ? ) )";
 
         assertEquals(expectedResult, actual);
+    }
+
+    @Test
+    public void wrapperHeaderWithBooleanOutputTest() {
+        OracleBooleanSpCommand command = spProc3BoolOut;
+
+        command.setPrefix("t");
+        String actual = command.getWrapperHeader();
+        String expectedResult = "procedure t_wrapper( t_p1 OUT VARCHAR2 )";
+
+        assertEquals(expectedResult, actual.trim());
     }
 
     @Test

@@ -16,6 +16,7 @@ public class OracleBooleanSpTestsFactory {
     public static final String SP_ARG_CHR_IN = "p_1_in";
     public static final String SP_ARG_BOOL_IN = "p_bool_in";
     public static final String SP_ARG_NUM_IN = "p_num_in";
+    public static final String SP_ARG_BOOL_OUT = "p_bool_out";
     public static final String SP_RETVAL_NUM = "";
 
     private void addSpParameter(Map<String, OracleSpParameter> spParams,
@@ -28,6 +29,7 @@ public class OracleBooleanSpTestsFactory {
         addSpParameter(spParams, SP_ARG_CHR_IN, INPUT, "VARCHAR2");
         addSpParameter(spParams, SP_ARG_BOOL_IN, INPUT, "BOOLEAN");
         addSpParameter(spParams, SP_ARG_NUM_IN, INPUT, "NUMBER");
+        addSpParameter(spParams, SP_ARG_BOOL_OUT, OUTPUT, "BOOLEAN");
         addSpParameter(spParams, SP_RETVAL_NUM, RETURN_VALUE, "NUMBER");
 
         return spParams;

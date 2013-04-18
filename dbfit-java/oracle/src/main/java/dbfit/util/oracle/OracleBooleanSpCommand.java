@@ -3,6 +3,9 @@ package dbfit.util.oracle;
 import dbfit.util.DbParameterAccessor;
 
 import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.commons.io.IOUtils;
 
 public class OracleBooleanSpCommand {
     protected SpGeneratorOutput out = null;
@@ -31,6 +34,7 @@ public class OracleBooleanSpCommand {
 
         initPrefix();
         initArgsPrefixes();
+        initParameterIds();
     }
 
     public void initPrefix() {
@@ -42,6 +46,18 @@ public class OracleBooleanSpCommand {
         }
 
         prefix = String.valueOf(c);
+    }
+
+    private void initParameterIds() {
+        if (returnValue != null) {
+            returnValue.setId("ret");
+        }
+
+        int i = 1;
+        for (OracleSpParameter arg: arguments) {
+            arg.setId("p" + i);
+            ++i;
+        }
     }
 
     private void initArgsPrefixes() {
@@ -93,14 +109,51 @@ public class OracleBooleanSpCommand {
         return returnValue != null;
     }
 
+    private boolean isBooleanOutputOrReturn(OracleSpParameter param) {
+        return (param != null) && param.isBoolean()
+            && param.isOutputOtReturnValue();
+    }
+
+    private boolean hasBooleanOutputOrReturn() {
+        if (isBooleanOutputOrReturn(returnValue)) {
+            return true;
+        }
+
+        for (OracleSpParameter arg: arguments) {
+            if (isBooleanOutputOrReturn(arg)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Generate the whole database call on the configured SpGeneratorOutput
      */
     public void generate() {
+        if (hasBooleanOutputOrReturn()) {
+            generateWithBooleanOutput();
+        } else {
+            generateWithoutBooleanOutput();
+        }
+    }
+
+    private void generateWithoutBooleanOutput() {
         String template = loadChr2BoolTemplate();
         String result = template.replace("${sp_call}", getWrapperCall());
         result = result.replace("${prefix}", getPrefix());
         out.append(result);
+    }
+
+    private void generateWithBooleanOutput() {
+        out.append("declare\n");
+        out.append(getBool2Chr());
+        out.append("\n");
+        out.append("begin\n");
+        out.append("    ").append(getWrapperCall()).append("\n");
+        out.append("end;\n");
+        out.append("\n");
     }
 
     protected void callWhitespace() {
@@ -117,6 +170,19 @@ public class OracleBooleanSpCommand {
         });
     }
 
+    public String getWrapperHeader() {
+        return getIsolatedOutput(new Generator() {
+            @Override public void generate() {
+                genWrapperHeader();
+            }
+        });
+    }
+
+    private String getBool2Chr() {
+        String template = loadBool2ChrTemplate();
+        return template.replace("${prefix}", getPrefix());
+    }
+
     public void genWrapperCallArguments() {
         String separator = "";
 
@@ -131,11 +197,39 @@ public class OracleBooleanSpCommand {
         callWhitespace();
     }
 
-    public void genWrapperCall() {
-        if (isFunction()) {
-            out.append("? := ");
+    public void genWrapperArguments() {
+        String separator = "";
+
+        callWhitespace();
+
+        for (OracleSpParameter arg: arguments) {
+            out.append(separator);
+            arg.declareArgument();
+            separator = ", ";
         }
-        out.append(procName).append("(");
+
+        callWhitespace();
+    }
+
+    private String getWrapperReturnVar() {
+        if (hasBooleanOutputOrReturn()) {
+            return getPrefix() + getPrefix() + "_ret";
+        } else {
+            return "?";
+        }
+    }
+
+    private void genWrapperCallLeftSide() {
+        if (isFunction()) {
+            out.append(getWrapperReturnVar()).append(" := ");
+        }
+    }
+
+    public void genWrapperCall() {
+        genWrapperCallLeftSide();
+
+        out.append(getWrapperName());
+        out.append("(");
         genWrapperCallArguments();
         out.append(")");
     }
@@ -167,6 +261,52 @@ public class OracleBooleanSpCommand {
         sb.append("\n");
 
         return sb.toString();
+    }
+
+    private String getSpKind() {
+        return isFunction() ? "function" : "procedure";
+    }
+
+    public void genWrapperHeader() {
+        out.append("    ").append(getSpKind()).append(" ");
+        out.append(getWrapperName());
+
+        out.append("(");
+        genWrapperArguments();
+        out.append(")");
+    }
+
+    protected void genWrapperDefinition() {
+        if (!hasBooleanOutputOrReturn()) {
+            return;
+        }
+
+        out.append("    ").append(getSpKind()).append(" ");
+        genWrapperHeader();
+    }
+
+    private String getWrapperName() {
+        if (hasBooleanOutputOrReturn()) {
+            return getPrefix() + "_wrapper";
+        } else {
+            // no need of real wrapper sp
+            return procName;
+        }
+    }
+
+    protected String loadBool2ChrTemplate() {
+        return loadResource("bool2chr.pls");
+    }
+
+    private String loadResource(String resource) {
+        InputStream in = getClass().getResourceAsStream(resource);
+        try {
+            return IOUtils.toString(in, "UTF-8");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(in);
+        }
     }
 
     private interface Generator {

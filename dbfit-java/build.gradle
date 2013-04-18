@@ -98,6 +98,7 @@ project('oracle') {
 
     dependencies {
         compile project(':dbfit-java:core')
+        compile "commons-io:commons-io:2.4"
         compile 'dummy:ojdbc6:11.2.0.3.0@jar'
     }
 }
