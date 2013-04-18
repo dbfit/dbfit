@@ -1,6 +1,7 @@
 package dbfit.util.oracle;
 
 import dbfit.util.DbParameterAccessor;
+import static dbfit.util.DbParameterAccessor.*;
 import static dbfit.util.oracle.OracleBooleanSpTestsFactory.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class OracleBooleanSpCommandTest {
     private static final String SP_PROC_2 = "proc_2";
     private static final String SP_F_BOOL_IN_RET_NUM = "f_bool_in_ret_num";
     private static final String SP_PROC_BOOL_OUT = "proc_3_bool_out";
+    private static final String SP_PROC_BOOL_OUT_BOOL_IN = "proc_4_bool_out_bool_in";
 
     private SpGeneratorOutput output;
     private OracleBooleanSpTestsFactory factory;
@@ -28,6 +30,7 @@ public class OracleBooleanSpCommandTest {
     private OracleBooleanSpCommand spProc2;
     private OracleBooleanSpCommand funcBoolInRetNum;
     private OracleBooleanSpCommand spProc3BoolOut;
+    private OracleBooleanSpCommand spProc4BoolOutBoolIn;
     private Map<String, OracleSpParameter> spParams;
 
     @Before
@@ -35,44 +38,26 @@ public class OracleBooleanSpCommandTest {
         output = new SpGeneratorOutput();
         factory = new OracleBooleanSpTestsFactory(output);
         spParams = factory.createSampleSpParameters();
-        spProc1 = createProcWithBooleanInParam();
-        spProc2 = createProcWithBooleanInAndNumInParam();
-        funcBoolInRetNum = createFuncBoolInRetNum();
+        spProc1 = factory.getSpCommandBuilder(SP_PROC_1)
+            .withBooleanArgument("p_arg1", INPUT)
+            .build();
+           
+        spProc2 = factory.getSpCommandBuilder(SP_PROC_2)
+            .withBooleanArgument("p_arg1", INPUT)
+            .withArgument("p_arg2", INPUT, "NUMBER")
+            .build();
+
+        funcBoolInRetNum = factory.getSpCommandBuilder(SP_F_BOOL_IN_RET_NUM)
+            .withBooleanArgument("p_arg1", INPUT)
+            .withReturnValue("NUMBER")
+            .build();
+
         spProc3BoolOut = createProcWithBooleanOutParam();
-    }
 
-    private void addSpParameter(List<OracleSpParameter> params,
-            String name, int direction, String dataType, String prefix) {
-        params.add(factory.makeSpParameter(name, direction, dataType, prefix));
-    }
-
-    private OracleBooleanSpCommand createProcWithBooleanInParam() {
-        List<OracleSpParameter> args = new ArrayList<OracleSpParameter>();
-        addSpParameter(args, "p_arg1", DbParameterAccessor.INPUT, "BOOLEAN", "t");
-
-        return factory.makeSpCommand(SP_PROC_1, args);
-    }
-    private OracleBooleanSpCommand createProcWithBooleanInAndNumInParam() {
-        List<OracleSpParameter> args = new ArrayList<OracleSpParameter>();
-        addSpParameter(args, "p_arg1", DbParameterAccessor.INPUT, "BOOLEAN", "t");
-        addSpParameter(args, "p_arg2", DbParameterAccessor.INPUT, "NUMBER", "t");
-
-        return factory.makeSpCommand(SP_PROC_2, args);
-    }
-
-    private OracleBooleanSpCommand createFuncBoolInRetNum() {
-        List<OracleSpParameter> args = new ArrayList<OracleSpParameter>();
-        args.add(spParams.get(SP_ARG_BOOL_IN));
-
-        return factory.makeSpCommand(SP_F_BOOL_IN_RET_NUM, args,
-               spParams.get(SP_RETVAL_NUM));
-    }
-
-    private OracleBooleanSpCommand createProcWithBooleanOutParam() {
-        List<OracleSpParameter> args = new ArrayList<OracleSpParameter>();
-        args.add(spParams.get(SP_ARG_BOOL_OUT));
-
-        return factory.makeSpCommand(SP_PROC_BOOL_OUT, args);
+        spProc4BoolOutBoolIn = factory.getSpCommandBuilder(SP_PROC_BOOL_OUT_BOOL_IN)
+            .withBooleanArgument("p_arg1", OUTPUT)
+            .withBooleanArgument("p_arg2", INPUT)
+            .build();
     }
 
     @Test
@@ -123,7 +108,7 @@ public class OracleBooleanSpCommandTest {
     }
 
     @Test
-    public void wrapperCallFunctionWithBooleanInandNumReturnTest() throws IOException {
+    public void wrapperCallFunctionWithBooleanInAndNumReturnTest() throws IOException {
         OracleBooleanSpCommand command = funcBoolInRetNum;
 
         command.setPrefix("t");

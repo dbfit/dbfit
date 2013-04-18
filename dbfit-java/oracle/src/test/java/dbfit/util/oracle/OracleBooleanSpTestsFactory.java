@@ -7,6 +7,7 @@ import static dbfit.util.DbParameterAccessor.INPUT_OUTPUT;
 import static dbfit.util.DbParameterAccessor.RETURN_VALUE;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +19,70 @@ public class OracleBooleanSpTestsFactory {
     public static final String SP_ARG_NUM_IN = "p_num_in";
     public static final String SP_ARG_BOOL_OUT = "p_bool_out";
     public static final String SP_RETVAL_NUM = "";
+
+    public class OracleSpCommandBuilder {
+        private List<OracleSpParameter> args = new ArrayList<OracleSpParameter>();
+        private OracleSpParameter returnValue = null;
+        private String spName;
+        private String prefix = null;
+
+        public OracleSpCommandBuilder() {
+            this("spdemo");
+        }
+
+        public OracleSpCommandBuilder(String spName) {
+            this.spName = spName;
+        }
+
+        public OracleSpCommandBuilder withPrefix(String prefix) {
+            this.prefix = prefix;
+            return this;
+        }
+
+        public OracleSpCommandBuilder withBooleanArgument(
+                        String name, int direction) {
+            return withArgument(name, direction, "BOOLEAN");
+        }
+
+        public OracleSpCommandBuilder withArgument(String name, int direction,
+                                String dataType) {
+            args.add(makeSpParameter(name, direction, dataType, prefix));
+            return this;
+        }
+
+        public OracleSpCommandBuilder withArgument(OracleSpParameter p) {
+            args.add(p);
+            return this;
+        }
+
+        public OracleSpCommandBuilder withReturnValue(String dataType) {
+            OracleSpParameter ret = makeSpParameter("", RETURN_VALUE, dataType, prefix);
+            return withReturnValue(ret);
+        }
+
+        public OracleSpCommandBuilder withReturnValue(OracleSpParameter p) {
+            returnValue = p;
+            return this;
+        }
+
+        public OracleSpCommandBuilder withName(String spName) {
+            this.spName = spName;
+            return this;
+        }
+
+        public OracleBooleanSpCommand build() {
+            OracleBooleanSpCommand cmd = makeSpCommand(spName, args, returnValue);
+            if (null != prefix) {
+                cmd.setPrefix(prefix);
+            }
+
+            return cmd;
+        }
+    }
+
+    public OracleSpCommandBuilder getSpCommandBuilder(String spName) {
+        return new OracleSpCommandBuilder(spName);
+    }
 
     private void addSpParameter(Map<String, OracleSpParameter> spParams,
             String name, int direction, String type) {
