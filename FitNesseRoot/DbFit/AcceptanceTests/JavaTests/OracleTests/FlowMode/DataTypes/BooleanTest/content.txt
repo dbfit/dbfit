@@ -30,6 +30,9 @@
 
 !|execute|create or replace procedure p_bool_out_bool_in(p_arg1 out BOOLEAN, p_arg2 BOOLEAN) is begin p_arg1 := p_arg2; end p_bool_out_bool_in;|
 
+!|execute|create or replace procedure p_bool_out_num_in(p_arg1 out BOOLEAN, p_arg2 in NUMBER) is begin if (p_arg2 = 0) then p_arg1 := true; else p_arg1 := false; end if; end p_bool_out_num_in;|
+
+
 !|execute procedure|p_bool_out|
 |p_arg?|
 |false |
@@ -41,4 +44,8 @@
 !|execute procedure|p_bool_out_bool_in|
 |p_arg1?|p_arg2|
 |true   |true  |
+
+!|execute procedure|p_bool_out_num_in|
+|p_arg1?|p_arg2|
+|true   |0     |
 
