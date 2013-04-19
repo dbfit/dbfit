@@ -20,6 +20,7 @@ public class OracleBooleanSpCommandTest {
     private static final String SP_F_BOOL_IN_RET_NUM = "f_bool_in_ret_num";
     private static final String SP_PROC_BOOL_OUT = "proc_3_bool_out";
     private static final String SP_PROC_BOOL_OUT_BOOL_IN = "proc_4_bool_out_bool_in";
+    private static final String SP_PROC_BOOL_INOUT = "proc_5_bool_inout";
 
     private SpGeneratorOutput output;
     private OracleBooleanSpTestsFactory factory;
@@ -86,6 +87,13 @@ public class OracleBooleanSpCommandTest {
                 .withBooleanArgument(OUTPUT)
                 .withBooleanArgument(INPUT),
                 "proc_4_1_bool_out_1_bool_in.pls");
+    }
+
+    @Test
+    public void procedureWithBooleanInoutTest() throws IOException {
+        verifyGeneratedWrapperWithSavedResource(getCmdBuilder(SP_PROC_BOOL_INOUT)
+                .withBooleanArgument(INPUT_OUTPUT),
+                "proc_5_1_bool_inout.pls");
     }
 
     @Test
