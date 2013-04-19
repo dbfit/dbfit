@@ -144,12 +144,24 @@ public class OracleSpParameter {
             .append(" ").append(getWrapperArgumentType());
     }
 
+    private void initializeVariable() {
+        if (getDirection() == DbParameterAccessor.INPUT_OUTPUT) {
+            out.append(" := ")
+                .append(prefix).append("_chr2bool( ")
+                .append(getWrapperArgumentName())
+                .append(" )");
+        }
+    }
+
     public void declareVariable() {
         if (needsArgumentTypeChange()) {
             out.append("        ")
                 .append(getWrapperVarName())
-                .append(" ").append(getDataType())
-                .append(";\n");
+                .append(" ").append(getDataType());
+
+            initializeVariable();
+
+            out.append(";\n");
         }
     }
 
