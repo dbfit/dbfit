@@ -75,6 +75,13 @@ public class OracleSpParameterTest {
         assertEquals(expected, arg.toString());
     }
 
+    private void checkVariableDeclaration(String paramName, String expected) {
+        OracleSpParameter arg = spParams.get(paramName);
+        arg.declareVariable();
+
+        assertEquals(expected, arg.toString().trim());
+    }
+
     @Test
     public void inputParameterDeclareArgumentChrTest() {
         checkParameterDeclaration(SP_ARG_CHR_IN, "z_" + SP_ARG_CHR_IN + " IN VARCHAR2");
@@ -98,6 +105,33 @@ public class OracleSpParameterTest {
     @Test
     public void inputParameterDeclareArgumentNumberTest() {
         checkParameterDeclaration(SP_ARG_NUM_IN, "z_" + SP_ARG_NUM_IN + " IN NUMBER");
+    }
+
+    @Test
+    public void variableDeclarChrInTest() {
+        checkVariableDeclaration(SP_ARG_CHR_IN, "");
+    }
+
+    @Test
+    public void variableDeclareBooleanInTest() {
+        checkVariableDeclaration(SP_ARG_BOOL_IN, "");
+    }
+
+    @Test
+    public void variableDeclareBooleanOutTest() {
+        checkVariableDeclaration(SP_ARG_BOOL_OUT,
+            "z_v_" + SP_ARG_BOOL_OUT + "_out BOOLEAN;");
+    }
+
+    @Test
+    public void variableDeclareBooleanInoutTest() {
+        checkVariableDeclaration(SP_ARG_BOOL_INOUT,
+            "z_v_" + SP_ARG_BOOL_INOUT + "_inout BOOLEAN := z_chr2bool( z_" + SP_ARG_BOOL_INOUT + " );");
+    }
+
+    @Test
+    public void variableDeclareNumberInTest() {
+        checkVariableDeclaration(SP_ARG_NUM_IN, "");
     }
 
     @Test
