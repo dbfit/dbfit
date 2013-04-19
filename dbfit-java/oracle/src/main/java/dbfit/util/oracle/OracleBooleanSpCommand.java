@@ -111,7 +111,7 @@ public class OracleBooleanSpCommand {
 
     private boolean isBooleanOutputOrReturn(OracleSpParameter param) {
         return (param != null) && param.isBoolean()
-            && param.isOutputOtReturnValue();
+            && param.isOutputOrReturnValue();
     }
 
     private boolean hasBooleanOutputOrReturn() {

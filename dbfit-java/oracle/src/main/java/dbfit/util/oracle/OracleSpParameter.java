@@ -35,7 +35,7 @@ public class OracleSpParameter {
         return getDirection() == DbParameterAccessor.RETURN_VALUE;
     }
 
-    public boolean isOutputOtReturnValue() {
+    public boolean isOutputOrReturnValue() {
         switch (getDirection()) {
             case DbParameterAccessor.RETURN_VALUE:
             case DbParameterAccessor.OUTPUT:
@@ -65,7 +65,7 @@ public class OracleSpParameter {
     }
 
     private boolean needsArgumentTypeChange() {
-        return isBoolean() && isOutputOtReturnValue();
+        return isBoolean() && isOutputOrReturnValue();
     }
 
     private String getWrapperArgumentType() {
@@ -145,7 +145,7 @@ public class OracleSpParameter {
     }
 
     public void declareVariable() {
-        if (isBoolean() && isOutputOtReturnValue()) {
+        if (isBoolean() && isOutputOrReturnValue()) {
             out.append("        ")
                 .append(getWrapperVarName())
                 .append(" ").append(getDataType())
@@ -154,7 +154,7 @@ public class OracleSpParameter {
     }
 
     public void assignOutputVariable() {
-        if (isBoolean() && isOutputOtReturnValue()) {
+        if (isBoolean() && isOutputOrReturnValue()) {
             out.append("        ")
                 .append(getWrapperArgumentName())
                 .append(" := ")
@@ -169,7 +169,7 @@ public class OracleSpParameter {
     }
 
     public void genWrapperCallArgument(String varname) {
-        if (isBoolean() && !isOutputOtReturnValue()) {
+        if (isBoolean() && !isOutputOrReturnValue()) {
             out.append(prefix).append("_chr2bool( ");
             out.append(varname);
             out.append(" )");
