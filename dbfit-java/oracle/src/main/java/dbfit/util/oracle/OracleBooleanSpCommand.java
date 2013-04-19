@@ -128,6 +128,16 @@ public class OracleBooleanSpCommand {
         return false;
     }
 
+    private boolean hasBooleanInput() {
+        for (OracleSpParameter arg: arguments) {
+            if (arg.isBooleanInOrInOut()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Generate the whole database call on the configured SpGeneratorOutput
      */
@@ -140,7 +150,7 @@ public class OracleBooleanSpCommand {
     }
 
     private void generateWithoutBooleanOutput() {
-        String template = loadChr2BoolTemplate();
+        String template = loadTemplateWithoutBooleanOutput();
         String result = template.replace("${sp_call}", getWrapperCall());
         result = result.replace("${prefix}", getPrefix());
         out.append(result);
@@ -149,6 +159,9 @@ public class OracleBooleanSpCommand {
     private void generateWithBooleanOutput() {
         out.append("declare\n");
         out.append(getBool2Chr());
+        if (hasBooleanInput()) {
+            out.append(getChr2Bool());
+        }
         out.append(getWrapperHeader()).append("\n");
         out.append("    is\n");
         genWrapperVariables();
@@ -185,6 +198,11 @@ public class OracleBooleanSpCommand {
                 genWrapperHeader();
             }
         });
+    }
+
+    private String getChr2Bool() {
+        String template = loadChr2BoolTemplate();
+        return template.replace("${prefix}", getPrefix());
     }
 
     private String getBool2Chr() {
@@ -295,7 +313,7 @@ public class OracleBooleanSpCommand {
         out.append(")");
     }
 
-    protected String loadChr2BoolTemplate() {
+    protected String loadTemplateWithoutBooleanOutput() {
         StringBuilder sb = new StringBuilder();
 
         sb.append("declare\n");
@@ -353,6 +371,10 @@ public class OracleBooleanSpCommand {
             // no need of real wrapper sp
             return procName;
         }
+    }
+
+    protected String loadChr2BoolTemplate() {
+        return loadResource("chr2bool.pls");
     }
 
     protected String loadBool2ChrTemplate() {
