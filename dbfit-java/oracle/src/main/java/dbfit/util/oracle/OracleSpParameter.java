@@ -123,11 +123,11 @@ public class OracleSpParameter {
     }
 
     private String getWrapperArgumentName() {
-        return prefix + "_" + id;
+        return prefixed(id);
     }
 
     public String getWrapperVarName() {
-        return prefix + "_v_" + id + "_" + getShortDirectionName();
+        return prefixed("v_" + id + "_" + getShortDirectionName());
     }
 
     public String toString() {
@@ -150,10 +150,7 @@ public class OracleSpParameter {
 
     private void initializeVariable() {
         if (getDirection() == INPUT_OUTPUT) {
-            out.append(" := ")
-                .append(prefix).append("_chr2bool( ")
-                .append(getWrapperArgumentName())
-                .append(" )");
+            out.append(" := ").append(chr2bool(getWrapperArgumentName()));
         }
     }
 
@@ -174,9 +171,8 @@ public class OracleSpParameter {
             out.append("        ")
                 .append(getWrapperArgumentName())
                 .append(" := ")
-                .append(prefix).append("_bool2chr( ")
-                .append(getWrapperVarName())
-                .append(" );\n");
+                .append(bool2chr(getWrapperVarName()))
+                .append(";\n");
         }
     }
 
@@ -186,9 +182,7 @@ public class OracleSpParameter {
 
     public void genWrapperCallArgument(String varname) {
         if (isBoolean() && !isOutputOrReturnValue()) {
-            out.append(prefix).append("_chr2bool( ");
-            out.append(varname);
-            out.append(" )");
+            out.append(chr2bool(varname));
         } else {
             out.append(varname);
         }
