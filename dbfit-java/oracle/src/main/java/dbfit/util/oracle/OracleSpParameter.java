@@ -179,14 +179,10 @@ public class OracleSpParameter {
     }
 
     public void genSpCallArgumentWithinWrapper() {
-        if (!isBoolean()) {
-            out.append(getWrapperArgumentName());
-        } else if (isOutputOtReturnValue()) {
+        if (needsArgumentTypeChange()) {
             out.append(getWrapperVarName());
         } else {
-            out.append(prefix).append("_chr2bool( ");
-            out.append(getWrapperVarName());
-            out.append(" )");
+            out.append(getWrapperArgumentName());
         }
     }
 
