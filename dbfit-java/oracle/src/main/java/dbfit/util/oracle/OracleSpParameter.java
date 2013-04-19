@@ -202,5 +202,20 @@ public class OracleSpParameter {
         }
     }
 
+    private String prefixed(String expr) {
+        return prefix + "_" + expr;
+    }
+
+    private String prefixedCallExpr(String func, String args) {
+        return prefixed(func) + "( " + args + " )";
+    }
+
+    private String chr2bool(String arg) {
+        return prefixedCallExpr("chr2bool", arg);
+    }
+
+    private String bool2chr(String arg) {
+        return prefixedCallExpr("bool2chr", arg);
+    }
 }
 
