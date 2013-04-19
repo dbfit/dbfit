@@ -4,9 +4,6 @@ import dbfit.util.DbParameterAccessor;
 import static dbfit.util.DbParameterAccessor.*;
 import static dbfit.util.oracle.OracleBooleanSpTestsFactory.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
 import java.io.InputStream;
 import java.io.IOException;
 import org.junit.Test;
@@ -27,80 +24,70 @@ public class OracleBooleanSpCommandTest {
     private SpGeneratorOutput output;
     private OracleBooleanSpTestsFactory factory;
     private OracleBooleanSpCommand spProc1;
-    private OracleBooleanSpCommand spProc2;
-    private OracleBooleanSpCommand funcBoolInRetNum;
-    private OracleBooleanSpCommand spProc3BoolOut;
-    private OracleBooleanSpCommand spProc4BoolOutBoolIn;
-    private Map<String, OracleSpParameter> spParams;
 
     @Before
     public void prepare() {
         output = new SpGeneratorOutput();
         factory = new OracleBooleanSpTestsFactory(output);
-        spParams = factory.createSampleSpParameters();
+
         spProc1 = factory.getSpCommandBuilder(SP_PROC_1)
-            .withBooleanArgument("p_arg1", INPUT)
+            .withBooleanArgument(INPUT)
             .build();
-           
-        spProc2 = factory.getSpCommandBuilder(SP_PROC_2)
-            .withBooleanArgument("p_arg1", INPUT)
-            .withArgument("p_arg2", INPUT, "NUMBER")
-            .build();
+    }
 
-        funcBoolInRetNum = factory.getSpCommandBuilder(SP_F_BOOL_IN_RET_NUM)
-            .withBooleanArgument("p_arg1", INPUT)
-            .withReturnValue("NUMBER")
-            .build();
+    private OracleBooleanSpTestsFactory.OracleSpCommandBuilder getCmdBuilder(String procName) {
+        return factory.getSpCommandBuilder(procName);
+    }
 
-        spProc3BoolOut = createProcWithBooleanOutParam();
+    private void verifyGeneratedWrapperWithExpectedResult(
+                OracleBooleanSpTestsFactory.OracleSpCommandBuilder builder,
+                String expectedResult) throws IOException {
+        OracleBooleanSpCommand command = builder.withPrefix("t").build();
 
-        spProc4BoolOutBoolIn = factory.getSpCommandBuilder(SP_PROC_BOOL_OUT_BOOL_IN)
-            .withBooleanArgument("p_arg1", OUTPUT)
-            .withBooleanArgument("p_arg2", INPUT)
-            .build();
+        command.generate();
+        String actual = command.toString();
+
+        assertEquals(expectedResult, actual);
+    }
+
+    private void verifyGeneratedWrapperWithSavedResource(
+                OracleBooleanSpTestsFactory.OracleSpCommandBuilder builder,
+                String correctResultFilename) throws IOException {
+        String expectedResult = loadWrapperSample(correctResultFilename);
+
+        verifyGeneratedWrapperWithExpectedResult(builder, expectedResult);
     }
 
     @Test
     public void procedureWithBooleanInputParamTest() throws IOException {
-        OracleBooleanSpCommand command = spProc1;
-        String expectedResult = loadWrapperSample("proc_1_1_bool_in.pls");
-
-        command.setPrefix("t");
-        command.generate();
-        String actual = command.toString();
-
-        assertEquals(expectedResult, actual);
+        verifyGeneratedWrapperWithSavedResource(getCmdBuilder(SP_PROC_1)
+                .withBooleanArgument(INPUT), 
+                "proc_1_1_bool_in.pls");
     }
 
     @Test
     public void procedureWithBooleanAndNumInputsTest() throws IOException {
-        OracleBooleanSpCommand command = spProc2;
-        String expectedResult = loadWrapperSample("proc_2_1_bool_in_1_num_in.pls");
-
-        command.setPrefix("t");
-        command.generate();
-        String actual = command.toString();
-
-        assertEquals(expectedResult, actual);
+        verifyGeneratedWrapperWithSavedResource(getCmdBuilder(SP_PROC_2)
+                .withBooleanArgument(INPUT)
+                .withArgument(INPUT, "NUMBER"),
+                "proc_2_1_bool_in_1_num_in.pls");
     }
 
     @Test
     public void procedureWithBooleanOutTest() throws IOException {
-        OracleBooleanSpCommand command = spProc3BoolOut;
-        String expectedResult = loadWrapperSample("proc_3_1_bool_out.pls");
-
-        command.setPrefix("t");
-        command.generate();
-        String actual = command.toString();
-
-        assertEquals(expectedResult, actual);
+        verifyGeneratedWrapperWithSavedResource(getCmdBuilder(SP_PROC_BOOL_OUT)
+                .withBooleanArgument(OUTPUT),
+                "proc_3_1_bool_out.pls");
     }
 
     @Test
     public void wrapperCallProcedureWithBooleanAndNumInputsTest() throws IOException {
-        OracleBooleanSpCommand command = spProc2;
+        OracleBooleanSpCommand command = getCmdBuilder(SP_PROC_2)
+                .withBooleanArgument(INPUT)
+                .withArgument(INPUT, "NUMBER")
+                .withPrefix("t")
+                .build();
 
-        command.setPrefix("t");
         String actual = command.getWrapperCall();
         String expectedResult = SP_PROC_2 + "( t_chr2bool( ? ), ? )";
 
@@ -109,9 +96,12 @@ public class OracleBooleanSpCommandTest {
 
     @Test
     public void wrapperCallFunctionWithBooleanInAndNumReturnTest() throws IOException {
-        OracleBooleanSpCommand command = funcBoolInRetNum;
+        OracleBooleanSpCommand command = getCmdBuilder(SP_F_BOOL_IN_RET_NUM)
+            .withBooleanArgument(INPUT)
+            .withReturnValue("NUMBER")
+            .withPrefix("t")
+            .build();
 
-        command.setPrefix("t");
         String actual = command.getWrapperCall();
         String expectedResult = "? := " + SP_F_BOOL_IN_RET_NUM + "( t_chr2bool( ? ) )";
 
@@ -120,9 +110,11 @@ public class OracleBooleanSpCommandTest {
 
     @Test
     public void wrapperHeaderWithBooleanOutputTest() {
-        OracleBooleanSpCommand command = spProc3BoolOut;
+        OracleBooleanSpCommand command = getCmdBuilder(SP_PROC_BOOL_OUT)
+            .withBooleanArgument(OUTPUT)
+            .withPrefix("t")
+            .build();
 
-        command.setPrefix("t");
         String actual = command.getWrapperHeader();
         String expectedResult = "procedure t_wrapper( t_p1 OUT VARCHAR2 )";
 

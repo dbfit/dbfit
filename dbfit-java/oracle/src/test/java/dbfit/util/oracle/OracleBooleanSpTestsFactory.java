@@ -26,6 +26,10 @@ public class OracleBooleanSpTestsFactory {
         private String spName;
         private String prefix = null;
 
+        private String genArgName() {
+            return "p_arg" + (args.size() + 1);
+        }
+
         public OracleSpCommandBuilder() {
             this("spdemo");
         }
@@ -39,15 +43,22 @@ public class OracleBooleanSpTestsFactory {
             return this;
         }
 
-        public OracleSpCommandBuilder withBooleanArgument(
-                        String name, int direction) {
+        public OracleSpCommandBuilder withBooleanArgument(String name, int direction) {
             return withArgument(name, direction, "BOOLEAN");
+        }
+
+        public OracleSpCommandBuilder withBooleanArgument(int direction) {
+            return withBooleanArgument(genArgName(), direction);
         }
 
         public OracleSpCommandBuilder withArgument(String name, int direction,
                                 String dataType) {
             args.add(makeSpParameter(name, direction, dataType, prefix));
             return this;
+        }
+
+        public OracleSpCommandBuilder withArgument(int direction, String dataType) {
+            return withArgument(genArgName(), direction, dataType);
         }
 
         public OracleSpCommandBuilder withArgument(OracleSpParameter p) {
