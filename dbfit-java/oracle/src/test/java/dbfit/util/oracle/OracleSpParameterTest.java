@@ -16,10 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class OracleSpParameterTest {
-    public static final String SP_ARG_CHR_IN = "p_1_in";
-    public static final String SP_ARG_BOOL_IN = "p_bool_in";
-    public static final String SP_ARG_NUM_IN = "p_num_in";
-
     private Map<Integer, String> expectedDirections;
     private SpGeneratorOutput output;
     private OracleBooleanSpTestsFactory factory;
@@ -86,7 +82,17 @@ public class OracleSpParameterTest {
 
     @Test
     public void inputParameterDeclareArgumentBooleanTest() {
-        checkParameterDeclaration(SP_ARG_BOOL_IN, "z_" + SP_ARG_BOOL_IN + " IN VARCHAR2");
+        checkParameterDeclaration(SP_ARG_BOOL_IN, "z_" + SP_ARG_BOOL_IN + " IN BOOLEAN");
+    }
+
+    @Test
+    public void outputParameterDeclareArgumentBooleanTest() {
+        checkParameterDeclaration(SP_ARG_BOOL_OUT, "z_" + SP_ARG_BOOL_OUT + " OUT VARCHAR2");
+    }
+
+    @Test
+    public void inoutParameterDeclareArgumentBooleanTest() {
+        checkParameterDeclaration(SP_ARG_BOOL_INOUT, "z_" + SP_ARG_BOOL_INOUT + " IN OUT VARCHAR2");
     }
 
     @Test

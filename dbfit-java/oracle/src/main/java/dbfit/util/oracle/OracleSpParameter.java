@@ -46,12 +46,30 @@ public class OracleSpParameter {
         }
     }
 
+    public boolean isInOrInout() {
+        switch (getDirection()) {
+            case DbParameterAccessor.INPUT:
+            case DbParameterAccessor.INPUT_OUTPUT:
+                return true;
+        }
+
+        return false;
+    }
+
+    public boolean isBooleanInOrInOut() {
+        return isBoolean() && isInOrInout();
+    }
+
     protected String getDataType() {
         return dataType;
     }
 
+    private boolean needsArgumentTypeChange() {
+        return isBoolean() && isOutputOtReturnValue();
+    }
+
     private String getWrapperArgumentType() {
-        return isBoolean() ? "VARCHAR2" : getDataType();
+        return needsArgumentTypeChange() ? "VARCHAR2" : getDataType();
     }
 
     public boolean isBoolean() {
