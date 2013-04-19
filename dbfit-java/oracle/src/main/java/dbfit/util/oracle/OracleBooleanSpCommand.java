@@ -150,10 +150,12 @@ public class OracleBooleanSpCommand {
     }
 
     private void generateWithoutBooleanOutput() {
-        String template = loadTemplateWithoutBooleanOutput();
-        String result = template.replace("${sp_call}", getWrapperCall());
-        result = result.replace("${prefix}", getPrefix());
-        out.append(result);
+        out.append("declare\n");
+        out.append(getChr2Bool());
+        out.append("begin\n");
+        out.append("    ").append(getWrapperCall()).append(";\n");
+        out.append("end;\n");
+        out.append("\n");
     }
 
     private void generateWithBooleanOutput() {
@@ -311,35 +313,6 @@ public class OracleBooleanSpCommand {
         out.append("(");
         genWrapperCallArguments();
         out.append(")");
-    }
-
-    protected String loadTemplateWithoutBooleanOutput() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("declare\n");
-        sb.append("    function ${prefix}_chr2bool( p_arg VARCHAR2 ) return BOOLEAN\n");
-        sb.append("    is\n");
-        sb.append("    begin\n");
-        sb.append("        if ( p_arg = 'true' )\n");
-        sb.append("        then\n");
-        sb.append("            return true;\n");
-        sb.append("        elsif ( p_arg = 'false' )\n");
-        sb.append("        then\n");
-        sb.append("            return false;\n");
-        sb.append("        elsif ( p_arg is null )\n");
-        sb.append("        then\n");
-        sb.append("            return null;\n");
-        sb.append("        else\n");
-        sb.append("            raise_application_error( -20013, 'Error. Expected true or false, got: ' || p_arg );\n");
-        sb.append("        end if;\n");
-        sb.append("    end ${prefix}_chr2bool;\n");
-        sb.append("\n");
-        sb.append("begin\n");
-        sb.append("    ${sp_call};\n");
-        sb.append("end;\n");
-        sb.append("\n");
-
-        return sb.toString();
     }
 
     private String getSpKind() {
