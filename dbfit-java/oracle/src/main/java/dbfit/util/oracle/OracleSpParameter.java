@@ -1,6 +1,10 @@
 package dbfit.util.oracle;
 
 import dbfit.util.DbParameterAccessor;
+import static dbfit.util.DbParameterAccessor.INPUT;
+import static dbfit.util.DbParameterAccessor.OUTPUT;
+import static dbfit.util.DbParameterAccessor.INPUT_OUTPUT;
+import static dbfit.util.DbParameterAccessor.RETURN_VALUE;
 
 public class OracleSpParameter {
     protected int direction; // In terms of DbParameterAccessor constants
@@ -32,14 +36,14 @@ public class OracleSpParameter {
     }
     
     public boolean isReturnValue() {
-        return getDirection() == DbParameterAccessor.RETURN_VALUE;
+        return getDirection() == RETURN_VALUE;
     }
 
     public boolean isOutputOrReturnValue() {
         switch (getDirection()) {
-            case DbParameterAccessor.RETURN_VALUE:
-            case DbParameterAccessor.OUTPUT:
-            case DbParameterAccessor.INPUT_OUTPUT:
+            case RETURN_VALUE:
+            case OUTPUT:
+            case INPUT_OUTPUT:
                 return true;
             default:
                 return false;
@@ -48,8 +52,8 @@ public class OracleSpParameter {
 
     public boolean isInOrInout() {
         switch (getDirection()) {
-            case DbParameterAccessor.INPUT:
-            case DbParameterAccessor.INPUT_OUTPUT:
+            case INPUT:
+            case INPUT_OUTPUT:
                 return true;
         }
 
@@ -78,11 +82,11 @@ public class OracleSpParameter {
 
     public String getDirectionName() {
         switch (getDirection()) {
-            case DbParameterAccessor.INPUT_OUTPUT:
+            case INPUT_OUTPUT:
                 return "IN OUT";
-            case DbParameterAccessor.OUTPUT:
+            case OUTPUT:
                 return "OUT";
-            case DbParameterAccessor.INPUT:
+            case INPUT:
                 return "IN";
             default:
                 return "RETURN";
@@ -91,11 +95,11 @@ public class OracleSpParameter {
 
     public String getShortDirectionName() {
         switch (getDirection()) {
-            case DbParameterAccessor.INPUT_OUTPUT:
+            case INPUT_OUTPUT:
                 return "inout";
-            case DbParameterAccessor.OUTPUT:
+            case OUTPUT:
                 return "out";
-            case DbParameterAccessor.INPUT:
+            case INPUT:
                 return "in";
             default:
                 return "ret";
@@ -145,7 +149,7 @@ public class OracleSpParameter {
     }
 
     private void initializeVariable() {
-        if (getDirection() == DbParameterAccessor.INPUT_OUTPUT) {
+        if (getDirection() == INPUT_OUTPUT) {
             out.append(" := ")
                 .append(prefix).append("_chr2bool( ")
                 .append(getWrapperArgumentName())
