@@ -145,7 +145,7 @@ public class OracleSpParameter {
     }
 
     public void declareVariable() {
-        if (isBoolean() && isOutputOrReturnValue()) {
+        if (needsArgumentTypeChange()) {
             out.append("        ")
                 .append(getWrapperVarName())
                 .append(" ").append(getDataType())
@@ -154,7 +154,7 @@ public class OracleSpParameter {
     }
 
     public void assignOutputVariable() {
-        if (isBoolean() && isOutputOrReturnValue()) {
+        if (needsArgumentTypeChange()) {
             out.append("        ")
                 .append(getWrapperArgumentName())
                 .append(" := ")
