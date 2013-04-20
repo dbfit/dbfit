@@ -193,34 +193,34 @@ public class OracleBooleanSpCommandTest {
     }
 
     @Test
-    public void wrapperHeaderWithBooleanOutputTest() {
+    public void wrapperHeaderProcBooleanOutputTest() {
         verifyWrapperHeaderVsExpectedResult(getCmdBuilder(SP_PROC_BOOL_OUT)
             .withBooleanArgument(OUTPUT),
             "procedure t_wrapper( t_p1 OUT VARCHAR2 )");
     }
 
     @Test
-    public void wrapperHeaderFuncWithBooleanInputReturnBooleanTest() {
+    public void wrapperHeaderFuncBooleanOutReturnBooleanTest() {
         verifyWrapperHeaderVsExpectedResult(getCmdBuilder(SP_F_BOOL_OUT_RET_BOOL)
             .withBooleanArgument(OUTPUT)
             .withReturnValue("BOOLEAN"),
-            "procedure t_wrapper( t_p1 OUT VARCHAR2 ) return BOOLEAN");
+            "function t_wrapper( t_p1 OUT VARCHAR2 ) RETURN BOOLEAN");
     }
 
     @Test
-    public void wrapperHeaderFuncWithBooleanInoutReturnBooleanTest() {
+    public void wrapperHeaderFuncBooleanInoutReturnBooleanTest() {
         verifyWrapperHeaderVsExpectedResult(getCmdBuilder(SP_F_BOOL_INOUT_RET_BOOL)
-            .withBooleanArgument(OUTPUT)
+            .withBooleanArgument(INPUT_OUTPUT)
             .withReturnValue("BOOLEAN"),
-            "procedure t_wrapper( t_p1 IN OUT VARCHAR2 ) return BOOLEAN");
+            "function t_wrapper( t_p1 IN OUT VARCHAR2 ) RETURN BOOLEAN");
     }
 
     @Test
-    public void wrapperHeaderFuncWithBooleanInoutReturnNumberTest() {
+    public void wrapperHeaderFuncBooleanOutReturnNumberTest() {
         verifyWrapperHeaderVsExpectedResult(getCmdBuilder(SP_F_BOOL_OUT_RET_NUM)
             .withBooleanArgument(OUTPUT)
             .withReturnValue("NUMBER"),
-            "procedure t_wrapper( t_p1 IN OUT VARCHAR2 ) return BOOLEAN");
+            "function t_wrapper( t_p1 OUT VARCHAR2 ) RETURN NUMBER");
     }
 
     @Test
