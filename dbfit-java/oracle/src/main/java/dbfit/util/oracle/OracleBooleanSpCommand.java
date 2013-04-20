@@ -201,6 +201,7 @@ public class OracleBooleanSpCommand {
             genSpCallWithinWrapper();
             out.append(";\n");
             assignOutputVariables();
+            genWrapperReturnStatement();
             out.append("    end ").append(getWrapperName()).append(";\n");
             out.append("\n");
         }
@@ -324,6 +325,13 @@ public class OracleBooleanSpCommand {
 
     private String getWrapperReturnVar() {
         return isFunction() ? returnValue.getWrapperVarName() : null;
+    }
+
+    private void genWrapperReturnStatement() {
+        if (isFunction()) {
+            out.append("        ").append("return ")
+               .append(getWrapperReturnVar()).append(";\n");
+        }
     }
 
     private void genSpCallLeftSide(String var) {
