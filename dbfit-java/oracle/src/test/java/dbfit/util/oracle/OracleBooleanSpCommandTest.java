@@ -26,6 +26,7 @@ public class OracleBooleanSpCommandTest {
     private static final String SP_F_BOOL_IN_RET_BOOL = "f_bool_in_ret_bool";
     private static final String SP_F_BOOL_OUT_RET_BOOL = "f_bool_out_ret_bool";
     private static final String SP_F_BOOL_INOUT_RET_BOOL = "f_bool_inout_ret_bool";
+    private static final String SP_F_BOOL_OUT_RET_NUM = "f_bool_in_ret_num";
 
     private SpGeneratorOutput output;
     private OracleBooleanSpTestsFactory factory;
@@ -45,7 +46,9 @@ public class OracleBooleanSpCommandTest {
         return factory.getSpCommandBuilder(procName);
     }
 
-    private void verifyWrapperHeaderVsExpectedResult() {
+    private void verifyWrapperHeaderVsExpectedResult(
+                OracleBooleanSpTestsFactory.OracleSpCommandBuilder builder,
+                String expectedResult) {
         OracleBooleanSpCommand command = builder.withPrefix("t").build();
         String actual = command.getWrapperHeader();
 
@@ -194,6 +197,30 @@ public class OracleBooleanSpCommandTest {
         verifyWrapperHeaderVsExpectedResult(getCmdBuilder(SP_PROC_BOOL_OUT)
             .withBooleanArgument(OUTPUT),
             "procedure t_wrapper( t_p1 OUT VARCHAR2 )");
+    }
+
+    @Test
+    public void wrapperHeaderFuncWithBooleanInputReturnBooleanTest() {
+        verifyWrapperHeaderVsExpectedResult(getCmdBuilder(SP_F_BOOL_OUT_RET_BOOL)
+            .withBooleanArgument(OUTPUT)
+            .withReturnValue("BOOLEAN"),
+            "procedure t_wrapper( t_p1 OUT VARCHAR2 ) return BOOLEAN");
+    }
+
+    @Test
+    public void wrapperHeaderFuncWithBooleanInoutReturnBooleanTest() {
+        verifyWrapperHeaderVsExpectedResult(getCmdBuilder(SP_F_BOOL_INOUT_RET_BOOL)
+            .withBooleanArgument(OUTPUT)
+            .withReturnValue("BOOLEAN"),
+            "procedure t_wrapper( t_p1 IN OUT VARCHAR2 ) return BOOLEAN");
+    }
+
+    @Test
+    public void wrapperHeaderFuncWithBooleanInoutReturnNumberTest() {
+        verifyWrapperHeaderVsExpectedResult(getCmdBuilder(SP_F_BOOL_OUT_RET_NUM)
+            .withBooleanArgument(OUTPUT)
+            .withReturnValue("NUMBER"),
+            "procedure t_wrapper( t_p1 IN OUT VARCHAR2 ) return BOOLEAN");
     }
 
     @Test
