@@ -45,6 +45,13 @@ public class OracleBooleanSpCommandTest {
         return factory.getSpCommandBuilder(procName);
     }
 
+    private void verifyWrapperHeaderVsExpectedResult() {
+        OracleBooleanSpCommand command = builder.withPrefix("t").build();
+        String actual = command.getWrapperHeader();
+
+        assertEquals(expectedResult, actual.trim());
+    }
+
     private void verifyGeneratedWrapperCallVsExpectedResult(
                 OracleBooleanSpTestsFactory.OracleSpCommandBuilder builder,
                 String expectedResult) {
@@ -184,15 +191,9 @@ public class OracleBooleanSpCommandTest {
 
     @Test
     public void wrapperHeaderWithBooleanOutputTest() {
-        OracleBooleanSpCommand command = getCmdBuilder(SP_PROC_BOOL_OUT)
-            .withBooleanArgument(OUTPUT)
-            .withPrefix("t")
-            .build();
-
-        String actual = command.getWrapperHeader();
-        String expectedResult = "procedure t_wrapper( t_p1 OUT VARCHAR2 )";
-
-        assertEquals(expectedResult, actual.trim());
+        verifyWrapperHeaderVsExpectedResult(getCmdBuilder(SP_PROC_BOOL_OUT)
+            .withBooleanArgument(OUTPUT),
+            "procedure t_wrapper( t_p1 OUT VARCHAR2 )");
     }
 
     @Test
