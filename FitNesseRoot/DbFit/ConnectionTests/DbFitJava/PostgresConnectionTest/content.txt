@@ -1,0 +1,7 @@
+!|dbfit.PostgresTest|
+
+!|Connect|localhost:5432|dbfit|dbfit|dbfit|
+
+!|Query|select 'hello world' as x|
+|x                               |
+|hello world                     |
