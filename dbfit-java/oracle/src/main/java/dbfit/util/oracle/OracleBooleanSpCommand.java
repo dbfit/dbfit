@@ -67,9 +67,20 @@ public class OracleBooleanSpCommand {
         }
     }
 
+    private void initOutputs() {
+        initArgsOutputs();
+        initReturnValueOutput();
+    }
+
     private void initArgsOutputs() {
         for (OracleSpParameter arg: arguments) {
             arg.setOutput(out);
+        }
+    }
+
+    private void initReturnValueOutput() {
+        if (isFunction()) {
+            returnValue.setOutput(out);
         }
     }
 
@@ -85,7 +96,7 @@ public class OracleBooleanSpCommand {
 
     public void setOutput(SpGeneratorOutput out) {
         this.out = out;
-        initArgsOutputs();
+        initOutputs();
     }
 
     protected SpGeneratorOutput append(String s) {
@@ -125,7 +136,7 @@ public class OracleBooleanSpCommand {
 
     private boolean hasBooleanOutOrInout() {
         for (OracleSpParameter arg: arguments) {
-            if (isBooleanOutputOrReturn(arg)) {
+            if(arg.isBooleanOutOrInout()) {
                 return true;
             }
         }
@@ -332,6 +343,9 @@ public class OracleBooleanSpCommand {
     public void genWrapperHeader() {
         out.append("    ").append(getSpKind()).append(" ");
         out.append(callExpr(getWrapperName(), getWrapperArguments()));
+        if (isFunction()) {
+            returnValue.declareReturnValue();
+        }
     }
 
     protected void genWrapperDefinition() {

@@ -64,6 +64,16 @@ public class OracleSpParameter {
         return false;
     }
 
+    public boolean isOutOrInout() {
+        switch (getDirection()) {
+            case OUTPUT:
+            case INPUT_OUTPUT:
+                return true;
+        }
+
+        return false;
+    }
+
     private boolean isInput() {
         return getDirection() == INPUT;
     }
@@ -72,12 +82,16 @@ public class OracleSpParameter {
         return isBoolean() && isInOrInout();
     }
 
+    public boolean isBooleanOutOrInout() {
+        return isBoolean() && isOutOrInout();
+    }
+
     protected String getDataType() {
         return dataType;
     }
 
     private boolean needsArgumentTypeChange() {
-        return isBoolean() && isOutputOrReturnValue();
+        return isBooleanOutOrInout();
     }
 
     private String getWrapperArgumentType() {
@@ -131,7 +145,7 @@ public class OracleSpParameter {
     }
 
     private String getWrapperArgumentName() {
-        return prefixed(id);
+        return isReturnValue() ? "" : prefixed(id);
     }
 
     public String getWrapperVarName() {
@@ -150,10 +164,19 @@ public class OracleSpParameter {
         this.prefix = prefix;
     }
 
-    public void declareArgument() {
+    private void declareArgumentOrReturnValue() {
         out.append(getWrapperArgumentName())
-            .append(" ").append(getDirectionName())
+            .append(" ")
+            .append(getDirectionName())
             .append(" ").append(getWrapperArgumentType());
+    }
+
+    public void declareArgument() {
+        declareArgumentOrReturnValue();
+    }
+
+    public void declareReturnValue() {
+        declareArgumentOrReturnValue();
     }
 
     private void initializeVariable() {
