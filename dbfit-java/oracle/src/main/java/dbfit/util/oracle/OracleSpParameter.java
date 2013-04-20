@@ -204,8 +204,13 @@ public class OracleSpParameter {
         return prefix + "_" + expr;
     }
 
+    public static String callExpr(String func, String args) {
+        String ws = (args.trim().length() == 0) ? "" : " ";
+        return func + "(" + ws + args + ws + ")";
+    }
+
     private String prefixedCallExpr(String func, String args) {
-        return prefixed(func) + "( " + args + " )";
+        return callExpr(prefixed(func), args);
     }
 
     private String chr2bool(String arg) {
