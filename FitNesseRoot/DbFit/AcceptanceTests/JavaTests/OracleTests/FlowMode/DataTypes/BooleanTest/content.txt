@@ -92,3 +92,92 @@ end p_bool_mix;
 |p_arg1|p_arg1?|p_arg2|p_arg3?|p_arg4|p_arg4?|
 |false |true   |true  |true   |4     |5      |
 
+###
+!2 Functions returning boolean
+!|execute|create or replace function f_bool_3(p_in in BOOLEAN, p_inout in out NUMBER) return number is begin p_inout := p_inout * 2; if (p_in) then return 1; else return 0; end if; end f_bool_3;|
+
+!|execute procedure|f_bool_3|
+|p_in|p_inout|p_inout?|?|
+|true|7      |14      |1|
+
+# Twisting order of attribute to make sure it's handled correctly
+!|execute procedure|f_bool_3|
+|?|p_inout?|p_inout|p_in |
+|0|12      |6      |false|
+
+###
+!2 Procedure with boolean output arguments
+!|execute|create or replace procedure p_bool_out(p_arg out BOOLEAN) is begin p_arg := false; end p_bool_out;|
+
+!|execute|create or replace procedure p_bool_out_bool_in(p_arg1 out BOOLEAN, p_arg2 BOOLEAN) is begin p_arg1 := p_arg2; end p_bool_out_bool_in;|
+
+!|execute|create or replace procedure p_bool_out_num_in(p_arg1 out BOOLEAN, p_arg2 in NUMBER) is begin if (p_arg2 = 0) then p_arg1 := true; else p_arg1 := false; end if; end p_bool_out_num_in;|
+
+
+!|execute procedure|p_bool_out|
+|p_arg?|
+|false |
+
+!|execute procedure|p_bool_out_bool_in|
+|p_arg1?|p_arg2|
+|false  |false |
+
+!|execute procedure|p_bool_out_bool_in|
+|p_arg1?|p_arg2|
+|true   |true  |
+
+!|execute procedure|p_bool_out_num_in|
+|p_arg1?|p_arg2|
+|true   |0     |
+
+###
+!2 Procedure with boolean in out arguments
+!|execute|create or replace procedure p_bool_inout(p_arg1 in out BOOLEAN) is begin p_arg1 := not p_arg1; end p_bool_inout;|
+
+!|execute|!-
+create or replace procedure p_bool_inout_num_in(p_arg1 in out BOOLEAN, p_arg2 NUMBER)
+is
+begin
+    if (p_arg1 and p_arg2 = 7)
+    then
+        p_arg1 := true;
+    else
+        p_arg1 := false;
+    end if;
+end p_bool_inout_num_in;
+-!|
+
+!|execute procedure|p_bool_inout|
+|p_arg1|p_arg1?|
+|true  |false  |
+
+!|execute procedure|p_bool_inout_num_in|
+|p_arg1|p_arg2 |p_arg1?|
+|true  |7      |true   |
+
+!|execute procedure|p_bool_inout_num_in|
+|p_arg1|p_arg2 |p_arg1?|
+|true  |8      |false  |
+
+!|execute|!-
+create or replace procedure p_bool_mix(p_arg1 in out BOOLEAN, p_arg2 in BOOLEAN, p_arg3 out BOOLEAN, p_arg4 in out NUMBER)
+is
+begin
+    p_arg1 := not p_arg1;
+    p_arg3 := p_arg2;
+    p_arg4 := p_arg4 + 1;
+end p_bool_mix;
+-!|
+
+!|execute procedure|p_bool_mix|
+|p_arg1|p_arg1?|p_arg2|p_arg3?|p_arg4|p_arg4?|
+|false |true   |true  |true   |4     |5      |
+
+###
+!2 Functions returning boolean
+!|execute|create or replace function f_true return number is begin return true; end f_true;|
+
+!|execute procedure|f_true|
+|?   |
+|true|
+

@@ -22,6 +22,7 @@ public class OracleBooleanSpCommandTest {
     private static final String SP_PROC_BOOL_OUT = "proc_3_bool_out";
     private static final String SP_PROC_BOOL_OUT_BOOL_IN = "proc_4_bool_out_bool_in";
     private static final String SP_PROC_BOOL_INOUT = "proc_5_bool_inout";
+    private static final String SP_F_RET_BOOL = "f_ret_true";
 
     private SpGeneratorOutput output;
     private OracleBooleanSpTestsFactory factory;
@@ -112,6 +113,13 @@ public class OracleBooleanSpCommandTest {
                 .withArgument(INPUT_OUTPUT, "NUMBER")
                 .withReturnValue("NUMBER"),
                 "func_6_1_bool_in_1_num_inout_ret_num.pls");
+    }
+
+    @Test
+    public void functionRetBooleanTest() throws IOException {
+        verifyGeneratedWrapperWithSavedResource(getCmdBuilder(SP_F_RET_BOOL)
+                .withReturnValue("BOOLEAN"),
+                "func_8_ret_true.pls");
     }
 
     @Test
