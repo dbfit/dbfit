@@ -161,6 +161,14 @@ public class OracleBooleanSpCommandTest {
     }
 
     @Test
+    public void functionBoolInoutRetBoolTest() throws IOException {
+        verifyGeneratedWrapperWithSavedResource(getCmdBuilder(SP_F_BOOL_INOUT_RET_BOOL)
+                .withBooleanArgument(INPUT_OUTPUT)
+                .withReturnValue("BOOLEAN"),
+                "func_11_bool_inout_ret_bool.pls");
+    }
+
+    @Test
     public void wrapperCallProcedureWithBooleanAndNumInputsTest() {
         verifyGeneratedWrapperCallVsExpectedResult(getCmdBuilder(SP_PROC_2)
                 .withBooleanArgument(INPUT)
