@@ -171,7 +171,7 @@ public class OracleBooleanSpCommandTest {
         verifyGeneratedWrapperCallVsExpectedResult(getCmdBuilder(SP_F_BOOL_OUT_RET_BOOL)
             .withBooleanArgument(OUTPUT)
             .withReturnValue("BOOLEAN"),
-            "? := t_bool2chr( " + SP_F_BOOL_OUT_RET_BOOL + "( ? ) )");
+            "? := t_bool2chr( t_wrapper( ? ) )");
     }
 
     @Test
@@ -179,7 +179,7 @@ public class OracleBooleanSpCommandTest {
         verifyGeneratedWrapperCallVsExpectedResult(getCmdBuilder(SP_F_BOOL_INOUT_RET_BOOL)
             .withBooleanArgument(OUTPUT)
             .withReturnValue("BOOLEAN"),
-            "? := t_bool2chr( " + SP_F_BOOL_INOUT_RET_BOOL + "( ? ) )");
+            "? := t_bool2chr( t_wrapper( ? ) )");
     }
 
     @Test
