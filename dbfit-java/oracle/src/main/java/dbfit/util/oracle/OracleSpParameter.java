@@ -149,7 +149,8 @@ public class OracleSpParameter {
     }
 
     public String getWrapperVarName() {
-        return prefixed("v_" + id + "_" + getShortDirectionName());
+        String varid = isReturnValue() ? "" : id + "_";
+        return prefixed("v_" + varid + getShortDirectionName());
     }
 
     public String toString() {
@@ -186,7 +187,7 @@ public class OracleSpParameter {
     }
 
     public void declareVariable() {
-        if (needsArgumentTypeChange()) {
+        if (needsArgumentTypeChange() || isReturnValue()) {
             out.append("        ")
                 .append(getWrapperVarName())
                 .append(" ").append(getDataType());

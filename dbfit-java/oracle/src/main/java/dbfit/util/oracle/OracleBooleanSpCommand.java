@@ -34,7 +34,7 @@ public class OracleBooleanSpCommand {
         this.returnValue = returnValue;
 
         initPrefix();
-        initArgsPrefixes();
+        initPrefixes();
         initParameterIds();
     }
 
@@ -58,6 +58,17 @@ public class OracleBooleanSpCommand {
         for (OracleSpParameter arg: arguments) {
             arg.setId("p" + i);
             ++i;
+        }
+    }
+
+    private void initPrefixes() {
+        initArgsPrefixes();
+        initReturnValuePrefix();
+    }
+
+    private void initReturnValuePrefix() {
+        if (isFunction()) {
+            returnValue.setPrefix(prefix);
         }
     }
 
@@ -91,7 +102,7 @@ public class OracleBooleanSpCommand {
         }
 
         this.prefix = prefix;
-        initArgsPrefixes();
+        initPrefixes();
     }
 
     public void setOutput(SpGeneratorOutput out) {
@@ -300,7 +311,7 @@ public class OracleBooleanSpCommand {
     }
 
     private void declareReturnValueVar() {
-        if (returnValue != null) {
+        if (isFunction()) {
             returnValue.declareVariable();
         }
     }
