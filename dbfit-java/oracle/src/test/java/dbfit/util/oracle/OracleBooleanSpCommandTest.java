@@ -23,6 +23,9 @@ public class OracleBooleanSpCommandTest {
     private static final String SP_PROC_BOOL_OUT_BOOL_IN = "proc_4_bool_out_bool_in";
     private static final String SP_PROC_BOOL_INOUT = "proc_5_bool_inout";
     private static final String SP_F_RET_BOOL = "f_ret_true";
+    private static final String SP_F_BOOL_IN_RET_BOOL = "f_bool_in_ret_bool";
+    private static final String SP_F_BOOL_OUT_RET_BOOL = "f_bool_out_ret_bool";
+    private static final String SP_F_BOOL_INOUT_RET_BOOL = "f_bool_inout_ret_bool";
 
     private SpGeneratorOutput output;
     private OracleBooleanSpTestsFactory factory;
@@ -42,9 +45,18 @@ public class OracleBooleanSpCommandTest {
         return factory.getSpCommandBuilder(procName);
     }
 
+    private void verifyGeneratedWrapperCallVsExpectedResult(
+                OracleBooleanSpTestsFactory.OracleSpCommandBuilder builder,
+                String expectedResult) {
+        OracleBooleanSpCommand command = builder.withPrefix("t").build();
+        String actual = command.getWrapperCall();
+
+        assertEquals(expectedResult, actual);
+    }
+
     private void verifyGeneratedWrapperWithExpectedResult(
                 OracleBooleanSpTestsFactory.OracleSpCommandBuilder builder,
-                String expectedResult) throws IOException {
+                String expectedResult) {
         OracleBooleanSpCommand command = builder.withPrefix("t").build();
 
         command.generate();
@@ -122,32 +134,52 @@ public class OracleBooleanSpCommandTest {
                 "func_8_ret_true.pls");
     }
 
+
     @Test
-    public void wrapperCallProcedureWithBooleanAndNumInputsTest() throws IOException {
-        OracleBooleanSpCommand command = getCmdBuilder(SP_PROC_2)
+    public void wrapperCallProcedureWithBooleanAndNumInputsTest() {
+        verifyGeneratedWrapperCallVsExpectedResult(getCmdBuilder(SP_PROC_2)
                 .withBooleanArgument(INPUT)
-                .withArgument(INPUT, "NUMBER")
-                .withPrefix("t")
-                .build();
-
-        String actual = command.getWrapperCall();
-        String expectedResult = SP_PROC_2 + "( t_chr2bool( ? ), ? )";
-
-        assertEquals(expectedResult, actual);
+                .withArgument(INPUT, "NUMBER"),
+                SP_PROC_2 + "( t_chr2bool( ? ), ? )");
     }
 
     @Test
-    public void wrapperCallFunctionWithBooleanInAndNumReturnTest() throws IOException {
-        OracleBooleanSpCommand command = getCmdBuilder(SP_F_BOOL_IN_RET_NUM)
+    public void wrapperCallFunctionWithBooleanInAndNumReturnTest() {
+        verifyGeneratedWrapperCallVsExpectedResult(getCmdBuilder(SP_F_BOOL_IN_RET_NUM)
             .withBooleanArgument(INPUT)
-            .withReturnValue("NUMBER")
-            .withPrefix("t")
-            .build();
+            .withReturnValue("NUMBER"),
+            "? := " + SP_F_BOOL_IN_RET_NUM + "( t_chr2bool( ? ) )");
+    }
 
-        String actual = command.getWrapperCall();
-        String expectedResult = "? := " + SP_F_BOOL_IN_RET_NUM + "( t_chr2bool( ? ) )";
+    @Test
+    public void wrapperCallFunctionWithBooleanReturnTest() {
+        verifyGeneratedWrapperCallVsExpectedResult(getCmdBuilder(SP_F_RET_BOOL)
+            .withReturnValue("BOOLEAN"),
+            "? := t_bool2chr( " + SP_F_RET_BOOL + "() )");
+    }
 
-        assertEquals(expectedResult, actual);
+    @Test
+    public void wrapperCallFunctionWithBooleanInBooleanReturnTest() {
+        verifyGeneratedWrapperCallVsExpectedResult(getCmdBuilder(SP_F_BOOL_IN_RET_BOOL)
+            .withBooleanArgument(INPUT)
+            .withReturnValue("BOOLEAN"),
+            "? := t_bool2chr( " + SP_F_BOOL_IN_RET_BOOL + "( t_chr2bool( ? ) ) )");
+    }
+
+    @Test
+    public void wrapperCallFunctionWithBooleanOutBooleanReturnTest() {
+        verifyGeneratedWrapperCallVsExpectedResult(getCmdBuilder(SP_F_BOOL_OUT_RET_BOOL)
+            .withBooleanArgument(OUTPUT)
+            .withReturnValue("BOOLEAN"),
+            "? := t_bool2chr( " + SP_F_BOOL_OUT_RET_BOOL + "( ? ) )");
+    }
+
+    @Test
+    public void wrapperCallFunctionWithBooleanInoutBooleanReturnTest() {
+        verifyGeneratedWrapperCallVsExpectedResult(getCmdBuilder(SP_F_BOOL_INOUT_RET_BOOL)
+            .withBooleanArgument(OUTPUT)
+            .withReturnValue("BOOLEAN"),
+            "? := t_bool2chr( " + SP_F_BOOL_INOUT_RET_BOOL + "( ? ) )");
     }
 
     @Test
