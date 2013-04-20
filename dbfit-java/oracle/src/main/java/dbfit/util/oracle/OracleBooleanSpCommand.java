@@ -317,7 +317,12 @@ public class OracleBooleanSpCommand {
 
     public void genWrapperCall() {
         genSpCallLeftSide(isFunction() ? "?" : null);
-        out.append(callExpr(getWrapperName(), getWrapperCallArguments()));
+        String callText = callExpr(getWrapperName(), getWrapperCallArguments());
+        if (hasBooleanReturn()) {
+            callText = callExpr(getPrefix() + "_bool2chr", callText);
+        }
+
+        out.append(callText);
     }
 
     private String getSpKind() {
