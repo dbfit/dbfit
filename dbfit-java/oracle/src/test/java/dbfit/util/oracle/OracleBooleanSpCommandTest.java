@@ -165,7 +165,7 @@ public class OracleBooleanSpCommandTest {
         verifyGeneratedWrapperWithSavedResource(getCmdBuilder(SP_F_BOOL_INOUT_RET_BOOL)
                 .withBooleanArgument(INPUT_OUTPUT)
                 .withReturnValue("BOOLEAN"),
-                "func_11_bool_inout_ret_bool.pls");
+                "func_12_bool_inout_ret_bool.pls");
     }
 
     @Test
