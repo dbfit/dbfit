@@ -64,6 +64,10 @@ public class OracleSpParameter {
         return false;
     }
 
+    private boolean isInput() {
+        return getDirection() == INPUT;
+    }
+
     public boolean isBooleanInOrInout() {
         return isBoolean() && isInOrInout();
     }
@@ -185,7 +189,7 @@ public class OracleSpParameter {
     }
 
     public void genWrapperCallArgument(String varname) {
-        if (isBoolean() && !isOutputOrReturnValue()) {
+        if (isBoolean() && isInput()) {
             out.append(chr2bool(varname));
         } else {
             out.append(varname);
