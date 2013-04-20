@@ -64,7 +64,7 @@ public class OracleSpParameter {
         return false;
     }
 
-    public boolean isBooleanInOrInOut() {
+    public boolean isBooleanInOrInout() {
         return isBoolean() && isInOrInout();
     }
 

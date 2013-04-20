@@ -118,11 +118,11 @@ public class OracleBooleanSpCommand {
         return isBooleanOutputOrReturn(returnValue);
     }
 
-    private boolean hasBooleanOutputOrReturn() {
-        return hasBooleanReturn() || hasBooleanOutOrInOut();
+    private boolean hasBooleanOutOrInoutOrReturn() {
+        return hasBooleanReturn() || hasBooleanOutOrInout();
     }
 
-    private boolean hasBooleanOutOrInOut() {
+    private boolean hasBooleanOutOrInout() {
         for (OracleSpParameter arg: arguments) {
             if (isBooleanOutputOrReturn(arg)) {
                 return true;
@@ -133,12 +133,12 @@ public class OracleBooleanSpCommand {
     }
 
     private boolean needsWrapperSp() {
-        return hasBooleanOutOrInOut();
+        return hasBooleanOutOrInout();
     }
 
-    private boolean hasBooleanInput() {
+    private boolean hasBooleanInOrInout() {
         for (OracleSpParameter arg: arguments) {
-            if (arg.isBooleanInOrInOut()) {
+            if (arg.isBooleanInOrInout()) {
                 return true;
             }
         }
@@ -146,32 +146,29 @@ public class OracleBooleanSpCommand {
         return false;
     }
 
+    private boolean needsChr2Bool() {
+        return hasBooleanInOrInout();
+    }
+
+    private boolean needsBool2Chr() {
+        return hasBooleanOutOrInoutOrReturn();
+    }
+
     /**
      * Generate the whole database call on the configured SpGeneratorOutput
      */
     public void generate() {
-        if (hasBooleanOutputOrReturn()) {
-            generateWithBooleanOutput();
-        } else {
-            generateWithoutBooleanOutput();
-        }
-    }
-
-    private void generateWithoutBooleanOutput() {
         out.append("declare\n");
-        out.append(getChr2Bool());
+        genBool2Chr();
+        genChr2Bool();
+        genWrapperSp();
         out.append("begin\n");
         out.append("    ").append(getWrapperCall()).append(";\n");
         out.append("end;\n");
         out.append("\n");
     }
 
-    private void generateWithBooleanOutput() {
-        out.append("declare\n");
-        out.append(getBool2Chr());
-        if (hasBooleanInput()) {
-            out.append(getChr2Bool());
-        }
+    private void genWrapperSp() {
         if (needsWrapperSp()) {
             out.append(getWrapperHeader()).append("\n");
             out.append("    is\n");
@@ -184,10 +181,6 @@ public class OracleBooleanSpCommand {
             out.append("    end ").append(getWrapperName()).append(";\n");
             out.append("\n");
         }
-        out.append("begin\n");
-        out.append("    ").append(getWrapperCall()).append(";\n");
-        out.append("end;\n");
-        out.append("\n");
     }
 
     protected void callWhitespace() {
@@ -220,6 +213,18 @@ public class OracleBooleanSpCommand {
     private String getBool2Chr() {
         String template = loadBool2ChrTemplate();
         return template.replace("${prefix}", getPrefix());
+    }
+
+    private void genChr2Bool() {
+        if (needsChr2Bool()) {
+            out.append(getChr2Bool());
+        }
+    }
+
+    private void genBool2Chr() {
+        if (needsBool2Chr()) {
+            out.append(getBool2Chr());
+        }
     }
 
     public void genWrapperCallArguments() {
@@ -329,7 +334,7 @@ public class OracleBooleanSpCommand {
     }
 
     protected void genWrapperDefinition() {
-        if (!hasBooleanOutputOrReturn()) {
+        if (!needsWrapperSp()) {
             return;
         }
 
@@ -338,7 +343,7 @@ public class OracleBooleanSpCommand {
     }
 
     private String getWrapperName() {
-        if (hasBooleanOutputOrReturn()) {
+        if (needsWrapperSp()) {
             return getPrefix() + "_wrapper";
         } else {
             // no need of real wrapper sp
