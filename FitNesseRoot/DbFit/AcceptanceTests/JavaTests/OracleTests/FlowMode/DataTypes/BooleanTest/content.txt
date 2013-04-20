@@ -198,3 +198,45 @@ is begin p_arg := p_arg - 1; if (p_arg = 7) then return true; end if; return fal
 |8    |true|7     |
 ----
 
+###
+!2 Functions with boolean out or in/out parameters
+!|execute|!- create or replace function f_bool_out_ret_bool(p_arg out boolean) return boolean is begin p_arg := false; return true; end f_bool_out_ret_bool; -!|
+
+!|execute procedure|f_bool_out_ret_bool|
+|p_arg|?   |
+|false|true|
+----
+
+!|execute|!- create or replace function f_bool_inout_ret_bool(p_arg in out boolean) return boolean is begin p_arg := not p_arg; return p_arg; end f_bool_inout_ret_bool; -!|
+
+!|execute procedure|f_bool_inout_ret_bool|
+|p_arg?|p_arg|?   |
+|false |true |true|
+----
+
+## Mix of all booleans
+!|execute|!-
+create or replace function f_bool_in_bool_inout_ret_bool(p_arg1 in boolean, p_arg in out boolean) return boolean is
+begin
+    p_arg := not p_arg;
+    return p_arg1;
+end f_bool_in_bool_inout_ret_bool;
+-!|
+
+!|execute procedure|f_bool_inout_ret_bool|
+|p_arg?|p_arg|?    |p_arg1|
+|true  |false|false|false |
+
+!3 Returning non-bool
+!|execute|!-
+create or replace function f_bool_out_ret_num(p_arg out boolean) return number is
+begin
+    p_arg := true;
+    return 8;
+end f_bool_out_ret_num;
+-!|
+
+!|execute procedure|f_bool_out_ret_num|
+|p_arg?|?|
+|true  |8|
+
