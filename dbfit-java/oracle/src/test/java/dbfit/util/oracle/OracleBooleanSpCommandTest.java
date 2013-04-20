@@ -27,6 +27,7 @@ public class OracleBooleanSpCommandTest {
     private static final String SP_F_BOOL_OUT_RET_BOOL = "f_bool_out_ret_bool";
     private static final String SP_F_BOOL_INOUT_RET_BOOL = "f_bool_inout_ret_bool";
     private static final String SP_F_BOOL_OUT_RET_NUM = "f_bool_out_ret_num";
+    private static final String SP_F_BOOL_ALL_CHR_IN_NUM_INOUT_RET_BOOL = "f_bool_all_mix_ret_bool";
 
     private SpGeneratorOutput output;
     private OracleBooleanSpTestsFactory factory;
@@ -174,6 +175,18 @@ public class OracleBooleanSpCommandTest {
                 .withBooleanArgument(INPUT_OUTPUT)
                 .withReturnValue("BOOLEAN"),
                 "func_12_bool_inout_ret_bool.pls");
+    }
+
+    @Test
+    public void functionBoolAllMixRetBoolTest() throws IOException {
+        verifyGeneratedWrapperWithSavedResource(getCmdBuilder(SP_F_BOOL_ALL_CHR_IN_NUM_INOUT_RET_BOOL)
+                .withBooleanArgument(INPUT)
+                .withBooleanArgument(OUTPUT)
+                .withBooleanArgument(INPUT_OUTPUT)
+                .withArgument(INPUT, "VARCHAR2")
+                .withArgument(INPUT_OUTPUT, "NUMBER")
+                .withReturnValue("BOOLEAN"),
+                "func_13_bool_all_mix_ret_bool.pls");
     }
 
     @Test
