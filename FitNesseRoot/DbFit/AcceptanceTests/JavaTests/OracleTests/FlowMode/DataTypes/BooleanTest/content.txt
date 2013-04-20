@@ -13,16 +13,16 @@
 |false     |0|
 
 ## Try an in-out non-boolean
-!|execute|create or replace function f_bool_3(p_in in VARCHAR2, p_inout in out NUMBER) return number is begin p_inout := p_inout * 2; return length(p_in); end f_bool_3;|
+!|execute|create or replace function f_bool_3(p_in in BOOLEAN, p_inout in out NUMBER) return number is begin p_inout := p_inout * 2; if (p_in) then return 1; else return 0; end if; end f_bool_3;|
 
 !|execute procedure|f_bool_3|
 |p_in|p_inout|p_inout?|?|
-|crap|7      |14      |4|
+|true|7      |14      |1|
 
 # Twisting order of attribute to make sure it's handled correctly
 !|execute procedure|f_bool_3|
-|?|p_inout|p_inout?|?|p_in|
-|4|7      |14      |4|crap|
+|?|p_inout?|p_inout|p_in |
+|0|12      |6      |false|
 
 ###
 !2 Procedure with boolean output arguments
