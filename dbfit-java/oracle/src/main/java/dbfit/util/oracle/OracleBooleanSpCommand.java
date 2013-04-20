@@ -114,11 +114,15 @@ public class OracleBooleanSpCommand {
             && param.isOutputOrReturnValue();
     }
 
-    private boolean hasBooleanOutputOrReturn() {
-        if (isBooleanOutputOrReturn(returnValue)) {
-            return true;
-        }
+    private boolean hasBooleanReturn() {
+        return isBooleanOutputOrReturn(returnValue);
+    }
 
+    private boolean hasBooleanOutputOrReturn() {
+        return hasBooleanReturn() || hasBooleanOutOrInOut();
+    }
+
+    private boolean hasBooleanOutOrInOut() {
         for (OracleSpParameter arg: arguments) {
             if (isBooleanOutputOrReturn(arg)) {
                 return true;
@@ -126,6 +130,10 @@ public class OracleBooleanSpCommand {
         }
 
         return false;
+    }
+
+    private boolean needsWrapperSp() {
+        return hasBooleanOutOrInOut();
     }
 
     private boolean hasBooleanInput() {
@@ -164,16 +172,18 @@ public class OracleBooleanSpCommand {
         if (hasBooleanInput()) {
             out.append(getChr2Bool());
         }
-        out.append(getWrapperHeader()).append("\n");
-        out.append("    is\n");
-        genWrapperVariables();
-        out.append("    begin\n");
-        out.append("        ");
-        genSpCallWithinWrapper();
-        out.append(";\n");
-        assignOutputVariables();
-        out.append("    end ").append(getWrapperName()).append(";\n");
-        out.append("\n");
+        if (needsWrapperSp()) {
+            out.append(getWrapperHeader()).append("\n");
+            out.append("    is\n");
+            genWrapperVariables();
+            out.append("    begin\n");
+            out.append("        ");
+            genSpCallWithinWrapper();
+            out.append(";\n");
+            assignOutputVariables();
+            out.append("    end ").append(getWrapperName()).append(";\n");
+            out.append("\n");
+        }
         out.append("begin\n");
         out.append("    ").append(getWrapperCall()).append(";\n");
         out.append("end;\n");
@@ -278,27 +288,17 @@ public class OracleBooleanSpCommand {
     }
 
     private String getWrapperReturnVar() {
-        if (hasBooleanOutputOrReturn()) {
-            return returnValue.getWrapperVarName();
-        } else {
-            return "?";
-        }
+        return isFunction() ? returnValue.getWrapperVarName() : null;
     }
 
-    private void genWrapperCallLeftSide() {
-        if (isFunction()) {
-            out.append(getWrapperReturnVar()).append(" := ");
-        }
-    }
-
-    private void genSpCallLeftSide() {
-        if (isFunction()) {
-            out.append(getWrapperReturnVar()).append(" := ");
+    private void genSpCallLeftSide(String var) {
+        if (var != null) {
+            out.append(var).append(" := ");
         }
     }
 
     public void genSpCallWithinWrapper() {
-        genWrapperCallLeftSide();
+        genSpCallLeftSide(getWrapperReturnVar());
 
         out.append(procName);
         out.append("(");
@@ -307,7 +307,7 @@ public class OracleBooleanSpCommand {
     }
 
     public void genWrapperCall() {
-        genWrapperCallLeftSide();
+        genSpCallLeftSide(isFunction() ? "?" : null);
 
         out.append(getWrapperName());
         out.append("(");
