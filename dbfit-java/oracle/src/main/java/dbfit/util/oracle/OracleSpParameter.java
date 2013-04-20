@@ -34,6 +34,10 @@ public class OracleSpParameter {
     protected int getDirection() {
         return direction;
     }
+
+    public void setDirection(int direction) {
+        this.direction = direction;
+    }
     
     public boolean isReturnValue() {
         return getDirection() == RETURN_VALUE;

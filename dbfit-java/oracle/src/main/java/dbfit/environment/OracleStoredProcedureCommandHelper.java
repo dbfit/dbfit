@@ -14,11 +14,23 @@ import java.util.ArrayList;
 
 public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommandHelper { 
 
+    private void addAccessor(Map<String, DbParameterAccessor> map, DbParameterAccessor acc) {
+        DbParameterAccessor prevAcc = map.get(acc.getName());
+        if (prevAcc != null) {
+            // Duplicated parameters are indication for single IN/OUT one.
+            // So merging them here.
+            prevAcc.setDirection(DbParameterAccessor.INPUT_OUTPUT);
+        } else {
+            // Put a copy - we don't want to change shared state
+            map.put(acc.getName(), new DbParameterAccessor(acc));
+        }
+    }
+
     private Map<String, DbParameterAccessor> getAccessorsMap(
             DbParameterAccessor[] accessors) {
         Map<String, DbParameterAccessor> map = new HashMap<String, DbParameterAccessor>();
         for (DbParameterAccessor ac: accessors) {
-            map.put(ac.getName(), ac);
+            addAccessor(map, ac);
         }
 
         return map;
