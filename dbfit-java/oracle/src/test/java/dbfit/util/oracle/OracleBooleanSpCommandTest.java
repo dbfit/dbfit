@@ -18,6 +18,7 @@ public class OracleBooleanSpCommandTest {
     private static final String SP_PROC_1 = "proc_1";
     private static final String SP_PROC_2 = "proc_2";
     private static final String SP_F_BOOL_IN_RET_NUM = "f_bool_in_ret_num";
+    private static final String SP_F_BOOL_IN_NUM_INOUT_RET_NUM = "f_bool_in_num_inout_ret_num";
     private static final String SP_PROC_BOOL_OUT = "proc_3_bool_out";
     private static final String SP_PROC_BOOL_OUT_BOOL_IN = "proc_4_bool_out_bool_in";
     private static final String SP_PROC_BOOL_INOUT = "proc_5_bool_inout";
@@ -94,6 +95,23 @@ public class OracleBooleanSpCommandTest {
         verifyGeneratedWrapperWithSavedResource(getCmdBuilder(SP_PROC_BOOL_INOUT)
                 .withBooleanArgument(INPUT_OUTPUT),
                 "proc_5_1_bool_inout.pls");
+    }
+
+    @Test
+    public void functionWithBooleanInRetNumTest() throws IOException {
+        verifyGeneratedWrapperWithSavedResource(getCmdBuilder(SP_F_BOOL_IN_RET_NUM)
+                .withBooleanArgument(INPUT)
+                .withReturnValue("NUMBER"),
+                "func_7_1_bool_in_ret_num.pls");
+    }
+
+    @Test
+    public void functionWithBooleanInNumInoutRetNumTest() throws IOException {
+        verifyGeneratedWrapperWithSavedResource(getCmdBuilder(SP_F_BOOL_IN_NUM_INOUT_RET_NUM)
+                .withBooleanArgument(INPUT)
+                .withArgument(INPUT_OUTPUT, "NUMBER")
+                .withReturnValue("NUMBER"),
+                "func_6_1_bool_in_1_num_inout_ret_num.pls");
     }
 
     @Test
