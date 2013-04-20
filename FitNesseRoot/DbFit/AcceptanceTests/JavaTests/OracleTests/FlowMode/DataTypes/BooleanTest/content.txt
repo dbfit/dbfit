@@ -174,10 +174,27 @@ end p_bool_mix;
 |false |true   |true  |true   |4     |5      |
 
 ###
-!2 Functions returning boolean
-!|execute|create or replace function f_true return number is begin return true; end f_true;|
+!2 Functions returning boolean (without boolean output params)
+!|execute|create or replace function f_true return boolean is begin return true; end f_true;|
 
 !|execute procedure|f_true|
 |?   |
 |true|
+----
+
+!|execute|create or replace function f_bool_in_ret_bool(p_arg in boolean) return boolean is begin return p_arg; end f_bool_in_ret_bool;|
+
+!|execute procedure|f_bool_in_ret_bool|
+|p_arg|?   |
+|true |true|
+----
+
+!|execute|!-
+create or replace function f_num_inout_ret_bool(p_arg in out number) return boolean
+is begin p_arg := p_arg - 1; if (p_arg = 7) then return true; end if; return false; end f_num_inout_ret_bool; -!|
+
+!|execute procedure|f_num_inout_ret_bool|
+|p_arg|?   |p_arg?|
+|8    |true|7     |
+----
 
