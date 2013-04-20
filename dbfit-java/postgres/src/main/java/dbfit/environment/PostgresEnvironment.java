@@ -1,17 +1,18 @@
 package dbfit.environment;
 
+import dbfit.annotations.DatabaseEnvironment;
+import dbfit.api.AbstractDbEnvironment;
+import dbfit.util.DbParameterAccessor;
+import dbfit.util.DbResultSetValueAccessor;
+import dbfit.util.NameNormaliser;
+
+import javax.sql.RowSet;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.regex.Pattern;
 import java.util.*;
-
-import javax.sql.RowSet;
-
-import dbfit.api.AbstractDbEnvironment;
-import dbfit.util.*;
-import dbfit.annotations.DatabaseEnvironment;
+import java.util.regex.Pattern;
 
 @DatabaseEnvironment(name="Postgres", driver="org.postgresql.Driver")
 public class PostgresEnvironment extends AbstractDbEnvironment {
@@ -94,7 +95,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
     // map types
     private static List<String> stringTypes = Arrays.asList(new String[] {
             "VARCHAR", "CHAR", "CHARACTER", "CHARACTER VARYING", "TEXT",
-            "NAME", "XML", "BPCHAR" });
+            "NAME", "XML", "BPCHAR", "UNKNOWN" });
     private static List<String> intTypes = Arrays.asList(new String[] {
             "SMALLINT", "INT", "INT4", "INT2", "INTEGER", "SERIAL" });
     private static List<String> longTypes = Arrays.asList(new String[] {
