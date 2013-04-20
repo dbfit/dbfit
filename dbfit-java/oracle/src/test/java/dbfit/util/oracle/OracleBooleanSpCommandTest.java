@@ -144,6 +144,21 @@ public class OracleBooleanSpCommandTest {
                 "func_8_ret_true.pls");
     }
 
+    @Test
+    public void functionBoolInRetBoolTest() throws IOException {
+        verifyGeneratedWrapperWithSavedResource(getCmdBuilder(SP_F_BOOL_IN_RET_BOOL)
+                .withBooleanArgument(INPUT)
+                .withReturnValue("BOOLEAN"),
+                "func_9_bool_in_ret_bool.pls");
+    }
+
+    @Test
+    public void functionBoolOutRetBoolTest() throws IOException {
+        verifyGeneratedWrapperWithSavedResource(getCmdBuilder(SP_F_BOOL_OUT_RET_BOOL)
+                .withBooleanArgument(OUTPUT)
+                .withReturnValue("BOOLEAN"),
+                "func_10_bool_out_ret_bool.pls");
+    }
 
     @Test
     public void wrapperCallProcedureWithBooleanAndNumInputsTest() {
