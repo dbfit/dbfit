@@ -7,7 +7,9 @@ show_comments: false
 <div class="row">
   <div class="sidebar span3">
     <ul id="sidenav" class="nav nav-list affix">
-      <li class="active"><a href="#working-with-parameters">Working with parameters</a></li>
+      <li class="active"><a href="#connect">Connect</a></li>
+      <li><a href="#connect-using-file">Connect Using File</a></li>
+      <li><a href="#working-with-parameters">Working with parameters</a></li>
       <li><a href="#query">Query</a></li>
       <li><a href="#insert">Insert</a></li>
       <li><a href="#update">Update</a></li>
@@ -24,6 +26,8 @@ show_comments: false
       <h1>Reference</h1>
     </div>
     <div markdown="1">
+{% include manual/connect.md %}
+{% include manual/connect-using-file.md %}
 {% include manual/working-with-parameters.md %}
 {% include manual/query.md %}
 {% include manual/insert.md %}
