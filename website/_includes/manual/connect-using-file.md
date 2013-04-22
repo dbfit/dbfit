@@ -2,7 +2,7 @@
 
 You can also store connection properties in a file, then initialise the connection using the `ConnectUsingFile` table. This allows you to hide actual database usernames and passwords from FitNesse users, should you need to do so.
 
-`ConnectUsingFile` has only one argument - the path of the file on the server, either absolute or relative to the folder from which you started FitNesse (the one containing `run.bat`). The connection properties file is a plain text file, containing key/value pairs separarted by the equals symbol (`=`). Lines starting with a hash (`#`) are ignored. Use the following keys (they care case-sensitive):
+`ConnectUsingFile` has only one argument - the path of the file on the server, either absolute or relative to the folder from which you started FitNesse (the one containing `startFitnesse`). The connection properties file is a plain text file, containing key/value pairs separarted by the equals symbol (`=`). Lines starting with a hash (`#`) are ignored. Use the following keys (they care case-sensitive):
 
  1. `service` - service name, eg `LAPTOP\SQLEXPRESS`. 
  2. `username` - username to connect to the database.
