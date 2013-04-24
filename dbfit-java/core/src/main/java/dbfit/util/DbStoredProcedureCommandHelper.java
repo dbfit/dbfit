@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DbStoredProcedureCommandHelper {
-    protected DbParameterAccessors accessorUtils = new DbParameterAccessors();
 
     public String buildPreparedStatementString(String procName, boolean isFunction, int numberOfAccessors) {
         StringBuilder ins = new StringBuilder("{ ");
@@ -26,15 +25,15 @@ public class DbStoredProcedureCommandHelper {
 
     public String buildPreparedStatementString(String procName,
             DbParameterAccessor[] accessors) {
-        List<String> accessorNames = accessorUtils.getSortedAccessorNames(accessors);
-        boolean isFunction = accessorUtils.containsReturnValue(accessors);
+        List<String> accessorNames = new DbParameterAccessors().getSortedAccessorNames(accessors);
+        boolean isFunction = new DbParameterAccessors().containsReturnValue(accessors);
 
         return buildPreparedStatementString(procName, isFunction, accessorNames.size());
     }
 
     public void bindParameters(PreparedStatement statement,
             DbParameterAccessor[] accessors) throws SQLException {
-        List<String> accessorNames = accessorUtils.getSortedAccessorNames(accessors);
+        List<String> accessorNames = new DbParameterAccessors().getSortedAccessorNames(accessors);
         for (DbParameterAccessor ac : accessors) {
             int realindex = accessorNames.indexOf(ac.getName());
             ac.bindTo(statement, realindex + 1); // jdbc params are 1-based

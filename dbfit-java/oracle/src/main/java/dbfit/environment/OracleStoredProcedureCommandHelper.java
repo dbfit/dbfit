@@ -1,8 +1,8 @@
 package dbfit.environment;
 
+import dbfit.util.DbParameterAccessors;
 import dbfit.util.DbStoredProcedureCommandHelper;
 import dbfit.util.DbParameterAccessor;
-import dbfit.util.DbStoredProcedureCommandHelper;
 import dbfit.util.oracle.OracleSpParameter;
 import dbfit.util.oracle.OracleBooleanSpCommand;
 import dbfit.util.oracle.SpGeneratorOutput;
@@ -56,7 +56,7 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
 
     private SpParamsSpec initSpParams(String procName,
                                     DbParameterAccessor[] accessors) {
-        List<String> accessorNames = accessorUtils.getSortedAccessorNames(accessors);
+        List<String> accessorNames = new DbParameterAccessors().getSortedAccessorNames(accessors);
         Map<String, DbParameterAccessor> accessorsMap = getAccessorsMap(accessors);
 
         SpParamsSpec params = new SpParamsSpec();
