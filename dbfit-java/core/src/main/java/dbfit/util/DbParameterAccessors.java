@@ -25,13 +25,9 @@ public class DbParameterAccessors {
         return nameList;
     }
 
-    public boolean isReturnValueAccessor(DbParameterAccessor ac) {
-        return (ac.getDirection() == DbParameterAccessor.RETURN_VALUE);
-    }
-
     public boolean containsReturnValue(DbParameterAccessor[] accessors) {
         for (DbParameterAccessor ac : accessors) {
-            if (isReturnValueAccessor(ac)) {
+            if (ac.isReturnValueAccessor()) {
                 return true;
             }
         }

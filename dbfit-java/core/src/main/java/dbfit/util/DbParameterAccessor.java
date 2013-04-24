@@ -130,5 +130,9 @@ public class DbParameterAccessor {
 
         return tagValue;
     }
+
+    public boolean isReturnValueAccessor() {
+        return (getDirection() == RETURN_VALUE);
+    }
 }
 
