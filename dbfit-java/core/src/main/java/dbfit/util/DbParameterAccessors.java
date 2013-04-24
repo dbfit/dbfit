@@ -3,9 +3,6 @@ package dbfit.util;
 import java.util.*;
 
 public class DbParameterAccessors {
-    public static DbParameterAccessors newInstance() {
-        return new DbParameterAccessors();
-    }
 
     private class PositionComparator implements Comparator<DbParameterAccessor> {
         public int compare(DbParameterAccessor o1, DbParameterAccessor o2) {

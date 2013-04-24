@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DbStoredProcedureCommandHelper {
-    protected DbParameterAccessors accessorUtils = DbParameterAccessors.newInstance();
+    protected DbParameterAccessors accessorUtils = new DbParameterAccessors();
 
     public String buildPreparedStatementString(String procName, boolean isFunction, int numberOfAccessors) {
         StringBuilder ins = new StringBuilder("{ ");
