@@ -1,10 +1,8 @@
 package dbfit.api;
 
 import dbfit.util.DbParameterAccessor;
-import dbfit.util.DbParameterAccessorUtils;
 import dbfit.util.NameNormaliser;
 
-import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;

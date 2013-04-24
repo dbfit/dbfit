@@ -1,13 +1,11 @@
 package dbfit.util;
 
-import dbfit.util.DbParameterAccessorUtils;
-
 import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DbStoredProcedureCommandHelper {
-    protected DbParameterAccessorUtils accessorUtils = DbParameterAccessorUtils.newInstance();
+    protected DbParameterAccessors accessorUtils = DbParameterAccessors.newInstance();
 
     public String buildPreparedStatementString(String procName, boolean isFunction, int numberOfAccessors) {
         StringBuilder ins = new StringBuilder("{ ");

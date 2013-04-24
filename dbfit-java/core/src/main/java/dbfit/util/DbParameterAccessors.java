@@ -1,12 +1,10 @@
 package dbfit.util;
 
-import dbfit.util.DbParameterAccessor;
-
 import java.util.*;
 
-public class DbParameterAccessorUtils {
-    public static DbParameterAccessorUtils newInstance() {
-        return new DbParameterAccessorUtils();
+public class DbParameterAccessors {
+    public static DbParameterAccessors newInstance() {
+        return new DbParameterAccessors();
     }
 
     private class PositionComparator implements Comparator<DbParameterAccessor> {
