@@ -56,7 +56,7 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
 
     private SpParamsSpec initSpParams(String procName,
                                     DbParameterAccessor[] accessors) {
-        List<String> accessorNames = new DbParameterAccessors().getSortedAccessorNames(accessors);
+        List<String> accessorNames = new DbParameterAccessors(accessors).getSortedAccessorNames();
         Map<String, DbParameterAccessor> accessorsMap = getAccessorsMap(accessors);
 
         SpParamsSpec params = new SpParamsSpec();
