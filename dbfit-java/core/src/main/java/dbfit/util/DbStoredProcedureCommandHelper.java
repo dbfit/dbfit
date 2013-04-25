@@ -1,8 +1,11 @@
 package dbfit.util;
 
-import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
+
+import static dbfit.util.LangUtils.join;
+import static dbfit.util.LangUtils.repeat;
 
 public class DbStoredProcedureCommandHelper {
 
@@ -13,11 +16,7 @@ public class DbStoredProcedureCommandHelper {
         }
         ins.append("call ").append(procName);
         ins.append("(");
-        for (int i = (isFunction ? 1 : 0); i < numberOfAccessors; i++) {
-            ins.append("?");
-            if (i < numberOfAccessors - 1)
-                ins.append(",");
-        }
+        ins.append(join(repeat("?", (isFunction ? numberOfAccessors - 1 : numberOfAccessors)), ","));
         ins.append(")");
         ins.append("}");
         return ins.toString();
