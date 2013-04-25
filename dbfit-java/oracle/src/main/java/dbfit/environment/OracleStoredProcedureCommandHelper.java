@@ -12,7 +12,19 @@ import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 
-public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommandHelper { 
+public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommandHelper {
+
+    @Override
+    public String buildPreparedStatementString(String procName,
+                                               DbParameterAccessor[] accessors) {
+        if (!containsBooleanType(accessors)) {
+            return super.buildPreparedStatementString(procName, accessors);
+        }
+
+        OracleBooleanSpCommand command = initSpCommand(procName, accessors);
+        command.generate();
+        return command.toString();
+    }
 
     private void addAccessor(Map<String, DbParameterAccessor> map, DbParameterAccessor acc) {
         DbParameterAccessor prevAcc = map.get(acc.getName());
@@ -40,11 +52,10 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
         return OracleSpParameter.newInstance(
                 ac.getName(), ac.getDirection(), ac.getTag("ORIGINAL_DB_TYPE"));
     }
-
     private static class SpParamsSpec {
         public List<OracleSpParameter> arguments = new ArrayList<OracleSpParameter>();
-        public OracleSpParameter returnValue = null;
 
+        public OracleSpParameter returnValue = null;
         public void add(OracleSpParameter param) {
             if (param.isReturnValue()) {
                 returnValue = param;
@@ -52,6 +63,7 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
                 arguments.add(param);
             }
         }
+
     }
 
     private SpParamsSpec initSpParams(String procName,
@@ -77,18 +89,6 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
         command.setOutput(new SpGeneratorOutput());
 
         return command;
-    }
-
-    @Override
-    public String buildPreparedStatementString(String procName,
-            DbParameterAccessor[] accessors) {
-        if (!containsBooleanType(accessors)) {
-            return super.buildPreparedStatementString(procName, accessors);
-        }
-
-        OracleBooleanSpCommand command = initSpCommand(procName, accessors);
-        command.generate();
-        return command.toString();
     }
 
     private boolean isBooleanAccessor(DbParameterAccessor accessor) {
