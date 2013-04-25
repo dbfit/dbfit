@@ -4,30 +4,23 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-import static dbfit.util.LangUtils.join;
-import static dbfit.util.LangUtils.repeat;
+import static dbfit.util.sql.PreparedStatements.buildFunctionCall;
+import static dbfit.util.sql.PreparedStatements.buildStoredProcedureCall;
 
 public class DbStoredProcedureCommandHelper {
-
-    public String buildPreparedStatementString(String procName, boolean isFunction, int numberOfAccessors) {
-        StringBuilder ins = new StringBuilder("{ ");
-        if (isFunction) {
-            ins.append("? =");
-        }
-        ins.append("call ").append(procName);
-        ins.append("(");
-        ins.append(join(repeat("?", (isFunction ? numberOfAccessors - 1 : numberOfAccessors)), ","));
-        ins.append(")");
-        ins.append("}");
-        return ins.toString();
-    }
 
     public String buildPreparedStatementString(String procName,
             DbParameterAccessor[] accessors) {
         List<String> accessorNames = new DbParameterAccessors(accessors).getSortedAccessorNames();
         boolean isFunction = new DbParameterAccessors(accessors).containsReturnValue();
 
-        return buildPreparedStatementString(procName, isFunction, accessorNames.size());
+        int numberOfAccessors = accessorNames.size();
+        int numberOfInputParameters = isFunction ? numberOfAccessors - 1 : numberOfAccessors;
+        if (isFunction) {
+            return buildFunctionCall(procName, numberOfInputParameters);
+        } else {
+            return buildStoredProcedureCall(procName, numberOfInputParameters);
+        }
     }
 
     public void bindParameters(PreparedStatement statement,
@@ -41,5 +34,6 @@ public class DbStoredProcedureCommandHelper {
             }
         }
     }
+
 }
 
