@@ -1,9 +1,7 @@
 package dbfit.api;
 
 import dbfit.util.DbStoredProcedureCommandHelper;
-
 import org.junit.Test;
-import org.junit.Before;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,7 +14,7 @@ public class DbStoredProcedureTest {
 
     @Test
     public void preparedStatementStringForFunctionWithoutParameters() {
-        assertEquals("{ ? =call func()}", buildPreparedStatementString("func", true, 0));
+        assertEquals("{ ? =call func()}", buildPreparedStatementString("func", true, 1));
     }
 
     @Test
