@@ -1,8 +1,11 @@
 package dbfit.api;
 
 import dbfit.util.DbParameterAccessor;
+import dbfit.util.DbParameterAccessors;
+import dbfit.util.DbStoredProcedureCommandHelper;
 import dbfit.util.NameNormaliser;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
@@ -19,8 +22,13 @@ public class DbStoredProcedure implements DbObject {
 
     public PreparedStatement buildPreparedStatement(
             DbParameterAccessor[] accessors) throws SQLException {
-        return environment.buildStoredProcedurePreparedStatement(
-                                                storedProcName, accessors);
+        DbStoredProcedureCommandHelper spHelper = ((AbstractDbEnvironment) environment).getDbStoredProcedureCommandHelper();
+
+        String callString = spHelper.buildPreparedStatementString(storedProcName, accessors);
+        CallableStatement cs = environment.getConnection().prepareCall(callString);
+        new DbParameterAccessors(accessors).bindParameters(cs);
+
+        return cs;
     }
 
     public DbParameterAccessor getDbParameterAccessor(String name,

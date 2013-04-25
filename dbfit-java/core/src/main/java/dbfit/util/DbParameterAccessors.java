@@ -1,5 +1,7 @@
 package dbfit.util;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 
 public class DbParameterAccessors {
@@ -7,6 +9,17 @@ public class DbParameterAccessors {
 
     public DbParameterAccessors(DbParameterAccessor[] accessors) {
         this.accessors = accessors;
+    }
+
+    public void bindParameters(PreparedStatement statement) throws SQLException {
+        List<String> accessorNames = getSortedAccessorNames();
+        for (DbParameterAccessor ac : accessors) {
+            int realindex = accessorNames.indexOf(ac.getName());
+            ac.bindTo(statement, realindex + 1); // jdbc params are 1-based
+            if (ac.getDirection() == DbParameterAccessor.RETURN_VALUE) {
+                ac.bindTo(statement, Math.abs(ac.getPosition()));
+            }
+        }
     }
 
     private class PositionComparator implements Comparator<DbParameterAccessor> {

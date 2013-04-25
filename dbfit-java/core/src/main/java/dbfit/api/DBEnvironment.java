@@ -1,14 +1,14 @@
 package dbfit.api;
 
+import dbfit.util.DbParameterAccessor;
+import dbfit.util.NameNormaliser;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
-
-import dbfit.util.DbParameterAccessor;
-import dbfit.util.NameNormaliser;
 
 
 public interface DBEnvironment {
@@ -38,12 +38,6 @@ public interface DBEnvironment {
      * rows in a table.
      */
     PreparedStatement buildInsertPreparedStatement(String tableName, DbParameterAccessor[] accessors)
-            throws SQLException;
-
-    /**
-     * This method creates a stored procedure call.
-     */
-    PreparedStatement buildStoredProcedurePreparedStatement(String procName, DbParameterAccessor[] accessors)
             throws SQLException;
 
     /**
