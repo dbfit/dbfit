@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.HashMap;
 
 public class DbParameterAccessor {
     public static final int RETURN_VALUE=0;
@@ -18,7 +17,6 @@ public class DbParameterAccessor {
     protected int sqlType;
     protected Class<?> javaType;
     protected int position; //zero-based index of parameter in procedure or column in table
-    protected HashMap<String, String> tags = new HashMap<String, String>();
     protected PreparedStatement cs;
 
     public static Object normaliseValue(Object currVal) throws SQLException {        
@@ -33,7 +31,6 @@ public class DbParameterAccessor {
         DbParameterAccessor copy = new DbParameterAccessor(name, direction,
                 sqlType, javaType, position);
 
-        copy.tags = (HashMap<String, String>) tags.clone();
         copy.cs = null;
 
         return copy;
@@ -116,19 +113,6 @@ public class DbParameterAccessor {
 
     public Class<?> getJavaType() {
         return javaType;
-    }
-
-    public void setTag(String tagName, String tagValue) {
-        tags.put(tagName, tagValue);
-    }
-
-    public String getTag(String tagName) {
-        String tagValue = tags.get(tagName);
-        if (null == tagValue) {
-            tagValue = "";
-        }
-
-        return tagValue;
     }
 
     public boolean isReturnValueAccessor() {

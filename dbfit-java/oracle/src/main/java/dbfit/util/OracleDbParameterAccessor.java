@@ -1,7 +1,5 @@
 package dbfit.util;
 
-import java.util.HashMap;
-
 public class OracleDbParameterAccessor extends DbParameterAccessor {
     private String originalTypeName;
 
@@ -29,8 +27,6 @@ public class OracleDbParameterAccessor extends DbParameterAccessor {
     public OracleDbParameterAccessor clone() {
         OracleDbParameterAccessor copy = new OracleDbParameterAccessor(
                 name, direction, sqlType, javaType, position, originalTypeName);
-
-        copy.tags = (HashMap<String, String>) tags.clone();
         copy.cs = null;
 
         return copy;

@@ -3,6 +3,7 @@ package dbfit.environment;
 import dbfit.util.DbParameterAccessors;
 import dbfit.util.DbStoredProcedureCommandHelper;
 import dbfit.util.DbParameterAccessor;
+import dbfit.util.OracleDbParameterAccessor;
 import dbfit.util.oracle.OracleSpParameter;
 import dbfit.util.oracle.OracleBooleanSpCommand;
 import dbfit.util.oracle.SpGeneratorOutput;
@@ -49,9 +50,11 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
     }
 
     private OracleSpParameter makeOracleSpParameter(DbParameterAccessor ac) {
+        String originalType = ((OracleDbParameterAccessor) ac).getOriginalTypeName();
         return OracleSpParameter.newInstance(
-                ac.getName(), ac.getDirection(), ac.getTag("ORIGINAL_DB_TYPE"));
+                ac.getName(), ac.getDirection(), originalType);
     }
+
     private static class SpParamsSpec {
         public List<OracleSpParameter> arguments = new ArrayList<OracleSpParameter>();
 
@@ -92,7 +95,8 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
     }
 
     private boolean isBooleanAccessor(DbParameterAccessor accessor) {
-        return accessor.getTag("ORIGINAL_DB_TYPE").contains("BOOLEAN");
+        return ((OracleDbParameterAccessor) accessor).getOriginalTypeName()
+                                                        .contains("BOOLEAN");
     }
 
     private boolean containsBooleanType(DbParameterAccessor[] accessors) {
