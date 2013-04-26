@@ -100,7 +100,7 @@ public class Update extends fit.Fixture {
 				throw new SQLException("Cannot find column "+paramName);
 			}
 			//clone parameter because there may be multiple usages of the same column
-			DbParameterAccessor acc=new DbParameterAccessor(orig);
+			DbParameterAccessor acc = orig.clone();
 			acc.setDirection(DbParameterAccessor.INPUT);	
 			if (headerCells.text().endsWith("="))
 				updateAcc.add(acc);

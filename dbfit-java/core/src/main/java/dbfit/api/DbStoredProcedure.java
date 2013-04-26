@@ -47,14 +47,14 @@ public class DbStoredProcedure implements DbObject {
             throw new SQLException("Cannot find parameter \"" + paramName + "\"");
         if (accessor.getDirection() == DbParameterAccessor.INPUT_OUTPUT) {
             // clone, separate into input and output
-            accessor = new DbParameterAccessor(accessor);
+            accessor = accessor.clone();
             accessor.setDirection(expectedDirection);
         }
         // sql server quirk. if output parameter is used in an input column,
         // then the param should be cloned and remapped to IN/OUT
         if (expectedDirection!=DbParameterAccessor.OUTPUT && 
                 accessor.getDirection() == DbParameterAccessor.OUTPUT) {
-            accessor = new DbParameterAccessor(accessor);
+            accessor = accessor.clone();
             accessor.setDirection(DbParameterAccessor.INPUT);
         }
         return accessor;

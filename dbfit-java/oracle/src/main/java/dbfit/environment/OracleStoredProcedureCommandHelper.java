@@ -34,7 +34,7 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
             prevAcc.setDirection(DbParameterAccessor.INPUT_OUTPUT);
         } else {
             // Put a copy - we don't want to change shared state
-            map.put(acc.getName(), new DbParameterAccessor(acc));
+            map.put(acc.getName(), acc.clone());
         }
     }
 

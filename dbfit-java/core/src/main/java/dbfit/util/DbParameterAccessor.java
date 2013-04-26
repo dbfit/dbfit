@@ -12,14 +12,14 @@ public class DbParameterAccessor {
     public static final int OUTPUT=2;
     public static final int INPUT_OUTPUT=3;
     
-    private int index; //index in effective sql statement (not necessarily the same as position below)
-    private int direction;
-    private String name;
-    private int sqlType;
+    protected int index; //index in effective sql statement (not necessarily the same as position below)
+    protected int direction;
+    protected String name;
+    protected int sqlType;
     protected Class<?> javaType;
-    private int position; //zero-based index of parameter in procedure or column in table
-    private HashMap<String, String> tags = new HashMap<String, String>();
-    private PreparedStatement cs;
+    protected int position; //zero-based index of parameter in procedure or column in table
+    protected HashMap<String, String> tags = new HashMap<String, String>();
+    protected PreparedStatement cs;
 
     public static Object normaliseValue(Object currVal) throws SQLException {        
         if (currVal==null) return null;
@@ -28,15 +28,15 @@ public class DbParameterAccessor {
         return currVal;
     }
 
-    @SuppressWarnings("unchecked")
-    public DbParameterAccessor(DbParameterAccessor acc) {
-        this.name = acc.name;
-        this.direction = acc.direction;
-        this.sqlType = acc.sqlType;
-        //this.type=null;
-        this.javaType = acc.javaType;
-        this.position=acc.position;
-        this.tags = (HashMap<String, String>) acc.tags.clone();
+    @Override
+    public DbParameterAccessor clone() {
+        DbParameterAccessor copy = new DbParameterAccessor(name, direction,
+                sqlType, javaType, position);
+
+        copy.tags = (HashMap<String, String>) tags.clone();
+        copy.cs = null;
+
+        return copy;
     }
 
     @SuppressWarnings("unchecked")
