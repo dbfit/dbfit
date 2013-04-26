@@ -23,6 +23,10 @@ public class OracleDbParameterAccessor extends DbParameterAccessor {
         this.originalTypeName = typeName;
     }
 
+    public boolean isOriginalTypeBoolean() {
+        return getOriginalTypeName().contains("BOOLEAN");
+    }
+
     @Override
     public OracleDbParameterAccessor clone() {
         OracleDbParameterAccessor copy = new OracleDbParameterAccessor(

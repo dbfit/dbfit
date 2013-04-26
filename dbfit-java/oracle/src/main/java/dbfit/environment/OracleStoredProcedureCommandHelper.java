@@ -95,8 +95,7 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
     }
 
     private boolean isBooleanAccessor(DbParameterAccessor accessor) {
-        return ((OracleDbParameterAccessor) accessor).getOriginalTypeName()
-                                                        .contains("BOOLEAN");
+        return ((OracleDbParameterAccessor) accessor).isOriginalTypeBoolean();
     }
 
     private boolean containsBooleanType(DbParameterAccessor[] accessors) {
