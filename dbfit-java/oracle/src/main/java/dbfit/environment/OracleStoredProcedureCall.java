@@ -64,7 +64,7 @@ public class OracleStoredProcedureCall extends DbStoredProcedureCall {
 
         public OracleSpParameter returnValue = null;
         public void add(OracleSpParameter param) {
-            if (param.isReturnValue()) {
+            if (param.direction.isReturnValue()) {
                 returnValue = param;
             } else {
                 arguments.add(param);

@@ -1,12 +1,12 @@
 package dbfit.util.oracle;
 
-import dbfit.util.DbParameterAccessor;
-import static dbfit.util.oracle.OracleSpParameter.callExpr;
+import org.apache.commons.io.IOUtils;
 
-import java.util.List;
 import java.io.IOException;
 import java.io.InputStream;
-import org.apache.commons.io.IOUtils;
+import java.util.List;
+
+import static dbfit.util.oracle.OracleSpParameter.callExpr;
 
 public class OracleBooleanSpCommand {
     protected SpGeneratorOutput out = null;
@@ -134,7 +134,7 @@ public class OracleBooleanSpCommand {
 
     private boolean isBooleanOutputOrReturn(OracleSpParameter param) {
         return (param != null) && param.isBoolean()
-            && param.isOutputOrReturnValue();
+            && param.direction.isOutputOrReturnValue();
     }
 
     private boolean hasBooleanReturn() {

@@ -3,7 +3,7 @@ package dbfit.util.oracle;
 import static dbfit.util.DbParameterAccessor.Direction;
 
 public class OracleSpParameter {
-    protected Direction direction; // In terms of DbParameterAccessor constants
+    public Direction direction; // In terms of DbParameterAccessor constants
     protected SpGeneratorOutput out = null;
     protected String dataType; // original type name in the original sp
     protected String id; // id to be used for generating param/arg names
@@ -34,52 +34,13 @@ public class OracleSpParameter {
     public void setDirection(Direction direction) {
         this.direction = direction;
     }
-    
-    public boolean isReturnValue() {
-        return getDirection() == Direction.RETURN_VALUE;
-    }
-
-    public boolean isOutputOrReturnValue() {
-        switch (getDirection()) {
-            case RETURN_VALUE:
-            case OUTPUT:
-            case INPUT_OUTPUT:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    public boolean isInOrInout() {
-        switch (getDirection()) {
-            case INPUT:
-            case INPUT_OUTPUT:
-                return true;
-        }
-
-        return false;
-    }
-
-    public boolean isOutOrInout() {
-        switch (getDirection()) {
-            case OUTPUT:
-            case INPUT_OUTPUT:
-                return true;
-        }
-
-        return false;
-    }
-
-    private boolean isInput() {
-        return getDirection() == Direction.INPUT;
-    }
 
     public boolean isBooleanInOrInout() {
-        return isBoolean() && isInOrInout();
+        return isBoolean() && direction.isInOrInout();
     }
 
     public boolean isBooleanOutOrInout() {
-        return isBoolean() && isOutOrInout();
+        return isBoolean() && direction.isOutOrInout();
     }
 
     protected String getDataType() {
@@ -141,11 +102,11 @@ public class OracleSpParameter {
     }
 
     private String getWrapperArgumentName() {
-        return isReturnValue() ? "" : prefixed(id);
+        return direction.isReturnValue() ? "" : prefixed(id);
     }
 
     public String getWrapperVarName() {
-        String varid = isReturnValue() ? "" : id + "_";
+        String varid = direction.isReturnValue() ? "" : id + "_";
         return prefixed("v_" + varid + getShortDirectionName());
     }
 
@@ -183,7 +144,7 @@ public class OracleSpParameter {
     }
 
     public void declareVariable() {
-        if (needsArgumentTypeChange() || isReturnValue()) {
+        if (needsArgumentTypeChange() || direction.isReturnValue()) {
             out.append("        ")
                 .append(getWrapperVarName())
                 .append(" ").append(getDataType());
@@ -209,7 +170,7 @@ public class OracleSpParameter {
     }
 
     public void genWrapperCallArgument(String varname) {
-        if (isBoolean() && isInput()) {
+        if (isBoolean() && direction.isInput()) {
             out.append(chr2bool(varname));
         } else {
             out.append(varname);
