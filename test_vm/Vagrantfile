@@ -33,9 +33,6 @@ Vagrant::Config.run do |config|
           "packages" => ["postgresql92-contrib"]
         }
       },
-      "maven" => {
-        "version" => 3
-      },
       "java" => {
         "install_flavor" => "oracle",
         "oracle" => {

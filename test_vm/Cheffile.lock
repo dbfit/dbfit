@@ -16,9 +16,6 @@ SITE
       java (>= 0.0.0)
     java (1.10.0)
       windows (>= 0.0.0)
-    maven (0.15.0)
-      ark (>= 0.0.0)
-      java (>= 0.0.0)
     mysql (2.1.2)
       build-essential (>= 0.0.0)
       openssl (>= 0.0.0)
@@ -43,7 +40,6 @@ PATH
     dbfit_test (0.1.0)
       database (>= 0.0.0)
       gradle (>= 0.0.0)
-      maven (>= 0.0.0)
       mysql (>= 0.0.0)
       postgresql (>= 0.0.0)
 
