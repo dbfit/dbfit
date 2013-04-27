@@ -4,14 +4,14 @@ import dbfit.util.crypto.CryptoService;
 import dbfit.util.crypto.CryptoServiceFactory;
 
 import org.junit.Test;
-import org.junit.Before;
 import org.junit.After;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Mock;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.*;
 
 import java.util.List;
 
@@ -20,13 +20,7 @@ public class DbConnectionPropertiesTest {
 
     private static final String DB_PASSWORD = "Test Password";
 
-    private CryptoService cryptoService;
     @Mock private CryptoService mockedCryptoService;
-
-    @Before
-    public void prepare() {
-        cryptoService = CryptoServiceFactory.getCryptoService();
-    }
 
     @After
     public void cleanup() {
@@ -35,6 +29,11 @@ public class DbConnectionPropertiesTest {
 
     private String getOriginalPassword() {
         return DB_PASSWORD;
+    }
+
+    private String getEncryptedPassword() {
+        return CryptoServiceFactory.getCryptoService().encrypt(
+                getOriginalPassword());
     }
 
     /**
@@ -47,7 +46,7 @@ public class DbConnectionPropertiesTest {
         lines.add("username=mydemouser");
         lines.add("database=mydemodb");
 
-        lines.add("password=ENC(" + cryptoService.encrypt(password) + ")");
+        lines.add("password=" + wrapEncryptedPassword(getEncryptedPassword()));
 
         return lines;
     }
@@ -56,23 +55,65 @@ public class DbConnectionPropertiesTest {
         return prepareEncryptedSettings(getOriginalPassword());
     }
 
-    @Test
-    public void shouldCallDecryptWhenLoadingEncryptedPassword() {
-        List<String> lines = prepareEncryptedSettings();
-        CryptoServiceFactory.setCryptoService(mockedCryptoService);
+    private String wrapEncryptedPassword(String pwd) {
+        return "ENC(" + pwd + ")";
+    }
 
-        DbConnectionProperties.CreateFromString(lines);
-        verify(mockedCryptoService, times(1)).decrypt(getOriginalPassword());
+    private void setFakeCryptoService(String pwd) {
+        String encPwd = "XE-" + pwd;
+        when(mockedCryptoService.encrypt(pwd)).thenReturn(encPwd);
+        when(mockedCryptoService.decrypt(encPwd)).thenReturn(pwd);
+
+        CryptoServiceFactory.setCryptoService(mockedCryptoService);
     }
 
     @Test
-    public void decryptedPasswordShouldMatchOriginalOne() {
+    public void unwrapEncryptedPasswordTest() {
+        String pwd = "XYZ";
+        String encPwd = wrapEncryptedPassword(pwd);
+
+        assertEquals(pwd, DbConnectionProperties.unwrapEncryptedPassword(encPwd));
+    }
+
+    @Test
+    public void unwrapNonEncryptedPasswordTest() {
+        assertNull(DbConnectionProperties.unwrapEncryptedPassword("XYZ"));
+    }
+
+    @Test
+    public void shouldCallDecryptWhenLoadingEncryptedPassword() {
+        setFakeCryptoService(getOriginalPassword());
+        List<String> lines = prepareEncryptedSettings();
+
+        DbConnectionProperties.CreateFromString(lines);
+
+        verify(mockedCryptoService, times(1)).decrypt(getEncryptedPassword());
+    }
+
+    private void checkPasswordLoad(boolean useFakeCryptoService) {
+        if (useFakeCryptoService) {
+            setFakeCryptoService(getOriginalPassword());
+        }
+
         List<String> lines = prepareEncryptedSettings();
 
         DbConnectionProperties connProps =
             DbConnectionProperties.CreateFromString(lines);
 
         assertEquals(getOriginalPassword(), connProps.Password);
+    }
+
+    @Test
+    public void shouldStoreDecryptedPasswordInDbConnProperties() {
+        checkPasswordLoad(true);
+    }
+
+    /**
+     * Integration test - using real decryption
+     */
+    @Test
+    public void decryptedPasswordShouldMatchOriginalOne() {
+        checkPasswordLoad(false);
     }
 }
 

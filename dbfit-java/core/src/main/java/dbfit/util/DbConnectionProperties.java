@@ -1,5 +1,8 @@
 package dbfit.util;
 
+import dbfit.util.crypto.CryptoServiceFactory;
+import dbfit.util.crypto.CryptoService;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,8 +22,31 @@ public class DbConnectionProperties {
     private DbConnectionProperties() {
     }
 
-    private static String parsePassword(String pwd) {
-        return pwd;
+    /**
+     * Unwrap encrypted form password "ENC(password)".
+     *
+     * @return password text if wrapped in ENC(pass)
+     *         null if format is not ENC(...)
+     */
+    public static String unwrapEncryptedPassword(String encPwd) {
+        String encryptedFormPrefix = "ENC(";
+        if (encPwd.startsWith(encryptedFormPrefix)) {
+            return encPwd.substring(encryptedFormPrefix.length(),
+                                        encPwd.length() - 1);
+        } else {
+            return null;
+        }
+    }
+
+    public static String parsePassword(String pwd) {
+        String encPwd = unwrapEncryptedPassword(pwd);
+
+        if (encPwd == null) {
+            return pwd;
+        } else {
+            CryptoService crypto = CryptoServiceFactory.getCryptoService();
+            return crypto.decrypt(encPwd);
+        }
     }
 
     public static DbConnectionProperties CreateFromString(
