@@ -4,32 +4,32 @@ import dbfit.util.crypto.CryptoService;
 
 public class CryptoServiceFactory {
 
-    private static CryptoService CRYPTO_SERVICE_INSTANCE = null;
+    private static CryptoService cryptoServiceInstance = null;
 
     public static void setCryptoService(CryptoService svc) {
-        CRYPTO_SERVICE_INSTANCE = svc;
+        cryptoServiceInstance = svc;
     }
 
     private static void initCryptoService() {
-        CRYPTO_SERVICE_INSTANCE = new CryptoService() {
+        cryptoServiceInstance = new CryptoService() {
             @Override
             public String encrypt(String msg) {
-                return msg;
+                return "E" + msg;
             }
 
             @Override
             public String decrypt(String msg) {
-                return msg;
+                return msg.substring(1);
             }
         };
     }
 
     public static CryptoService getCryptoService() {
-        if (CRYPTO_SERVICE_INSTANCE == null) {
+        if (cryptoServiceInstance == null) {
             initCryptoService();
         }
 
-        return CRYPTO_SERVICE_INSTANCE;
+        return cryptoServiceInstance;
     }
 }
 
