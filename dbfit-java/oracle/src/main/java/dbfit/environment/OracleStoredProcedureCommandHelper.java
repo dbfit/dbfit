@@ -69,8 +69,7 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
 
     }
 
-    private SpParamsSpec initSpParams(String procName,
-                                    DbParameterAccessor[] accessors) {
+    private SpParamsSpec initSpParams(DbParameterAccessor[] accessors) {
         List<String> accessorNames = new DbParameterAccessors(accessors).getSortedAccessorNames();
         Map<String, DbParameterAccessor> accessorsMap = getAccessorsMap(accessors);
 
@@ -86,7 +85,7 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
 
     private OracleBooleanSpCommand initSpCommand(String procName,
                                     DbParameterAccessor[] accessors) {
-        SpParamsSpec params = initSpParams(procName, accessors);
+        SpParamsSpec params = initSpParams(accessors);
         OracleBooleanSpCommand command = OracleBooleanSpCommand.newInstance(
                 procName, params.arguments, params.returnValue);
         command.setOutput(new SpGeneratorOutput());
