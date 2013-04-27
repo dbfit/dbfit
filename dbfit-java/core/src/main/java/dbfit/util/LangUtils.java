@@ -3,13 +3,6 @@ package dbfit.util;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benilovj
- * Date: 4/25/13
- * Time: 7:51 PM
- * To change this template use File | Settings | File Templates.
- */
 public class LangUtils {
     public static <T> List<T> repeat(T element, int number) {
         List<T> list = new ArrayList<T>();
