@@ -12,10 +12,9 @@ import static dbfit.util.DbParameterAccessor.Direction.*;
 
 public class DbStoredProcedure implements DbObject {
     private DBEnvironment environment;
-
     private String name;
-
     private Map<String, DbParameterAccessor> allParams;
+
     public DbStoredProcedure(DBEnvironment environment, String name) {
         this.environment = environment;
         this.name = name;
@@ -25,23 +24,12 @@ public class DbStoredProcedure implements DbObject {
             DbParameterAccessor[] accessors) throws SQLException {
         DbStoredProcedureCall call = environment.newStoredProcedureCall(name, accessors);
 
-        return call.toCallableStatement(environment.getConnection());
+        return call.toCallableStatement();
     }
 
     public DbParameterAccessor getDbParameterAccessor(String name,
             Direction expectedDirection) throws SQLException{
-
-        if (allParams==null){
-            allParams = environment.getAllProcedureParameters(this.name);
-            if (allParams.isEmpty()) {
-                throw new SQLException("Cannot retrieve list of parameters for "
-                        + this.name + " - check spelling and access rights");
-            }
-        }
-        String paramName = NameNormaliser.normaliseName(name);
-        DbParameterAccessor accessor = allParams.get(paramName);
-        if (accessor == null)
-            throw new SQLException("Cannot find parameter \"" + paramName + "\"");
+        DbParameterAccessor accessor = findAccessorForParamWithName(name);
         if (accessor.getDirection() == INPUT_OUTPUT) {
             // clone, separate into input and output
             accessor = accessor.clone();
@@ -55,6 +43,25 @@ public class DbStoredProcedure implements DbObject {
             accessor.setDirection(Direction.INPUT);
         }
         return accessor;
+    }
+
+    private DbParameterAccessor findAccessorForParamWithName(String name) throws SQLException {
+        String paramName = NameNormaliser.normaliseName(name);
+        DbParameterAccessor accessor = getAllParams().get(paramName);
+        if (accessor == null)
+            throw new SQLException("Cannot find parameter \"" + paramName + "\"");
+        return accessor;
+    }
+
+    private Map<String, DbParameterAccessor> getAllParams() throws SQLException {
+        if (allParams==null){
+            allParams = environment.getAllProcedureParameters(this.name);
+            if (allParams.isEmpty()) {
+                throw new SQLException("Cannot retrieve list of parameters for "
+                        + this.name + " - check spelling and access rights");
+            }
+        }
+        return allParams;
     }
 
     public String getName() {

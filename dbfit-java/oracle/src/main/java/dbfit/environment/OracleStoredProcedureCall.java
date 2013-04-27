@@ -1,5 +1,6 @@
 package dbfit.environment;
 
+import dbfit.api.DBEnvironment;
 import dbfit.api.DbStoredProcedureCall;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessors;
@@ -16,8 +17,8 @@ import java.util.Map;
 import static dbfit.util.DbParameterAccessor.Direction;
 
 public class OracleStoredProcedureCall extends DbStoredProcedureCall {
-    public OracleStoredProcedureCall(String name, DbParameterAccessor[] accessors) {
-        super(name, accessors);
+    public OracleStoredProcedureCall(DBEnvironment environment, String name, DbParameterAccessor[] accessors) {
+        super(environment, name, accessors);
     }
 
     @Override

@@ -4,7 +4,6 @@ import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessors;
 
 import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -12,10 +11,12 @@ import static dbfit.util.sql.PreparedStatements.buildFunctionCall;
 import static dbfit.util.sql.PreparedStatements.buildStoredProcedureCall;
 
 public class DbStoredProcedureCall {
+    private DBEnvironment environment;
     private String name;
     private DbParameterAccessor[] accessors;
 
-    public DbStoredProcedureCall(String name, DbParameterAccessor[] accessors) {
+    public DbStoredProcedureCall(DBEnvironment environment, String name, DbParameterAccessor[] accessors) {
+        this.environment = environment;
         this.name = name;
         this.accessors = accessors;
     }
@@ -49,8 +50,8 @@ public class DbStoredProcedureCall {
         new DbParameterAccessors(getAccessors()).bindParameters(cs);
     }
 
-    public CallableStatement toCallableStatement(Connection connection) throws SQLException {
-        CallableStatement cs = connection.prepareCall(toSqlString());
+    public CallableStatement toCallableStatement() throws SQLException {
+        CallableStatement cs = this.environment.getConnection().prepareCall(toSqlString());
         bindParametersTo(cs);
         return cs;
     }
