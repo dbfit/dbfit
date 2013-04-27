@@ -1,5 +1,10 @@
 package dbfit.environment;
 
+import dbfit.annotations.DatabaseEnvironment;
+import dbfit.api.AbstractDbEnvironment;
+import dbfit.util.DbParameterAccessor;
+import dbfit.util.NameNormaliser;
+
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,10 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import dbfit.api.AbstractDbEnvironment;
-
-import dbfit.util.*;
-import dbfit.annotations.DatabaseEnvironment;
+import static dbfit.util.DbParameterAccessor.Direction;
 
 @DatabaseEnvironment(name="SqlServer", driver="com.microsoft.sqlserver.jdbc.SQLServerDriver")
 public class SqlServerEnvironment extends AbstractDbEnvironment {
@@ -92,9 +94,9 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
             String dataType = rs.getString(2);
             // int length = rs.getInt(3);
             int direction = rs.getInt(4);
-            int paramDirection;
+            Direction paramDirection;
             if (paramName.trim().length() == 0)
-                paramDirection = DbParameterAccessor.RETURN_VALUE;
+                paramDirection = Direction.RETURN_VALUE;
             else
                 paramDirection = getParameterDirection(direction);
             DbParameterAccessor dbp = new DbParameterAccessor(paramName,
@@ -140,11 +142,11 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
     // private static string[] GuidTypes = new string[] { "UNIQUEIDENTIFIER" };
     // private static string[] VariantTypes = new string[] { "SQL_VARIANT" };
 
-    private static int getParameterDirection(int isOutput) {
+    private static Direction getParameterDirection(int isOutput) {
         if (isOutput == 1)
-            return DbParameterAccessor.OUTPUT;
+            return Direction.OUTPUT;
         else
-            return DbParameterAccessor.INPUT;
+            return Direction.INPUT;
     }
 
     private static String normaliseTypeName(String dataType) {

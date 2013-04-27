@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static dbfit.util.DbParameterAccessor.Direction;
+
 public abstract class AbstractDbEnvironment implements DBEnvironment {
 
     protected Connection currentConnection;
@@ -192,7 +194,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         StringBuilder values = new StringBuilder();
 
         for (DbParameterAccessor accessor : accessors) {
-            if (accessor.getDirection() == DbParameterAccessor.INPUT) {
+            if (accessor.getDirection() == Direction.INPUT) {
                 sb.append(comma);
                 values.append(comma);
                 sb.append(accessor.getName());

@@ -1,17 +1,16 @@
 package dbfit.util.oracle;
 
-import dbfit.util.DbParameterAccessor;
-import static dbfit.util.DbParameterAccessor.*;
-import static dbfit.util.oracle.OracleBooleanSpTestsFactory.*;
-
-import java.io.InputStream;
-import java.io.IOException;
-import org.junit.Test;
-import org.junit.Before;
-import static org.junit.Assert.*;
-import static org.hamcrest.core.StringStartsWith.startsWith;
-import static org.hamcrest.core.IsNot.not;
 import org.apache.commons.io.IOUtils;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import static dbfit.util.DbParameterAccessor.Direction.*;
+import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.core.StringStartsWith.startsWith;
+import static org.junit.Assert.*;
 
 public class OracleBooleanSpCommandTest {
 

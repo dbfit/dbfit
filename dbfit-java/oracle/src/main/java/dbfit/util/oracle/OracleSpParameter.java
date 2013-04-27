@@ -1,29 +1,25 @@
 package dbfit.util.oracle;
 
-import dbfit.util.DbParameterAccessor;
-import static dbfit.util.DbParameterAccessor.INPUT;
-import static dbfit.util.DbParameterAccessor.OUTPUT;
-import static dbfit.util.DbParameterAccessor.INPUT_OUTPUT;
-import static dbfit.util.DbParameterAccessor.RETURN_VALUE;
+import static dbfit.util.DbParameterAccessor.Direction;
 
 public class OracleSpParameter {
-    protected int direction; // In terms of DbParameterAccessor constants
+    protected Direction direction; // In terms of DbParameterAccessor constants
     protected SpGeneratorOutput out = null;
     protected String dataType; // original type name in the original sp
     protected String id; // id to be used for generating param/arg names
     protected String prefix; // prefix to be used for all names to avoid conflicts
 
-    public static OracleSpParameter newInstance(String paramName, int direction,
+    public static OracleSpParameter newInstance(String paramName, Direction direction,
                             String dataType) {
         return newInstance(paramName, direction, dataType, "x");
     }
 
-    public static OracleSpParameter newInstance(String paramName, int direction,
+    public static OracleSpParameter newInstance(String paramName, Direction direction,
                             String dataType, String prefix) {
         return new OracleSpParameter(paramName, direction, dataType, prefix);
     }
 
-    protected OracleSpParameter(String paramName, int direction, String dataType,
+    protected OracleSpParameter(String paramName, Direction direction, String dataType,
                                 String prefix) {
         this.direction = direction;
         this.dataType = dataType;
@@ -31,16 +27,16 @@ public class OracleSpParameter {
         this.prefix = prefix;
     }
 
-    protected int getDirection() {
+    protected Direction getDirection() {
         return direction;
     }
 
-    public void setDirection(int direction) {
+    public void setDirection(Direction direction) {
         this.direction = direction;
     }
     
     public boolean isReturnValue() {
-        return getDirection() == RETURN_VALUE;
+        return getDirection() == Direction.RETURN_VALUE;
     }
 
     public boolean isOutputOrReturnValue() {
@@ -75,7 +71,7 @@ public class OracleSpParameter {
     }
 
     private boolean isInput() {
-        return getDirection() == INPUT;
+        return getDirection() == Direction.INPUT;
     }
 
     public boolean isBooleanInOrInout() {
@@ -181,7 +177,7 @@ public class OracleSpParameter {
     }
 
     private void initializeVariable() {
-        if (getDirection() == INPUT_OUTPUT) {
+        if (getDirection() == Direction.INPUT_OUTPUT) {
             out.append(" := ").append(chr2bool(getWrapperArgumentName()));
         }
     }

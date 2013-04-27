@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static dbfit.util.DbParameterAccessor.Direction;
+
 public class OracleStoredProcedureCall extends DbStoredProcedureCall {
     public OracleStoredProcedureCall(String name, DbParameterAccessor[] accessors) {
         super(name, accessors);
@@ -34,7 +36,7 @@ public class OracleStoredProcedureCall extends DbStoredProcedureCall {
         if (prevAcc != null) {
             // Duplicated parameters are indication for single IN/OUT one.
             // So merging them here.
-            prevAcc.setDirection(DbParameterAccessor.INPUT_OUTPUT);
+            prevAcc.setDirection(Direction.INPUT_OUTPUT);
         } else {
             // Put a copy - we don't want to change shared state
             map.put(acc.getName(), acc.clone());

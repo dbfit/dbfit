@@ -7,6 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 
+import static dbfit.util.DbParameterAccessor.Direction;
+import static dbfit.util.DbParameterAccessor.Direction.*;
+
 public class DbStoredProcedure implements DbObject {
     private DBEnvironment environment;
 
@@ -26,7 +29,7 @@ public class DbStoredProcedure implements DbObject {
     }
 
     public DbParameterAccessor getDbParameterAccessor(String name,
-            int expectedDirection) throws SQLException{
+            Direction expectedDirection) throws SQLException{
 
         if (allParams==null){
             allParams = environment.getAllProcedureParameters(this.name);
@@ -39,17 +42,17 @@ public class DbStoredProcedure implements DbObject {
         DbParameterAccessor accessor = allParams.get(paramName);
         if (accessor == null)
             throw new SQLException("Cannot find parameter \"" + paramName + "\"");
-        if (accessor.getDirection() == DbParameterAccessor.INPUT_OUTPUT) {
+        if (accessor.getDirection() == INPUT_OUTPUT) {
             // clone, separate into input and output
             accessor = accessor.clone();
             accessor.setDirection(expectedDirection);
         }
         // sql server quirk. if output parameter is used in an input column,
         // then the param should be cloned and remapped to IN/OUT
-        if (expectedDirection!=DbParameterAccessor.OUTPUT &&
-                accessor.getDirection() == DbParameterAccessor.OUTPUT) {
+        if (expectedDirection!=Direction.OUTPUT &&
+                accessor.getDirection() == Direction.OUTPUT) {
             accessor = accessor.clone();
-            accessor.setDirection(DbParameterAccessor.INPUT);
+            accessor.setDirection(Direction.INPUT);
         }
         return accessor;
     }

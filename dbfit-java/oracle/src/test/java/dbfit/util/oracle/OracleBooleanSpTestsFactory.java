@@ -1,15 +1,12 @@
 package dbfit.util.oracle;
 
-import dbfit.util.DbParameterAccessor;
-import static dbfit.util.DbParameterAccessor.INPUT;
-import static dbfit.util.DbParameterAccessor.OUTPUT;
-import static dbfit.util.DbParameterAccessor.INPUT_OUTPUT;
-import static dbfit.util.DbParameterAccessor.RETURN_VALUE;
-
-import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static dbfit.util.DbParameterAccessor.Direction;
+import static dbfit.util.DbParameterAccessor.Direction.*;
 
 public class OracleBooleanSpTestsFactory {
     private SpGeneratorOutput output;
@@ -44,21 +41,21 @@ public class OracleBooleanSpTestsFactory {
             return this;
         }
 
-        public OracleSpCommandBuilder withBooleanArgument(String name, int direction) {
+        public OracleSpCommandBuilder withBooleanArgument(String name, Direction direction) {
             return withArgument(name, direction, "BOOLEAN");
         }
 
-        public OracleSpCommandBuilder withBooleanArgument(int direction) {
+        public OracleSpCommandBuilder withBooleanArgument(Direction direction) {
             return withBooleanArgument(genArgName(), direction);
         }
 
-        public OracleSpCommandBuilder withArgument(String name, int direction,
+        public OracleSpCommandBuilder withArgument(String name, Direction direction,
                                 String dataType) {
             args.add(makeSpParameter(name, direction, dataType, prefix));
             return this;
         }
 
-        public OracleSpCommandBuilder withArgument(int direction, String dataType) {
+        public OracleSpCommandBuilder withArgument(Direction direction, String dataType) {
             return withArgument(genArgName(), direction, dataType);
         }
 
@@ -97,7 +94,7 @@ public class OracleBooleanSpTestsFactory {
     }
 
     private void addSpParameter(Map<String, OracleSpParameter> spParams,
-            String name, int direction, String type) {
+            String name, Direction direction, String type) {
         spParams.put(name, makeSpParameter(name, direction, type, "z"));
     }
 
@@ -121,12 +118,12 @@ public class OracleBooleanSpTestsFactory {
         this.output = output;
     }
 
-    public OracleSpParameter makeSpParameter(String paramName, int direction) {
+    public OracleSpParameter makeSpParameter(String paramName, Direction direction) {
         return makeSpParameter(paramName, direction, "VARCHAR2", "t");
     }
 
     public OracleSpParameter makeSpParameter(String paramName,
-            int direction, String dataType, String prefix) {
+                                             Direction direction, String dataType, String prefix) {
         OracleSpParameter param = OracleSpParameter.newInstance(paramName,
                         direction, dataType, prefix);
         param.setOutput(output);

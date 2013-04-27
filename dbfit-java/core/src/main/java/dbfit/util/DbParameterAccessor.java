@@ -5,14 +5,19 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static dbfit.util.DbParameterAccessor.Direction.*;
+
 public class DbParameterAccessor {
-    public static final int RETURN_VALUE=0;
-    public static final int INPUT=1;
-    public static final int OUTPUT=2;
-    public static final int INPUT_OUTPUT=3;
-    
+    public static enum Direction {
+        RETURN_VALUE,
+        INPUT,
+        OUTPUT,
+        INPUT_OUTPUT,
+    }
+
     protected int index; //index in effective sql statement (not necessarily the same as position below)
     protected int direction;
+    protected Direction directionEnum;
     protected String name;
     protected int sqlType;
     protected Class<?> javaType;
@@ -28,7 +33,7 @@ public class DbParameterAccessor {
 
     @Override
     public DbParameterAccessor clone() {
-        DbParameterAccessor copy = new DbParameterAccessor(name, direction,
+        DbParameterAccessor copy = new DbParameterAccessor(name, directionEnum,
                 sqlType, javaType, position);
 
         copy.cs = null;
@@ -37,9 +42,9 @@ public class DbParameterAccessor {
     }
 
     @SuppressWarnings("unchecked")
-    public DbParameterAccessor(String name, int direction, int sqlType, Class javaType, int position) {
+    public DbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {
         this.name = name;
-        this.direction = direction;
+        this.directionEnum = direction;
         this.sqlType = sqlType;
         this.javaType = javaType;
         this.position=position;
@@ -58,16 +63,16 @@ public class DbParameterAccessor {
      * public static final int OUTPUT=2;
      * public static final int INPUT_OUTPUT=3;
      */
-    public int getDirection() {
-        return direction;
+    public Direction getDirection() {
+        return directionEnum;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setDirection(int direction){
-        this.direction=direction;
+    public void setDirection(Direction direction){
+        this.directionEnum = direction;
     }
 
     //really ugly, but a hack to support mysql, because it will not execute inserts with a callable statement
@@ -80,22 +85,22 @@ public class DbParameterAccessor {
     public void bindTo(PreparedStatement cs, int ind) throws SQLException{
         this.cs=cs;
         this.index=ind;    
-        if (direction==DbParameterAccessor.OUTPUT || 
-                direction==DbParameterAccessor.RETURN_VALUE||
-                direction==DbParameterAccessor.INPUT_OUTPUT){
+        if (directionEnum == OUTPUT ||
+                directionEnum == RETURN_VALUE||
+                directionEnum == INPUT_OUTPUT){
             convertStatementToCallable().registerOutParameter(ind, getSqlType());
         }
     }
 
     public void set(Object value) throws Exception {
-        if (direction==OUTPUT||direction==RETURN_VALUE)
+        if (directionEnum == OUTPUT||directionEnum == RETURN_VALUE)
             throw new UnsupportedOperationException("Trying to set value of output parameter "+name);
         cs.setObject(index, value);
     }    
 
     public Object get() throws IllegalAccessException, InvocationTargetException {
         try{
-            if (direction==INPUT)
+            if (directionEnum.equals(INPUT))
                 throw new UnsupportedOperationException("Trying to get value of input parameter "+name);            
             return normaliseValue(convertStatementToCallable().getObject(index));
         }

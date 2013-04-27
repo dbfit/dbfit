@@ -1,5 +1,10 @@
 package dbfit.environment;
 
+import dbfit.annotations.DatabaseEnvironment;
+import dbfit.api.AbstractDbEnvironment;
+import dbfit.util.DbParameterAccessor;
+import dbfit.util.NameNormaliser;
+
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,9 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import dbfit.api.*;
-import dbfit.util.*;
-import dbfit.annotations.DatabaseEnvironment;
+import static dbfit.util.DbParameterAccessor.Direction;
+import static dbfit.util.DbParameterAccessor.Direction.*;
 
 @DatabaseEnvironment(name="DB2", driver="com.ibm.db2.jcc.DB2Driver")
 public class DB2Environment extends AbstractDbEnvironment {
@@ -75,11 +79,11 @@ public class DB2Environment extends AbstractDbEnvironment {
             String dataType = rs.getString(2);
             // int length=rs.getInt(3);
             String direction = rs.getString(4);
-            int paramDirection = getParameterDirection(direction);
+            Direction paramDirection = getParameterDirection(direction);
             DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                     paramDirection, getSqlType(dataType),
                     getJavaClass(dataType),
-                    paramDirection == DbParameterAccessor.RETURN_VALUE ? -1
+                    paramDirection == RETURN_VALUE ? -1
                             : position++);
             allParams.put(NameNormaliser.normaliseName(paramName), dbp);
         }
@@ -87,15 +91,15 @@ public class DB2Environment extends AbstractDbEnvironment {
         return allParams;
     }
 
-    private static int getParameterDirection(String direction) {
+    private static Direction getParameterDirection(String direction) {
         if ("P".equals(direction))
-            return DbParameterAccessor.INPUT;
+            return INPUT;
         if ("O".equals(direction))
-            return DbParameterAccessor.OUTPUT;
+            return OUTPUT;
         if ("B".equals(direction))
-            return DbParameterAccessor.INPUT_OUTPUT;
+            return INPUT_OUTPUT;
         if ("C".equals(direction))
-            return DbParameterAccessor.RETURN_VALUE;
+            return RETURN_VALUE;
         // todo return val
         throw new UnsupportedOperationException("Direction " + direction
                 + " is not supported");

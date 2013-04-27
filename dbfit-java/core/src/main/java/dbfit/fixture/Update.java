@@ -1,16 +1,21 @@
 package dbfit.fixture;
 
+import dbfit.api.DBEnvironment;
+import dbfit.api.DbEnvironmentFactory;
+import dbfit.util.DbParameterAccessor;
+import dbfit.util.DbParameterAccessorTypeAdapter;
+import dbfit.util.NameNormaliser;
+import dbfit.util.SymbolAccessSetBinding;
+import fit.Binding;
+import fit.Parse;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import dbfit.api.DBEnvironment;
-import dbfit.api.DbEnvironmentFactory;
-import dbfit.util.*;
-import fit.Binding;
-import fit.Parse;
+import static dbfit.util.DbParameterAccessor.Direction;
 
 public class Update extends fit.Fixture {
 	private DBEnvironment environment;
@@ -101,7 +106,7 @@ public class Update extends fit.Fixture {
 			}
 			//clone parameter because there may be multiple usages of the same column
 			DbParameterAccessor acc = orig.clone();
-			acc.setDirection(DbParameterAccessor.INPUT);	
+			acc.setDirection(Direction.INPUT);
 			if (headerCells.text().endsWith("="))
 				updateAcc.add(acc);
 			else

@@ -2,7 +2,12 @@ package dbfit.util;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
+import static dbfit.util.DbParameterAccessor.Direction;
 
 public class DbParameterAccessors {
     private DbParameterAccessor[] accessors;
@@ -16,7 +21,7 @@ public class DbParameterAccessors {
         for (DbParameterAccessor ac : accessors) {
             int realindex = accessorNames.indexOf(ac.getName());
             ac.bindTo(statement, realindex + 1); // jdbc params are 1-based
-            if (ac.getDirection() == DbParameterAccessor.RETURN_VALUE) {
+            if (ac.getDirection() == Direction.RETURN_VALUE) {
                 ac.bindTo(statement, Math.abs(ac.getPosition()));
             }
         }

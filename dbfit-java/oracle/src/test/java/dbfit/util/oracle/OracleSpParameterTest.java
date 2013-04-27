@@ -1,29 +1,26 @@
 package dbfit.util.oracle;
 
 import dbfit.util.DbParameterAccessor;
-import static dbfit.util.DbParameterAccessor.INPUT;
-import static dbfit.util.DbParameterAccessor.OUTPUT;
-import static dbfit.util.DbParameterAccessor.INPUT_OUTPUT;
-import static dbfit.util.DbParameterAccessor.RETURN_VALUE;
-
-import static dbfit.util.oracle.OracleBooleanSpTestsFactory.*;
-
-import org.junit.Test;
 import org.junit.Before;
-import static org.junit.Assert.*;
-import java.util.ArrayList;
+import org.junit.Test;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import static dbfit.util.DbParameterAccessor.Direction;
+import static dbfit.util.DbParameterAccessor.Direction.*;
+import static dbfit.util.oracle.OracleBooleanSpTestsFactory.*;
+import static org.junit.Assert.assertEquals;
+
 public class OracleSpParameterTest {
-    private Map<Integer, String> expectedDirections;
+    private Map<DbParameterAccessor.Direction, String> expectedDirections;
     private SpGeneratorOutput output;
     private OracleBooleanSpTestsFactory factory;
     private OracleSpParameter pin;
     private Map<String, OracleSpParameter> spParams;
 
     public void initExpectedDirections() {
-        expectedDirections = new HashMap<Integer, String>();
+        expectedDirections = new HashMap<DbParameterAccessor.Direction, String>();
         expectedDirections.put(INPUT, "IN");
         expectedDirections.put(OUTPUT, "OUT");
         expectedDirections.put(INPUT_OUTPUT, "IN OUT");
@@ -48,14 +45,14 @@ public class OracleSpParameterTest {
         HashMap<Integer, String> expectedNames = new HashMap<Integer, String>();
 
         int i = 1;
-        for (Map.Entry<Integer, String> entry: expectedDirections.entrySet()) {
+        for (Map.Entry<Direction, String> entry: expectedDirections.entrySet()) {
             OracleSpParameter p = factory.makeSpParameter("p_" + i, entry.getKey());
             assertEquals(entry.getValue(), p.getDirectionName());
             ++i;
         }
     }
 
-    private void checkShortDirectionName(int direction, String expected) {
+    private void checkShortDirectionName(Direction direction, String expected) {
         OracleSpParameter p = factory.makeSpParameter("p1", direction);
         assertEquals(p.getShortDirectionName(), expected);
     }

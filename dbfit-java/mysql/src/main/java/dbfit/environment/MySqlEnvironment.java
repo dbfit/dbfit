@@ -1,19 +1,19 @@
 package dbfit.environment;
 
+import dbfit.annotations.DatabaseEnvironment;
+import dbfit.api.AbstractDbEnvironment;
+import dbfit.util.DbParameterAccessor;
+import dbfit.util.NameNormaliser;
+
+import javax.sql.RowSet;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.regex.Pattern;
-import javax.sql.RowSet;
-import dbfit.util.*;
-import dbfit.api.*;
-import dbfit.annotations.DatabaseEnvironment;
+
+import static dbfit.util.DbParameterAccessor.Direction;
 
 @DatabaseEnvironment(name="MySql", driver="com.mysql.jdbc.Driver")
 public class MySqlEnvironment extends AbstractDbEnvironment {
@@ -78,7 +78,7 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
                 paramName = "";
             String dataType = rs.getString(2);
             DbParameterAccessor dbp = new DbParameterAccessor(paramName,
-                    DbParameterAccessor.INPUT, getSqlType(dataType),
+                    Direction.INPUT, getSqlType(dataType),
                     getJavaClass(dataType), position++);
             allParams.put(NameNormaliser.normaliseName(paramName), dbp);
         }
@@ -193,16 +193,16 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             if (!s.hasMoreElements())
                 return allParams;
             String token = s.nextToken();
-            int direction = DbParameterAccessor.INPUT;
+            Direction direction = Direction.INPUT;
 
             if (token.equals("inout")) {
-                direction = DbParameterAccessor.INPUT_OUTPUT;
+                direction = Direction.INPUT_OUTPUT;
                 token = s.nextToken();
             }
             if (token.equals("in")) {
                 token = s.nextToken();
             } else if (token.equals("out")) {
-                direction = DbParameterAccessor.OUTPUT;
+                direction = Direction.OUTPUT;
                 token = s.nextToken();
             }
             String paramName = token;
@@ -218,7 +218,7 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
                     .toLowerCase(), " ()");
             String dataType = s.nextToken();
             allParams.put("", new DbParameterAccessor("",
-                    DbParameterAccessor.RETURN_VALUE, getSqlType(dataType),
+                    Direction.RETURN_VALUE, getSqlType(dataType),
                     getJavaClass(dataType), -1));
         }
         return allParams;

@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static dbfit.util.DbParameterAccessor.Direction;
+
 @DatabaseEnvironment(name="Teradata", driver="com.teradata.jdbc.TeraDriver")
 public class TeradataEnvironment extends AbstractDbEnvironment {
 
@@ -293,14 +295,14 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
             System.out
                     .println("TeradataEnvironment: readIntoParams: direction: "
                             + direction);
-            int paramDirection;
+            Direction paramDirection;
             System.out
                     .println("TeradataEnvironment: readIntoParams: +paramName.trim().toUpperCase()+: +"
                             + paramName.trim().toUpperCase() + "+");
             if (paramName.trim().toUpperCase().equals("")) {
                 System.out
                         .println("TeradataEnvironment: readIntoParams: setting paramDirection to RETURN_VALUE");
-                paramDirection = DbParameterAccessor.RETURN_VALUE;
+                paramDirection = Direction.RETURN_VALUE;
             } else {
                 System.out
                         .println("TeradataEnvironment: readIntoParams: setting paramDirection to getParameterDirection(direction): "
@@ -318,7 +320,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
             Class<?> clsJavaClass = getJavaClass(dataType);
             DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                     paramDirection, intSqlType, clsJavaClass,
-                    paramDirection == DbParameterAccessor.RETURN_VALUE ? -1
+                    paramDirection == Direction.RETURN_VALUE ? -1
                             : position++);
             // DbParameterAccessor dbp = new DbParameterAccessor(paramName,
             // paramDirection, getSqlType(dataType), getJavaClass(dataType),
@@ -495,13 +497,13 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                         + " is not supported");
     }
 
-    private static int getParameterDirection(String direction) {
+    private static Direction getParameterDirection(String direction) {
         if ("IN".equals(direction))
-            return DbParameterAccessor.INPUT;
+            return Direction.INPUT;
         if ("OUT".equals(direction))
-            return DbParameterAccessor.OUTPUT;
+            return Direction.OUTPUT;
         if ("IN/OUT".equals(direction))
-            return DbParameterAccessor.INPUT_OUTPUT;
+            return Direction.INPUT_OUTPUT;
         // todo return val
         throw new UnsupportedOperationException(
                 "TeradataEnvironment: Direction " + direction
@@ -521,7 +523,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         StringBuilder retValues = new StringBuilder();
 
         for (DbParameterAccessor accessor : accessors) {
-            if (accessor.getDirection() == DbParameterAccessor.INPUT) {
+            if (accessor.getDirection() == Direction.INPUT) {
                 sb.append(comma);
                 values.append(comma);
                 sb.append(accessor.getName());
