@@ -1,6 +1,10 @@
 package dbfit.util;
 
+import dbfit.util.crypto.CryptoService;
+import dbfit.util.crypto.CryptoServiceFactory;
+
 import org.junit.Test;
+import org.junit.Before;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
@@ -9,14 +13,16 @@ public class DbConnectionPropertiesTest {
 
     private static final String DB_PASSWORD = "Test Password";
 
-    private String getOriginalPassword() {
-        return DB_PASSWORD;
+    private CryptoService cryptoService;
+
+
+    @Before
+    public void prepare() {
+        cryptoService = CryptoServiceFactory.getCryptoService();
     }
 
-    private String encrypt(String msg) {
-        // return cryptoService.encrypt(msg);
-        // TODO: encrypt msg here
-        return msg;
+    private String getOriginalPassword() {
+        return DB_PASSWORD;
     }
 
     /**
@@ -29,7 +35,7 @@ public class DbConnectionPropertiesTest {
         lines.add("username=mydemouser");
         lines.add("database=mydemodb");
 
-        lines.add("password=ENC(" + encrypt(password) + ")");
+        lines.add("password=ENC(" + cryptoService.encrypt(password) + ")");
 
         return lines;
     }
