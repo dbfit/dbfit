@@ -55,8 +55,7 @@ public class DbParameterAccessor {
     }
 
     protected int index; //index in effective sql statement (not necessarily the same as position below)
-    protected int direction;
-    protected Direction directionEnum;
+    protected Direction direction;
     protected String name;
     protected int sqlType;
     protected Class<?> javaType;
@@ -72,7 +71,7 @@ public class DbParameterAccessor {
 
     @Override
     public DbParameterAccessor clone() {
-        DbParameterAccessor copy = new DbParameterAccessor(name, directionEnum,
+        DbParameterAccessor copy = new DbParameterAccessor(name, direction,
                 sqlType, javaType, position);
 
         copy.cs = null;
@@ -83,7 +82,7 @@ public class DbParameterAccessor {
     @SuppressWarnings("unchecked")
     public DbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {
         this.name = name;
-        this.directionEnum = direction;
+        this.direction = direction;
         this.sqlType = sqlType;
         this.javaType = javaType;
         this.position=position;
@@ -93,17 +92,8 @@ public class DbParameterAccessor {
         return sqlType;
     }
 
-    /**
-     * One of the constants from this class declaring whether the param is
-     * input, output or a return value. JDBC does not have a return value
-     * parameter directions, so a new constant list had to be introduced
-     * public static final int RETURN_VALUE=0;
-     * public static final int INPUT=1;
-     * public static final int OUTPUT=2;
-     * public static final int INPUT_OUTPUT=3;
-     */
     public Direction getDirection() {
-        return directionEnum;
+        return direction;
     }
 
     public String getName() {
@@ -111,7 +101,7 @@ public class DbParameterAccessor {
     }
 
     public void setDirection(Direction direction){
-        this.directionEnum = direction;
+        this.direction = direction;
     }
 
     //really ugly, but a hack to support mysql, because it will not execute inserts with a callable statement
@@ -124,22 +114,20 @@ public class DbParameterAccessor {
     public void bindTo(PreparedStatement cs, int ind) throws SQLException{
         this.cs=cs;
         this.index=ind;    
-        if (directionEnum == OUTPUT ||
-                directionEnum == RETURN_VALUE||
-                directionEnum == INPUT_OUTPUT){
+        if (direction != INPUT){
             convertStatementToCallable().registerOutParameter(ind, getSqlType());
         }
     }
 
     public void set(Object value) throws Exception {
-        if (directionEnum == OUTPUT||directionEnum == RETURN_VALUE)
+        if (direction == OUTPUT|| direction == RETURN_VALUE)
             throw new UnsupportedOperationException("Trying to set value of output parameter "+name);
         cs.setObject(index, value);
     }    
 
     public Object get() throws IllegalAccessException, InvocationTargetException {
         try{
-            if (directionEnum.equals(INPUT))
+            if (direction.equals(INPUT))
                 throw new UnsupportedOperationException("Trying to get value of input parameter "+name);            
             return normaliseValue(convertStatementToCallable().getObject(index));
         }
@@ -160,7 +148,7 @@ public class DbParameterAccessor {
     }
 
     public boolean isReturnValueAccessor() {
-        return (getDirection() == RETURN_VALUE);
+        return direction.isReturnValue();
     }
 }
 
