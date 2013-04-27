@@ -94,13 +94,9 @@ public class OracleStoredProcedureCall extends DbStoredProcedureCall {
         return command;
     }
 
-    private boolean isBooleanAccessor(DbParameterAccessor accessor) {
-        return ((OracleDbParameterAccessor) accessor).isOriginalTypeBoolean();
-    }
-
     private boolean containsBooleanType() {
         for (DbParameterAccessor ac: getAccessors()) {
-            if (isBooleanAccessor(ac)) {
+            if (((OracleDbParameterAccessor) ac).isOriginalTypeBoolean()) {
                 return true;
             }
         }
