@@ -2,6 +2,8 @@ package dbfit.util.crypto;
 
 import dbfit.util.crypto.CryptoService;
 
+import java.security.Key;
+
 public class CryptoServiceFactory {
 
     private static CryptoService cryptoServiceInstance = null;
@@ -30,6 +32,10 @@ public class CryptoServiceFactory {
         }
 
         return cryptoServiceInstance;
+    }
+
+    public static AESCryptoService createAESCryptoService(Key key) {
+        return new AESCryptoService(key);
     }
 }
 
