@@ -19,6 +19,10 @@ public class DbConnectionProperties {
     private DbConnectionProperties() {
     }
 
+    private static String parsePassword(String pwd) {
+        return pwd;
+    }
+
     public static DbConnectionProperties CreateFromString(
             java.util.List<String> lines) {
         int currLine = 0;
@@ -45,7 +49,7 @@ public class DbConnectionProperties {
             if ("username".equals(key)) {
                 props.Username = val;
             } else if ("password".equals(key)) {
-                props.Password = val;
+                props.Password = parsePassword(val);
             } else if ("service".equals(key)) {
                 props.Service = val;
             } else if ("database".equals(key)) {
