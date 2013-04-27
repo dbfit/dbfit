@@ -1,6 +1,8 @@
 package dbfit.environment;
 
+import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
+import dbfit.api.DbStoredProcedureCall;
 import dbfit.util.*;
 import oracle.jdbc.OracleTypes;
 import oracle.jdbc.rowset.OracleCachedRowSet;
@@ -9,8 +11,6 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
 import java.util.regex.Pattern;
-
-import dbfit.annotations.DatabaseEnvironment;
 
 @DatabaseEnvironment(name="Oracle", driver="oracle.jdbc.OracleDriver")
 public class OracleEnvironment extends AbstractDbEnvironment {
@@ -568,7 +568,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
-    protected DbStoredProcedureCommandHelper getDbStoredProcedureCommandHelper() {
-        return new OracleStoredProcedureCommandHelper();
+    public DbStoredProcedureCall newStoredProcedureCall(String name, DbParameterAccessor[] accessors) {
+        return new OracleStoredProcedureCall(name, accessors);
     }
 }

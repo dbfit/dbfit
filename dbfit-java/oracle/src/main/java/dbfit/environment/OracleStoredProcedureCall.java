@@ -1,28 +1,30 @@
 package dbfit.environment;
 
-import dbfit.util.DbParameterAccessors;
-import dbfit.util.DbStoredProcedureCommandHelper;
+import dbfit.api.DbStoredProcedureCall;
 import dbfit.util.DbParameterAccessor;
+import dbfit.util.DbParameterAccessors;
 import dbfit.util.OracleDbParameterAccessor;
-import dbfit.util.oracle.OracleSpParameter;
 import dbfit.util.oracle.OracleBooleanSpCommand;
+import dbfit.util.oracle.OracleSpParameter;
 import dbfit.util.oracle.SpGeneratorOutput;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommandHelper {
+public class OracleStoredProcedureCall extends DbStoredProcedureCall {
+    public OracleStoredProcedureCall(String name, DbParameterAccessor[] accessors) {
+        super(name, accessors);
+    }
 
     @Override
-    public String buildPreparedStatementString(String procName,
-                                               DbParameterAccessor[] accessors) {
-        if (!containsBooleanType(accessors)) {
-            return super.buildPreparedStatementString(procName, accessors);
+    public String toSqlString() {
+        if (!containsBooleanType()) {
+            return super.toSqlString();
         }
 
-        OracleBooleanSpCommand command = initSpCommand(procName, accessors);
+        OracleBooleanSpCommand command = initSpCommand();
         command.generate();
         return command.toString();
     }
@@ -69,9 +71,9 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
 
     }
 
-    private SpParamsSpec initSpParams(DbParameterAccessor[] accessors) {
-        List<String> accessorNames = new DbParameterAccessors(accessors).getSortedAccessorNames();
-        Map<String, DbParameterAccessor> accessorsMap = getAccessorsMap(accessors);
+    private SpParamsSpec initSpParams() {
+        List<String> accessorNames = new DbParameterAccessors(getAccessors()).getSortedAccessorNames();
+        Map<String, DbParameterAccessor> accessorsMap = getAccessorsMap(getAccessors());
 
         SpParamsSpec params = new SpParamsSpec();
 
@@ -83,11 +85,10 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
         return params;
     }
 
-    private OracleBooleanSpCommand initSpCommand(String procName,
-                                    DbParameterAccessor[] accessors) {
-        SpParamsSpec params = initSpParams(accessors);
+    private OracleBooleanSpCommand initSpCommand() {
+        SpParamsSpec params = initSpParams();
         OracleBooleanSpCommand command = OracleBooleanSpCommand.newInstance(
-                procName, params.arguments, params.returnValue);
+                getName(), params.arguments, params.returnValue);
         command.setOutput(new SpGeneratorOutput());
 
         return command;
@@ -97,8 +98,8 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
         return ((OracleDbParameterAccessor) accessor).isOriginalTypeBoolean();
     }
 
-    private boolean containsBooleanType(DbParameterAccessor[] accessors) {
-        for (DbParameterAccessor ac: accessors) {
+    private boolean containsBooleanType() {
+        for (DbParameterAccessor ac: getAccessors()) {
             if (isBooleanAccessor(ac)) {
                 return true;
             }
@@ -106,4 +107,3 @@ public class OracleStoredProcedureCommandHelper extends DbStoredProcedureCommand
         return false;
     }
 }
-
