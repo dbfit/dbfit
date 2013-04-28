@@ -42,6 +42,7 @@ public class JKSCryptoKeyStoreManager implements CryptoKeyStoreManager {
         return keyStorePassword;
     }
 
+    @Override
     public File getKeyStoreFile() {
         return new File(getKeyStoreLocation(), KS_NAME);
     }
