@@ -52,17 +52,24 @@ public class CryptoKeyStoreManager {
         return getKeyStoreFile().exists();
     }
 
-    private void verifyNoExistingKeyStore() throws UnsupportedOperationException {
-        if (keyStoreExists()) {
+    public void createKeyStore() throws Exception {
+        if (!initKeyStore()) {
             throw new UnsupportedOperationException(
                     "Cannot create KeyStore on top of existing one! ["
                     + getKeyStoreFile() + "]");
         }
     }
 
-    public void createKeyStore() throws Exception {
-        verifyNoExistingKeyStore();
+    public boolean initKeyStore() throws Exception {
+        if (keyStoreExists()) {
+            return false;
+        }
 
+        createKeyStoreNoCheck();
+        return true;
+    }
+
+    private void createKeyStoreNoCheck() throws Exception {
         KeyStore ks = KeyStore.getInstance(KS_TYPE);
         ks.load(null, getKeyStorePassword());
         SecretKey mySecretKey = (SecretKey) generateKey();

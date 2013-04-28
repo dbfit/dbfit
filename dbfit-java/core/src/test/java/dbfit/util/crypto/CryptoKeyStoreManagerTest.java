@@ -68,5 +68,16 @@ public class CryptoKeyStoreManagerTest {
         assertTrue(ksManager.keyStoreExists());
     }
 
+    @Test
+    public void initNonExistingKeyStoreShouldCreateOne() throws Exception {
+        assertTrue(ksManager.initKeyStore());
+    }
+
+    @Test
+    public void initExistingKeyStoreShouldReturnFalse() throws Exception {
+        ksManager.createKeyStore();
+        assertFalse(ksManager.initKeyStore());
+    }
+
 }
 
