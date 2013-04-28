@@ -13,7 +13,7 @@ public class CryptoKeyServiceFactory {
             return keyStoreLocation;
         }
 
-        return CryptoKeyStoreManager.getDefaultKeyStoreLocation();
+        return CryptoAdmin.getDefaultKeyStoreLocation();
     }
 
     public static void setKeyStoreLocation(File ksLocation, char[] password) {

@@ -15,8 +15,9 @@ public class CryptoServiceTests {
 
     public static final char[] TEST_KS_PASS = "dbfit-demo-pass".toCharArray();
 
-    private static CryptoKeyStoreManager getKsManager(File ksPath) {
-        return new CryptoKeyStoreManager(ksPath, TEST_KS_PASS);
+    private static JKSCryptoKeyStoreManager getKsManager(File ksPath) {
+        return (JKSCryptoKeyStoreManager) CryptoAdmin.getKSManagerFactory()
+                                        .newInstance(ksPath, TEST_KS_PASS);
     }
 
     public static void initTestCryptoKeyStore(File ksPath) throws Exception {
@@ -28,10 +29,6 @@ public class CryptoServiceTests {
     public static void resetTestKeyServiceFactory() {
         CryptoKeyServiceFactory.setKeyStoreLocation(null);
         CryptoKeyServiceFactory.setKeyService(null);
-    }
-
-    public static Key generateKey() throws NoSuchAlgorithmException {
-        return CryptoKeyStoreManager.generateKey();
     }
 
     public static void encryptedPasswordShouldNotContainOriginalOne(

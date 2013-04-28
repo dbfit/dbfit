@@ -25,7 +25,8 @@ public class CryptoKeyStoreManagerTest {
 
     @Before
     public void prepare() {
-        ksManager = new CryptoKeyStoreManager(tempKeyStoreFolder.getRoot());
+        ksManager = CryptoAdmin.getKSManagerFactory().newInstance(
+                                            tempKeyStoreFolder.getRoot());
     }
 
     @Test

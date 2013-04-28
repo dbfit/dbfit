@@ -1,7 +1,7 @@
 package dbfit.util.crypto;
 
-import static dbfit.util.crypto.CryptoKeyStoreManager.KEY_ALIAS;
-import static dbfit.util.crypto.CryptoKeyStoreManager.KS_PASS;
+import static dbfit.util.crypto.JKSCryptoKeyStoreManager.KEY_ALIAS;
+import static dbfit.util.crypto.JKSCryptoKeyStoreManager.KS_PASS;
 
 import java.security.KeyStore;
 import java.security.Key;
@@ -36,7 +36,8 @@ public class JKSCryptoKeyService implements CryptoKeyService {
 
     private static KeyStore loadKeyStore(File location, char[] password) {
         try {
-            return new CryptoKeyStoreManager(location, password).loadKeyStore();
+            return CryptoAdmin.getKSManagerFactory()
+                        .newInstance(location, password).loadKeyStore();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
