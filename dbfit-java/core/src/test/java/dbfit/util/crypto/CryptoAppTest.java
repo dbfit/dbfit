@@ -51,7 +51,7 @@ public class CryptoAppTest {
         app.execute(args);
 
         verify(mockedKSManagerFactory).newInstance();
-        verify(mockedKSManager).createKeyStore();
+        verify(mockedKSManager).initKeyStore();
     }
 
 }
