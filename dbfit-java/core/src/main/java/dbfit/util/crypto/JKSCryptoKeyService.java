@@ -1,6 +1,7 @@
 package dbfit.util.crypto;
 
-import dbfit.util.crypto.CryptoKeyService;
+import static dbfit.util.crypto.CryptoKeyStoreManager.KEY_ALIAS;
+import static dbfit.util.crypto.CryptoKeyStoreManager.KS_PASS;
 
 import java.security.KeyStore;
 import java.security.Key;
@@ -12,11 +13,6 @@ import java.io.FileInputStream;
  */
 public class JKSCryptoKeyService implements CryptoKeyService {
 
-    public static final String KS_TYPE = "JCEKS";
-    public static final String KS_NAME = ".dbfit.jks";
-    public static final char[] KS_PASS = "DbFit Access Key".toCharArray();
-    public static final String KEY_ALIAS = "dbfit";
-
     private KeyStore keyStore;
     private char[] password;
 
@@ -25,29 +21,8 @@ public class JKSCryptoKeyService implements CryptoKeyService {
     }
 
     public JKSCryptoKeyService(File keyStorePath, char[] password) {
-        try {
-            this.password = password;
-            this.keyStore = loadKeyStore(keyStorePath, password);
-        } catch(Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static KeyStore loadKeyStore(File keyStorePath, char[] password)
-                                                        throws Exception {
-        KeyStore ks = KeyStore.getInstance(KS_TYPE);
-        File file = new File(keyStorePath, KS_NAME);
-        FileInputStream in = null;
-
-        try {
-            in = new FileInputStream(file);
-            ks.load(in, password);
-            return ks;
-        } finally {
-            if (null != in) {
-                in.close();
-            }
-        }
+        this.password = password;
+        this.keyStore = loadKeyStore(keyStorePath, password);
     }
 
     @Override
@@ -55,6 +30,14 @@ public class JKSCryptoKeyService implements CryptoKeyService {
         try {
             return keyStore.getKey(KEY_ALIAS, password);
         } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static KeyStore loadKeyStore(File location, char[] password) {
+        try {
+            return new CryptoKeyStoreManager(location, password).loadKeyStore();
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
