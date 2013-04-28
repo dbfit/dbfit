@@ -124,5 +124,15 @@ public class DbConnectionPropertiesTest {
         assertEquals("crap", keyval[1]);
     }
 
+    @Test
+    public void shouldAllowEqualsSignInSettingsValue() {
+        String key = "password";
+        String value = "One=Two-Three==";
+        String[] keyval = DbConnectionProperties.splitKeyVal(
+                key + "=" + value);
+
+        assertEquals(key, keyval[0]);
+        assertEquals(value, keyval[1]);
+    }
 }
 
