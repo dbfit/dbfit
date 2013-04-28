@@ -10,11 +10,15 @@ import org.junit.Test;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
+import org.junit.rules.ExpectedException;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.matchers.JUnitMatchers.containsString;
 
 public class CryptoKeyStoreManagerTest {
 
     @Rule public TemporaryFolder tempKeyStoreFolder = new TemporaryFolder();
+    @Rule public ExpectedException thrown = ExpectedException.none();
+
     private CryptoKeyStoreManager ksManager;
 
     @Before
@@ -24,6 +28,17 @@ public class CryptoKeyStoreManagerTest {
 
     @Test
     public void createKeyStoreTest() throws Exception {
+        ksManager.createKeyStore();
+    }
+
+    @Test
+    public void createKeyStoreOnTopOfExistingOneShouldFail() throws Exception {
+        ksManager.createKeyStore();
+
+        String expectedMessage = "Cannot create KeyStore on top of existing one";
+        thrown.expect(Exception.class);
+        thrown.expectMessage(containsString(expectedMessage));
+
         ksManager.createKeyStore();
     }
 

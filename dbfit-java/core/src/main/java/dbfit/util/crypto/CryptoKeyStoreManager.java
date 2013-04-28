@@ -48,7 +48,17 @@ public class CryptoKeyStoreManager {
         return new File(getKeyStoreLocation(), KS_NAME);
     }
 
+    private void verifyNoExistingKeyStore() throws UnsupportedOperationException {
+        if (getKeyStoreFile().exists()) {
+            throw new UnsupportedOperationException(
+                    "Cannot create KeyStore on top of existing one! ["
+                    + getKeyStoreFile() + "]");
+        }
+    }
+
     public void createKeyStore() throws Exception {
+        verifyNoExistingKeyStore();
+
         KeyStore ks = KeyStore.getInstance(KS_TYPE);
         ks.load(null, getKeyStorePassword());
         SecretKey mySecretKey = (SecretKey) generateKey();
