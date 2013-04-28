@@ -1,5 +1,6 @@
 package dbfit.util.crypto;
 
+import dbfit.util.crypto.CryptoKeyService;
 import dbfit.util.crypto.CryptoService;
 
 import java.security.Key;
@@ -7,23 +8,27 @@ import java.security.Key;
 public class CryptoServiceFactory {
 
     private static CryptoService cryptoServiceInstance = null;
+    private static CryptoKeyService keyService = null; // for overwriting default
 
     public static void setCryptoService(CryptoService svc) {
         cryptoServiceInstance = svc;
     }
 
-    private static void initCryptoService() {
-        cryptoServiceInstance = new CryptoService() {
-            @Override
-            public String encrypt(String msg) {
-                return "E" + msg;
-            }
+    public static void setKeyService(CryptoKeyService keySvc) {
+        keyService = keySvc;
+    }
 
-            @Override
-            public String decrypt(String msg) {
-                return msg.substring(1);
-            }
-        };
+    private static CryptoKeyService getKeyService() {
+        if (null != keyService) {
+            return keyService;
+        } else {
+            return CryptoKeyServiceFactory.getKeyService();
+        }
+    }
+
+    private static void initCryptoService() {
+        Key key = getKeyService().getKey();
+        setCryptoService(createAESCryptoService(key));
     }
 
     public static CryptoService getCryptoService() {
