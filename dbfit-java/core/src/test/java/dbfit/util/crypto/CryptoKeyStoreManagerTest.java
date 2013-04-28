@@ -12,6 +12,8 @@ import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.ExpectedException;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.matchers.JUnitMatchers.containsString;
 
 public class CryptoKeyStoreManagerTest {
@@ -57,6 +59,13 @@ public class CryptoKeyStoreManagerTest {
     @Test
     public void generateKeyTest() throws NoSuchAlgorithmException {
         assertNotNull(ksManager.generateKey());
+    }
+
+    @Test
+    public void keyStoreExistenceCheck() throws Exception {
+        assertFalse(ksManager.keyStoreExists());
+        ksManager.createKeyStore();
+        assertTrue(ksManager.keyStoreExists());
     }
 
 }

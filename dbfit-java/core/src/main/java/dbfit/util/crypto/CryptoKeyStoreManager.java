@@ -48,8 +48,12 @@ public class CryptoKeyStoreManager {
         return new File(getKeyStoreLocation(), KS_NAME);
     }
 
+    public boolean keyStoreExists() {
+        return getKeyStoreFile().exists();
+    }
+
     private void verifyNoExistingKeyStore() throws UnsupportedOperationException {
-        if (getKeyStoreFile().exists()) {
+        if (keyStoreExists()) {
             throw new UnsupportedOperationException(
                     "Cannot create KeyStore on top of existing one! ["
                     + getKeyStoreFile() + "]");
