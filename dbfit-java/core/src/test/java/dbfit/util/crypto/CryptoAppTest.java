@@ -21,9 +21,14 @@ public class CryptoAppTest {
     @Mock private CryptoKeyStoreManager mockedKSManager;
     @Mock private CryptoKeyStoreManagerFactory mockedKSManagerFactory;
     @Rule public TemporaryFolder tempKeyStoreFolder = new TemporaryFolder();
+    @Rule public TemporaryFolder tempKeyStoreFolder2 = new TemporaryFolder();
 
     private String getTempKeyStorePath() throws IOException {
         return tempKeyStoreFolder.getRoot().getCanonicalPath();
+    }
+
+    private String getTempKeyStore2Path() throws IOException {
+        return tempKeyStoreFolder2.getRoot().getCanonicalPath();
     }
 
     @Before
@@ -54,5 +59,37 @@ public class CryptoAppTest {
         verify(mockedKSManager).initKeyStore();
     }
 
+    @Test
+    public void createKeyStoreInCustomLocationTest() throws Exception {
+        CryptoApp app = new CryptoApp(mockedKSManagerFactory, mockedCryptoService);
+        String[] args = { "-createKeyStore", getTempKeyStore2Path() };
+
+        app.execute(args);
+
+        verify(mockedKSManagerFactory).newInstance(tempKeyStoreFolder2.getRoot());
+        verify(mockedKSManager).initKeyStore();
+    }
+
+    @Test
+    public void encryptPasswordTest() throws Exception {
+        CryptoApp app = new CryptoApp(mockedKSManagerFactory, mockedCryptoService);
+        String password = "Demo Password CLI";
+        String[] args = { "-encryptPassword", password };
+
+        app.execute(args);
+
+        verify(mockedCryptoService).encrypt(password);
+    }
+
+    @Test
+    public void shouldCreateKeyStoreIfOneIsMissingOnEncrypt() throws Exception {
+        CryptoApp app = new CryptoApp(mockedKSManagerFactory, mockedCryptoService);
+        String password = "Demo Password CLI 2";
+        String[] args = { "-encryptPassword", password };
+
+        app.execute(args);
+
+        verify(mockedKSManagerFactory).newInstance();
+    }
 }
 

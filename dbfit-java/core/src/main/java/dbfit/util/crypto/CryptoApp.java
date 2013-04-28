@@ -1,6 +1,7 @@
 package dbfit.util.crypto;
 
 import java.io.PrintStream;
+import java.io.File;
 
 public class CryptoApp {
 
@@ -29,8 +30,7 @@ public class CryptoApp {
         out.println(msg);
     }
 
-    private void createKeyStore() throws Exception {
-        CryptoKeyStoreManager ksMgr = ksManagerFactory.newInstance();
+    private void createKeyStore(CryptoKeyStoreManager ksMgr) throws Exception {
         if (ksMgr.initKeyStore()) {
             updateStatus("KeyStore created: " + ksMgr.getKeyStoreFile());
         } else {
@@ -40,15 +40,42 @@ public class CryptoApp {
         }
     }
 
+    private void createKeyStore() throws Exception {
+        CryptoKeyStoreManager ksMgr = ksManagerFactory.newInstance();
+        createKeyStore(ksMgr);
+    }
+
+    private void createKeyStore(String customPath) throws Exception {
+        File ksRoot = new File(customPath);
+        CryptoKeyStoreManager ksMgr = ksManagerFactory.newInstance(ksRoot);
+        createKeyStore(ksMgr);
+    }
+
+    private void encryptPassword(String password) throws Exception {
+        CryptoKeyStoreManager ksMgr = ksManagerFactory.newInstance();
+        if (!ksMgr.keyStoreExists()) {
+            createKeyStore(ksMgr);
+        }
+
+        String encPwd = cryptoService.encrypt(password);
+        updateStatus("Encrypted Password\n: ENC(" + encPwd + ")");
+    }
+
     public void execute(String[] args) throws Exception {
         if (args.length < 1) {
             return;
         }
 
-        String cmd = args[0].toLowerCase();
+        String cmd = args[0];
 
-        if (cmd.equals("-createkeystore")) {
-            createKeyStore();
+        if (cmd.equalsIgnoreCase("-createKeyStore")) {
+            if (args.length > 1) {
+                createKeyStore(args[1]);
+            } else {
+                createKeyStore();
+            }
+        } else if (cmd.equalsIgnoreCase("-encryptPassword")) {
+            encryptPassword(args[1]);
         }
     }
 
