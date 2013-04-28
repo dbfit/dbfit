@@ -49,6 +49,10 @@ public class DbConnectionProperties {
         }
     }
 
+    public static String[] splitKeyVal(String line) {
+        return line.split("=");
+    }
+
     public static DbConnectionProperties CreateFromString(
             java.util.List<String> lines) {
         int currLine = 0;
@@ -62,7 +66,7 @@ public class DbConnectionProperties {
                 continue;
             if (trimline.startsWith("#"))
                 continue;
-            String[] keyval = trimline.split("=");
+            String[] keyval = splitKeyVal(trimline);
             String key, val;
 
             if (keyval.length == 1) {

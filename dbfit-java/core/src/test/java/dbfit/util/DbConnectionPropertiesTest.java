@@ -115,5 +115,14 @@ public class DbConnectionPropertiesTest {
     public void decryptedPasswordShouldMatchOriginalOne() {
         checkPasswordLoad(false);
     }
+
+    @Test
+    public void splitKeyValueSettingsLineTest() {
+        String[] keyval = DbConnectionProperties.splitKeyVal("password=crap");
+
+        assertEquals("password", keyval[0]);
+        assertEquals("crap", keyval[1]);
+    }
+
 }
 
