@@ -7,6 +7,7 @@ import javax.crypto.SecretKey;
 import java.security.KeyStore;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 public class CryptoKeyStoreManager {
@@ -65,6 +66,21 @@ public class CryptoKeyStoreManager {
         } finally {
             if (fos != null) {
                 fos.close();
+            }
+        }
+    }
+
+    public KeyStore loadKeyStore() throws Exception {
+        KeyStore ks = KeyStore.getInstance(KS_TYPE);
+        FileInputStream in = null;
+
+        try {
+            in = new FileInputStream(getKeyStoreFile());
+            ks.load(in, getKeyStorePassword());
+            return ks;
+        } finally {
+            if (null != in) {
+                in.close();
             }
         }
     }

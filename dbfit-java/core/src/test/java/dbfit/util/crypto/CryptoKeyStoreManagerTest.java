@@ -27,6 +27,18 @@ public class CryptoKeyStoreManagerTest {
         ksManager.createKeyStore();
     }
 
+    @Test(expected = java.io.IOException.class)
+    public void shouldFailToLoadFromNonExistingKeyStore() throws Exception {
+        KeyStore ks = ksManager.loadKeyStore();
+    }
+
+    @Test
+    public void shouldSucceedToLoadFromExistingKeyStore() throws Exception {
+        ksManager.createKeyStore();
+        KeyStore ks = ksManager.loadKeyStore();
+        assertNotNull(ks);
+    }
+
     @Test
     public void generateKeyTest() throws NoSuchAlgorithmException {
         assertNotNull(ksManager.generateKey());
