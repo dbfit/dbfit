@@ -1,6 +1,5 @@
 package dbfit.util.crypto;
 
-import java.security.Key;
 import java.io.File;
 
 public class CryptoKeyServiceFactory {
@@ -9,21 +8,12 @@ public class CryptoKeyServiceFactory {
     private static File keyStoreLocation = null;
     private static char[] keyStorePassword = null;
 
-    private static File getKeyStoreLocationFromProperties() {
-        String ksLocation = System.getProperty("dbfit.keystore.path");
-        if (ksLocation == null) {
-            ksLocation = System.getProperty("user.home");
-        }
-
-        return new File(ksLocation);
-    }
-
     public static File getKeyStoreLocation() {
         if (keyStoreLocation != null) {
             return keyStoreLocation;
         }
 
-        return getKeyStoreLocationFromProperties();
+        return CryptoKeyStoreManager.getDefaultKeyStoreLocation();
     }
 
     public static void setKeyStoreLocation(File ksLocation, char[] password) {
