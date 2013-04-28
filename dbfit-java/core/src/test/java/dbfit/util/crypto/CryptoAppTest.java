@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
+import org.mockito.InOrder;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -20,6 +21,8 @@ public class CryptoAppTest {
     @Mock private CryptoService mockedCryptoService;
     @Mock private CryptoKeyStoreManager mockedKSManager;
     @Mock private CryptoKeyStoreManagerFactory mockedKSManagerFactory;
+    @Mock private CryptoKeyService mockedKeyService;
+
     @Rule public TemporaryFolder tempKeyStoreFolder = new TemporaryFolder();
     @Rule public TemporaryFolder tempKeyStoreFolder2 = new TemporaryFolder();
 
@@ -31,12 +34,17 @@ public class CryptoAppTest {
         return tempKeyStoreFolder2.getRoot().getCanonicalPath();
     }
 
+    private CryptoApp createCryptoApp() {
+        return new CryptoApp(mockedKSManagerFactory);
+    }
+
     @Before
     public void prepare() throws IOException {
         when(mockedKSManagerFactory.newInstance()).thenReturn(mockedKSManager);
         when(mockedKSManagerFactory.newInstance(any(File.class))).thenReturn(mockedKSManager);
 
         CryptoAdmin.setKSManagerFactory(mockedKSManagerFactory);
+        CryptoKeyServiceFactory.setKeyService(mockedKeyService);
         CryptoServiceFactory.setCryptoService(mockedCryptoService);
 
         System.setProperty("dbfit.keystore.path", getTempKeyStorePath());
@@ -50,7 +58,7 @@ public class CryptoAppTest {
 
     @Test
     public void createKeyStoreInDefaultLocationTest() throws Exception {
-        CryptoApp app = new CryptoApp(mockedKSManagerFactory, mockedCryptoService);
+        CryptoApp app = createCryptoApp();
         String[] args = { "-createKeyStore" };
 
         app.execute(args);
@@ -61,7 +69,7 @@ public class CryptoAppTest {
 
     @Test
     public void createKeyStoreInCustomLocationTest() throws Exception {
-        CryptoApp app = new CryptoApp(mockedKSManagerFactory, mockedCryptoService);
+        CryptoApp app = createCryptoApp();
         String[] args = { "-createKeyStore", getTempKeyStore2Path() };
 
         app.execute(args);
@@ -72,7 +80,8 @@ public class CryptoAppTest {
 
     @Test
     public void encryptPasswordTest() throws Exception {
-        CryptoApp app = new CryptoApp(mockedKSManagerFactory, mockedCryptoService);
+        when(mockedKSManager.keyStoreExists()).thenReturn(true);
+        CryptoApp app = createCryptoApp();
         String password = "Demo Password CLI";
         String[] args = { "-encryptPassword", password };
 
@@ -82,14 +91,21 @@ public class CryptoAppTest {
     }
 
     @Test
-    public void shouldCreateKeyStoreIfOneIsMissingOnEncrypt() throws Exception {
-        CryptoApp app = new CryptoApp(mockedKSManagerFactory, mockedCryptoService);
+    public void shouldCreateKeyStoreBeforeEncrypt() throws Exception {
+        when(mockedKSManager.keyStoreExists()).thenReturn(false);
+        CryptoApp app = createCryptoApp();
         String password = "Demo Password CLI 2";
         String[] args = { "-encryptPassword", password };
 
         app.execute(args);
 
-        verify(mockedKSManagerFactory).newInstance();
+        InOrder inOrder = inOrder(mockedKSManagerFactory, mockedKSManager,
+                mockedCryptoService, mockedKeyService);
+
+        inOrder.verify(mockedKSManagerFactory).newInstance();
+        inOrder.verify(mockedKSManager).initKeyStore();
+        inOrder.verify(mockedKeyService).getKey();
+        inOrder.verify(mockedCryptoService).encrypt(password);
     }
 }
 

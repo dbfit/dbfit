@@ -6,12 +6,10 @@ import java.io.File;
 public class CryptoApp {
 
     private CryptoKeyStoreManagerFactory ksManagerFactory;
-    private CryptoService cryptoService;
     private PrintStream out = System.out;
 
-    public CryptoApp(CryptoKeyStoreManagerFactory factory, CryptoService cryptoService) {
+    public CryptoApp(CryptoKeyStoreManagerFactory factory) {
         this.ksManagerFactory = factory;
-        this.cryptoService = cryptoService;
     }
 
     public void setOutput(PrintStream out) {
@@ -57,7 +55,7 @@ public class CryptoApp {
             createKeyStore(ksMgr);
         }
 
-        String encPwd = cryptoService.encrypt(password);
+        String encPwd = getCryptoService().encrypt(password);
         updateStatus("Encrypted Password\n: ENC(" + encPwd + ")");
     }
 
@@ -80,10 +78,13 @@ public class CryptoApp {
     }
 
     public static void main(String[] args) throws Exception {
-        CryptoApp app = new CryptoApp(CryptoAdmin.getKSManagerFactory(),
-                CryptoServiceFactory.getCryptoService());
+        CryptoApp app = new CryptoApp(CryptoAdmin.getKSManagerFactory());
 
         app.execute(args);
+    }
+
+    private CryptoService getCryptoService() {
+        return CryptoServiceFactory.getCryptoService();
     }
 
 }
