@@ -5,6 +5,7 @@ import java.io.File;
 public class CryptoAdmin {
 
     private static CryptoKeyStoreManagerFactory ksManagerFactory = null;
+    private static CryptoKeyServiceFactory keyFactory = null;
 
     public static void setKSManagerFactory(CryptoKeyStoreManagerFactory factory) {
         ksManagerFactory = factory;
@@ -16,6 +17,18 @@ public class CryptoAdmin {
         }
 
         return ksManagerFactory;
+    }
+
+    public static void setCryptoKeyServiceFactory(CryptoKeyServiceFactory factory) {
+        keyFactory = factory;
+    }
+
+    public static CryptoKeyServiceFactory getCryptoKeyServiceFactory() {
+        if (null == keyFactory) {
+            return new JKSCryptoKeyServiceFactory(getDefaultKeyStoreLocation());
+        }
+
+        return keyFactory;
     }
 
     public static File getDefaultKeyStoreLocation() {

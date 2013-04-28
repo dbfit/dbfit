@@ -22,7 +22,7 @@ public class CryptoServiceFactory {
         if (null != keyService) {
             return keyService;
         } else {
-            return CryptoKeyServiceFactory.getKeyService();
+            return CryptoAdmin.getCryptoKeyServiceFactory().getKeyService();
         }
     }
 

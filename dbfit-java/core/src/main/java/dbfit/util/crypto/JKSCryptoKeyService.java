@@ -21,7 +21,7 @@ public class JKSCryptoKeyService implements CryptoKeyService {
     }
 
     public JKSCryptoKeyService(File keyStorePath, char[] password) {
-        this.password = password;
+        this.password = ((password == null) ? KS_PASS : password);
         this.keyStore = loadKeyStore(keyStorePath, password);
     }
 

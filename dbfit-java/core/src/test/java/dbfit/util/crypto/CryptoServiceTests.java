@@ -15,6 +15,15 @@ public class CryptoServiceTests {
 
     public static final char[] TEST_KS_PASS = "dbfit-demo-pass".toCharArray();
 
+    private static void initTestCryptoKeyServiceFactory(final File ksPath) {
+        CryptoAdmin.setCryptoKeyServiceFactory(
+            new CryptoKeyServiceFactory() {
+                @Override public CryptoKeyService getKeyService() {
+                    return new JKSCryptoKeyService(ksPath, TEST_KS_PASS);
+                }
+            });
+    }
+
     private static JKSCryptoKeyStoreManager getKsManager(File ksPath) {
         return (JKSCryptoKeyStoreManager) CryptoAdmin.getKSManagerFactory()
                                         .newInstance(ksPath, TEST_KS_PASS);
@@ -22,13 +31,11 @@ public class CryptoServiceTests {
 
     public static void initTestCryptoKeyStore(File ksPath) throws Exception {
         getKsManager(ksPath).createKeyStore();
-        CryptoKeyServiceFactory.setKeyStoreLocation(ksPath, TEST_KS_PASS);
-        CryptoKeyServiceFactory.setKeyService(null);
+        initTestCryptoKeyServiceFactory(ksPath);
     }
 
     public static void resetTestKeyServiceFactory() {
-        CryptoKeyServiceFactory.setKeyStoreLocation(null);
-        CryptoKeyServiceFactory.setKeyService(null);
+        CryptoAdmin.setCryptoKeyServiceFactory(null);
     }
 
     public static void encryptedPasswordShouldNotContainOriginalOne(

@@ -21,6 +21,7 @@ public class CryptoAppTest {
     @Mock private CryptoService mockedCryptoService;
     @Mock private CryptoKeyStoreManager mockedKSManager;
     @Mock private CryptoKeyStoreManagerFactory mockedKSManagerFactory;
+    @Mock private CryptoKeyServiceFactory mockedKeyServiceFactory;
     @Mock private CryptoKeyService mockedKeyService;
 
     @Rule public TemporaryFolder tempKeyStoreFolder = new TemporaryFolder();
@@ -42,9 +43,10 @@ public class CryptoAppTest {
     public void prepare() throws IOException {
         when(mockedKSManagerFactory.newInstance()).thenReturn(mockedKSManager);
         when(mockedKSManagerFactory.newInstance(any(File.class))).thenReturn(mockedKSManager);
+        when(mockedKeyServiceFactory.getKeyService()).thenReturn(mockedKeyService);
 
         CryptoAdmin.setKSManagerFactory(mockedKSManagerFactory);
-        CryptoKeyServiceFactory.setKeyService(mockedKeyService);
+        CryptoAdmin.setCryptoKeyServiceFactory(mockedKeyServiceFactory);
         CryptoServiceFactory.setCryptoService(mockedCryptoService);
 
         System.setProperty("dbfit.keystore.path", getTempKeyStorePath());
@@ -91,11 +93,12 @@ public class CryptoAppTest {
     }
 
     @Test
-    public void shouldCreateKeyStoreBeforeEncrypt() throws Exception {
+    public void shouldCreateKeyStoreBeforeGettingKey() throws Exception {
         when(mockedKSManager.keyStoreExists()).thenReturn(false);
         CryptoApp app = createCryptoApp();
         String password = "Demo Password CLI 2";
         String[] args = { "-encryptPassword", password };
+
 
         app.execute(args);
 

@@ -24,7 +24,7 @@ public class CryptoKeyServiceTest {
 
     @Test
     public void testLoadedKeyIsNotNull() {
-        CryptoKeyService keySvc = CryptoKeyServiceFactory.getKeyService();
+        CryptoKeyService keySvc = CryptoAdmin.getCryptoKeyServiceFactory().getKeyService();
 
         assertNotNull("CryptoKeyService initialized to null!", keySvc);
         assertNotNull(keySvc.getKey());
