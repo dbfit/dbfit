@@ -50,7 +50,7 @@ public class DbConnectionProperties {
     }
 
     public static String[] splitKeyVal(String line) {
-        return line.split("=");
+        return line.split("=", 2);
     }
 
     public static DbConnectionProperties CreateFromString(
