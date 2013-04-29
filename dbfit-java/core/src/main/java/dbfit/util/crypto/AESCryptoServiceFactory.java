@@ -14,27 +14,6 @@ public class AESCryptoServiceFactory implements CryptoServiceFactory {
         this.keyService = keyService;
     }
 
-    public static void setCryptoService(CryptoService svc) {
-        cryptoServiceInstance = svc;
-    }
-
-    public static void setKeyService(CryptoKeyService keySvc) {
-        keyService = keySvc;
-    }
-
-    private static CryptoKeyService getKeyService() {
-        if (null != keyService) {
-            return keyService;
-        } else {
-            return CryptoAdmin.getCryptoKeyServiceFactory().getKeyService();
-        }
-    }
-
-    private static void initCryptoService() {
-        Key key = getKeyService().getKey();
-        setCryptoService(createAESCryptoService(key));
-    }
-
     @Override
     public CryptoService getCryptoService() {
         if (cryptoServiceInstance == null) {
@@ -47,5 +26,11 @@ public class AESCryptoServiceFactory implements CryptoServiceFactory {
     public static AESCryptoService createAESCryptoService(Key key) {
         return new AESCryptoService(key);
     }
+
+    private static void initCryptoService() {
+        Key key = keyService.getKey();
+        cryptoServiceInstance = createAESCryptoService(key);
+    }
+
 }
 

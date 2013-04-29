@@ -94,7 +94,6 @@ public class CryptoAppTest {
     @Test
     public void shouldCreateKeyStoreBeforeGettingKeyService() throws Exception {
         when(mockedKSManager.keyStoreExists()).thenReturn(false);
-        //CryptoServiceFactory.setCryptoService(null);
         CryptoApp app = createCryptoApp();
         String password = "Demo Password CLI 2";
         String[] args = { "-encryptPassword", password };

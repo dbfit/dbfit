@@ -11,10 +11,6 @@ public class AESCryptoService implements CryptoService {
     private Key key;
 
     public AESCryptoService(Key key) {
-        setKey(key);
-    }
-
-    public void setKey(Key key) {
         this.key = key;
     }
 
