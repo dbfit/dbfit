@@ -1,8 +1,5 @@
 package dbfit.util.crypto;
 
-import dbfit.util.crypto.CryptoService;
-import dbfit.util.crypto.CryptoServiceFactory;
-
 import javax.crypto.KeyGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.Key;
@@ -18,7 +15,7 @@ public class AESCryptoServiceTest {
         KeyGenerator kgen = KeyGenerator.getInstance("AES");
         Key key = kgen.generateKey();
 
-        cryptoService = CryptoServiceFactory.createAESCryptoService(key);
+        cryptoService = AESCryptoServiceFactory.createAESCryptoService(key);
     }
 
     @Test

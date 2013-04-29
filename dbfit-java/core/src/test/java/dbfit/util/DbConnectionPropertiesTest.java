@@ -3,6 +3,7 @@ package dbfit.util;
 import dbfit.util.crypto.CryptoServiceTests;
 import dbfit.util.crypto.CryptoService;
 import dbfit.util.crypto.CryptoServiceFactory;
+import dbfit.util.crypto.CryptoAdmin;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -34,7 +35,7 @@ public class DbConnectionPropertiesTest {
 
     @After
     public void cleanup() {
-        CryptoServiceFactory.setCryptoService(null);
+        CryptoAdmin.setCryptoServiceFactory(null);
     }
 
     private String getOriginalPassword() {
@@ -42,7 +43,7 @@ public class DbConnectionPropertiesTest {
     }
 
     private String encrypt(String password) {
-        return CryptoServiceFactory.getCryptoService().encrypt(password);
+        return CryptoAdmin.getCryptoService().encrypt(password);
     }
 
     private String naiveEncrypt(String pwd) {
@@ -72,7 +73,11 @@ public class DbConnectionPropertiesTest {
         String encPwd = naiveEncrypt(pwd);
         when(mockedCryptoService.decrypt(encPwd)).thenReturn(pwd);
 
-        CryptoServiceFactory.setCryptoService(mockedCryptoService);
+        CryptoAdmin.setCryptoServiceFactory(new CryptoServiceFactory() {
+            @Override public CryptoService getCryptoService() {
+                return mockedCryptoService;
+            }
+        });
     }
 
     @Test

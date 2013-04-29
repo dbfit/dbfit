@@ -1,6 +1,6 @@
 package dbfit.util;
 
-import dbfit.util.crypto.CryptoServiceFactory;
+import dbfit.util.crypto.CryptoAdmin;
 import dbfit.util.crypto.CryptoService;
 
 import java.io.BufferedReader;
@@ -44,7 +44,7 @@ public class DbConnectionProperties {
         if (encPwd == null) {
             return pwd;
         } else {
-            CryptoService crypto = CryptoServiceFactory.getCryptoService();
+            CryptoService crypto = CryptoAdmin.getCryptoService();
             return crypto.decrypt(encPwd);
         }
     }

@@ -56,7 +56,7 @@ public class CryptoApp {
         }
 
         String encPwd = getCryptoService().encrypt(password);
-        updateStatus("Encrypted Password\n: ENC(" + encPwd + ")");
+        updateStatus("Encrypted Password:\nENC(" + encPwd + ")");
     }
 
     public void execute(String[] args) throws Exception {
@@ -74,6 +74,8 @@ public class CryptoApp {
             }
         } else if (cmd.equalsIgnoreCase("-encryptPassword")) {
             encryptPassword(args[1]);
+        } else {
+            throw new RuntimeException("Invalid arguments!");
         }
     }
 
@@ -84,7 +86,7 @@ public class CryptoApp {
     }
 
     private CryptoService getCryptoService() {
-        return CryptoServiceFactory.getCryptoService();
+        return CryptoAdmin.getCryptoServiceFactory().getCryptoService();
     }
 
 }

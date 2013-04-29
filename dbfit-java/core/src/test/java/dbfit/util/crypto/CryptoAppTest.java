@@ -21,8 +21,7 @@ public class CryptoAppTest {
     @Mock private CryptoService mockedCryptoService;
     @Mock private CryptoKeyStoreManager mockedKSManager;
     @Mock private CryptoKeyStoreManagerFactory mockedKSManagerFactory;
-    @Mock private CryptoKeyServiceFactory mockedKeyServiceFactory;
-    @Mock private CryptoKeyService mockedKeyService;
+    @Mock private CryptoServiceFactory mockedCryptoServiceFactory;
 
     @Rule public TemporaryFolder tempKeyStoreFolder = new TemporaryFolder();
     @Rule public TemporaryFolder tempKeyStoreFolder2 = new TemporaryFolder();
@@ -43,19 +42,19 @@ public class CryptoAppTest {
     public void prepare() throws IOException {
         when(mockedKSManagerFactory.newInstance()).thenReturn(mockedKSManager);
         when(mockedKSManagerFactory.newInstance(any(File.class))).thenReturn(mockedKSManager);
-        when(mockedKeyServiceFactory.getKeyService()).thenReturn(mockedKeyService);
+        when(mockedCryptoServiceFactory.getCryptoService()).thenReturn(mockedCryptoService);
 
         CryptoAdmin.setKSManagerFactory(mockedKSManagerFactory);
-        CryptoAdmin.setCryptoKeyServiceFactory(mockedKeyServiceFactory);
-        CryptoServiceFactory.setCryptoService(mockedCryptoService);
+        CryptoAdmin.setCryptoServiceFactory(mockedCryptoServiceFactory);
 
         System.setProperty("dbfit.keystore.path", getTempKeyStorePath());
     }
 
     @After
     public void tearDown() {
-        CryptoServiceFactory.setCryptoService(null);
+        CryptoAdmin.setCryptoServiceFactory(null);
         CryptoAdmin.setKSManagerFactory(null);
+        CryptoAdmin.setCryptoKeyServiceFactory(null);
     }
 
     @Test
@@ -93,21 +92,22 @@ public class CryptoAppTest {
     }
 
     @Test
-    public void shouldCreateKeyStoreBeforeGettingKey() throws Exception {
+    public void shouldCreateKeyStoreBeforeGettingKeyService() throws Exception {
         when(mockedKSManager.keyStoreExists()).thenReturn(false);
+        //CryptoServiceFactory.setCryptoService(null);
         CryptoApp app = createCryptoApp();
         String password = "Demo Password CLI 2";
         String[] args = { "-encryptPassword", password };
 
-
         app.execute(args);
 
-        InOrder inOrder = inOrder(mockedKSManagerFactory, mockedKSManager,
-                mockedCryptoService, mockedKeyService);
+        InOrder inOrder = inOrder(
+                mockedKSManagerFactory, mockedKSManager,
+                mockedCryptoServiceFactory, mockedCryptoService);
 
         inOrder.verify(mockedKSManagerFactory).newInstance();
         inOrder.verify(mockedKSManager).initKeyStore();
-        inOrder.verify(mockedKeyService).getKey();
+        inOrder.verify(mockedCryptoServiceFactory).getCryptoService();
         inOrder.verify(mockedCryptoService).encrypt(password);
     }
 }
