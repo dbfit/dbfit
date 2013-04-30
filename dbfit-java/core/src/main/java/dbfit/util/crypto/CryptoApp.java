@@ -59,8 +59,18 @@ public class CryptoApp {
         updateStatus("Encrypted Password:\nENC(" + encPwd + ")");
     }
 
+    private void showUsage() {
+        updateStatus("Usage arguments:\n");
+        updateStatus(" -createKeyStore [<keyStoreName>]");
+        updateStatus("     Create new key store. Default is used");
+        updateStatus("     if <keyStoreName> directory is not specified");
+        updateStatus(" -encryptPassword <password>");
+        updateStatus("     Encrypt the given password and show the result");
+    }
+
     public void execute(String[] args) throws Exception {
         if (args.length < 1) {
+            showUsage();
             return;
         }
 
@@ -75,7 +85,7 @@ public class CryptoApp {
         } else if (cmd.equalsIgnoreCase("-encryptPassword")) {
             encryptPassword(args[1]);
         } else {
-            throw new RuntimeException("Invalid arguments!");
+            showUsage();
         }
     }
 
