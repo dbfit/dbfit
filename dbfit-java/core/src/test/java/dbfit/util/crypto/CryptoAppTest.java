@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
+import static org.junit.Assert.assertEquals;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
@@ -108,6 +109,27 @@ public class CryptoAppTest {
         inOrder.verify(mockedKSManager).initKeyStore();
         inOrder.verify(mockedCryptoServiceFactory).getCryptoService();
         inOrder.verify(mockedCryptoService).encrypt(password);
+    }
+
+    @Test
+    public void shouldReturnNonZeroOnEmptyArgs() throws Exception {
+        assertEquals(1, execApp(new String[] {}));
+    }
+
+    @Test
+    public void shouldReturnOneOnInvalidCommand() throws Exception {
+        assertEquals(1, execApp(new String[] {"-non-existing-command"}));
+        assertEquals(1, execApp(new String[] {"another invalid command"}));
+    }
+
+    @Test
+    public void shouldReturnTwoOnInvalidNumberOfOptions() throws Exception {
+        assertEquals(2, execApp(new String[] {"-encryptPassword", "too", "many", "args"}));
+        assertEquals(2, execApp(new String[] {"-createKeyStore", "too", "many"}));
+    }
+
+    private int execApp(String[] args) throws Exception {
+        return createCryptoApp().execute(args);
     }
 }
 

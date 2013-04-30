@@ -68,31 +68,48 @@ public class CryptoApp {
         updateStatus("     Encrypt the given password and show the result");
     }
 
-    public void execute(String[] args) throws Exception {
-        if (args.length < 1) {
-            showUsage();
-            return;
-        }
+    public int execute(String[] args) throws Exception {
+        String cmd = "";
+        int errCode = 0;
 
-        String cmd = args[0];
+        if (args.length < 1) {
+            errCode = 1;
+        } else {
+            cmd = args[0];
+        }
 
         if (cmd.equalsIgnoreCase("-createKeyStore")) {
-            if (args.length > 1) {
+            if (args.length == 2) {
                 createKeyStore(args[1]);
-            } else {
+            } else if (args.length == 1) {
                 createKeyStore();
+            } else {
+                errCode = 2;
             }
         } else if (cmd.equalsIgnoreCase("-encryptPassword")) {
-            encryptPassword(args[1]);
+            if (args.length == 2) {
+                encryptPassword(args[1]);
+            } else {
+                errCode = 2;
+            }
+        } else if (cmd.equalsIgnoreCase("-help")) {
+            showUsage();
         } else {
+            errCode = 1;
+        }
+
+        if (errCode != 0) {
             showUsage();
         }
+
+        return errCode;
     }
 
     public static void main(String[] args) throws Exception {
         CryptoApp app = new CryptoApp(CryptoAdmin.getKSManagerFactory());
 
-        app.execute(args);
+        int exitCode = app.execute(args);
+        System.exit(exitCode);
     }
 
     private CryptoService getCryptoService() {
