@@ -15,7 +15,8 @@ task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAl
         into 'dist/FitNesseRoot'
     }
     copy {
-        from 'LICENSE', 'README.md', 'bin/startFitnesse.bat', 'bin/startFitnesse.sh'
+        from 'LICENSE', 'README.md', 'bin/startFitnesse.bat', 'bin/startFitnesse.sh',
+             'bin/cryptoapp.bat', 'bin/cryptoapp.sh'
         into 'dist'
     }
     file('dist/plugins.properties') << 'Theme=bootstrap'
