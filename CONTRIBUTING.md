@@ -41,7 +41,7 @@ The fully-built VM includes:
  *  the pre-requisites to easily install Oracle
 
 The VM doesn't include:
- *  a working Oracle installation (fetching and installing the Oracle binaries and JDBC jar hasn't been automated yet, but is partially described below)
+ *  a working Oracle installation (however there is a shell script to help with the installation described below)
  *  a working DB2 installation
  *  a working SQL Server installation (obviously)
 
@@ -139,4 +139,4 @@ An Eclipse project can be created by running:
 
  *  Logging in as the `system` superuser for `oracle`:
 
-        sqlplus system/system
+        sqlplus system/oracle
