@@ -1,9 +1,8 @@
 set define on
+whenever sqlerror exit sql.sqlcode
+whenever sqlerror exit 9
 
-accept dbhost prompt "Enter DB Name ->"
-accept syspw prompt "Enter Sys password ->"
-
-connect sys/&&syspw@&&dbhost as sysdba
+connect / as sysdba
 
 define tbs_data = USERS
 set define off
@@ -17,7 +16,7 @@ grant resource to dftest;
 grant create procedure to dftest;
 
 set define on
-connect dftest/dftest@&&dbhost
+connect dftest/dftest
 set define off
 
 create or replace procedure ConcatenateStrings(firstString varchar2, secondString varchar2, concatenated out varchar2) as
@@ -88,7 +87,7 @@ end;
 
 set define on
 
-connect sys/&&syspw@&&dbhost as sysdba
+connect / as sysdba
 
 set verify off
 
