@@ -8,16 +8,15 @@ import org.junit.Before;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 
-import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
 import org.mockito.InOrder;
 import static org.mockito.Mockito.*;
+import dbfit.util.MockitoTestBase;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CryptoAppTest {
+
+public class CryptoAppTest extends MockitoTestBase {
 
     @Mock private CryptoService mockedCryptoService;
     @Mock private CryptoKeyStoreManager mockedKSManager;
