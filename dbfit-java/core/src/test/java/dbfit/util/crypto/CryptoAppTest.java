@@ -60,10 +60,7 @@ public class CryptoAppTest {
 
     @Test
     public void createKeyStoreInDefaultLocationTest() throws Exception {
-        CryptoApp app = createCryptoApp();
-        String[] args = { "-createKeyStore" };
-
-        app.execute(args);
+        execApp("-createKeyStore");
 
         verify(mockedKSManagerFactory).newInstance();
         verify(mockedKSManager).initKeyStore();
@@ -71,10 +68,7 @@ public class CryptoAppTest {
 
     @Test
     public void createKeyStoreInCustomLocationTest() throws Exception {
-        CryptoApp app = createCryptoApp();
-        String[] args = { "-createKeyStore", getTempKeyStore2Path() };
-
-        app.execute(args);
+        execApp("-createKeyStore", getTempKeyStore2Path());
 
         verify(mockedKSManagerFactory).newInstance(tempKeyStoreFolder2.getRoot());
         verify(mockedKSManager).initKeyStore();
@@ -83,11 +77,9 @@ public class CryptoAppTest {
     @Test
     public void encryptPasswordTest() throws Exception {
         when(mockedKSManager.keyStoreExists()).thenReturn(true);
-        CryptoApp app = createCryptoApp();
         String password = "Demo Password CLI";
-        String[] args = { "-encryptPassword", password };
 
-        app.execute(args);
+        execApp("-encryptPassword", password);
 
         verify(mockedCryptoService).encrypt(password);
     }
@@ -95,11 +87,9 @@ public class CryptoAppTest {
     @Test
     public void shouldCreateKeyStoreBeforeGettingKeyService() throws Exception {
         when(mockedKSManager.keyStoreExists()).thenReturn(false);
-        CryptoApp app = createCryptoApp();
         String password = "Demo Password CLI 2";
-        String[] args = { "-encryptPassword", password };
 
-        app.execute(args);
+        execApp("-encryptPassword", password);
 
         InOrder inOrder = inOrder(
                 mockedKSManagerFactory, mockedKSManager,
@@ -113,22 +103,22 @@ public class CryptoAppTest {
 
     @Test
     public void shouldReturnNonZeroOnEmptyArgs() throws Exception {
-        assertEquals(1, execApp(new String[] {}));
+        assertEquals(1, execApp());
     }
 
     @Test
     public void shouldReturnOneOnInvalidCommand() throws Exception {
-        assertEquals(1, execApp(new String[] {"-non-existing-command"}));
-        assertEquals(1, execApp(new String[] {"another invalid command"}));
+        assertEquals(1, execApp("-non-existing-command"));
+        assertEquals(1, execApp("another invalid command"));
     }
 
     @Test
     public void shouldReturnTwoOnInvalidNumberOfOptions() throws Exception {
-        assertEquals(2, execApp(new String[] {"-encryptPassword", "too", "many", "args"}));
-        assertEquals(2, execApp(new String[] {"-createKeyStore", "too", "many"}));
+        assertEquals(2, execApp("-encryptPassword", "too", "many", "args"));
+        assertEquals(2, execApp("-createKeyStore", "too", "many"));
     }
 
-    private int execApp(String[] args) throws Exception {
+    private int execApp(String... args) throws Exception {
         return createCryptoApp().execute(args);
     }
 }
