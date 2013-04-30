@@ -1,7 +1,4 @@
-ext {
-    dbfitVersion = '2.0.0-RC4'
-    commonsCodecVersion = "1.7"
-}
+ext.dbfitVersion = '2.0.0-RC4'
 
 task cleanFitnesseroot(type:Exec) {
     executable '/bin/sh'
@@ -12,38 +9,7 @@ task cleanDist << {
     delete 'dist'
 }
 
-task createDist << {
-    mkdir 'dist'
-}
-
-def getClassPath(def jarsList, def cpSep, def pathSep, def rootDir) {
-    return (jarsList.collect { "${rootDir}${pathSep}${it}" }).join(cpSep)
-}
-
-def platforms = [
-    unix: [cpSep: ':', pathSep: '/', scriptHeader: '#!/usr/bin/env sh\ncd "`dirname $0`"\n', scriptArgs: '$@', newLine: '\n'],
-    windows: [cpSep: ';', pathSep: "\\", scriptHeader: "", scriptArgs: '%1 %2', newLine: '\r\n']]
-
-def genJavaCallScript(def scriptFile, def mainClass, def jarList, def platform) {
-    scriptFile.write platform.scriptHeader
-    scriptFile << "java -cp " << getClassPath(jarList, platform.cpSep, platform.pathSep, "lib")
-    scriptFile << " " << mainClass << " " << platform.scriptArgs << platform.newLine
-    ant.chmod(file: scriptFile, perm: "+x")
-}
-
-def genCryptoAppScript(def scriptFile, def platform) {
-    def mainClass = "dbfit.util.crypto.CryptoApp"
-    def jarNames = ["dbfit-core-${dbfitVersion}.jar", "commons-codec-${commonsCodecVersion}.jar"]
-
-    genJavaCallScript(scriptFile, mainClass, jarNames, platform)
-}
-
-task genCryptoAppScripts(dependsOn: [createDist]) << {
-    genCryptoAppScript(file('dist/cryptoapp.sh'), platforms['unix'])
-    genCryptoAppScript(file('dist/cryptoapp.bat'), platforms['windows'])
-}
-
-task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist,':dbfit-java:assembleAll', ':dbfit-java:libs', genCryptoAppScripts]) << {
+task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAll', ':dbfit-java:libs']) << {
     copy {
         from 'FitNesseRoot'
         into 'dist/FitNesseRoot'
@@ -93,7 +59,6 @@ task bundle(type: Zip, dependsOn: [copyLocal, bundleFitsharp]) {
 }
 
 task start(type: Exec, dependsOn: [copyLocal, bundleFitsharp]) {
-
     workingDir './dist'
     description = 'starts fitness with dbfit'
     executable '/bin/sh'
@@ -101,4 +66,3 @@ task start(type: Exec, dependsOn: [copyLocal, bundleFitsharp]) {
 }
 
 task fastbuild(dependsOn: [':dbfit-java:core:check', ':dbfit-java:derby:check'])
-

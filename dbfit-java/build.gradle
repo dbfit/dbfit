@@ -59,7 +59,7 @@ project('core') {
         compile "dummy:fitnesse-standalone:20130321@jar"
         compile "dummy:fitlibrary:20081102@jar"
         compile "org.atteo:evo-classindex:1.4" // @jar suffix here doesn't pull dependencies (fails build)
-        compile "commons-codec:commons-codec:${rootProject.commonsCodecVersion}"
+        compile "commons-codec:commons-codec:1.7"
         testCompile "org.mockito:mockito-all:1.9.5"
     }
 }
