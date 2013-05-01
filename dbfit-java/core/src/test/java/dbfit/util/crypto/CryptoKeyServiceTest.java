@@ -24,8 +24,8 @@ public class CryptoKeyServiceTest {
 
     @Test
     public void testLoadedKeyIsNotNull() {
-        CryptoKeyService keySvc = new JKSCryptoKeyService(
-              CryptoServiceTests.getKsManager(tempKeyStoreFolder.getRoot()));
+        CryptoKeyService keySvc = CryptoServiceTests
+            .getCryptoKeyService(tempKeyStoreFolder.getRoot());
 
         assertNotNull(keySvc.getKey());
     }

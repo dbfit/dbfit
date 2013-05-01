@@ -25,7 +25,7 @@ public class CryptoServiceTests {
         });
     }
 
-    private static CryptoKeyService getCryptoKeyService(File ksPath) {
+    public static CryptoKeyService getCryptoKeyService(File ksPath) {
         return new JKSCryptoKeyService(getKsManager(ksPath));
     }
 
