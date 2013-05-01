@@ -1,14 +1,12 @@
 package dbfit.util.crypto;
 
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
 import org.mockito.InOrder;
 import static org.mockito.Mockito.*;
 
 
 public class CryptoAppTest extends CryptoAppTestBase {
-
     @Test
     public void createKeyStoreInDefaultLocationTest() throws Exception {
         execApp("-createKeyStore");
