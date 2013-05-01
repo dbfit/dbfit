@@ -57,8 +57,9 @@ public class CryptoKeyStoreManagerTest {
     }
 
     @Test
-    public void generateKeyTest() throws NoSuchAlgorithmException {
-        assertNotNull(ksManager.generateKey());
+    public void shouldBeAbleToGetKeyFromExistingKeyStore() throws Exception {
+        ksManager.createKeyStore();
+        assertNotNull(ksManager.getKey());
     }
 
     @Test

@@ -1,7 +1,5 @@
 package dbfit.util.crypto;
 
-import javax.crypto.KeyGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.security.Key;
 import javax.crypto.SecretKey;
 import java.security.KeyStore;
@@ -74,8 +72,7 @@ public class JKSCryptoKeyStoreManager
     private void createKeyStoreNoCheck() throws Exception {
         KeyStore ks = KeyStore.getInstance(KS_TYPE);
         ks.load(null, getKeyStorePassword());
-        SecretKey mySecretKey = (SecretKey) generateKey();
-
+        SecretKey mySecretKey = AESKeyGenerator.generateKey();
 
         KeyStore.SecretKeyEntry skEntry = new KeyStore.SecretKeyEntry(mySecretKey);
         ks.setEntry(KEY_ALIAS, skEntry, new KeyStore.PasswordProtection(
@@ -106,11 +103,6 @@ public class JKSCryptoKeyStoreManager
                 in.close();
             }
         }
-    }
-
-    @Override
-    public Key generateKey() throws NoSuchAlgorithmException {
-        return KeyGenerator.getInstance("AES").generateKey();
     }
 
     @Override
