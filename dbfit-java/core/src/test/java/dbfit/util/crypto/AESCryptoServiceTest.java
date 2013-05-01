@@ -15,7 +15,7 @@ public class AESCryptoServiceTest {
         KeyGenerator kgen = KeyGenerator.getInstance("AES");
         Key key = kgen.generateKey();
 
-        cryptoService = AESCryptoServiceFactory.createAESCryptoService(key);
+        cryptoService = new AESCryptoService(key);
     }
 
     @Test

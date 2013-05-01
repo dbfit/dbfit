@@ -12,7 +12,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-public class JKSCryptoKeyStoreManager implements CryptoKeyStoreManager {
+public class JKSCryptoKeyStoreManager
+                implements CryptoKeyStoreManager, CryptoKeyAccessor {
+
     public static final String KS_TYPE = "JCEKS";
     public static final String KS_NAME = ".dbfit.jks";
     public static final char[] KS_PASS = "DbFit Access Key".toCharArray();
@@ -114,7 +116,7 @@ public class JKSCryptoKeyStoreManager implements CryptoKeyStoreManager {
     }
 
     @Override
-    public Key loadKey() {
+    public Key getKey() {
         try {
             return loadKeyStore().getKey(KEY_ALIAS, getKeyStorePassword());
         } catch(Exception e) {

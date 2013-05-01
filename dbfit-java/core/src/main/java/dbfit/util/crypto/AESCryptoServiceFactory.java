@@ -1,35 +1,27 @@
 package dbfit.util.crypto;
 
-import dbfit.util.crypto.CryptoKeyService;
-import dbfit.util.crypto.CryptoService;
-
 import java.security.Key;
 
 public class AESCryptoServiceFactory implements CryptoServiceFactory {
 
-    private static CryptoService cryptoServiceInstance = null;
-    private static CryptoKeyService keyService = null; // for overwriting default
+    private static CryptoService cryptoServiceInstance = null; // caching
+    private CryptoKeyAccessor keyAccessor;
 
-    public AESCryptoServiceFactory(CryptoKeyService keyService) {
-        this.keyService = keyService;
+    public AESCryptoServiceFactory(CryptoKeyAccessor keyAccessor) {
+        this.keyAccessor = keyAccessor;
+    }
+
+    public AESCryptoServiceFactory() {
+        this.keyAccessor = new JKSCryptoKeyStoreManager();
     }
 
     @Override
     public CryptoService getCryptoService() {
         if (cryptoServiceInstance == null) {
-            initCryptoService();
+            cryptoServiceInstance = new AESCryptoService(keyAccessor.getKey());
         }
 
         return cryptoServiceInstance;
-    }
-
-    public static AESCryptoService createAESCryptoService(Key key) {
-        return new AESCryptoService(key);
-    }
-
-    private static void initCryptoService() {
-        Key key = keyService.getKey();
-        cryptoServiceInstance = createAESCryptoService(key);
     }
 
 }

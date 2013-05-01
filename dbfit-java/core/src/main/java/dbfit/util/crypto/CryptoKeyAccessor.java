@@ -2,7 +2,7 @@ package dbfit.util.crypto;
 
 import java.security.Key;
 
-public interface CryptoKeyService {
+public interface CryptoKeyAccessor {
     public Key getKey();
 }
 

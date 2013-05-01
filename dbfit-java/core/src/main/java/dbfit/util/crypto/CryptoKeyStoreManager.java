@@ -11,6 +11,5 @@ public interface CryptoKeyStoreManager {
     public boolean keyStoreExists();
     public Key generateKey() throws NoSuchAlgorithmException;
     public File getKeyStoreFile();
-    public Key loadKey();
 }
 

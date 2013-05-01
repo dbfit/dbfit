@@ -1,7 +1,6 @@
 package dbfit.util.crypto;
 
 import java.security.NoSuchAlgorithmException;
-import java.security.Key;
 import java.io.File;
 
 public class CryptoTestsAdmin {
@@ -13,17 +12,21 @@ public class CryptoTestsAdmin {
             new CryptoServiceFactory() {
                 @Override public CryptoService getCryptoService() {
                     return new AESCryptoService(
-                        getCryptoKeyService(ksPath).getKey());
+                        getCryptoKeyAccessor(ksPath).getKey());
             }
         });
     }
 
-    public static CryptoKeyService getCryptoKeyService(File ksPath) {
-        return new KSCryptoKeyService(getKsManager(ksPath));
+    private static JKSCryptoKeyStoreManager getJKStoreManager(File ksPath) {
+        return new JKSCryptoKeyStoreManager(ksPath, TEST_KS_PASS);
+    }
+
+    public static CryptoKeyAccessor getCryptoKeyAccessor(File ksPath) {
+        return getJKStoreManager(ksPath);
     }
 
     public static CryptoKeyStoreManager getKsManager(File ksPath) {
-        return CryptoAdmin.getKSManagerFactory().newInstance(ksPath, TEST_KS_PASS);
+        return getJKStoreManager(ksPath);
     }
 
     public static void initTestCryptoKeyStore(File ksPath) throws Exception {
