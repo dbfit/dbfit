@@ -18,13 +18,11 @@ This is a pure-Java build that runs the `core` unit tests and the Derby integrat
 
 #### Integration tests
 
-If you make changes to any database adapter, it's sufficient to make sure that the tests for only that adapter run eg if you make any changes to the Oracle adapter, you can run the Oracle integration tests:
+If you make changes to any database adapter, it's sufficient to make sure that the tests for only that adapter run eg if you make any changes to the Mysql adapter, you can run the Mysql integration tests:
 
-    $ gradle :dbfit-java:oracle:test
+    $ gradle :dbfit-java:mysql:test
 
 If you have to make changes to `core`, please run all integration tests (because `core` changes can affect any of the adapters). This is easiest done from the test virtual machine.
-
-__Note:__ At the moment, the Oracle test database needs to be set up manually using the test script found under `dbfit-oracle/src/test/resources`.
 
 #### Integration tests without a VM
 
@@ -43,7 +41,7 @@ The fully-built VM includes:
  *  the pre-requisites to easily install Oracle
 
 The VM doesn't include:
- *  a working Oracle installation (fetching and installing the Oracle binaries and JDBC jar hasn't been automated yet, but is partially described below)
+ *  a working Oracle installation (however there is a shell script to help with the installation described below)
  *  a working DB2 installation
  *  a working SQL Server installation (obviously)
 
@@ -92,15 +90,7 @@ The subsequent steps need to be followed on the project folder within the VM. To
 
 #### Installing Oracle XE
 
-*Note: These instructions are work in progress.*
-
- 1. Download the `Oracle XE 11g for Linux x64` RPM from [Oracle](http://www.oracle.com/technetwork/products/express-edition/downloads/index.html) from inside the VM.
-
- 2. Install the RPM:
-        
-        sudo yum install <rpm-name.rpm>
-
- 3. TODO...
+See the [ORACLE file](ORACLE.md) file 
 
 #### IDE Integration
 
@@ -149,4 +139,4 @@ An Eclipse project can be created by running:
 
  *  Logging in as the `system` superuser for `oracle`:
 
-        sqlplus system/system
+        sqlplus system/oracle
