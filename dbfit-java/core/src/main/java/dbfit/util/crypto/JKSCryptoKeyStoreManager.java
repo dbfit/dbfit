@@ -1,7 +1,5 @@
 package dbfit.util.crypto;
 
-import static dbfit.util.crypto.CryptoAdmin.getDefaultKeyStoreLocation;
-
 import javax.crypto.KeyGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.Key;
@@ -122,6 +120,15 @@ public class JKSCryptoKeyStoreManager
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static File getDefaultKeyStoreLocation() {
+        String ksLocation = System.getProperty("dbfit.keystore.path");
+        if (ksLocation == null) {
+            ksLocation = System.getProperty("user.home");
+        }
+
+        return new File(ksLocation);
     }
 
 }

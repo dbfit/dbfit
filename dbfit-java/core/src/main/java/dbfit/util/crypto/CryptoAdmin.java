@@ -31,15 +31,6 @@ public class CryptoAdmin {
         return cryptoServiceFactory;
     }
 
-    public static File getDefaultKeyStoreLocation() {
-        String ksLocation = System.getProperty("dbfit.keystore.path");
-        if (ksLocation == null) {
-            ksLocation = System.getProperty("user.home");
-        }
-
-        return new File(ksLocation);
-    }
-
     /*** Shortcut Methods ***/
     public static CryptoService getCryptoService() {
         return getCryptoServiceFactory().getCryptoService();
