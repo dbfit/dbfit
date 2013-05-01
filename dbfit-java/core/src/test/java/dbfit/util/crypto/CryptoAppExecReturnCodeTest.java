@@ -3,13 +3,10 @@ package dbfit.util.crypto;
 import java.util.Collection;
 
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.junit.rules.TemporaryFolder;
-import org.junit.Rule;
+import static org.junit.Assert.assertEquals;
 
 
 @RunWith(Parameterized.class)
@@ -25,15 +22,12 @@ public class CryptoAppExecReturnCodeTest extends CryptoAppTestBase {
 
     @Test
     public void execReturnCodeShouldBeCorrect() throws Exception {
-        int res = execApp(appArgs.args);
-        assertEquals(expectedExitCode, res);
+        assertEquals(expectedExitCode, execApp(appArgs));
     }
 
     @Parameters(name = "{index}: exec with args {1} -> expecting {0}")
     public static Collection<Object[]> data() throws Exception {
-        TemporaryFolder tmpDir = new TemporaryFolder();
-
-        Object[][] data = new Object[][] {
+        return java.util.Arrays.asList(new Object[][] {
             {0, args("-createKeyStore")},
             {0, args("-createKeyStore", System.getProperty("java.io.tmpdir"))},
             {0, args("-encryptPassword", "ABC")},
@@ -43,9 +37,7 @@ public class CryptoAppExecReturnCodeTest extends CryptoAppTestBase {
             {2, args("-encryptPassword", "too", "many", "args")},
             {2, args("-encryptPassword")},
             {2, args("-createKeyStore", "too", "many")}
-        };
-
-        return java.util.Arrays.asList(data);
+        });
     }
 }
 

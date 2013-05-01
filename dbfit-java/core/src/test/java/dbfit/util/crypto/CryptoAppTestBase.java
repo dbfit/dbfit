@@ -48,6 +48,10 @@ public class CryptoAppTestBase extends MockitoTestBase {
         return createCryptoApp().execute(args);
     }
 
+    protected int execApp(ArgList argList) throws Exception {
+        return createCryptoApp().execute(argList.args);
+    }
+
     protected String getTempKeyStorePath() throws IOException {
         return tempKeyStoreFolder.getRoot().getCanonicalPath();
     }
