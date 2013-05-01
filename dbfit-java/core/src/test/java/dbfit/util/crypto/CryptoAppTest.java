@@ -1,61 +1,13 @@
 package dbfit.util.crypto;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.junit.Test;
-import org.junit.Before;
-import org.junit.After;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
 import static org.junit.Assert.assertEquals;
 
-import org.mockito.Mock;
 import org.mockito.InOrder;
 import static org.mockito.Mockito.*;
-import dbfit.util.MockitoTestBase;
 
 
-public class CryptoAppTest extends MockitoTestBase {
-
-    @Mock private CryptoService mockedCryptoService;
-    @Mock private CryptoKeyStoreManager mockedKSManager;
-    @Mock private CryptoKeyStoreManagerFactory mockedKSManagerFactory;
-    @Mock private CryptoServiceFactory mockedCryptoServiceFactory;
-
-    @Rule public TemporaryFolder tempKeyStoreFolder = new TemporaryFolder();
-    @Rule public TemporaryFolder tempKeyStoreFolder2 = new TemporaryFolder();
-
-    private String getTempKeyStorePath() throws IOException {
-        return tempKeyStoreFolder.getRoot().getCanonicalPath();
-    }
-
-    private String getTempKeyStore2Path() throws IOException {
-        return tempKeyStoreFolder2.getRoot().getCanonicalPath();
-    }
-
-    private CryptoApp createCryptoApp() {
-        return new CryptoApp(mockedKSManagerFactory);
-    }
-
-    @Before
-    public void prepare() throws IOException {
-        when(mockedKSManagerFactory.newInstance()).thenReturn(mockedKSManager);
-        when(mockedKSManagerFactory.newInstance(any(File.class))).thenReturn(mockedKSManager);
-        when(mockedCryptoServiceFactory.getCryptoService()).thenReturn(mockedCryptoService);
-
-        CryptoAdmin.setKSManagerFactory(mockedKSManagerFactory);
-        CryptoAdmin.setCryptoServiceFactory(mockedCryptoServiceFactory);
-
-        System.setProperty("dbfit.keystore.path", getTempKeyStorePath());
-    }
-
-    @After
-    public void tearDown() {
-        CryptoAdmin.setCryptoServiceFactory(null);
-        CryptoAdmin.setKSManagerFactory(null);
-        CryptoAdmin.setCryptoKeyServiceFactory(null);
-    }
+public class CryptoAppTest extends CryptoAppTestBase {
 
     @Test
     public void createKeyStoreInDefaultLocationTest() throws Exception {
@@ -117,8 +69,5 @@ public class CryptoAppTest extends MockitoTestBase {
         assertEquals(2, execApp("-createKeyStore", "too", "many"));
     }
 
-    private int execApp(String... args) throws Exception {
-        return createCryptoApp().execute(args);
-    }
 }
 
