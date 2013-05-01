@@ -48,12 +48,15 @@ public class CryptoApp {
     }
 
     private void showUsage() {
-        updateStatus("Usage arguments:\n");
-        updateStatus(" -createKeyStore [<keyStoreName>]");
-        updateStatus("     Create new key store. Default is used");
-        updateStatus("     if <keyStoreName> directory is not specified");
+        updateStatus("Usage arguments:");
+        updateStatus(" -createKeyStore [<keyStoreLocation>]");
+        updateStatus("     Create new key store in keyStoreLocation directory.");
+        updateStatus("     If keyStoreLocation is not specified - default is used.");
+        updateStatus("     Default is user home folder or 'dbfit.keystore.path' system property");
         updateStatus(" -encryptPassword <password>");
         updateStatus("     Encrypt the given password and show the result");
+        updateStatus(" -help");
+        updateStatus("     Show this usage note");
     }
 
     public int execute(String[] args) throws Exception {
