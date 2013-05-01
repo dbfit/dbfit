@@ -114,5 +114,14 @@ public class JKSCryptoKeyStoreManager implements CryptoKeyStoreManager {
         return KeyGenerator.getInstance("AES").generateKey();
     }
 
+    @Override
+    public Key loadKey() {
+        try {
+            return loadKeyStore().getKey(KEY_ALIAS, getKeyStorePassword());
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
 

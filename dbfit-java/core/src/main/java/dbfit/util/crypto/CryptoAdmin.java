@@ -31,7 +31,8 @@ public class CryptoAdmin {
 
     public static CryptoKeyServiceFactory getCryptoKeyServiceFactory() {
         if (null == keyFactory) {
-            return new JKSCryptoKeyServiceFactory(getDefaultKeyStoreLocation());
+            return new JKSCryptoKeyServiceFactory(
+                    getKSManagerFactory().newInstance(getDefaultKeyStoreLocation()));
         }
 
         return keyFactory;
@@ -59,7 +60,6 @@ public class CryptoAdmin {
     public static CryptoService getCryptoService() {
         return getCryptoServiceFactory().getCryptoService();
     }
-
 
 }
 

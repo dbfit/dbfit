@@ -19,7 +19,7 @@ public class CryptoServiceTests {
         CryptoAdmin.setCryptoKeyServiceFactory(
             new CryptoKeyServiceFactory() {
                 @Override public CryptoKeyService getKeyService() {
-                    return new JKSCryptoKeyService(ksPath, TEST_KS_PASS);
+                    return new JKSCryptoKeyService(getKsManager(ksPath));
                 }
             });
     }

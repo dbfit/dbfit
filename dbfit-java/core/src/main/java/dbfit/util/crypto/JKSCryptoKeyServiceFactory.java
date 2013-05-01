@@ -4,38 +4,20 @@ import java.io.File;
 
 public class JKSCryptoKeyServiceFactory implements CryptoKeyServiceFactory {
 
-    private CryptoKeyService keyService = null;
-    private File keyStoreLocation = null;
-    private char[] keyStorePassword = null;
+    private CryptoKeyStoreManager ksManager = null;
+    private CryptoKeyService keyService = null; // caching instance
 
-    public JKSCryptoKeyServiceFactory(File ksLocation) {
-        this(ksLocation, null);
-    }
-
-    public JKSCryptoKeyServiceFactory(File ksLocation, char[] password) {
-        setKeyStoreLocation(ksLocation, password);
+    public JKSCryptoKeyServiceFactory(CryptoKeyStoreManager ksManager) {
+        this.ksManager = ksManager;
     }
 
     @Override
     public CryptoKeyService getKeyService() {
         if (null == keyService) {
-            keyService = createKeyService(getKeyStoreLocation());
+            keyService = new JKSCryptoKeyService(ksManager);
         }
 
         return keyService;
-    }
-
-    private void setKeyStoreLocation(File ksLocation, char[] password) {
-        this.keyStoreLocation = ksLocation;
-        this.keyStorePassword = password;
-    }
-
-    private File getKeyStoreLocation() {
-        return keyStoreLocation;
-    }
-
-    private CryptoKeyService createKeyService(File keyStorePath) {
-        return new JKSCryptoKeyService(keyStoreLocation, keyStorePassword);
     }
 }
 
