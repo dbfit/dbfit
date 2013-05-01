@@ -21,12 +21,11 @@ public class CryptoKeyStoreManagerTest {
     @Rule public TemporaryFolder tempKeyStoreFolder = new TemporaryFolder();
     @Rule public ExpectedException thrown = ExpectedException.none();
 
-    private CryptoKeyStoreManager ksManager;
+    private JKSCryptoKeyStoreManager ksManager;
 
     @Before
     public void prepare() {
-        ksManager = CryptoAdmin.getKSManagerFactory().newInstance(
-                                            tempKeyStoreFolder.getRoot());
+        ksManager = new JKSCryptoKeyStoreManager(tempKeyStoreFolder.getRoot());
     }
 
     @Test

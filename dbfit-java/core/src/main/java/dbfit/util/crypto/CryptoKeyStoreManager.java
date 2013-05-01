@@ -6,7 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import java.io.File;
 
 public interface CryptoKeyStoreManager {
-    public KeyStore loadKeyStore() throws Exception;
     public void createKeyStore() throws Exception;
     public boolean initKeyStore() throws Exception;
     public boolean keyStoreExists();
