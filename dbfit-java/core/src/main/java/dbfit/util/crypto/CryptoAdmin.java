@@ -26,7 +26,7 @@ public class CryptoAdmin {
     public static CryptoServiceFactory getCryptoServiceFactory() {
         if (null == cryptoServiceFactory) {
             CryptoKeyStoreManager ksMgr = getKSManagerFactory().newInstance(getDefaultKeyStoreLocation());
-            cryptoServiceFactory = new AESCryptoServiceFactory(new JKSCryptoKeyService(ksMgr));
+            cryptoServiceFactory = new AESCryptoServiceFactory(new KSCryptoKeyService(ksMgr));
         }
 
         return cryptoServiceFactory;

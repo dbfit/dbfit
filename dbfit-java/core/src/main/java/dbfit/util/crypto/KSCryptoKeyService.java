@@ -3,14 +3,14 @@ package dbfit.util.crypto;
 import java.security.Key;
 
 /**
- * Java KeyStore-based key service
+ * KeyStore-based key service
  */
-public class JKSCryptoKeyService implements CryptoKeyService {
+public class KSCryptoKeyService implements CryptoKeyService {
 
     private CryptoKeyStoreManager ksManager;
     private Key key = null; // caching the key
 
-    public JKSCryptoKeyService(CryptoKeyStoreManager ksManager) {
+    public KSCryptoKeyService(CryptoKeyStoreManager ksManager) {
         this.ksManager = ksManager;
     }
 

@@ -19,7 +19,7 @@ public class CryptoTestsAdmin {
     }
 
     public static CryptoKeyService getCryptoKeyService(File ksPath) {
-        return new JKSCryptoKeyService(getKsManager(ksPath));
+        return new KSCryptoKeyService(getKsManager(ksPath));
     }
 
     public static CryptoKeyStoreManager getKsManager(File ksPath) {
