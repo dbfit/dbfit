@@ -41,7 +41,6 @@ public class CryptoAppTestBase extends MockitoTestBase {
     public void tearDown() {
         CryptoAdmin.setCryptoServiceFactory(null);
         CryptoAdmin.setKSManagerFactory(null);
-        CryptoAdmin.setCryptoKeyServiceFactory(null);
     }
 
     protected int execApp(String... args) throws Exception {

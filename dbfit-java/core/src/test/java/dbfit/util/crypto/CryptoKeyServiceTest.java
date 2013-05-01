@@ -19,14 +19,14 @@ public class CryptoKeyServiceTest {
 
     @After
     public void cleanup() {
-        CryptoServiceTests.resetTestKeyServiceFactory();
+        CryptoServiceTests.resetTestCryptoServiceFactory();
     }
 
     @Test
     public void testLoadedKeyIsNotNull() {
-        CryptoKeyService keySvc = CryptoAdmin.getCryptoKeyServiceFactory().getKeyService();
+        CryptoKeyService keySvc = new JKSCryptoKeyService(
+              CryptoServiceTests.getKsManager(tempKeyStoreFolder.getRoot()));
 
-        assertNotNull("CryptoKeyService initialized to null!", keySvc);
         assertNotNull(keySvc.getKey());
     }
 }

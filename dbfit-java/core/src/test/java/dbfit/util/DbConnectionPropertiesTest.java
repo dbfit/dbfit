@@ -29,12 +29,8 @@ public class DbConnectionPropertiesTest {
     @Rule public TemporaryFolder tempKeyStoreFolder = new TemporaryFolder();
 
     @After
-    public void resetKeyServiceFactory() {
-        CryptoServiceTests.resetTestKeyServiceFactory();
-    }
-
-    @After
     public void cleanup() {
+        CryptoServiceTests.resetTestCryptoServiceFactory();
         CryptoAdmin.setCryptoServiceFactory(null);
     }
 

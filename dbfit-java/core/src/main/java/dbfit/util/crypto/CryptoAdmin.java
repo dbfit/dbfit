@@ -5,21 +5,15 @@ import java.io.File;
 public class CryptoAdmin {
 
     private static CryptoKeyStoreManagerFactory ksManagerFactory = null;
-    private static CryptoKeyServiceFactory keyFactory = null;
     private static CryptoServiceFactory cryptoServiceFactory = null;
 
     public static void setKSManagerFactory(CryptoKeyStoreManagerFactory factory) {
         ksManagerFactory = factory;
     }
 
-    public static void setCryptoKeyServiceFactory(CryptoKeyServiceFactory factory) {
-        keyFactory = factory;
-    }
-
     public static void setCryptoServiceFactory(CryptoServiceFactory factory) {
         cryptoServiceFactory = factory;
     }
-
 
     public static CryptoKeyStoreManagerFactory getKSManagerFactory() {
         if (null == ksManagerFactory) {
@@ -29,19 +23,10 @@ public class CryptoAdmin {
         return ksManagerFactory;
     }
 
-    public static CryptoKeyServiceFactory getCryptoKeyServiceFactory() {
-        if (null == keyFactory) {
-            return new JKSCryptoKeyServiceFactory(
-                    getKSManagerFactory().newInstance(getDefaultKeyStoreLocation()));
-        }
-
-        return keyFactory;
-    }
-
     public static CryptoServiceFactory getCryptoServiceFactory() {
         if (null == cryptoServiceFactory) {
-            cryptoServiceFactory = new AESCryptoServiceFactory(
-                    getCryptoKeyServiceFactory().getKeyService());
+            CryptoKeyStoreManager ksMgr = getKSManagerFactory().newInstance(getDefaultKeyStoreLocation());
+            cryptoServiceFactory = new AESCryptoServiceFactory(new JKSCryptoKeyService(ksMgr));
         }
 
         return cryptoServiceFactory;

@@ -19,7 +19,7 @@ public class CryptoServiceTest {
 
     @After
     public void cleanup() throws Exception {
-        CryptoServiceTests.resetTestKeyServiceFactory();
+        CryptoServiceTests.resetTestCryptoServiceFactory();
     }
 
     @Test

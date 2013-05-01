@@ -15,27 +15,31 @@ public class CryptoServiceTests {
 
     public static final char[] TEST_KS_PASS = "dbfit-demo-pass".toCharArray();
 
-    private static void initTestCryptoKeyServiceFactory(final File ksPath) {
-        CryptoAdmin.setCryptoKeyServiceFactory(
-            new CryptoKeyServiceFactory() {
-                @Override public CryptoKeyService getKeyService() {
-                    return new JKSCryptoKeyService(getKsManager(ksPath));
-                }
-            });
+    private static void initTestCryptoServiceFactory(final File ksPath) {
+        CryptoAdmin.setCryptoServiceFactory(
+            new CryptoServiceFactory() {
+                @Override public CryptoService getCryptoService() {
+                    return new AESCryptoService(
+                        getCryptoKeyService(ksPath).getKey());
+            }
+        });
     }
 
-    private static JKSCryptoKeyStoreManager getKsManager(File ksPath) {
-        return (JKSCryptoKeyStoreManager) CryptoAdmin.getKSManagerFactory()
-                                        .newInstance(ksPath, TEST_KS_PASS);
+    private static CryptoKeyService getCryptoKeyService(File ksPath) {
+        return new JKSCryptoKeyService(getKsManager(ksPath));
+    }
+
+    public static CryptoKeyStoreManager getKsManager(File ksPath) {
+        return CryptoAdmin.getKSManagerFactory().newInstance(ksPath, TEST_KS_PASS);
     }
 
     public static void initTestCryptoKeyStore(File ksPath) throws Exception {
         getKsManager(ksPath).createKeyStore();
-        initTestCryptoKeyServiceFactory(ksPath);
+        initTestCryptoServiceFactory(ksPath);
     }
 
-    public static void resetTestKeyServiceFactory() {
-        CryptoAdmin.setCryptoKeyServiceFactory(null);
+    public static void resetTestCryptoServiceFactory() {
+        CryptoAdmin.setCryptoServiceFactory(null);
     }
 
     public static void encryptedPasswordShouldNotContainOriginalOne(
