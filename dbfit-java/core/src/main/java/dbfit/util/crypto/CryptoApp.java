@@ -12,19 +12,7 @@ public class CryptoApp {
         this.ksManagerFactory = factory;
     }
 
-    public void setOutput(PrintStream out) {
-        this.out = out;
-    }
-
-    public void resetOutput() {
-        this.out = System.out;
-    }
-
     private void updateStatus(String msg) {
-        out.println(msg);
-    }
-
-    private void updateErrStatus(String msg) {
         out.println(msg);
     }
 
