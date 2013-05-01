@@ -14,17 +14,17 @@ public class CryptoKeyServiceTest {
 
     @Before
     public void prepare() throws Exception {
-        CryptoServiceTests.initTestCryptoKeyStore(tempKeyStoreFolder.getRoot());
+        CryptoTestsAdmin.initTestCryptoKeyStore(tempKeyStoreFolder.getRoot());
     }
 
     @After
     public void cleanup() {
-        CryptoServiceTests.resetTestCryptoServiceFactory();
+        CryptoTestsAdmin.resetTestCryptoServiceFactory();
     }
 
     @Test
     public void testLoadedKeyIsNotNull() {
-        CryptoKeyService keySvc = CryptoServiceTests
+        CryptoKeyService keySvc = CryptoTestsAdmin
             .getCryptoKeyService(tempKeyStoreFolder.getRoot());
 
         assertNotNull(keySvc.getKey());

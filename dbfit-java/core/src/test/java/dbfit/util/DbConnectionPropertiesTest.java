@@ -1,6 +1,6 @@
 package dbfit.util;
 
-import dbfit.util.crypto.CryptoServiceTests;
+import dbfit.util.crypto.CryptoTestsAdmin;
 import dbfit.util.crypto.CryptoService;
 import dbfit.util.crypto.CryptoServiceFactory;
 import dbfit.util.crypto.CryptoAdmin;
@@ -30,8 +30,7 @@ public class DbConnectionPropertiesTest {
 
     @After
     public void cleanup() {
-        CryptoServiceTests.resetTestCryptoServiceFactory();
-        CryptoAdmin.setCryptoServiceFactory(null);
+        CryptoTestsAdmin.resetTestCryptoServiceFactory();
     }
 
     private String getOriginalPassword() {
@@ -130,7 +129,7 @@ public class DbConnectionPropertiesTest {
 
     @Test
     public void parseEncryptedPasswordValueTest() throws Exception {
-        CryptoServiceTests.initTestCryptoKeyStore(tempKeyStoreFolder.getRoot());
+        CryptoTestsAdmin.initTestCryptoKeyStore(tempKeyStoreFolder.getRoot());
 
         String wrappedPwd = wrapEncryptedPassword(encrypt(getOriginalPassword()));
         String decPwd = DbConnectionProperties.parsePassword(wrappedPwd);
@@ -140,7 +139,7 @@ public class DbConnectionPropertiesTest {
 
     @Test
     public void parseNonEncryptedPasswordValueTest() throws Exception {
-        CryptoServiceTests.initTestCryptoKeyStore(tempKeyStoreFolder.getRoot());
+        CryptoTestsAdmin.initTestCryptoKeyStore(tempKeyStoreFolder.getRoot());
 
         String decPwd = DbConnectionProperties.parsePassword(getOriginalPassword());
 
@@ -152,7 +151,7 @@ public class DbConnectionPropertiesTest {
      */
     @Test
     public void decryptedPasswordShouldMatchOriginalOne() throws Exception {
-        CryptoServiceTests.initTestCryptoKeyStore(tempKeyStoreFolder.getRoot());
+        CryptoTestsAdmin.initTestCryptoKeyStore(tempKeyStoreFolder.getRoot());
 
         checkPasswordLoad(false);
     }
