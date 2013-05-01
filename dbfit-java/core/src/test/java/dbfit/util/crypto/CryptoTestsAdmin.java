@@ -5,8 +5,6 @@ import java.io.File;
 
 public class CryptoTestsAdmin {
 
-    public static final char[] TEST_KS_PASS = "dbfit-demo-pass".toCharArray();
-
     private static void initTestCryptoServiceFactory(final File ksPath) {
         CryptoAdmin.setCryptoServiceFactory(
             new CryptoServiceFactory() {
@@ -18,7 +16,7 @@ public class CryptoTestsAdmin {
     }
 
     private static JKSCryptoKeyStoreManager getJKStoreManager(File ksPath) {
-        return new JKSCryptoKeyStoreManager(ksPath, TEST_KS_PASS);
+        return new JKSCryptoKeyStoreManager(ksPath);
     }
 
     public static CryptoKeyAccessor getCryptoKeyAccessor(File ksPath) {

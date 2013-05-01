@@ -6,6 +6,5 @@ public interface CryptoKeyStoreManagerFactory {
 
     public CryptoKeyStoreManager newInstance();
     public CryptoKeyStoreManager newInstance(File keyStorePath);
-    public CryptoKeyStoreManager newInstance(File keyStorePath, char[] ksPassword);
 }
 

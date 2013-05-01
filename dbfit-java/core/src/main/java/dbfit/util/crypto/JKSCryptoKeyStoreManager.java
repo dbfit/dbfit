@@ -17,15 +17,9 @@ public class JKSCryptoKeyStoreManager
     public static final String KEY_ALIAS = "dbfit";
 
     private File keyStoreLocation;
-    private char[] keyStorePassword;
-
-    public JKSCryptoKeyStoreManager(File keyStorePath, char[] ksPassword) {
-        this.keyStoreLocation = keyStorePath;
-        this.keyStorePassword = ksPassword;
-    }
 
     public JKSCryptoKeyStoreManager(File keyStorePath) {
-        this(keyStorePath, KS_PASS);
+        this.keyStoreLocation = keyStorePath;
     }
 
     public JKSCryptoKeyStoreManager() {
@@ -36,8 +30,8 @@ public class JKSCryptoKeyStoreManager
         return keyStoreLocation;
     }
 
-    public char[] getKeyStorePassword() {
-        return keyStorePassword;
+    private char[] getKeyStorePassword() {
+        return KS_PASS;
     }
 
     @Override

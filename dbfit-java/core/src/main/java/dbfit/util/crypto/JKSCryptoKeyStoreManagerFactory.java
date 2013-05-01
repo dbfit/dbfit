@@ -14,10 +14,5 @@ public class JKSCryptoKeyStoreManagerFactory implements CryptoKeyStoreManagerFac
         return new JKSCryptoKeyStoreManager(keyStorePath);
     }
 
-    @Override
-    public CryptoKeyStoreManager newInstance(File keyStorePath,
-                                            char[] ksPassword) {
-        return new JKSCryptoKeyStoreManager(keyStorePath, ksPassword);
-    }
 }
 
