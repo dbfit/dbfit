@@ -5,6 +5,11 @@ import java.io.File;
 
 public class CryptoApp {
 
+    public static final int EXIT_SUCCESS = 0;
+    public static final int EXIT_INVALID_COMMAND = 1;
+    public static final int EXIT_INVALID_OPTION = 2;
+    public static final int EXIT_COMMAND_FAILED = 3;
+    
     private CryptoKeyStoreFactory ksFactory;
     private PrintStream out = System.out;
 
@@ -20,10 +25,10 @@ public class CryptoApp {
         try {
             ks.createKeyStore();
             updateStatus("KeyStore created: " + ks.getKeyStoreFile());
-            return 0;
+            return EXIT_SUCCESS;
         } catch (CryptoKeyStoreException e) {
             updateStatus("KeyStore create failed: " + e.getMessage());
-            return 3;
+            return EXIT_COMMAND_FAILED;
         }
     }
 
@@ -59,10 +64,10 @@ public class CryptoApp {
 
     public int execute(String[] args) throws Exception {
         String cmd = "";
-        int errCode = 0;
+        int errCode = EXIT_SUCCESS;
 
         if (args.length < 1) {
-            errCode = 1;
+            errCode = EXIT_INVALID_COMMAND;
         } else {
             cmd = args[0];
         }
@@ -73,21 +78,21 @@ public class CryptoApp {
             } else if (args.length == 1) {
                 errCode = createKeyStore();
             } else {
-                errCode = 2;
+                errCode = EXIT_INVALID_OPTION;
             }
         } else if (cmd.equalsIgnoreCase("-encryptPassword")) {
             if (args.length == 2) {
                 encryptPassword(args[1]);
             } else {
-                errCode = 2;
+                errCode = EXIT_INVALID_OPTION;
             }
         } else if (cmd.equalsIgnoreCase("-help")) {
             showUsage();
         } else {
-            errCode = 1;
+            errCode = EXIT_INVALID_COMMAND;
         }
 
-        if ((errCode == 1) || (errCode == 2)) {
+        if ((errCode == EXIT_INVALID_OPTION) || (errCode == EXIT_INVALID_COMMAND)) {
             showUsage();
         }
 
