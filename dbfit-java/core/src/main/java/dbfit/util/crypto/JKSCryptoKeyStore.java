@@ -49,21 +49,13 @@ public class JKSCryptoKeyStore implements CryptoKeyStore {
 
     @Override
     public void createKeyStore() throws Exception {
-        if (!initKeyStore()) {
-            throw new UnsupportedOperationException(
+        if (keyStoreExists()) {
+            throw new CryptoKeyStoreException(this,
                     "Cannot create KeyStore on top of existing one! ["
                     + getKeyStoreFile() + "]");
         }
-    }
-
-    @Override
-    public boolean initKeyStore() throws Exception {
-        if (keyStoreExists()) {
-            return false;
-        }
 
         createKeyStoreNoCheck();
-        return true;
     }
 
     private void createKeyStoreNoCheck() throws Exception {

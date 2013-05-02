@@ -12,7 +12,7 @@ public class CryptoAppTest extends CryptoAppTestBase {
         execApp("-createKeyStore");
 
         verify(mockedKSFactory).newInstance();
-        verify(mockedKS).initKeyStore();
+        verify(mockedKS).createKeyStore();
     }
 
     @Test
@@ -20,7 +20,7 @@ public class CryptoAppTest extends CryptoAppTestBase {
         execApp("-createKeyStore", getTempKeyStore2Path());
 
         verify(mockedKSFactory).newInstance(tempKeyStoreFolder2.getRoot());
-        verify(mockedKS).initKeyStore();
+        verify(mockedKS).createKeyStore();
     }
 
     @Test
@@ -45,7 +45,7 @@ public class CryptoAppTest extends CryptoAppTestBase {
                 mockedCryptoServiceFactory, mockedCryptoService);
 
         inOrder.verify(mockedKSFactory).newInstance();
-        inOrder.verify(mockedKS).initKeyStore();
+        inOrder.verify(mockedKS).createKeyStore();
         inOrder.verify(mockedCryptoServiceFactory).getCryptoService();
         inOrder.verify(mockedCryptoService).encrypt(password);
     }

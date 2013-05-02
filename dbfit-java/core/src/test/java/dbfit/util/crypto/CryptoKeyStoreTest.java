@@ -63,14 +63,14 @@ public class CryptoKeyStoreTest {
     }
 
     @Test
-    public void initNonExistingKeyStoreShouldCreateOne() throws Exception {
-        assertTrue(ks.initKeyStore());
+    public void createInEmptyLocationShouldSucceed() throws Exception {
+        ks.createKeyStore();
     }
 
-    @Test
-    public void initExistingKeyStoreShouldReturnFalse() throws Exception {
+    @Test(expected = CryptoKeyStoreException.class)
+    public void createOnTopOfExistingKSShouldFail() throws Exception {
         ks.createKeyStore();
-        assertFalse(ks.initKeyStore());
+        ks.createKeyStore();
     }
 
 }

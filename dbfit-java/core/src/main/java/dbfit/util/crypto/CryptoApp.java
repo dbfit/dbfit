@@ -16,13 +16,14 @@ public class CryptoApp {
         out.println(msg);
     }
 
-    private void createKeyStore(CryptoKeyStore ks) throws Exception {
-        if (ks.initKeyStore()) {
+    private int createKeyStore(CryptoKeyStore ks) throws Exception {
+        try {
+            ks.createKeyStore();
             updateStatus("KeyStore created: " + ks.getKeyStoreFile());
-        } else {
-            updateStatus("KeyStore already exists: "
-                    + ks.getKeyStoreFile()
-                    + ". You should clean it up manually if you want to re-create.");
+            return 0;
+        } catch (CryptoKeyStoreException e) {
+            updateStatus("KeyStore create failed: " + e.getMessage());
+            return 3;
         }
     }
 
