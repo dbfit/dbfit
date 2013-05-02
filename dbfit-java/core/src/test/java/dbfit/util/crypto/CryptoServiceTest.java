@@ -13,13 +13,13 @@ public class CryptoServiceTest {
 
     @Before
     public void prepare() throws Exception {
-        CryptoTestsAdmin.initTestCryptoKeyStore(tempKeyStoreFolder.getRoot());
+        CryptoTestsConfig.initTestCryptoKeyStore(tempKeyStoreFolder.getRoot());
         cryptoService = CryptoFactories.getCryptoService();
     }
 
     @After
     public void cleanup() throws Exception {
-        CryptoTestsAdmin.resetTestCryptoServiceFactory();
+        CryptoTestsConfig.resetTestCryptoServiceFactory();
     }
 
     @Test

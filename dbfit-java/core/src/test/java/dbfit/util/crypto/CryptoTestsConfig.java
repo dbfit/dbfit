@@ -3,7 +3,7 @@ package dbfit.util.crypto;
 import java.security.NoSuchAlgorithmException;
 import java.io.File;
 
-public class CryptoTestsAdmin {
+public class CryptoTestsConfig {
 
     private static void initTestCryptoServiceFactory(final File ksPath) {
         CryptoFactories.setCryptoServiceFactory(
