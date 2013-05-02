@@ -2,9 +2,8 @@ package dbfit.util.crypto;
 
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.matchers.JUnitMatchers.*;
 
-import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.CoreMatchers.*;
 
 public class CryptoServiceTests {
 

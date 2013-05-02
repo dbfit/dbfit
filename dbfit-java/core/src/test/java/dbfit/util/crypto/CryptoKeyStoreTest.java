@@ -8,7 +8,8 @@ import org.junit.rules.ExpectedException;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
-import static org.junit.matchers.JUnitMatchers.containsString;
+import static org.hamcrest.CoreMatchers.containsString;
+
 
 public class CryptoKeyStoreTest {
 
