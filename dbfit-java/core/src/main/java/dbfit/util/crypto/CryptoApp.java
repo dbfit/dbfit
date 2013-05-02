@@ -11,10 +11,18 @@ public class CryptoApp {
     public static final int EXIT_COMMAND_FAILED = 3;
     
     private CryptoKeyStoreFactory ksFactory;
+    private CryptoServiceFactory cryptoServiceFactory;
     private PrintStream out = System.out;
 
-    public CryptoApp(CryptoKeyStoreFactory factory) {
-        this.ksFactory = factory;
+    public CryptoApp(
+            CryptoKeyStoreFactory ksFactory, CryptoServiceFactory csFactory) {
+        this.ksFactory = ksFactory;
+        this.cryptoServiceFactory = csFactory;
+    }
+
+    public CryptoApp() {
+        this(CryptoFactories.getCryptoKeyStoreFactory(),
+                CryptoFactories.getCryptoServiceFactory());
     }
 
     private void updateStatus(String msg) {
@@ -100,14 +108,14 @@ public class CryptoApp {
     }
 
     public static void main(String[] args) throws Exception {
-        CryptoApp app = new CryptoApp(CryptoFactories.getCryptoKeyStoreFactory());
+        CryptoApp app = new CryptoApp();
 
         int exitCode = app.execute(args);
         System.exit(exitCode);
     }
 
     private CryptoService getCryptoService() {
-        return CryptoFactories.getCryptoServiceFactory().getCryptoService();
+        return cryptoServiceFactory.getCryptoService();
     }
 
 }

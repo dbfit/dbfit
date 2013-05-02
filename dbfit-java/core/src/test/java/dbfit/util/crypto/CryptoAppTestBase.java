@@ -7,11 +7,7 @@ import java.io.IOException;
 import static java.util.Arrays.asList;
 import static dbfit.util.LangUtils.*;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.After;
 import org.junit.Rule;
-import org.junit.ClassRule;
 import org.junit.rules.TemporaryFolder;
 
 import org.mockito.Mock;
@@ -32,9 +28,6 @@ public class CryptoAppTestBase extends MockitoTestBase {
         when(mockedKSFactory.newInstance()).thenReturn(mockedKS);
         when(mockedKSFactory.newInstance(any(File.class))).thenReturn(mockedKS);
         when(mockedCryptoServiceFactory.getCryptoService()).thenReturn(mockedCryptoService);
-
-        CryptoFactories.setCryptoKeyStoreFactory(mockedKSFactory);
-        CryptoFactories.setCryptoServiceFactory(mockedCryptoServiceFactory);
     }
 
     protected int execApp(String... args) throws Exception {
@@ -53,8 +46,9 @@ public class CryptoAppTestBase extends MockitoTestBase {
         return tempKeyStoreFolder2.getRoot().getCanonicalPath();
     }
 
+    // Create a real (non-mocked app)
     protected CryptoApp createCryptoApp() {
-        return new CryptoApp(CryptoFactories.getCryptoKeyStoreFactory());
+        return new CryptoApp();
     }
 
     protected static class ArgList {

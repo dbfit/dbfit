@@ -15,15 +15,9 @@ public class CryptoAppTest extends CryptoAppTestBase {
         setupMocks();
     }
 
-    @After
-    public void tearDown() {
-        CryptoFactories.setCryptoServiceFactory(null);
-        CryptoFactories.setCryptoKeyStoreFactory(null);
-    }
-
     @Override
     protected CryptoApp createCryptoApp() {
-        return new CryptoApp(mockedKSFactory);
+        return new CryptoApp(mockedKSFactory, mockedCryptoServiceFactory);
     }
 
     @Test

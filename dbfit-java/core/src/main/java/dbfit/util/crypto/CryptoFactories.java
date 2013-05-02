@@ -1,10 +1,7 @@
 package dbfit.util.crypto;
 
-import java.io.File;
-
 public class CryptoFactories {
 
-    private static CryptoKeyStoreFactory ksFactory = null;
     private static CryptoServiceFactory cryptoServiceFactory = null;
 
     public static void setCryptoKeyStoreFactory(CryptoKeyStoreFactory factory) {
@@ -16,11 +13,7 @@ public class CryptoFactories {
     }
 
     public static CryptoKeyStoreFactory getCryptoKeyStoreFactory() {
-        if (null == ksFactory) {
-            return new JKSCryptoKeyStoreFactory();
-        }
-
-        return ksFactory;
+        return new JKSCryptoKeyStoreFactory();
     }
 
     public static CryptoServiceFactory getCryptoServiceFactory() {
