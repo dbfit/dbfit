@@ -2,7 +2,7 @@ package dbfit.util.crypto;
 
 import java.io.File;
 
-public class CryptoAdmin {
+public class CryptoFactories {
 
     private static CryptoKeyStoreFactory ksFactory = null;
     private static CryptoServiceFactory cryptoServiceFactory = null;

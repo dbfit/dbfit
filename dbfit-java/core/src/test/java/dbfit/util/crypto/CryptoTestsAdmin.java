@@ -6,7 +6,7 @@ import java.io.File;
 public class CryptoTestsAdmin {
 
     private static void initTestCryptoServiceFactory(final File ksPath) {
-        CryptoAdmin.setCryptoServiceFactory(
+        CryptoFactories.setCryptoServiceFactory(
             new CryptoServiceFactory() {
                 @Override public CryptoService getCryptoService() {
                     return new AESCryptoService(
@@ -33,7 +33,7 @@ public class CryptoTestsAdmin {
     }
 
     public static void resetTestCryptoServiceFactory() {
-        CryptoAdmin.setCryptoServiceFactory(null);
+        CryptoFactories.setCryptoServiceFactory(null);
     }
 
 }

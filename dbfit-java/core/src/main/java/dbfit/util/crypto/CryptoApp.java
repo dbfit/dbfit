@@ -100,14 +100,14 @@ public class CryptoApp {
     }
 
     public static void main(String[] args) throws Exception {
-        CryptoApp app = new CryptoApp(CryptoAdmin.getCryptoKeyStoreFactory());
+        CryptoApp app = new CryptoApp(CryptoFactories.getCryptoKeyStoreFactory());
 
         int exitCode = app.execute(args);
         System.exit(exitCode);
     }
 
     private CryptoService getCryptoService() {
-        return CryptoAdmin.getCryptoServiceFactory().getCryptoService();
+        return CryptoFactories.getCryptoServiceFactory().getCryptoService();
     }
 
 }

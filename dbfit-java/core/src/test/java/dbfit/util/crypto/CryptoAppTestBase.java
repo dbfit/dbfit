@@ -33,8 +33,8 @@ public class CryptoAppTestBase extends MockitoTestBase {
         when(mockedKSFactory.newInstance(any(File.class))).thenReturn(mockedKS);
         when(mockedCryptoServiceFactory.getCryptoService()).thenReturn(mockedCryptoService);
 
-        CryptoAdmin.setCryptoKeyStoreFactory(mockedKSFactory);
-        CryptoAdmin.setCryptoServiceFactory(mockedCryptoServiceFactory);
+        CryptoFactories.setCryptoKeyStoreFactory(mockedKSFactory);
+        CryptoFactories.setCryptoServiceFactory(mockedCryptoServiceFactory);
     }
 
     protected int execApp(String... args) throws Exception {
@@ -54,7 +54,7 @@ public class CryptoAppTestBase extends MockitoTestBase {
     }
 
     protected CryptoApp createCryptoApp() {
-        return new CryptoApp(CryptoAdmin.getCryptoKeyStoreFactory());
+        return new CryptoApp(CryptoFactories.getCryptoKeyStoreFactory());
     }
 
     protected static class ArgList {

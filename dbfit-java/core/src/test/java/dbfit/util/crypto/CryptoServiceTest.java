@@ -14,7 +14,7 @@ public class CryptoServiceTest {
     @Before
     public void prepare() throws Exception {
         CryptoTestsAdmin.initTestCryptoKeyStore(tempKeyStoreFolder.getRoot());
-        cryptoService = CryptoAdmin.getCryptoService();
+        cryptoService = CryptoFactories.getCryptoService();
     }
 
     @After

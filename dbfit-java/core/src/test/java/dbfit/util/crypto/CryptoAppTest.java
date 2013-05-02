@@ -17,8 +17,8 @@ public class CryptoAppTest extends CryptoAppTestBase {
 
     @After
     public void tearDown() {
-        CryptoAdmin.setCryptoServiceFactory(null);
-        CryptoAdmin.setCryptoKeyStoreFactory(null);
+        CryptoFactories.setCryptoServiceFactory(null);
+        CryptoFactories.setCryptoKeyStoreFactory(null);
     }
 
     @Override
