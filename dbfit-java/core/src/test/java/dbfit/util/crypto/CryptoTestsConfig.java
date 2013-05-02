@@ -7,12 +7,7 @@ public class CryptoTestsConfig {
 
     private static void initTestCryptoServiceFactory(final File ksPath) {
         CryptoFactories.setCryptoServiceFactory(
-            new CryptoServiceFactory() {
-                @Override public CryptoService getCryptoService() {
-                    return new AESCryptoService(
-                        getCryptoKeyAccessor(ksPath).getKey());
-            }
-        });
+                    new AESCryptoServiceFactory(getCryptoKeyAccessor(ksPath)));
     }
 
     public static JKSCryptoKeyStore getJKSCryptoKeyStore(File ksPath) {

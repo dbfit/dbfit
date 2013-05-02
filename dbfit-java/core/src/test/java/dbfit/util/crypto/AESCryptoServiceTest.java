@@ -1,5 +1,7 @@
 package dbfit.util.crypto;
 
+import java.security.Key;
+
 import org.junit.Test;
 import org.junit.Before;
 
@@ -8,7 +10,12 @@ public class AESCryptoServiceTest {
 
     @Before
     public void prepare() throws Exception {
-        cryptoService = new AESCryptoService(AESKeyGenerator.generateKey());
+        cryptoService = new AESCryptoServiceFactory(new CryptoKeyAccessor() {
+            private Key key = AESKeyGenerator.generateKey();
+            @Override public Key getKey() {
+                return key;
+            }
+        }).getCryptoService();
     }
 
     @Test

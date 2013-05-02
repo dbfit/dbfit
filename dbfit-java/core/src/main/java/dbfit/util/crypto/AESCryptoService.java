@@ -8,15 +8,24 @@ import org.apache.commons.codec.binary.Base64;
 
 public class AESCryptoService implements CryptoService {
 
+    private CryptoKeyAccessor keyAccessor;
     private Key key;
 
-    public AESCryptoService(Key key) {
-        this.key = key;
+    private Key getKey() {
+        if (key == null) {
+            key = keyAccessor.getKey();
+        }
+
+        return key;
+    }
+
+    public AESCryptoService(CryptoKeyAccessor keyAccessor) {
+        this.keyAccessor = keyAccessor;
     }
 
     private Cipher getCipher(int opmode) throws Exception {
         Cipher cipher = Cipher.getInstance("AES");
-        byte[] raw = key.getEncoded();
+        byte[] raw = getKey().getEncoded();
         SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
 
         cipher.init(opmode, skeySpec);

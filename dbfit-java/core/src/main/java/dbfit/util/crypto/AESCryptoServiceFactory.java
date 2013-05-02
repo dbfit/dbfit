@@ -1,7 +1,5 @@
 package dbfit.util.crypto;
 
-import java.security.Key;
-
 public class AESCryptoServiceFactory implements CryptoServiceFactory {
 
     private static CryptoService cryptoServiceInstance = null; // caching
@@ -12,13 +10,13 @@ public class AESCryptoServiceFactory implements CryptoServiceFactory {
     }
 
     public AESCryptoServiceFactory() {
-        this.keyAccessor = CryptoFactories.getCryptoKeyStoreFactory().newInstance();
+        this(CryptoFactories.getCryptoKeyStoreFactory().newInstance());
     }
 
     @Override
     public CryptoService getCryptoService() {
         if (cryptoServiceInstance == null) {
-            cryptoServiceInstance = new AESCryptoService(keyAccessor.getKey());
+            cryptoServiceInstance = new AESCryptoService(keyAccessor);
         }
 
         return cryptoServiceInstance;
