@@ -4,10 +4,6 @@ public class CryptoFactories {
 
     private static CryptoServiceFactory cryptoServiceFactory = null;
 
-    public static void setCryptoKeyStoreFactory(CryptoKeyStoreFactory factory) {
-        ksFactory = factory;
-    }
-
     public static void setCryptoServiceFactory(CryptoServiceFactory factory) {
         cryptoServiceFactory = factory;
     }
