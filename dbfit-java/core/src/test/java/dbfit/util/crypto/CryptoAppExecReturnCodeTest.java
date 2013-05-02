@@ -36,7 +36,8 @@ public class CryptoAppExecReturnCodeTest extends CryptoAppTestBase {
             {1, args("another invalid command")},
             {2, args("-encryptPassword", "too", "many", "args")},
             {2, args("-encryptPassword")},
-            {2, args("-createKeyStore", "too", "many")}
+            {2, args("-createKeyStore", "too", "many")},
+            {3, args("-createKeyStore", existingFakeKSFolder.getRoot().getPath())}
         });
     }
 }

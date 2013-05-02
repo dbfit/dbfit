@@ -6,8 +6,10 @@ import static java.util.Arrays.asList;
 import static dbfit.util.LangUtils.*;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.After;
 import org.junit.Rule;
+import org.junit.ClassRule;
 import org.junit.rules.TemporaryFolder;
 
 import org.mockito.Mock;
@@ -23,7 +25,12 @@ public class CryptoAppTestBase extends MockitoTestBase {
 
     @Rule public TemporaryFolder tempKeyStoreFolder = new TemporaryFolder();
     @Rule public TemporaryFolder tempKeyStoreFolder2 = new TemporaryFolder();
+    @ClassRule public static TemporaryFolder existingFakeKSFolder = new TemporaryFolder();
 
+    @BeforeClass
+    public static void createFakeKSFile() throws IOException {
+        existingFakeKSFolder.newFile(JKSCryptoKeyStore.KS_NAME);
+    }
 
     @Before
     public void prepare() throws IOException {
