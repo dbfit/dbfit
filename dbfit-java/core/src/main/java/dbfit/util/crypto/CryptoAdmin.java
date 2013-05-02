@@ -4,23 +4,23 @@ import java.io.File;
 
 public class CryptoAdmin {
 
-    private static CryptoKeyStoreManagerFactory ksManagerFactory = null;
+    private static CryptoKeyStoreFactory ksFactory = null;
     private static CryptoServiceFactory cryptoServiceFactory = null;
 
-    public static void setKSManagerFactory(CryptoKeyStoreManagerFactory factory) {
-        ksManagerFactory = factory;
+    public static void setCryptoKeyStoreFactory(CryptoKeyStoreFactory factory) {
+        ksFactory = factory;
     }
 
     public static void setCryptoServiceFactory(CryptoServiceFactory factory) {
         cryptoServiceFactory = factory;
     }
 
-    public static CryptoKeyStoreManagerFactory getKSManagerFactory() {
-        if (null == ksManagerFactory) {
-            return new JKSCryptoKeyStoreManagerFactory();
+    public static CryptoKeyStoreFactory getCryptoKeyStoreFactory() {
+        if (null == ksFactory) {
+            return new JKSCryptoKeyStoreFactory();
         }
 
-        return ksManagerFactory;
+        return ksFactory;
     }
 
     public static CryptoServiceFactory getCryptoServiceFactory() {

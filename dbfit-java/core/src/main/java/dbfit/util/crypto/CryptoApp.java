@@ -5,42 +5,42 @@ import java.io.File;
 
 public class CryptoApp {
 
-    private CryptoKeyStoreManagerFactory ksManagerFactory;
+    private CryptoKeyStoreFactory ksFactory;
     private PrintStream out = System.out;
 
-    public CryptoApp(CryptoKeyStoreManagerFactory factory) {
-        this.ksManagerFactory = factory;
+    public CryptoApp(CryptoKeyStoreFactory factory) {
+        this.ksFactory = factory;
     }
 
     private void updateStatus(String msg) {
         out.println(msg);
     }
 
-    private void createKeyStore(CryptoKeyStoreManager ksMgr) throws Exception {
-        if (ksMgr.initKeyStore()) {
-            updateStatus("KeyStore created: " + ksMgr.getKeyStoreFile());
+    private void createKeyStore(CryptoKeyStore ks) throws Exception {
+        if (ks.initKeyStore()) {
+            updateStatus("KeyStore created: " + ks.getKeyStoreFile());
         } else {
             updateStatus("KeyStore already exists: "
-                    + ksMgr.getKeyStoreFile()
+                    + ks.getKeyStoreFile()
                     + ". You should clean it up manually if you want to re-create.");
         }
     }
 
     private void createKeyStore() throws Exception {
-        CryptoKeyStoreManager ksMgr = ksManagerFactory.newInstance();
-        createKeyStore(ksMgr);
+        CryptoKeyStore ks = ksFactory.newInstance();
+        createKeyStore(ks);
     }
 
     private void createKeyStore(String customPath) throws Exception {
-        File ksRoot = new File(customPath);
-        CryptoKeyStoreManager ksMgr = ksManagerFactory.newInstance(ksRoot);
-        createKeyStore(ksMgr);
+        File ksRoot = (null == customPath) ? null : new File(customPath);
+        CryptoKeyStore ks = ksFactory.newInstance(ksRoot);
+        createKeyStore(ks);
     }
 
     private void encryptPassword(String password) throws Exception {
-        CryptoKeyStoreManager ksMgr = ksManagerFactory.newInstance();
-        if (!ksMgr.keyStoreExists()) {
-            createKeyStore(ksMgr);
+        CryptoKeyStore ks = ksFactory.newInstance();
+        if (!ks.keyStoreExists()) {
+            createKeyStore(ks);
         }
 
         String encPwd = getCryptoService().encrypt(password);
@@ -97,7 +97,7 @@ public class CryptoApp {
     }
 
     public static void main(String[] args) throws Exception {
-        CryptoApp app = new CryptoApp(CryptoAdmin.getKSManagerFactory());
+        CryptoApp app = new CryptoApp(CryptoAdmin.getCryptoKeyStoreFactory());
 
         int exitCode = app.execute(args);
         System.exit(exitCode);

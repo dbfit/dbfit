@@ -8,8 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-public class JKSCryptoKeyStoreManager
-                implements CryptoKeyStoreManager, CryptoKeyAccessor {
+public class JKSCryptoKeyStore implements CryptoKeyStore {
 
     public static final String KS_TYPE = "JCEKS";
     public static final String KS_NAME = ".dbfit.jks";
@@ -18,15 +17,19 @@ public class JKSCryptoKeyStoreManager
 
     private File keyStoreLocation;
 
-    public JKSCryptoKeyStoreManager(File keyStorePath) {
-        this.keyStoreLocation = keyStorePath;
+    public JKSCryptoKeyStore(final File keyStorePath) {
+        if (null != keyStorePath) {
+            this.keyStoreLocation = keyStorePath;
+        } else {
+            this.keyStoreLocation = getDefaultKeyStoreLocation();
+        }
     }
 
-    public JKSCryptoKeyStoreManager() {
-        this(getDefaultKeyStoreLocation());
+    public JKSCryptoKeyStore() {
+        this(null);
     }
 
-    public File getKeyStoreLocation() {
+    private File getKeyStoreLocation() {
         return keyStoreLocation;
     }
 

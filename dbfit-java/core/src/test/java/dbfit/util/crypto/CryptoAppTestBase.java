@@ -17,8 +17,8 @@ import dbfit.util.MockitoTestBase;
 
 public class CryptoAppTestBase extends MockitoTestBase {
     @Mock protected CryptoService mockedCryptoService;
-    @Mock protected CryptoKeyStoreManager mockedKSManager;
-    @Mock protected CryptoKeyStoreManagerFactory mockedKSManagerFactory;
+    @Mock protected CryptoKeyStore mockedKS;
+    @Mock protected CryptoKeyStoreFactory mockedKSFactory;
     @Mock protected CryptoServiceFactory mockedCryptoServiceFactory;
 
     @Rule public TemporaryFolder tempKeyStoreFolder = new TemporaryFolder();
@@ -27,11 +27,11 @@ public class CryptoAppTestBase extends MockitoTestBase {
 
     @Before
     public void prepare() throws IOException {
-        when(mockedKSManagerFactory.newInstance()).thenReturn(mockedKSManager);
-        when(mockedKSManagerFactory.newInstance(any(File.class))).thenReturn(mockedKSManager);
+        when(mockedKSFactory.newInstance()).thenReturn(mockedKS);
+        when(mockedKSFactory.newInstance(any(File.class))).thenReturn(mockedKS);
         when(mockedCryptoServiceFactory.getCryptoService()).thenReturn(mockedCryptoService);
 
-        CryptoAdmin.setKSManagerFactory(mockedKSManagerFactory);
+        CryptoAdmin.setCryptoKeyStoreFactory(mockedKSFactory);
         CryptoAdmin.setCryptoServiceFactory(mockedCryptoServiceFactory);
 
         System.setProperty("dbfit.keystore.path", getTempKeyStorePath());
@@ -40,7 +40,7 @@ public class CryptoAppTestBase extends MockitoTestBase {
     @After
     public void tearDown() {
         CryptoAdmin.setCryptoServiceFactory(null);
-        CryptoAdmin.setKSManagerFactory(null);
+        CryptoAdmin.setCryptoKeyStoreFactory(null);
     }
 
     protected int execApp(String... args) throws Exception {
@@ -60,7 +60,7 @@ public class CryptoAppTestBase extends MockitoTestBase {
     }
 
     protected CryptoApp createCryptoApp() {
-        return new CryptoApp(mockedKSManagerFactory);
+        return new CryptoApp(mockedKSFactory);
     }
 
     protected static class ArgList {

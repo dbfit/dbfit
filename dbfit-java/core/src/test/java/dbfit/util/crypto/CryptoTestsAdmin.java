@@ -15,20 +15,20 @@ public class CryptoTestsAdmin {
         });
     }
 
-    private static JKSCryptoKeyStoreManager getJKStoreManager(File ksPath) {
-        return new JKSCryptoKeyStoreManager(ksPath);
+    public static JKSCryptoKeyStore getJKSCryptoKeyStore(File ksPath) {
+        return new JKSCryptoKeyStore(ksPath);
     }
 
     public static CryptoKeyAccessor getCryptoKeyAccessor(File ksPath) {
-        return getJKStoreManager(ksPath);
+        return getCryptoKeyStore(ksPath);
     }
 
-    public static CryptoKeyStoreManager getKsManager(File ksPath) {
-        return getJKStoreManager(ksPath);
+    public static CryptoKeyStore getCryptoKeyStore(File ksPath) {
+        return getJKSCryptoKeyStore(ksPath);
     }
 
     public static void initTestCryptoKeyStore(File ksPath) throws Exception {
-        getKsManager(ksPath).createKeyStore();
+        getJKSCryptoKeyStore(ksPath).createKeyStore();
         initTestCryptoServiceFactory(ksPath);
     }
 

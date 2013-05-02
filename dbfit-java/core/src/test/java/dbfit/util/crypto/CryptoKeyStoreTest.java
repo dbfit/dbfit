@@ -1,11 +1,5 @@
 package dbfit.util.crypto;
 
-import javax.crypto.KeyGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.Key;
-import javax.crypto.SecretKey;
-import java.security.KeyStore;
-
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,68 +10,67 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.matchers.JUnitMatchers.containsString;
 
-public class CryptoKeyStoreManagerTest {
+public class CryptoKeyStoreTest {
 
     @Rule public TemporaryFolder tempKeyStoreFolder = new TemporaryFolder();
     @Rule public ExpectedException thrown = ExpectedException.none();
 
-    private JKSCryptoKeyStoreManager ksManager;
+    private JKSCryptoKeyStore ks;
 
     @Before
     public void prepare() {
-        ksManager = new JKSCryptoKeyStoreManager(tempKeyStoreFolder.getRoot());
+        ks = new JKSCryptoKeyStore(tempKeyStoreFolder.getRoot());
     }
 
     @Test
     public void createKeyStoreTest() throws Exception {
-        ksManager.createKeyStore();
+        ks.createKeyStore();
     }
 
     @Test
     public void createKeyStoreOnTopOfExistingOneShouldFail() throws Exception {
-        ksManager.createKeyStore();
+        ks.createKeyStore();
 
         String expectedMessage = "Cannot create KeyStore on top of existing one";
         thrown.expect(Exception.class);
         thrown.expectMessage(containsString(expectedMessage));
 
-        ksManager.createKeyStore();
+        ks.createKeyStore();
     }
 
     @Test(expected = java.io.IOException.class)
     public void shouldFailToLoadFromNonExistingKeyStore() throws Exception {
-        KeyStore ks = ksManager.loadKeyStore();
+        ks.loadKeyStore();
     }
 
     @Test
     public void shouldSucceedToLoadFromExistingKeyStore() throws Exception {
-        ksManager.createKeyStore();
-        KeyStore ks = ksManager.loadKeyStore();
-        assertNotNull(ks);
+        ks.createKeyStore();
+        assertNotNull(ks.loadKeyStore());
     }
 
     @Test
     public void shouldBeAbleToGetKeyFromExistingKeyStore() throws Exception {
-        ksManager.createKeyStore();
-        assertNotNull(ksManager.getKey());
+        ks.createKeyStore();
+        assertNotNull(ks.getKey());
     }
 
     @Test
     public void keyStoreExistenceCheck() throws Exception {
-        assertFalse(ksManager.keyStoreExists());
-        ksManager.createKeyStore();
-        assertTrue(ksManager.keyStoreExists());
+        assertFalse(ks.keyStoreExists());
+        ks.createKeyStore();
+        assertTrue(ks.keyStoreExists());
     }
 
     @Test
     public void initNonExistingKeyStoreShouldCreateOne() throws Exception {
-        assertTrue(ksManager.initKeyStore());
+        assertTrue(ks.initKeyStore());
     }
 
     @Test
     public void initExistingKeyStoreShouldReturnFalse() throws Exception {
-        ksManager.createKeyStore();
-        assertFalse(ksManager.initKeyStore());
+        ks.createKeyStore();
+        assertFalse(ks.initKeyStore());
     }
 
 }

@@ -12,7 +12,7 @@ public class AESCryptoServiceFactory implements CryptoServiceFactory {
     }
 
     public AESCryptoServiceFactory() {
-        this.keyAccessor = new JKSCryptoKeyStoreManager();
+        this.keyAccessor = CryptoAdmin.getCryptoKeyStoreFactory().newInstance();
     }
 
     @Override
