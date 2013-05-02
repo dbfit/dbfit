@@ -26,7 +26,7 @@ public class JKSCryptoKeyStore implements CryptoKeyStore {
     }
 
     public JKSCryptoKeyStore() {
-        this(null);
+        this.keyStoreLocation = getDefaultKeyStoreLocation();
     }
 
     private File getKeyStoreLocation() {
@@ -49,6 +49,10 @@ public class JKSCryptoKeyStore implements CryptoKeyStore {
 
     @Override
     public void createKeyStore() throws Exception {
+        if (!getKeyStoreLocation().exists()) {
+            throw new RuntimeException("No such folder: " + getKeyStoreLocation());
+        }
+
         if (keyStoreExists()) {
             throw new CryptoKeyStoreException(this,
                     "Cannot create KeyStore on top of existing one! ["

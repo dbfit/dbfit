@@ -1,12 +1,31 @@
 package dbfit.util.crypto;
 
 import org.junit.Test;
+import org.junit.Before;
+import org.junit.After;
 
 import org.mockito.InOrder;
 import static org.mockito.Mockito.*;
 
 
 public class CryptoAppTest extends CryptoAppTestBase {
+
+    @Before
+    public void setMockedFactories() throws Exception {
+        setupMocks();
+    }
+
+    @After
+    public void tearDown() {
+        CryptoAdmin.setCryptoServiceFactory(null);
+        CryptoAdmin.setCryptoKeyStoreFactory(null);
+    }
+
+    @Override
+    protected CryptoApp createCryptoApp() {
+        return new CryptoApp(mockedKSFactory);
+    }
+
     @Test
     public void createKeyStoreInDefaultLocationTest() throws Exception {
         execApp("-createKeyStore");

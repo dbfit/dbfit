@@ -27,15 +27,12 @@ public class CryptoApp {
         }
     }
 
-    private void createKeyStore() throws Exception {
-        CryptoKeyStore ks = ksFactory.newInstance();
-        createKeyStore(ks);
+    private int createKeyStore() throws Exception {
+        return createKeyStore(ksFactory.newInstance());
     }
 
-    private void createKeyStore(String customPath) throws Exception {
-        File ksRoot = (null == customPath) ? null : new File(customPath);
-        CryptoKeyStore ks = ksFactory.newInstance(ksRoot);
-        createKeyStore(ks);
+    private int createKeyStore(final String customPath) throws Exception {
+        return createKeyStore(ksFactory.newInstance(new File(customPath)));
     }
 
     private void encryptPassword(String password) throws Exception {
@@ -72,9 +69,9 @@ public class CryptoApp {
 
         if (cmd.equalsIgnoreCase("-createKeyStore")) {
             if (args.length == 2) {
-                createKeyStore(args[1]);
+                errCode = createKeyStore(args[1]);
             } else if (args.length == 1) {
-                createKeyStore();
+                errCode = createKeyStore();
             } else {
                 errCode = 2;
             }
@@ -90,7 +87,7 @@ public class CryptoApp {
             errCode = 1;
         }
 
-        if (errCode != 0) {
+        if ((errCode == 1) || (errCode == 2)) {
             showUsage();
         }
 

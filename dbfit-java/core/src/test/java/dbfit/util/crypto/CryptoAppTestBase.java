@@ -1,5 +1,7 @@
 package dbfit.util.crypto;
 
+import static dbfit.util.crypto.JKSCryptoKeyStore.KS_NAME;
+
 import java.io.File;
 import java.io.IOException;
 import static java.util.Arrays.asList;
@@ -25,29 +27,14 @@ public class CryptoAppTestBase extends MockitoTestBase {
 
     @Rule public TemporaryFolder tempKeyStoreFolder = new TemporaryFolder();
     @Rule public TemporaryFolder tempKeyStoreFolder2 = new TemporaryFolder();
-    @ClassRule public static TemporaryFolder existingFakeKSFolder = new TemporaryFolder();
 
-    @BeforeClass
-    public static void createFakeKSFile() throws IOException {
-        existingFakeKSFolder.newFile(JKSCryptoKeyStore.KS_NAME);
-    }
-
-    @Before
-    public void prepare() throws IOException {
+    protected void setupMocks() throws IOException {
         when(mockedKSFactory.newInstance()).thenReturn(mockedKS);
         when(mockedKSFactory.newInstance(any(File.class))).thenReturn(mockedKS);
         when(mockedCryptoServiceFactory.getCryptoService()).thenReturn(mockedCryptoService);
 
         CryptoAdmin.setCryptoKeyStoreFactory(mockedKSFactory);
         CryptoAdmin.setCryptoServiceFactory(mockedCryptoServiceFactory);
-
-        System.setProperty("dbfit.keystore.path", getTempKeyStorePath());
-    }
-
-    @After
-    public void tearDown() {
-        CryptoAdmin.setCryptoServiceFactory(null);
-        CryptoAdmin.setCryptoKeyStoreFactory(null);
     }
 
     protected int execApp(String... args) throws Exception {
@@ -67,7 +54,7 @@ public class CryptoAppTestBase extends MockitoTestBase {
     }
 
     protected CryptoApp createCryptoApp() {
-        return new CryptoApp(mockedKSFactory);
+        return new CryptoApp(CryptoAdmin.getCryptoKeyStoreFactory());
     }
 
     protected static class ArgList {
@@ -82,5 +69,17 @@ public class CryptoAppTestBase extends MockitoTestBase {
         return new ArgList(params);
     }
 
+    // Used to init before @Parameters method
+    protected static TemporaryFolder initStaticTemp(boolean createFile) {
+        try {
+            TemporaryFolder tmp = new TemporaryFolder() { { before(); } };
+            if (createFile) {
+                tmp.newFile(KS_NAME);
+            }
+            return tmp;
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
+    }
 }
 
