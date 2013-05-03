@@ -4,10 +4,6 @@ import java.io.File;
 
 public class CryptoTestsConfig {
 
-    private static void initTestCryptoServiceFactory(final File ksPath) {
-        CryptoFactories.setCryptoServiceFactory(getCryptoServiceFactory(ksPath));
-    }
-
     public static JKSCryptoKeyStore getJKSCryptoKeyStore(File ksPath) {
         return new JKSCryptoKeyStore(ksPath);
     }
@@ -32,15 +28,6 @@ public class CryptoTestsConfig {
         CryptoKeyStore ks = getCryptoKeyStore(ksPath);
         ks.createKeyStore();
         return ks;
-    }
-
-    public static void initTestCryptoKeyStore(File ksPath) throws Exception {
-        createTestKeyStore(ksPath);
-        initTestCryptoServiceFactory(ksPath);
-    }
-
-    public static void resetTestCryptoServiceFactory() {
-        CryptoFactories.setCryptoServiceFactory(null);
     }
 
     public static CryptoService getFakeCryptoService() {
