@@ -13,10 +13,14 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 
 import java.util.List;
 import java.util.Map;
@@ -69,6 +73,17 @@ public class PropertiesLoaderTest {
             fakeLoader.loadFromList(prepareEncryptedSettings());
 
         assertEquals(DB_PASSWORD, props.get("password"));
+    }
+
+    @Test
+    public void shouldSkipCommentedLines() throws Exception {
+        List<String> lines = new java.util.ArrayList<String>();
+        lines.add("#=A comment here");
+        lines.add("username=myname");
+
+        Map<String, String> props = fakeLoader.loadFromList(lines);
+
+        assertThat(props, not(hasKey(startsWith("#"))));
     }
 
     // Integration test with real crypto svc

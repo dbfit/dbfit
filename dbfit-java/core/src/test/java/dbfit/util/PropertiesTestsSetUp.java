@@ -7,10 +7,15 @@ public class PropertiesTestsSetUp {
 
     private static List<String> prepareGeneralSettings() {
         List<String> lines = new java.util.ArrayList<String>();
+        lines.add("# Some comments");
         lines.add("service=mydemoservice");
         lines.add("username=mydemouser");
         lines.add("database=mydemodb");
         lines.add("connection-string=myconnection");
+        lines.add(""); // empty line
+        lines.add(" "); // empty line
+        lines.add(" # indented comment");
+        lines.add("#=another commented line");
         return lines;
     }
 

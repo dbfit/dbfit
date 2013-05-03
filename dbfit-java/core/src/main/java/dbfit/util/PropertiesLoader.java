@@ -30,7 +30,9 @@ public class PropertiesLoader {
 
         for (String line : lines) {
             String[] keyval = parseLine(line);
-            props.put(keyval[0], keyval[1]);
+            if (keyval != null) {
+                props.put(keyval[0], keyval[1]);
+            }
         }
 
         return props;
