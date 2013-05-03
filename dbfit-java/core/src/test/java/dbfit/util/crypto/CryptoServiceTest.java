@@ -2,7 +2,6 @@ package dbfit.util.crypto;
 
 import org.junit.Test;
 import org.junit.Before;
-import org.junit.After;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
