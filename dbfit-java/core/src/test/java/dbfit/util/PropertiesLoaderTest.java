@@ -2,6 +2,7 @@ package dbfit.util;
 
 import dbfit.util.crypto.CryptoTestsConfig;
 import dbfit.util.crypto.CryptoService;
+import static dbfit.util.crypto.CryptoTestsConfig.getFakeCryptoService;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -21,7 +22,7 @@ import java.util.Map;
 @RunWith(MockitoJUnitRunner.class)
 public class PropertiesLoaderTest {
 
-    private final String DB_PASSWORD = "Test Password";
+    public static final String DB_PASSWORD = "Test Password";
     private final String ENCRYPTED_PASSWORD = encrypt(DB_PASSWORD);
 
     @Mock private CryptoService mockedCryptoService;
@@ -34,23 +35,11 @@ public class PropertiesLoaderTest {
         fakeLoader = new PropertiesLoader(getFakeCryptoService());
     }
 
-    private CryptoService getFakeCryptoService() {
-        return new CryptoService() {
-            @Override public String encrypt(String msg) {
-                return "XE-" + msg;
-            }
-
-            @Override public String decrypt(String msg) {
-                return msg.substring(3);
-            }
-        };
-    }
-
     private String encrypt(String password) {
         return getFakeCryptoService().encrypt(password);
     }
 
-    private List<String> prepareNonEncryptedSettings() {
+    private static List<String> prepareNonEncryptedSettings() {
         List<String> lines = new java.util.ArrayList<String>();
         lines.add("service=mydemoservice");
         lines.add("username=mydemouser");
@@ -62,7 +51,7 @@ public class PropertiesLoaderTest {
      * Generate dummy configuration settings with the given password in
      * encrypted format
      */
-    private List<String> prepareEncryptedSettings(String encPwd) {
+    public static List<String> prepareEncryptedSettings(String encPwd) {
         List<String> lines = prepareNonEncryptedSettings();
         lines.add("password=" + wrapEncryptedValue(encPwd));
         return lines;
@@ -160,6 +149,7 @@ public class PropertiesLoaderTest {
         String value = "One=Two-Three==";
         String[] keyval = PropertiesLoader.splitKeyVal(
                 key + "=" + value);
+
 
         assertEquals(key, keyval[0]);
         assertEquals(value, keyval[1]);

@@ -43,5 +43,16 @@ public class CryptoTestsConfig {
         CryptoFactories.setCryptoServiceFactory(null);
     }
 
+    public static CryptoService getFakeCryptoService() {
+        return new CryptoService() {
+            @Override public String encrypt(String msg) {
+                return "XE-" + msg;
+            }
+
+            @Override public String decrypt(String msg) {
+                return msg.substring(3);
+            }
+        };
+    }
 }
 
