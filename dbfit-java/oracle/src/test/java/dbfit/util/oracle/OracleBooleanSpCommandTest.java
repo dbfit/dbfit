@@ -50,7 +50,8 @@ public class OracleBooleanSpCommandTest {
                 OracleBooleanSpTestsFactory.OracleSpCommandBuilder builder,
                 String expectedResult) {
         OracleBooleanSpCommand command = builder.withPrefix("t").build();
-        String actual = command.getWrapperHeader();
+        command.getWrapper().genWrapperHeader();
+        String actual = command.toString();
 
         assertEquals(expectedResult, actual.trim());
     }
@@ -59,7 +60,8 @@ public class OracleBooleanSpCommandTest {
                 OracleBooleanSpTestsFactory.OracleSpCommandBuilder builder,
                 String expectedResult) {
         OracleBooleanSpCommand command = builder.withPrefix("t").build();
-        String actual = command.getWrapperCall();
+        command.genCall();
+        String actual = command.toString();
 
         assertEquals(expectedResult, actual);
     }

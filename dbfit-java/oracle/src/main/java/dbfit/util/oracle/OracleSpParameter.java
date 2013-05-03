@@ -165,11 +165,11 @@ public class OracleSpParameter {
         }
     }
 
-    public void genWrapperCallArgument() {
-        genWrapperCallArgument("?");
+    public void genCallArgument() {
+        genCallArgument("?");
     }
 
-    public void genWrapperCallArgument(String varname) {
+    public void genCallArgument(String varname) {
         if (isBoolean() && direction.isInput()) {
             out.append(chr2bool(varname));
         } else {

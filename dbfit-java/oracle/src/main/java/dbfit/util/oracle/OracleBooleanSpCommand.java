@@ -6,7 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import static dbfit.util.oracle.OracleSpParameter.callExpr;
+import static dbfit.util.oracle.OraclePlSqlGenerateUtils.callExpr;
+import static dbfit.util.oracle.OraclePlSqlGenerateUtils.getSpCallLeftSide;
 
 public class OracleBooleanSpCommand {
     protected SpGeneratorOutput out = null;
@@ -110,7 +111,11 @@ public class OracleBooleanSpCommand {
         initOutputs();
     }
 
-    protected SpGeneratorOutput append(String s) {
+    public SpGeneratorOutput getOutput() {
+        return out;
+    }
+
+    public SpGeneratorOutput append(String s) {
         if (null != out) {
             out.append(s);
         }
@@ -177,73 +182,36 @@ public class OracleBooleanSpCommand {
         return hasBooleanOutOrInoutOrReturn();
     }
 
+    public OracleBooleanSpInnerWrapperGenerator getWrapper() {
+        return new OracleBooleanSpInnerWrapperGenerator(this);
+    }
+
     /**
      * Generate the whole database call on the configured SpGeneratorOutput
      */
     public void generate() {
-        out.append("declare\n");
+        append("declare\n");
         genBool2Chr();
         genChr2Bool();
         genWrapperSp();
-        out.append("begin\n");
-        out.append("    ").append(getWrapperCall()).append(";\n");
-        out.append("end;\n");
-        out.append("\n");
+        append("begin\n");
+        append("    ");
+        genCall();
+        append(";\n");
+        append("end;\n");
+        append("\n");
     }
 
     private void genWrapperSp() {
         if (needsWrapperSp()) {
-            out.append(getWrapperHeader()).append("\n");
-            out.append("    is\n");
-            genWrapperVariables();
-            out.append("    begin\n");
-            out.append("        ");
-            genSpCallWithinWrapper();
-            out.append(";\n");
-            assignOutputVariables();
-            genWrapperReturnStatement();
-            out.append("    end ").append(getWrapperName()).append(";\n");
-            out.append("\n");
+            getWrapper().generate();
         }
     }
 
-    public String getWrapperCall() {
+    private String getCallArguments() {
         return getIsolatedOutput(new Generator() {
             @Override public void generate() {
-                genWrapperCall();
-            }
-        });
-    }
-
-    public String getWrapperHeader() {
-        return getIsolatedOutput(new Generator() {
-            @Override public void generate() {
-                genWrapperHeader();
-            }
-        });
-    }
-
-    private String getWrapperCallArguments() {
-        return getIsolatedOutput(new Generator() {
-            @Override public void generate() {
-                genWrapperCallArguments();
-            }
-        });
-    }
-
-    private String getWrapperArguments() {
-        return getIsolatedOutput(new Generator() {
-            @Override public void generate() {
-                genWrapperArguments();
-            }
-        });
-    }
-
-
-    private String getSpCallArguments() {
-        return getIsolatedOutput(new Generator() {
-            @Override public void generate() {
-                genSpCallArguments();
+                genCallArguments();
             }
         });
     }
@@ -260,60 +228,23 @@ public class OracleBooleanSpCommand {
 
     private void genChr2Bool() {
         if (needsChr2Bool()) {
-            out.append(getChr2Bool());
+            append(getChr2Bool());
         }
     }
 
     private void genBool2Chr() {
         if (needsBool2Chr()) {
-            out.append(getBool2Chr());
+            append(getBool2Chr());
         }
     }
 
-    public void genWrapperCallArguments() {
+    public void genCallArguments() {
         String separator = "";
 
         for (OracleSpParameter arg: arguments) {
-            out.append(separator);
-            arg.genWrapperCallArgument();
+            append(separator);
+            arg.genCallArgument();
             separator = ", ";
-        }
-    }
-
-    public void genSpCallArguments() {
-        String separator = "";
-
-        for (OracleSpParameter arg: arguments) {
-            out.append(separator);
-            arg.genSpCallArgumentWithinWrapper();
-            separator = ", ";
-        }
-    }
-
-    public void genWrapperArguments() {
-        String separator = "";
-
-        for (OracleSpParameter arg: arguments) {
-            out.append(separator);
-            arg.declareArgument();
-            separator = ", ";
-        }
-    }
-
-    private void genWrapperVariables() {
-        declareArgumentVars();
-        declareReturnValueVar();
-    }
-
-    private void declareArgumentVars() {
-        for (OracleSpParameter arg: arguments) {
-            arg.declareVariable();
-        }
-    }
-
-    private void declareReturnValueVar() {
-        if (isFunction()) {
-            returnValue.declareVariable();
         }
     }
 
@@ -323,62 +254,19 @@ public class OracleBooleanSpCommand {
         }
     }
 
-    private String getWrapperReturnVar() {
-        return isFunction() ? returnValue.getWrapperVarName() : null;
-    }
-
-    private void genWrapperReturnStatement() {
-        if (isFunction()) {
-            out.append("        ").append("return ")
-               .append(getWrapperReturnVar()).append(";\n");
-        }
-    }
-
-    private void genSpCallLeftSide(String var) {
-        if (var != null) {
-            out.append(var).append(" := ");
-        }
-    }
-
-    public void genSpCallWithinWrapper() {
-        genSpCallLeftSide(getWrapperReturnVar());
-        out.append(callExpr(procName, getSpCallArguments()));
-    }
-
-    public void genWrapperCall() {
-        genSpCallLeftSide(isFunction() ? "?" : null);
-        String callText = callExpr(getWrapperName(), getWrapperCallArguments());
+    public void genCall() {
+        append(getSpCallLeftSide(isFunction() ? "?" : null));
+        String callText = callExpr(getCallName(), getCallArguments());
         if (hasBooleanReturn()) {
             callText = callExpr(getPrefix() + "_bool2chr", callText);
         }
 
-        out.append(callText);
+        append(callText);
     }
 
-    private String getSpKind() {
-        return isFunction() ? "function" : "procedure";
-    }
-
-    public void genWrapperHeader() {
-        out.append("    ").append(getSpKind()).append(" ");
-        out.append(callExpr(getWrapperName(), getWrapperArguments()));
-        if (isFunction()) {
-            returnValue.declareReturnValue();
-        }
-    }
-
-    protected void genWrapperDefinition() {
-        if (!needsWrapperSp()) {
-            return;
-        }
-
-        out.append("    ").append(getSpKind()).append(" ");
-        genWrapperHeader();
-    }
-
-    private String getWrapperName() {
+    private String getCallName() {
         if (needsWrapperSp()) {
-            return getPrefix() + "_wrapper";
+            return getWrapper().getWrapperName();
         } else {
             // no need of real wrapper sp
             return procName;
@@ -417,5 +305,19 @@ public class OracleBooleanSpCommand {
         setOutput(savedOut);
         return result;
     }
+
+    /* ------------ */
+    public OracleSpParameter getReturnValue() {
+        return returnValue;
+    }
+
+    public List<OracleSpParameter> getArguments() {
+        return arguments;
+    }
+
+    public String getProcName() {
+        return procName;
+    }
+
 }
 
