@@ -1,13 +1,11 @@
 package dbfit.util.crypto;
 
-import java.security.NoSuchAlgorithmException;
 import java.io.File;
 
 public class CryptoTestsConfig {
 
     private static void initTestCryptoServiceFactory(final File ksPath) {
-        CryptoFactories.setCryptoServiceFactory(
-                    new AESCryptoServiceFactory(getCryptoKeyAccessor(ksPath)));
+        CryptoFactories.setCryptoServiceFactory(getCryptoServiceFactory(ksPath));
     }
 
     public static JKSCryptoKeyStore getJKSCryptoKeyStore(File ksPath) {
@@ -22,8 +20,22 @@ public class CryptoTestsConfig {
         return getJKSCryptoKeyStore(ksPath);
     }
 
+    public static CryptoServiceFactory getCryptoServiceFactory(File ksPath) {
+        return new AESCryptoServiceFactory(getCryptoKeyAccessor(ksPath));
+    }
+
+    public static CryptoService getCryptoService(File ksPath) {
+        return getCryptoServiceFactory(ksPath).getCryptoService();
+    }
+
+    public static CryptoKeyStore createTestKeyStore(File ksPath) throws Exception {
+        CryptoKeyStore ks = getCryptoKeyStore(ksPath);
+        ks.createKeyStore();
+        return ks;
+    }
+
     public static void initTestCryptoKeyStore(File ksPath) throws Exception {
-        getJKSCryptoKeyStore(ksPath).createKeyStore();
+        createTestKeyStore(ksPath);
         initTestCryptoServiceFactory(ksPath);
     }
 

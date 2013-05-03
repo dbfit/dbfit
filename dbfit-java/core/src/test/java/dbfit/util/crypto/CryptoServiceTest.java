@@ -13,13 +13,9 @@ public class CryptoServiceTest {
 
     @Before
     public void prepare() throws Exception {
-        CryptoTestsConfig.initTestCryptoKeyStore(tempKeyStoreFolder.getRoot());
-        cryptoService = CryptoFactories.getCryptoService();
-    }
-
-    @After
-    public void cleanup() throws Exception {
-        CryptoTestsConfig.resetTestCryptoServiceFactory();
+        final java.io.File ksRoot = tempKeyStoreFolder.getRoot();
+        CryptoTestsConfig.createTestKeyStore(ksRoot);
+        cryptoService = CryptoTestsConfig.getCryptoService(ksRoot);
     }
 
     @Test
