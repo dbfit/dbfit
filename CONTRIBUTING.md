@@ -140,3 +140,19 @@ An Eclipse project can be created by running:
  *  Logging in as the `system` superuser for `oracle`:
 
         sqlplus system/oracle
+
+### Adding a new database adapter
+
+Let's say that you wish to implement a DbFit driver for an as-yet-unsupported database, Newdata. Here is a broad outline of the steps that you would need to take:
+
+1.  Implement a `NewdataEnvironment` class, which implements the [`DBEnvironment` interface](dbfit-java/core/src/main/java/dbfit/api/DBEnvironment.java) and is annotated with `@DatabaseEnvironment`. You will almost certainly want to subclass [`AbstractDbEnvironment`](dbfit-java/core/src/main/java/dbfit/api/AbstractDbEnvironment.java), as that already does a lot of the work. Fundamentally, you will have to provide implementations for the following:
+
+    - a mapping between the Newdata database types and `java.sql` datatypes
+    - a query that yields all column metadata given the name of a table or view
+    - a query that yields all parameters given the name of a stored procedure or function
+
+2.  Implement a `NewdataTest` class which extends [`DatabaseTest`](dbfit-java/core/src/main/java/dbfit/DatabaseTest.java) - this is the fixture class that you will use to initialize your database code in your DbFit tests.
+3.  Clone the Oracle DbFit acceptance test suites - [FlowMode](FitNesseRoot/DbFit/AcceptanceTests/JavaTests/OracleTests/FlowMode/) and [StandaloneFixtures](FitNesseRoot/DbFit/AcceptanceTests/JavaTests/OracleTests/StandaloneFixtures/) - and convert them to use the Newdata database. When these tests pass, that is the clearest indication that your implementation is working. Not all of the tests will be applicable, and can be ignored.
+4.  Add any extra tests for any Newdata-specific SQL features that you may wish to use, and have to write code to provide the specific support.
+
+When in doubt, have a look how the problem you're having is solved in one of the several other database drivers.
