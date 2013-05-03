@@ -1,5 +1,7 @@
 package dbfit.util;
 
+import static dbfit.util.PropertiesTestsSetUp.wrapEncryptedValue;
+
 import dbfit.util.crypto.CryptoTestsConfig;
 import dbfit.util.crypto.CryptoService;
 import static dbfit.util.crypto.CryptoTestsConfig.getFakeCryptoService;
@@ -39,32 +41,9 @@ public class PropertiesLoaderTest {
         return getFakeCryptoService().encrypt(password);
     }
 
-    private static List<String> prepareNonEncryptedSettings() {
-        List<String> lines = new java.util.ArrayList<String>();
-        lines.add("service=mydemoservice");
-        lines.add("username=mydemouser");
-        lines.add("database=mydemodb");
-        return lines;
-    }
-
-    /**
-     * Generate dummy configuration settings with the given password in
-     * encrypted format
-     */
-    public static List<String> prepareEncryptedSettings(String encPwd) {
-        List<String> lines = prepareNonEncryptedSettings();
-        lines.add("password=" + wrapEncryptedValue(encPwd));
-        return lines;
-    }
-
     private List<String> prepareEncryptedSettings() {
-        return prepareEncryptedSettings(ENCRYPTED_PASSWORD);
+        return PropertiesTestsSetUp.prepareEncryptedSettings(ENCRYPTED_PASSWORD);
     }
-
-    private String wrapEncryptedValue(String pwd) {
-        return "ENC(" + pwd + ")";
-    }
-
 
     //----- Whole list loading tests -----/
     @Test
@@ -102,7 +81,7 @@ public class PropertiesLoaderTest {
         PropertiesLoader loader = new PropertiesLoader(crypto);
 
         Map<String, String> props = loader.loadFromList(
-                prepareEncryptedSettings(crypto.encrypt(DB_PASSWORD)));
+            PropertiesTestsSetUp.prepareEncryptedSettings(crypto.encrypt(DB_PASSWORD)));
 
         assertEquals(DB_PASSWORD, props.get("password"));
     }
@@ -123,7 +102,7 @@ public class PropertiesLoaderTest {
 
     //----- Start of static methods tests ------/
     @Test
-    public void unwrapEncryptedValue() {
+    public void unwrapEncryptedValueTest() {
         String value = "XYZ";
         String wrapped = wrapEncryptedValue(value);
 
