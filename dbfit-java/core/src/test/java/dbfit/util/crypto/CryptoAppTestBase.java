@@ -28,6 +28,7 @@ public class CryptoAppTestBase extends MockitoTestBase {
         when(mockedKSFactory.newInstance()).thenReturn(mockedKS);
         when(mockedKSFactory.newInstance(any(File.class))).thenReturn(mockedKS);
         when(mockedCryptoServiceFactory.getCryptoService()).thenReturn(mockedCryptoService);
+        when(mockedCryptoServiceFactory.getCryptoService(any(CryptoKeyAccessor.class))).thenReturn(mockedCryptoService);
     }
 
     protected int execApp(String... args) throws Exception {

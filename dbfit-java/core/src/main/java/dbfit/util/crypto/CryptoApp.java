@@ -48,14 +48,26 @@ public class CryptoApp {
         return createKeyStore(ksFactory.newInstance(new File(customPath)));
     }
 
-    private void encryptPassword(String password) throws Exception {
-        CryptoKeyStore ks = ksFactory.newInstance();
+    private int encryptPassword(final String password, final CryptoKeyStore ks)
+                                                    throws Exception {
         if (!ks.keyStoreExists()) {
             createKeyStore(ks);
         }
+        updateStatus("Using KeyStore: " + ks.getKeyStoreFile());
 
-        String encPwd = getCryptoService().encrypt(password);
+        String encPwd = getCryptoService(ks).encrypt(password);
         updateStatus("Encrypted Password:\nENC(" + encPwd + ")");
+
+        return EXIT_SUCCESS;
+    }
+
+    private int encryptPassword(final String password, final String path)
+                                                    throws Exception {
+        return encryptPassword(password, ksFactory.newInstance(new File(path)));
+    }
+
+    private int encryptPassword(final String password) throws Exception {
+        return encryptPassword(password, ksFactory.newInstance());
     }
 
     private void showUsage() {
@@ -64,8 +76,11 @@ public class CryptoApp {
         updateStatus("     Create new key store in keyStoreLocation directory.");
         updateStatus("     If keyStoreLocation is not specified - default is used.");
         updateStatus("     Default is user home folder or 'dbfit.keystore.path' system property");
-        updateStatus(" -encryptPassword <password>");
+        updateStatus(" -encryptPassword <password> [-keyStoreLocation <keyStoreLocation>]");
         updateStatus("     Encrypt the given password and show the result");
+        updateStatus("     Password is encrypted using key from keyStoreLocation");
+        updateStatus("     If no keyStoreLocation is specified - default location is used");
+        updateStatus("     If no dbfit keystore and key exists - it's automatically generated");
         updateStatus(" -help");
         updateStatus("     Show this usage note");
     }
@@ -90,7 +105,9 @@ public class CryptoApp {
             }
         } else if (cmd.equalsIgnoreCase("-encryptPassword")) {
             if (args.length == 2) {
-                encryptPassword(args[1]);
+                errCode = encryptPassword(args[1]);
+            } else if ((args.length == 4) && (args[2].equals("-keyStoreLocation"))) {
+                errCode = encryptPassword(args[1], args[3]);
             } else {
                 errCode = EXIT_INVALID_OPTION;
             }
@@ -114,8 +131,8 @@ public class CryptoApp {
         System.exit(exitCode);
     }
 
-    private CryptoService getCryptoService() {
-        return cryptoServiceFactory.getCryptoService();
+    private CryptoService getCryptoService(final CryptoKeyStore ks) {
+        return cryptoServiceFactory.getCryptoService(ks);
     }
 
 }

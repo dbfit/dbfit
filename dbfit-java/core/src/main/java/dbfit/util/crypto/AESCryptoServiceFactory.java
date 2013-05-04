@@ -22,5 +22,10 @@ public class AESCryptoServiceFactory implements CryptoServiceFactory {
         return cryptoServiceInstance;
     }
 
+    // Overrides the default accessor of this factory instance. No caching used
+    @Override
+    public CryptoService getCryptoService(CryptoKeyAccessor accessor) {
+        return new AESCryptoService(accessor);
+    }
 }
 

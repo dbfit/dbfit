@@ -38,12 +38,13 @@ public class CryptoAppExecReturnCodeTest extends CryptoAppTestBase {
             {0, args("-createKeyStore")},
             {0, args("-createKeyStore", emptyFakeKSFolder.getRoot().getPath())},
             {0, args("-encryptPassword", "ABC")},
+            {0, args("-encryptPassword", "ABC", "-keyStoreLocation", emptyFakeKSFolder.getRoot().getPath())},
             {0, args("-help")},
             {1, args("-non-existing-command")},
             {1, args("another invalid command")},
             {2, args("-encryptPassword", "too", "many", "args")},
+            {2, args("-encryptPassword", "XYZ", "invalid", "args")},
             {2, args("-encryptPassword")},
-            {2, args("-createKeyStore", "too", "many")},
             {3, args("-createKeyStore", existingFakeKSFolder.getRoot().getPath())}
         });
     }

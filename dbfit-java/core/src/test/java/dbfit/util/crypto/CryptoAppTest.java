@@ -59,7 +59,7 @@ public class CryptoAppTest extends CryptoAppTestBase {
 
         inOrder.verify(mockedKSFactory).newInstance();
         inOrder.verify(mockedKS).createKeyStore();
-        inOrder.verify(mockedCryptoServiceFactory).getCryptoService();
+        inOrder.verify(mockedCryptoServiceFactory).getCryptoService(any(CryptoKeyAccessor.class));
         inOrder.verify(mockedCryptoService).encrypt(password);
     }
 
