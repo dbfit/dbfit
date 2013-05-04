@@ -17,5 +17,20 @@ public class OraclePlSqlGenerateUtils {
     public static String getSpCallLeftSide(String var) {
         return (var == null) ? "" : (var + " := ");
     }
+
+    public static String findNonConflictingPrefix(String name) {
+        if (name == null) {
+            return "a";
+        }
+
+        char p = Character.toLowerCase(name.charAt(0));
+        char c = 'a';
+
+        while ((c == p) && (c < 'z')) {
+            ++c;
+        }
+
+        return String.valueOf(c);
+    }
 }
 

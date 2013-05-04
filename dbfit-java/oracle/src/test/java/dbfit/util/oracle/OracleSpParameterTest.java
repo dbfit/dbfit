@@ -134,17 +134,15 @@ public class OracleSpParameterTest {
     @Test
     public void boolArgInCallShouldBeWrapped() {
         OracleSpParameter arg = spParams.get(SP_ARG_BOOL_IN);
-        arg.genCallArgument();
 
-        assertEquals("z_chr2bool( ? )", arg.toString());
+        assertEquals("z_chr2bool( ? )", arg.getCallArgument());
     }
 
     @Test
     public void boolArgOutCallShouldNotBeWrapped() {
         OracleSpParameter arg = spParams.get(SP_ARG_BOOL_OUT);
-        arg.genCallArgument();
 
-        assertEquals("?", arg.toString());
+        assertEquals("?", arg.getCallArgument());
     }
 
    @Test

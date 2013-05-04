@@ -165,16 +165,18 @@ public class OracleSpParameter {
         }
     }
 
-    public void genCallArgument() {
-        genCallArgument("?");
+    public String getCallArgument() {
+        return getCallArgument("?");
     }
 
-    public void genCallArgument(String varname) {
+    private String getCallArgument(String varname) {
+        StringBuilder sb = new StringBuilder();
         if (isBoolean() && direction.isInput()) {
-            out.append(chr2bool(varname));
+            sb.append(chr2bool(varname));
         } else {
-            out.append(varname);
+            sb.append(varname);
         }
+        return sb.toString();
     }
 
     public void genSpCallArgumentWithinWrapper() {

@@ -6,12 +6,7 @@ import static dbfit.util.oracle.OraclePlSqlGenerateUtils.callExpr;
 import static dbfit.util.oracle.OraclePlSqlGenerateUtils.getSpCallLeftSide;
 import static dbfit.util.oracle.OracleBooleanConversions.*;
 
-public class OracleBooleanSpCommand {
-    protected SpGeneratorOutput out = null;
-    protected String procName;
-    protected String prefix;
-    protected List<OracleSpParameter> arguments;
-    protected OracleSpParameter returnValue;
+public class OracleBooleanSpCommand extends OracleBooleanSpCommandBase {
 
     public static OracleBooleanSpCommand newInstance(String spName, 
             List<OracleSpParameter> args) {
@@ -25,150 +20,12 @@ public class OracleBooleanSpCommand {
     }
 
     protected OracleBooleanSpCommand(String spName, 
-            List<OracleSpParameter> args,
-            OracleSpParameter returnValue) {
-        this.procName = spName;
-        this.arguments = args;
-        this.returnValue = returnValue;
-
-        initPrefix();
-        initPrefixes();
-        initParameterIds();
-    }
-
-    public void initPrefix() {
-        char p = Character.toLowerCase(procName.charAt(0));
-        char c = 'a';
-
-        while ((c == p) && (c < 'z')) {
-            ++c;
-        }
-
-        prefix = String.valueOf(c);
-    }
-
-    private void initParameterIds() {
-        if (returnValue != null) {
-            returnValue.setId("ret");
-        }
-
-        int i = 1;
-        for (OracleSpParameter arg: arguments) {
-            arg.setId("p" + i);
-            ++i;
-        }
-    }
-
-    private void initPrefixes() {
-        initArgsPrefixes();
-        initReturnValuePrefix();
-    }
-
-    private void initReturnValuePrefix() {
-        if (isFunction()) {
-            returnValue.setPrefix(prefix);
-        }
-    }
-
-    private void initArgsPrefixes() {
-        for (OracleSpParameter arg: arguments) {
-            arg.setPrefix(prefix);
-        }
-    }
-
-    private void initOutputs() {
-        initArgsOutputs();
-        initReturnValueOutput();
-    }
-
-    private void initArgsOutputs() {
-        for (OracleSpParameter arg: arguments) {
-            arg.setOutput(out);
-        }
-    }
-
-    private void initReturnValueOutput() {
-        if (isFunction()) {
-            returnValue.setOutput(out);
-        }
-    }
-
-    protected void setPrefix(String prefix) {
-        if (procName.toLowerCase().startsWith(prefix.toLowerCase())) {
-            throw new IllegalArgumentException("Invalid prefix " + prefix +
-                    " for procedure " + procName);
-        }
-
-        this.prefix = prefix;
-        initPrefixes();
-    }
-
-    public void setOutput(SpGeneratorOutput out) {
-        this.out = out;
-        initOutputs();
-    }
-
-    public SpGeneratorOutput getOutput() {
-        return out;
-    }
-
-    public SpGeneratorOutput append(String s) {
-        if (null != out) {
-            out.append(s);
-        }
-
-        return out;
-    }
-
-    public String toString() {
-        if (null == out) {
-            return "";
-        }
-
-        return out.toString();
-    }
-
-    public String getPrefix() { return prefix; }
-
-    public boolean isFunction() {
-        return returnValue != null;
-    }
-
-    private boolean isBooleanOutputOrReturn(OracleSpParameter param) {
-        return (param != null) && param.isBoolean()
-            && param.direction.isOutputOrReturnValue();
-    }
-
-    private boolean hasBooleanReturn() {
-        return isBooleanOutputOrReturn(returnValue);
-    }
-
-    private boolean hasBooleanOutOrInoutOrReturn() {
-        return hasBooleanReturn() || hasBooleanOutOrInout();
-    }
-
-    private boolean hasBooleanOutOrInout() {
-        for (OracleSpParameter arg: arguments) {
-            if(arg.isBooleanOutOrInout()) {
-                return true;
-            }
-        }
-
-        return false;
+            List<OracleSpParameter> args, OracleSpParameter returnValue) {
+        super(spName, args, returnValue);
     }
 
     private boolean needsWrapperSp() {
         return hasBooleanOutOrInout();
-    }
-
-    private boolean hasBooleanInOrInout() {
-        for (OracleSpParameter arg: arguments) {
-            if (arg.isBooleanInOrInout()) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private boolean needsChr2Bool() {
@@ -205,14 +62,6 @@ public class OracleBooleanSpCommand {
         }
     }
 
-    private String getCallArguments() {
-        return getIsolatedOutput(new Generator() {
-            @Override public void generate() {
-                genCallArguments();
-            }
-        });
-    }
-
     private void genChr2Bool() {
         if (needsChr2Bool()) {
             append(getChr2Bool(getPrefix()));
@@ -225,14 +74,16 @@ public class OracleBooleanSpCommand {
         }
     }
 
-    public void genCallArguments() {
+    public String getCallArguments() {
+        StringBuilder sb = new StringBuilder();
         String separator = "";
 
         for (OracleSpParameter arg: arguments) {
-            append(separator);
-            arg.genCallArgument();
+            sb.append(separator);
+            sb.append(arg.getCallArgument());
             separator = ", ";
         }
+        return sb.toString();
     }
 
     public void genCall() {
@@ -252,33 +103,6 @@ public class OracleBooleanSpCommand {
             // no need of real wrapper sp
             return procName;
         }
-    }
-
-    private interface Generator {
-        void generate();
-    }
-
-    private String getIsolatedOutput(Generator g) {
-        SpGeneratorOutput savedOut = out;
-        SpGeneratorOutput wrkOut = new SpGeneratorOutput();
-        setOutput(wrkOut);
-        g.generate();
-        String result = toString();
-        setOutput(savedOut);
-        return result;
-    }
-
-    /* ------------ */
-    public OracleSpParameter getReturnValue() {
-        return returnValue;
-    }
-
-    public List<OracleSpParameter> getArguments() {
-        return arguments;
-    }
-
-    public String getProcName() {
-        return procName;
     }
 
 }
