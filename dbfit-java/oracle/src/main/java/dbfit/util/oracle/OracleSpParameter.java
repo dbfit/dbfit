@@ -1,14 +1,8 @@
 package dbfit.util.oracle;
 
 import static dbfit.util.DbParameterAccessor.Direction;
-import static dbfit.util.oracle.OraclePlSqlGenerateUtils.callExpr;
 
-public class OracleSpParameter {
-    public Direction direction; // In terms of DbParameterAccessor constants
-    protected SpGeneratorOutput out = null;
-    protected String dataType; // original type name in the original sp
-    protected String id; // id to be used for generating param/arg names
-    protected String prefix; // prefix to be used for all names to avoid conflicts
+public class OracleSpParameter extends OracleSpParameterBase {
 
     public static OracleSpParameter newInstance(String paramName, Direction direction,
                             String dataType) {
@@ -22,30 +16,7 @@ public class OracleSpParameter {
 
     protected OracleSpParameter(String paramName, Direction direction, String dataType,
                                 String prefix) {
-        this.direction = direction;
-        this.dataType = dataType;
-        this.id = paramName;
-        this.prefix = prefix;
-    }
-
-    protected Direction getDirection() {
-        return direction;
-    }
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
-
-    public boolean isBooleanInOrInout() {
-        return isBoolean() && direction.isInOrInout();
-    }
-
-    public boolean isBooleanOutOrInout() {
-        return isBoolean() && direction.isOutOrInout();
-    }
-
-    protected String getDataType() {
-        return dataType;
+        super(paramName, direction, dataType, prefix);
     }
 
     private boolean needsArgumentTypeChange() {
@@ -54,23 +25,6 @@ public class OracleSpParameter {
 
     private String getWrapperArgumentType() {
         return needsArgumentTypeChange() ? "VARCHAR2" : getDataType();
-    }
-
-    public boolean isBoolean() {
-        return getDataType().equals("BOOLEAN");
-    }
-
-    public String getDirectionName() {
-        switch (getDirection()) {
-            case INPUT_OUTPUT:
-                return "IN OUT";
-            case OUTPUT:
-                return "OUT";
-            case INPUT:
-                return "IN";
-            default:
-                return "RETURN";
-        }
     }
 
     public String getShortDirectionName() {
@@ -86,22 +40,6 @@ public class OracleSpParameter {
         }
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setOutput(SpGeneratorOutput out) {
-        this.out = out;
-    }
-
-    protected SpGeneratorOutput append(String s) {
-        if (out != null) {
-            out.append(s);
-        }
-
-        return out;
-    }
-
     private String getWrapperArgumentName() {
         return direction.isReturnValue() ? "" : prefixed(id);
     }
@@ -109,18 +47,6 @@ public class OracleSpParameter {
     public String getWrapperVarName() {
         String varid = direction.isReturnValue() ? "" : id + "_";
         return prefixed("v_" + varid + getShortDirectionName());
-    }
-
-    public String toString() {
-        if (out == null) {
-            return "";
-        } else {
-            return out.toString();
-        }
-    }
-
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
     }
 
     private void declareArgumentOrReturnValue() {
@@ -186,14 +112,6 @@ public class OracleSpParameter {
         } else {
             out.append(getWrapperArgumentName());
         }
-    }
-
-    private String prefixed(String expr) {
-        return prefix + "_" + expr;
-    }
-
-    private String prefixedCallExpr(String func, String args) {
-        return callExpr(prefixed(func), args);
     }
 
     private String chr2bool(String arg) {
