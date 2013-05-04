@@ -35,8 +35,6 @@ public class CryptoAppExecReturnCodeTest extends CryptoAppTestBase {
     @Parameters(name = "({index}): exec with args {1} -> expecting {0}")
     public static Collection<Object[]> data() throws Exception {
         return java.util.Arrays.asList(new Object[][] {
-            {0, args("-createKeyStore")},
-            {0, args("-createKeyStore", emptyFakeKSFolder.getRoot().getPath())},
             {0, args("-encryptPassword", "ABC")},
             {0, args("-encryptPassword", "ABC", "-keyStoreLocation", emptyFakeKSFolder.getRoot().getPath())},
             {0, args("-help")},
@@ -45,7 +43,6 @@ public class CryptoAppExecReturnCodeTest extends CryptoAppTestBase {
             {2, args("-encryptPassword", "too", "many", "args")},
             {2, args("-encryptPassword", "XYZ", "invalid", "args")},
             {2, args("-encryptPassword")},
-            {3, args("-createKeyStore", existingFakeKSFolder.getRoot().getPath())}
         });
     }
 

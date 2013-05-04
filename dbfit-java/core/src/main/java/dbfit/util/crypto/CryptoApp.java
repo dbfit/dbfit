@@ -40,14 +40,6 @@ public class CryptoApp {
         }
     }
 
-    private int createKeyStore() throws Exception {
-        return createKeyStore(ksFactory.newInstance());
-    }
-
-    private int createKeyStore(final String customPath) throws Exception {
-        return createKeyStore(ksFactory.newInstance(new File(customPath)));
-    }
-
     private int encryptPassword(final String password, final CryptoKeyStore ks)
                                                     throws Exception {
         if (!ks.keyStoreExists()) {
@@ -72,17 +64,13 @@ public class CryptoApp {
 
     private void showUsage() {
         updateStatus("Usage arguments:");
-        updateStatus(" -createKeyStore [<keyStoreLocation>]");
-        updateStatus("     Create new key store in keyStoreLocation directory.");
-        updateStatus("     If keyStoreLocation is not specified - default is used.");
-        updateStatus("     Default is user home folder or 'dbfit.keystore.path' system property");
         updateStatus(" -encryptPassword <password> [-keyStoreLocation <keyStoreLocation>]");
-        updateStatus("     Encrypt the given password and show the result");
-        updateStatus("     Password is encrypted using key from keyStoreLocation");
-        updateStatus("     If no keyStoreLocation is specified - default location is used");
-        updateStatus("     If no dbfit keystore and key exists - it's automatically generated");
+        updateStatus("     Encrypt the given password and show the result.");
+        updateStatus("     Password is encrypted using key from keyStoreLocation.");
+        updateStatus("     If no keyStoreLocation is specified - default location is used.");
+        updateStatus("     If no dbfit keystore and key exist - they're automatically created.");
         updateStatus(" -help");
-        updateStatus("     Show this usage note");
+        updateStatus("     Show this usage note.");
     }
 
     public int execute(String[] args) throws Exception {
@@ -95,15 +83,7 @@ public class CryptoApp {
             cmd = args[0];
         }
 
-        if (cmd.equalsIgnoreCase("-createKeyStore")) {
-            if (args.length == 2) {
-                errCode = createKeyStore(args[1]);
-            } else if (args.length == 1) {
-                errCode = createKeyStore();
-            } else {
-                errCode = EXIT_INVALID_OPTION;
-            }
-        } else if (cmd.equalsIgnoreCase("-encryptPassword")) {
+        if (cmd.equalsIgnoreCase("-encryptPassword")) {
             if (args.length == 2) {
                 errCode = encryptPassword(args[1]);
             } else if ((args.length == 4) && (args[2].equals("-keyStoreLocation"))) {

@@ -22,7 +22,7 @@ public class CryptoAppTest extends CryptoAppTestBase {
 
     @Test
     public void createKeyStoreInDefaultLocationTest() throws Exception {
-        execApp("-createKeyStore");
+        execApp("-encryptPassword", "dummy");
 
         verify(mockedKSFactory).newInstance();
         verify(mockedKS).createKeyStore();
@@ -30,7 +30,7 @@ public class CryptoAppTest extends CryptoAppTestBase {
 
     @Test
     public void createKeyStoreInCustomLocationTest() throws Exception {
-        execApp("-createKeyStore", getTempKeyStore2Path());
+        execApp("-encryptPassword", "dummy", "-keyStoreLocation", getTempKeyStore2Path());
 
         verify(mockedKSFactory).newInstance(tempKeyStoreFolder2.getRoot());
         verify(mockedKS).createKeyStore();
