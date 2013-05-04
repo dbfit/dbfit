@@ -1,6 +1,7 @@
 package dbfit.util.oracle;
 
 import static dbfit.util.DbParameterAccessor.Direction;
+import static dbfit.util.oracle.OraclePlSqlGenerateUtils.callExpr;
 
 public class OracleSpParameter {
     public Direction direction; // In terms of DbParameterAccessor constants
@@ -189,11 +190,6 @@ public class OracleSpParameter {
 
     private String prefixed(String expr) {
         return prefix + "_" + expr;
-    }
-
-    public static String callExpr(String func, String args) {
-        String ws = (args.trim().length() == 0) ? "" : " ";
-        return func + "(" + ws + args + ws + ")";
     }
 
     private String prefixedCallExpr(String func, String args) {
