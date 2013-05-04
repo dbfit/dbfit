@@ -11,6 +11,8 @@ show_comments: false
   <div class="span8" markdown="1">
 ### [What's wrong with xUnit](/dbfit/docs/whats-wrong-with-xunit.html) <small>Why you should use DbFit.</small>
 
+### [DbFit features](/dbfit/docs/dbfit-features.html)
+
 ### [Writing tests](/dbfit/docs/writing-tests.html) <small>What different test types look like in DbFit.</small>
 
   </div>
