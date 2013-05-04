@@ -13,8 +13,6 @@ show_comments: false
 
 ### [Writing tests](/dbfit/docs/writing-tests.html) <small>What different test types look like in DbFit.</small>
 
-### [What's new](/dbfit/docs/whats-new.html) <small>The changes in each release.</small>
-
   </div>
 </div>
 
@@ -30,6 +28,19 @@ show_comments: false
 ### [Command reference](/dbfit/docs/reference.html) <small>The test building blocks.</small>
 
 ### [FAQ and troubleshooting](/dbfit/docs/faq.html)
+
+</div>
+</div>
+
+----
+
+<div class="row">
+  <div class="span4">
+    <h2>The project</h2>
+  </div>
+  <div class="span8" markdown="1">
+
+### [What's new](/dbfit/docs/whats-new.html) <small>The changes in each release.</small>
 
 ### [Contributing](https://github.com/benilovj/dbfit/blob/master/CONTRIBUTING.md) <small>Contributing code or documentation improvements to DbFit.</small>
 
