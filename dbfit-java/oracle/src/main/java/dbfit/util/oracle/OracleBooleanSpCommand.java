@@ -1,13 +1,10 @@
 package dbfit.util.oracle;
 
-import org.apache.commons.io.IOUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import static dbfit.util.oracle.OraclePlSqlGenerateUtils.callExpr;
 import static dbfit.util.oracle.OraclePlSqlGenerateUtils.getSpCallLeftSide;
+import static dbfit.util.oracle.OracleBooleanConversions.*;
 
 public class OracleBooleanSpCommand {
     protected SpGeneratorOutput out = null;
@@ -216,25 +213,15 @@ public class OracleBooleanSpCommand {
         });
     }
 
-    private String getChr2Bool() {
-        String template = loadChr2BoolTemplate();
-        return template.replace("${prefix}", getPrefix());
-    }
-
-    private String getBool2Chr() {
-        String template = loadBool2ChrTemplate();
-        return template.replace("${prefix}", getPrefix());
-    }
-
     private void genChr2Bool() {
         if (needsChr2Bool()) {
-            append(getChr2Bool());
+            append(getChr2Bool(getPrefix()));
         }
     }
 
     private void genBool2Chr() {
         if (needsBool2Chr()) {
-            append(getBool2Chr());
+            append(getBool2Chr(getPrefix()));
         }
     }
 
@@ -245,12 +232,6 @@ public class OracleBooleanSpCommand {
             append(separator);
             arg.genCallArgument();
             separator = ", ";
-        }
-    }
-
-    private void assignOutputVariables() {
-        for (OracleSpParameter arg: arguments) {
-            arg.assignOutputVariable();
         }
     }
 
@@ -270,25 +251,6 @@ public class OracleBooleanSpCommand {
         } else {
             // no need of real wrapper sp
             return procName;
-        }
-    }
-
-    protected String loadChr2BoolTemplate() {
-        return loadResource("chr2bool.pls");
-    }
-
-    protected String loadBool2ChrTemplate() {
-        return loadResource("bool2chr.pls");
-    }
-
-    private String loadResource(String resource) {
-        InputStream in = getClass().getResourceAsStream(resource);
-        try {
-            return IOUtils.toString(in, "UTF-8");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            IOUtils.closeQuietly(in);
         }
     }
 
