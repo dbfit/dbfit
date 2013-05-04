@@ -44,6 +44,8 @@ show_comments: false
 
 ### [Contributing](https://github.com/benilovj/dbfit/blob/master/CONTRIBUTING.md) <small>Contributing code or documentation improvements to DbFit.</small>
 
+### [DbFit: past and present](http://quickpeople.wordpress.com/2013/03/21/dbfit-the-past-and-present/) <small>A brief history of the project and its variants.</small>
+
 </div>
 </div>
 
