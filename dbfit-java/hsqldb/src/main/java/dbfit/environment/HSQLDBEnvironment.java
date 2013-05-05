@@ -1,18 +1,22 @@
 package dbfit.environment;
 
-import java.util.regex.Pattern;
-import java.util.Map;
-import java.util.List;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.sql.*;
-import java.math.BigDecimal;
-
+import dbfit.annotations.DatabaseEnvironment;
+import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
 
-import dbfit.api.AbstractDbEnvironment;
-import dbfit.annotations.DatabaseEnvironment;
+import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import static dbfit.util.DbParameterAccessor.Direction.*;
 
 /**
  * Provides support for testing HSQLDB databases.
@@ -79,7 +83,7 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
             String columnName = rs.getString(1);
             String dataType = rs.getString(2);
             DbParameterAccessor dbp = new DbParameterAccessor(columnName,
-                    DbParameterAccessor.INPUT,
+                    INPUT,
                     typeMapper.getJDBCSQLTypeForDBType(dataType),
                     getJavaClass(dataType), position++);
             allParams.put(NameNormaliser.normaliseName(columnName), dbp);

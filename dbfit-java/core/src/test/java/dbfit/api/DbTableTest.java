@@ -8,6 +8,7 @@ import org.junit.rules.ExpectedException;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import static dbfit.util.DbParameterAccessor.Direction.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -23,7 +24,7 @@ public class DbTableTest {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("No such database column or parameter: 'nonexistent_column'");
 
-        new DbTable(env, "mytable").getDbParameterAccessor("nonexistent_column", DbParameterAccessor.INPUT);
+        new DbTable(env, "mytable").getDbParameterAccessor("nonexistent_column", INPUT);
     }
 
     private HashMap<String, DbParameterAccessor> columns(String... columnNames) {

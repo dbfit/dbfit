@@ -1,19 +1,16 @@
 package dbfit.fixture;
 
+import dbfit.api.DbObject;
+import dbfit.util.*;
+import fit.Binding;
+import fit.Fixture;
+import fit.Parse;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Savepoint;
 
-
-import dbfit.api.DbObject;
-import dbfit.util.DbParameterAccessor;
-import dbfit.util.DbParameterAccessorTypeAdapter;
-import dbfit.util.ExpectedBehaviour;
-import dbfit.util.SymbolAccessQueryBinding;
-import dbfit.util.SymbolAccessSetBinding;
-import fit.Binding;
-import fit.Fixture;
-import fit.Parse;
+import static dbfit.util.DbParameterAccessor.Direction.*;
 
 /** this class handles all cases where a statement should be executed for each row with 
  * given inputs and verifying optional outputs or exceptions. it also handles a special case 
@@ -85,7 +82,7 @@ public abstract class DbObjectExecutionFixture extends Fixture{
         for (int i = 0; headerCells != null; i++, headerCells = headerCells.more) {
 			String name=headerCells.text();
 			accessors[i]=dbObject.getDbParameterAccessor(name, 
-        			isOutput(name)?DbParameterAccessor.OUTPUT:DbParameterAccessor.INPUT);
+        			isOutput(name)? OUTPUT:INPUT);
 			if (accessors[i]==null) {
 					exception (headerCells,new IllegalArgumentException("Parameter/column "+name+" not found"));
 					return null;
@@ -116,7 +113,7 @@ public abstract class DbObjectExecutionFixture extends Fixture{
 		Parse cell = row.parts;
 		//first set input params
 		for(int column=0; column<accessors.length; column++,	cell = cell.more){
-			if (accessors[column].getDirection()==DbParameterAccessor.INPUT) {
+			if (accessors[column].getDirection().equals(INPUT)) {
 				columnBindings[column].doCell(this, cell);
 			}
 		} 
@@ -167,8 +164,8 @@ public abstract class DbObjectExecutionFixture extends Fixture{
 		statement.execute();
 		Parse cells = row.parts;
 		for(int column=0; column<accessors.length; column++, cells = cells.more){
-			if (accessors[column].getDirection()==DbParameterAccessor.OUTPUT||
-					accessors[column].getDirection()==DbParameterAccessor.RETURN_VALUE) {
+			if (accessors[column].getDirection().equals(OUTPUT)||
+					accessors[column].getDirection().equals(RETURN_VALUE)) {
 				columnBindings[column].doCell(this, cells);
 			}
 		}
