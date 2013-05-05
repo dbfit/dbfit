@@ -5,19 +5,62 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static dbfit.util.DbParameterAccessor.Direction.*;
+
 public class DbParameterAccessor {
-    public static final int RETURN_VALUE=0;
-    public static final int INPUT=1;
-    public static final int OUTPUT=2;
-    public static final int INPUT_OUTPUT=3;
-    
-    private int index; //index in effective sql statement (not necessarily the same as position below)
-    private int direction;
-    private String name;
-    private int sqlType;
+    public static enum Direction {
+        RETURN_VALUE,
+        INPUT,
+        OUTPUT,
+        INPUT_OUTPUT;
+
+        public boolean isInput() {
+            return this == INPUT;
+        }
+
+        public boolean isOutOrInout() {
+            switch (this) {
+                case OUTPUT:
+                case INPUT_OUTPUT:
+                    return true;
+            }
+
+            return false;
+        }
+
+        public boolean isInOrInout() {
+            switch (this) {
+                case INPUT:
+                case INPUT_OUTPUT:
+                    return true;
+            }
+
+            return false;
+        }
+
+        public boolean isOutputOrReturnValue() {
+            switch (this) {
+                case RETURN_VALUE:
+                case OUTPUT:
+                case INPUT_OUTPUT:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public boolean isReturnValue() {
+            return this == RETURN_VALUE;
+        }
+    }
+
+    protected int index; //index in effective sql statement (not necessarily the same as position below)
+    protected Direction direction;
+    protected String name;
+    protected int sqlType;
     protected Class<?> javaType;
-    private int position; //zero-based index of parameter in procedure or column in table
-    private PreparedStatement cs;
+    protected int position; //zero-based index of parameter in procedure or column in table
+    protected PreparedStatement cs;
 
     public static Object normaliseValue(Object currVal) throws SQLException {        
         if (currVal==null) return null;
@@ -26,17 +69,18 @@ public class DbParameterAccessor {
         return currVal;
     }
 
-    public DbParameterAccessor(DbParameterAccessor acc) {
-        this.name = acc.name;
-        this.direction = acc.direction;
-        this.sqlType = acc.sqlType;
-        //this.type=null;
-        this.javaType = acc.javaType;
-        this.position=acc.position;
+    @Override
+    public DbParameterAccessor clone() {
+        DbParameterAccessor copy = new DbParameterAccessor(name, direction,
+                sqlType, javaType, position);
+
+        copy.cs = null;
+
+        return copy;
     }
 
     @SuppressWarnings("unchecked")
-    public DbParameterAccessor(String name, int direction, int sqlType, Class javaType, int position) {
+    public DbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {
         this.name = name;
         this.direction = direction;
         this.sqlType = sqlType;
@@ -48,16 +92,7 @@ public class DbParameterAccessor {
         return sqlType;
     }
 
-    /**
-     * One of the constants from this class declaring whether the param is
-     * input, output or a return value. JDBC does not have a return value
-     * parameter directions, so a new constant list had to be introduced
-     * public static final int RETURN_VALUE=0;
-     * public static final int INPUT=1;
-     * public static final int OUTPUT=2;
-     * public static final int INPUT_OUTPUT=3;
-     */
-    public int getDirection() {
+    public Direction getDirection() {
         return direction;
     }
 
@@ -65,8 +100,8 @@ public class DbParameterAccessor {
         return name;
     }
 
-    public void setDirection(int direction){
-        this.direction=direction;
+    public void setDirection(Direction direction){
+        this.direction = direction;
     }
 
     //really ugly, but a hack to support mysql, because it will not execute inserts with a callable statement
@@ -79,22 +114,20 @@ public class DbParameterAccessor {
     public void bindTo(PreparedStatement cs, int ind) throws SQLException{
         this.cs=cs;
         this.index=ind;    
-        if (direction==DbParameterAccessor.OUTPUT || 
-                direction==DbParameterAccessor.RETURN_VALUE||
-                direction==DbParameterAccessor.INPUT_OUTPUT){
+        if (direction != INPUT){
             convertStatementToCallable().registerOutParameter(ind, getSqlType());
         }
     }
 
     public void set(Object value) throws Exception {
-        if (direction==OUTPUT||direction==RETURN_VALUE)
+        if (direction == OUTPUT|| direction == RETURN_VALUE)
             throw new UnsupportedOperationException("Trying to set value of output parameter "+name);
         cs.setObject(index, value);
     }    
 
     public Object get() throws IllegalAccessException, InvocationTargetException {
         try{
-            if (direction==INPUT)
+            if (direction.equals(INPUT))
                 throw new UnsupportedOperationException("Trying to get value of input parameter "+name);            
             return normaliseValue(convertStatementToCallable().getObject(index));
         }
@@ -112,6 +145,10 @@ public class DbParameterAccessor {
 
     public Class<?> getJavaType() {
         return javaType;
+    }
+
+    public boolean isReturnValueAccessor() {
+        return direction.isReturnValue();
     }
 }
 

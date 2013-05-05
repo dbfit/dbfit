@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Pattern;
+import static dbfit.util.DbParameterAccessor.Direction;
 
 @DatabaseEnvironment(name="Postgres", driver="org.postgresql.Driver")
 public class PostgresEnvironment extends AbstractDbEnvironment {
@@ -83,7 +84,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
                 paramName = "";
             String dataType = rs.getString(2);
             DbParameterAccessor dbp = new DbParameterAccessor(paramName,
-                    DbParameterAccessor.INPUT, getSqlType(dataType),
+                    Direction.INPUT, getSqlType(dataType),
                     getJavaClass(dataType), position++);
             allParams.put(NameNormaliser.normaliseName(paramName), dbp);
         }
@@ -199,7 +200,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
         rs.close();
 
         int position = 0;
-        int direction = DbParameterAccessor.INPUT;
+        Direction direction = Direction.INPUT;
         String paramName;
         String dataType;
         String token;
@@ -213,10 +214,10 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
             if (token.equals("in")) {
                 token = s.nextToken();
             } else if (token.equals("inout")) {
-                direction = DbParameterAccessor.INPUT_OUTPUT;
+                direction = Direction.INPUT_OUTPUT;
                 token = s.nextToken();
             } else if (token.equals("out")) {
-                direction = DbParameterAccessor.OUTPUT;
+                direction = Direction.OUTPUT;
                 token = s.nextToken();
             }
 
@@ -241,7 +242,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 
             if (!dataType.equals("void")) {
                 allParams.put("", new DbParameterAccessor("",
-                        DbParameterAccessor.RETURN_VALUE, getSqlType(dataType),
+                        Direction.RETURN_VALUE, getSqlType(dataType),
                         getJavaClass(dataType), -1));
             }
         }
@@ -268,7 +269,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
         StringBuilder retValues = new StringBuilder();
 
         for (DbParameterAccessor accessor : accessors) {
-            if (accessor.getDirection() == DbParameterAccessor.INPUT) {
+            if (accessor.getDirection() == Direction.INPUT) {
                 sb.append(comma);
                 values.append(comma);
                 sb.append(accessor.getName());

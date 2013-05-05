@@ -1,5 +1,6 @@
 package dbfit.environment;
 
+import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
@@ -14,7 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import dbfit.annotations.DatabaseEnvironment;
+
+import static dbfit.util.DbParameterAccessor.Direction;
 
 /**
  * Encapsulates support for the Derby database (also known as JavaDB). Operates
@@ -70,7 +72,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
             String columnName = rs.getString(1);
             String dataType = rs.getString(2);
             DbParameterAccessor dbp = new DbParameterAccessor(columnName,
-                    DbParameterAccessor.INPUT,
+                    Direction.INPUT,
                     typeMapper.getJDBCSQLTypeForDBType(dataType),
                     getJavaClass(dataType), position++);
             allParams.put(NameNormaliser.normaliseName(columnName), dbp);

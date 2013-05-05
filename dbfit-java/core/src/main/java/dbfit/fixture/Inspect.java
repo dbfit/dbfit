@@ -1,17 +1,18 @@
 package dbfit.fixture;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.Map;
-
-
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.FitNesseTestHost;
 import fit.Fixture;
 import fit.Parse;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.Map;
+
+import static dbfit.util.DbParameterAccessor.Direction.*;
 
 public class Inspect extends fit.Fixture {
     private DBEnvironment environment;
@@ -118,7 +119,7 @@ public class Inspect extends fit.Fixture {
 		for(int i=0; i<orderedNames.length; i++){
 			String name=orderedNames[i];
       if (name == null) name = "";
-			if (params.get(name).getDirection()!=DbParameterAccessor.INPUT) name=name+"?";
+			if (params.get(name).getDirection()!= INPUT) name=name+"?";
 			Parse cell=new Parse("td",Fixture.gray(name),null,null);
 			if (prevCell==null) 
 					newRow.parts=cell;
