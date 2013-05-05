@@ -31,7 +31,7 @@ You can also convert a FitNesse table to tab-separated data with the `FitNesse t
 
 ## Database password encryption
 
-DbFit has [several ways to connect to the database](/dbfit/docs/reference.html#connect), one of which is [storing the database password in a file](/dbfit/docs/reference.html#connect-using-file). If you are working in an environment where you aren't allowed to store database passwords in plaintext, you may wish to use the `encrypt` utility that ships with DbFit to encrypt the password.
+DbFit has [several ways to connect to the database](/dbfit/docs/reference.html#connect). If you are working in an environment where you aren't allowed to store database passwords in plaintext, you may wish to use the `encrypt` utility that ships with DbFit to encrypt the password.
 
 A new *keystore* is created when `encrypt` is invoked for the first time. The default *keystore* filename is:
 
@@ -43,7 +43,7 @@ It's possible to create the KeyStore with other tools (eg java `keytool`). In or
 
 ### How it works
 
-You encrypt a password using `encrypt` and store the encrypted string in a database connection properties file. When a test is executed, DbFit decrypts the password and uses it to connect to the database. Both `encrypt` and DbFit use a cryptographic key, which is stored in a password-protected file known as *keystore*.
+You encrypt a password using `encrypt` and use the encrypted string as password when configuring your DbFit connection settings. When a test is executed, DbFit decrypts the password and uses it to connect to the database. Both `encrypt` and DbFit use a cryptographic key, which is stored in a password-protected file known as *keystore*.
 
 <div class="alert alert-warning alert-block">If an attacker is able to gain access to the <em>keystore</em>, they would be able to decrypt your passwords, since the <em>keystore</em> is protected by password that is hard-coded into the DbFit binary. Keep your <em>keystore</em> safe by setting restrictive permissions on the file.
 </div>
@@ -69,7 +69,7 @@ You encrypt a password using `encrypt` and store the encrypted string in a datab
         ...
 
 
-    No change is needed in the DbFit tests - the [`ConnectUsingFile`](/dbfit/docs/reference.html#connect-using-file) fixture works with both encrypted and non-encrypted passwords.
+    No change is needed in the DbFit tests - the [`ConnectUsingFile`](/dbfit/docs/reference.html#connect-using-file) and [`Connect`](dbfit/docs/reference.html#connect) fixtures work with both encrypted and non-encrypted passwords.
 
 #### Using an alternative *keystore* location
 
