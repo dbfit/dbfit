@@ -40,11 +40,11 @@ public class CryptoAppTestBase extends MockitoTestBase {
     }
 
     protected String getTempKeyStorePath() throws IOException {
-        return tempKeyStoreFolder.getRoot().getCanonicalPath();
+        return tempKeyStoreFolder.getRoot().getPath();
     }
 
     protected String getTempKeyStore2Path() throws IOException {
-        return tempKeyStoreFolder2.getRoot().getCanonicalPath();
+        return tempKeyStoreFolder2.getRoot().getPath();
     }
 
     // Create a real (non-mocked app)
