@@ -73,27 +73,19 @@ public class CryptoApp {
     }
 
     public int execute(String[] args) throws Exception {
-        String cmd = "";
-        int errCode = EXIT_SUCCESS;
-
-        if (args.length < 1) {
-            errCode = EXIT_INVALID_COMMAND;
-        } else {
-            cmd = args[0];
-        }
+        String cmd = (args.length == 0) ? "" : args[0];
 
         if (cmd.equalsIgnoreCase("-help")) {
             showUsage();
+            return EXIT_SUCCESS;
         } else if (args.length == 1) {
-            errCode = encryptPassword(args[0]);
+            return encryptPassword(args[0]);
         } else if ((args.length == 3) && (args[1].equals("-keyStoreLocation"))) {
-            errCode = encryptPassword(args[0], args[2]);
+            return encryptPassword(args[0], args[2]);
         } else {
-            errCode = EXIT_INVALID_COMMAND;
             showUsage();
+            return EXIT_INVALID_COMMAND;
         }
-
-        return errCode;
     }
 
     public static void main(String[] args) throws Exception {
