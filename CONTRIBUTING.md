@@ -51,28 +51,17 @@ The VM doesn't include:
 
 1.  You first need to [install VirtualBox](https://www.virtualbox.org/wiki/Downloads).
 
-2.  You need to have ruby installed, version 1.8.7, 1.9.X or 2.0.x. The Windows installed can be found [here](http://rubyinstaller.org/downloads/).
+2. [Install vagrant](http://docs.vagrantup.com/v2/installation/). Versions 1.2+.
 
-3. [Install vagrant](http://docs.vagrantup.com/v2/installation/). Versions 1.1+ are preferable.
-   (If for some reason 1.0.x should be used - add it as a dependency to Gemfile)
+3. Install vagrant plugin [vagrant-librarian-chef](https://github.com/jimmycuadra/vagrant-librarian-chef):
+
+        vagrant plugin install vagrant-librarian-chef
 
 4.  Run every subsequent command from the `test_vm` folder:
 
         cd test_vm
 
-5.  Install ruby `bundler`:
-
-        sudo gem install bundler
-
-6.  Install the necessary ruby gems (including `vagrant`):
-
-        bundle install
-
-7.  Install the `vagrant` recipes:
-
-        bundle exec librarian-chef install
-
-8.  Provision and start the vagrant VM:
+5.  Provision and start the vagrant VM:
 
         vagrant up
 
