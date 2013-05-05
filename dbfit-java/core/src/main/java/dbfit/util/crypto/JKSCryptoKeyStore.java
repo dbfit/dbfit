@@ -62,6 +62,14 @@ public class JKSCryptoKeyStore implements CryptoKeyStore {
         createKeyStoreNoCheck();
     }
 
+    private void setKsFilePermissions() throws Exception {
+        File ksFile = getKeyStoreFile();
+        ksFile.setReadable(false, false);
+        ksFile.setWritable(false, false);
+        ksFile.setExecutable(false, false);
+        ksFile.setReadable(true);
+    }
+
     private void createKeyStoreNoCheck() throws Exception {
         KeyStore ks = KeyStore.getInstance(KS_TYPE);
         ks.load(null, getKeyStorePassword());
@@ -76,6 +84,8 @@ public class JKSCryptoKeyStore implements CryptoKeyStore {
             File ksFile = getKeyStoreFile();
             fos = new java.io.FileOutputStream(ksFile);
             ks.store(fos, getKeyStorePassword());
+            fos.close();
+            setKsFilePermissions();
         } finally {
             if (fos != null) {
                 fos.close();
