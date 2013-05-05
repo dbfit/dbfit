@@ -77,9 +77,9 @@ To place the *keystore* in an alternative location, specify the `-keyStoreLocati
 
     encrypt.sh your-password-here -keyStoreLocation <some-path>
 
-To allow the DbFit tests to decrypt passwords using the alternative path, you need to set the `dbfit.keystore.path` Java system property when starting DbFit:
+To allow the DbFit tests to decrypt passwords using the alternative path, you need to override the FitNesse `COMMAND_PATERN` used for the execution of your tests (you can read more about FitNesse test execution [here](http://www.fitnesse.org/FitNesse.UserGuide.CustomizingTestExecution)). This basically means that you need to add the following line in a parent page of your testsuite (ideally next to the line `!path lib/*.jar`:
 
-    ./startFitnesse.sh -Ddbfit.keystore.path=<some-path>
+    !define COMMAND_PATTERN {java -Ddbfit.keystore.path=<some-path> -cp %p %m}
 
 </div>
   </div>
