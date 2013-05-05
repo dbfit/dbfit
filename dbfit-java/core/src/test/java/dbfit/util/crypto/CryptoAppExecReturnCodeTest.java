@@ -1,14 +1,17 @@
 package dbfit.util.crypto;
 
-import java.util.Collection;
-
-import org.junit.Test;
-import org.junit.Before;
 import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.junit.rules.TemporaryFolder;
+
+import java.util.Collection;
+
+import static dbfit.util.crypto.CryptoApp.EXIT_INVALID_COMMAND;
+import static dbfit.util.crypto.CryptoApp.EXIT_SUCCESS;
 import static org.junit.Assert.assertEquals;
 
 
@@ -35,14 +38,12 @@ public class CryptoAppExecReturnCodeTest extends CryptoAppTestBase {
     @Parameters(name = "({index}): exec with args {1} -> expecting {0}")
     public static Collection<Object[]> data() throws Exception {
         return java.util.Arrays.asList(new Object[][] {
-            {0, args("-encryptPassword", "ABC")},
-            {0, args("-encryptPassword", "ABC", "-keyStoreLocation", emptyFakeKSFolder.getRoot().getPath())},
-            {0, args("-help")},
-            {1, args("-non-existing-command")},
-            {1, args("another invalid command")},
-            {2, args("-encryptPassword", "too", "many", "args")},
-            {2, args("-encryptPassword", "XYZ", "invalid", "args")},
-            {2, args("-encryptPassword")},
+            {EXIT_SUCCESS, args("ABC")},
+            {EXIT_SUCCESS, args("ABC", "-keyStoreLocation", emptyFakeKSFolder.getRoot().getPath())},
+            {EXIT_SUCCESS, args("-help")},
+            {EXIT_INVALID_COMMAND, args("too", "many", "args")},
+            {EXIT_INVALID_COMMAND, args("XYZ", "invalid", "args")},
+            {EXIT_INVALID_COMMAND, args()},
         });
     }
 

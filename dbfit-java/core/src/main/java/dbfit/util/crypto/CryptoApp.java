@@ -7,8 +7,7 @@ public class CryptoApp {
 
     public static final int EXIT_SUCCESS = 0;
     public static final int EXIT_INVALID_COMMAND = 1;
-    public static final int EXIT_INVALID_OPTION = 2;
-    public static final int EXIT_COMMAND_FAILED = 3;
+    public static final int EXIT_COMMAND_FAILED = 2;
     
     private CryptoKeyStoreFactory ksFactory;
     private CryptoServiceFactory cryptoServiceFactory;
@@ -64,7 +63,7 @@ public class CryptoApp {
 
     private void showUsage() {
         updateStatus("Usage arguments:");
-        updateStatus(" -encryptPassword <password> [-keyStoreLocation <keyStoreLocation>]");
+        updateStatus(" <password> [-keyStoreLocation <keyStoreLocation>]");
         updateStatus("     Encrypt the given password and show the result.");
         updateStatus("     Password is encrypted using key from keyStoreLocation.");
         updateStatus("     If no keyStoreLocation is specified - default location is used.");
@@ -83,21 +82,14 @@ public class CryptoApp {
             cmd = args[0];
         }
 
-        if (cmd.equalsIgnoreCase("-encryptPassword")) {
-            if (args.length == 2) {
-                errCode = encryptPassword(args[1]);
-            } else if ((args.length == 4) && (args[2].equals("-keyStoreLocation"))) {
-                errCode = encryptPassword(args[1], args[3]);
-            } else {
-                errCode = EXIT_INVALID_OPTION;
-            }
-        } else if (cmd.equalsIgnoreCase("-help")) {
+        if (cmd.equalsIgnoreCase("-help")) {
             showUsage();
+        } else if (args.length == 1) {
+            errCode = encryptPassword(args[0]);
+        } else if ((args.length == 3) && (args[1].equals("-keyStoreLocation"))) {
+            errCode = encryptPassword(args[0], args[2]);
         } else {
             errCode = EXIT_INVALID_COMMAND;
-        }
-
-        if ((errCode == EXIT_INVALID_OPTION) || (errCode == EXIT_INVALID_COMMAND)) {
             showUsage();
         }
 

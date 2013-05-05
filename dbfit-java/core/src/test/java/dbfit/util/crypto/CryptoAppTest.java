@@ -1,10 +1,9 @@
 package dbfit.util.crypto;
 
-import org.junit.Test;
 import org.junit.Before;
-import org.junit.After;
-
+import org.junit.Test;
 import org.mockito.InOrder;
+
 import static org.mockito.Mockito.*;
 
 
@@ -22,7 +21,7 @@ public class CryptoAppTest extends CryptoAppTestBase {
 
     @Test
     public void createKeyStoreInDefaultLocationTest() throws Exception {
-        execApp("-encryptPassword", "dummy");
+        execApp("dummy");
 
         verify(mockedKSFactory).newInstance();
         verify(mockedKS).createKeyStore();
@@ -30,7 +29,7 @@ public class CryptoAppTest extends CryptoAppTestBase {
 
     @Test
     public void createKeyStoreInCustomLocationTest() throws Exception {
-        execApp("-encryptPassword", "dummy", "-keyStoreLocation", getTempKeyStore2Path());
+        execApp("dummy", "-keyStoreLocation", getTempKeyStore2Path());
 
         verify(mockedKSFactory).newInstance(tempKeyStoreFolder2.getRoot());
         verify(mockedKS).createKeyStore();
@@ -41,7 +40,7 @@ public class CryptoAppTest extends CryptoAppTestBase {
         when(mockedKS.keyStoreExists()).thenReturn(true);
         String password = "Demo Password CLI";
 
-        execApp("-encryptPassword", password);
+        execApp(password);
 
         verify(mockedCryptoService).encrypt(password);
     }
@@ -51,7 +50,7 @@ public class CryptoAppTest extends CryptoAppTestBase {
         when(mockedKS.keyStoreExists()).thenReturn(false);
         String password = "Demo Password CLI 2";
 
-        execApp("-encryptPassword", password);
+        execApp(password);
 
         InOrder inOrder = inOrder(
                 mockedKSFactory, mockedKS,
