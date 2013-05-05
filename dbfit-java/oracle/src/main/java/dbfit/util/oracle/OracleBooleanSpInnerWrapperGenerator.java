@@ -27,19 +27,11 @@ public class OracleBooleanSpInnerWrapperGenerator {
     }
 
     private String getWrapperArguments() {
-        return getIsolatedOutput(new Generator() {
-            @Override public void generate() {
-                genWrapperArguments();
-            }
-        });
+        return new Gen() {{ genWrapperArguments(); }}.toString();
     }
 
     private String getSpCallArguments() {
-        return getIsolatedOutput(new Generator() {
-            @Override public void generate() {
-                genSpCallArguments();
-            }
-        });
+        return new Gen() {{ genSpCallArguments(); }}.toString();
     }
 
     public void genSpCallArguments() {
@@ -121,23 +113,32 @@ public class OracleBooleanSpInnerWrapperGenerator {
         return cmd.append(s);
     }
 
-    private interface Generator {
-        void generate();
-    }
-
-    private String getIsolatedOutput(Generator g) {
-        SpGeneratorOutput savedOut = cmd.getOutput();;
-        SpGeneratorOutput wrkOut = new SpGeneratorOutput();
-        cmd.setOutput(wrkOut);
-        g.generate();
-        String result = cmd.toString();
-        cmd.setOutput(savedOut);
-        return result;
-    }
-
     @Override
     public String toString() {
         return cmd.toString();
     }
+
+    /*
+     * Utility class for short notation of capturing append() output.
+     *
+     * Usage:
+     * String result = new Gen() {{ doStuff(); }}.toString();
+     *
+     * Will temporariliy redirect output and return result as string.
+     */
+    class Gen {
+        SpGeneratorOutput savedOut = cmd.getOutput();
+        SpGeneratorOutput wrkOut = new SpGeneratorOutput();
+
+        public Gen() {
+            cmd.setOutput(wrkOut);
+        }
+
+        @Override public String toString() {
+            cmd.setOutput(savedOut);
+            return wrkOut.toString();
+        }
+    }
+
 }
 
