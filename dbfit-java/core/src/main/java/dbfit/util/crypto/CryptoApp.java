@@ -68,17 +68,12 @@ public class CryptoApp {
         updateStatus("     Password is encrypted using key from keyStoreLocation.");
         updateStatus("     If no keyStoreLocation is specified - default location is used.");
         updateStatus("     If no dbfit keystore and key exist - they're automatically created.");
-        updateStatus(" -help");
-        updateStatus("     Show this usage note.");
     }
 
     public int execute(String[] args) throws Exception {
         String cmd = (args.length == 0) ? "" : args[0];
 
-        if (cmd.equalsIgnoreCase("-help")) {
-            showUsage();
-            return EXIT_SUCCESS;
-        } else if (args.length == 1) {
+        if (args.length == 1) {
             return encryptPassword(args[0]);
         } else if ((args.length == 3) && (args[1].equals("-keyStoreLocation"))) {
             return encryptPassword(args[0], args[2]);

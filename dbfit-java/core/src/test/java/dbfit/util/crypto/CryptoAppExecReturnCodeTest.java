@@ -40,7 +40,6 @@ public class CryptoAppExecReturnCodeTest extends CryptoAppTestBase {
         return java.util.Arrays.asList(new Object[][] {
             {EXIT_SUCCESS, args("ABC")},
             {EXIT_SUCCESS, args("ABC", "-keyStoreLocation", emptyFakeKSFolder.getRoot().getPath())},
-            {EXIT_SUCCESS, args("-help")},
             {EXIT_INVALID_COMMAND, args("too", "many", "args")},
             {EXIT_INVALID_COMMAND, args("XYZ", "invalid", "args")},
             {EXIT_INVALID_COMMAND, args()},
