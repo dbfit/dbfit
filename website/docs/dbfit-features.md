@@ -69,7 +69,7 @@ You encrypt a password using `encrypt` and use the encrypted string as password 
         ...
 
 
-    No change is needed in the DbFit tests - the [`ConnectUsingFile`](/dbfit/docs/reference.html#connect-using-file) and [`Connect`](dbfit/docs/reference.html#connect) fixtures work with both encrypted and non-encrypted passwords.
+    No change is needed in the DbFit tests - the [`ConnectUsingFile`](/dbfit/docs/reference.html#connect-using-file) and [`Connect`](/dbfit/docs/reference.html#connect) fixtures work with both encrypted and non-encrypted passwords.
 
 #### Using an alternative *keystore* location
 
