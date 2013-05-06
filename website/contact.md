@@ -4,11 +4,17 @@ title: Contact
 nav_bar_name: contact
 show_comments: true
 ---
-This project is currently being maintained by Jake Benilov.
+To get in touch with us:
 
-Jake's contact details:
+- visit [the project forum](https://groups.google.com/group/dbfit) for discussion and questions
+- visit [the project issue tracker](github.com/benilovj/dbfit/issues) to make feature requests or to report bugs
 
-*  Email: jake \[at\] quickpeople.co.uk
-*  LinkedIn: [http://uk.linkedin.com/pub/jake-benilov/7/b07/895](http://uk.linkedin.com/pub/jake-benilov/7/b07/895)
-*  Twitter: [benilov](https://twitter.com/benilov)
-*  Skype: jbenilov
+You can also email directly to `jake [at] quickpeople.co.uk`.
+
+## Services
+
+We provide:
+
+- help getting your team up and running with DbFit
+- strategic database testing coaching
+- custom development around your specific requirements, or if you need a feature urgently
