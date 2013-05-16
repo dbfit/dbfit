@@ -79,7 +79,7 @@ The subsequent steps need to be followed on the project folder within the VM. To
 
 #### Installing Oracle XE
 
-See the [ORACLE file](ORACLE.md) file 
+See the [ORACLE file](ORACLE.md).
 
 #### IDE Integration
 
@@ -87,7 +87,7 @@ See the [ORACLE file](ORACLE.md) file
 
 An IntelliJ project can be created by running:
 
- 1. dbfit-java$ gradle idea
+ 1. `dbfit-java$ gradle idea`
 
  2. set gradle.java.home=<gradle jdk path> in $IDEA_HOME/bin/idea.properties    
 
