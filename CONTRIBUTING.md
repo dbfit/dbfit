@@ -45,9 +45,9 @@ The VM doesn't include:
  *  a working DB2 installation
  *  a working SQL Server installation (obviously)
 
-### Setting up the test VM
+**Note: the current setup relies on `nfs` to share the development directory between the host and the guest machines. Currently (May '13) vagrant for Windows doesn't support `nfs`, so this VM setup will only work for Linux/Mac OS.**
 
-*Note: the following instructions are Mac OS/Linux specific but the same approach should work under Windows as well, since vagrant and VirtualBox run on Windows.*
+### Setting up the test VM
 
 1.  You first need to [install VirtualBox](https://www.virtualbox.org/wiki/Downloads).
 
