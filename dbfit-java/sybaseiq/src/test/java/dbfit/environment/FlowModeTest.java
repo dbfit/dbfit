@@ -1,4 +1,4 @@
-package test.dbfit.environment;
+package dbfit.environment;
 
 import fitnesse.junit.FitNesseSuite;
 import org.junit.Test;

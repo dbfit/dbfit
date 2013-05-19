@@ -90,11 +90,11 @@ public class SybaseIQEnvironment extends AbstractDbEnvironment {
       "DATE",   "SMALLDATETIME", "DATETIME", "TIMESTAMP" });	
 	
 	
- private static int getParameterDirection(String isOutput) {
+ private static DbParameterAccessor.Direction getParameterDirection(String isOutput) {
      if (isOutput == "OUT")
-         return DbParameterAccessor.OUTPUT;
+         return DbParameterAccessor.Direction.OUTPUT;
      else
-         return DbParameterAccessor.INPUT;
+         return DbParameterAccessor.Direction.INPUT;
  }
 
 
@@ -110,9 +110,9 @@ public class SybaseIQEnvironment extends AbstractDbEnvironment {
 		String qry = "select " + cols
 				+ "  from sys.SYSPROCPARMS where 1=1 and ";
 		if (qualifiers.length == 2) {
-			qry += " (creator=? and procname=?) ";
+			qry += " (upper(creator)=upper(?) and upper(procname)=upper(?)) ";
 		} else {
-			qry += " (creator=user and procname=?)";
+			qry += " (creator=user and  upper(procname) = upper(?))";
 		}
 
 		
@@ -200,12 +200,15 @@ public class SybaseIQEnvironment extends AbstractDbEnvironment {
 	private Map<String, DbParameterAccessor> readIntoParams (String objname,
             String query)
 			throws SQLException {
+			String procName;
 		
 		if (objname.contains(".")) {
             String[] schemaAndName = objname.split("[\\.]", 2);
             objname = "[" + schemaAndName[0] + "].[" + schemaAndName[1] + "]";
+            procName = schemaAndName[1];
         } else {
             objname = "[" + NameNormaliser.normaliseName(objname) + "]";
+            procName = NameNormaliser.normaliseName(objname);
         }
 
 		PreparedStatement dc = currentConnection.prepareStatement(query);
@@ -221,9 +224,10 @@ public class SybaseIQEnvironment extends AbstractDbEnvironment {
             String dataType = rs.getString(2);
             // int length = rs.getInt(3);
             String direction = rs.getString(4);
-            int paramDirection;
-            if (paramName.trim().length() == 0)
-                paramDirection = DbParameterAccessor.RETURN_VALUE;
+            DbParameterAccessor.Direction paramDirection;
+            if ( paramName.trim().equalsIgnoreCase(procName))
+            //if (paramName.trim().length() == 0)
+                paramDirection = DbParameterAccessor.Direction.RETURN_VALUE;
             else
                 paramDirection = getParameterDirection(direction);
             DbParameterAccessor dbp = new DbParameterAccessor(paramName,

@@ -1,0 +1,3 @@
+!|dbfit.SybaseIQTest|
+
+|Connect|172.16.1.115:2638|dbfit|dbfit|
