@@ -460,6 +460,9 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
     private static int getSqlType(String dataType) {
         // todo:strip everything from first blank
+    	//Storing the original Data Type, in case
+    	// it is necessary for the error message.
+    	String dataTypeOriginal = dataType;
         dataType = normaliseTypeName(dataType);
 
         if (stringTypes.contains(dataType))
@@ -473,7 +476,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         if (timestampTypes.contains(dataType))
             return java.sql.Types.TIMESTAMP;
 
-        throw new UnsupportedOperationException("Type " + dataType
+        throw new UnsupportedOperationException("Type " + dataTypeOriginal
                 + " is not supported");
     }
 
