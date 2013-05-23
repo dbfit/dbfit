@@ -460,7 +460,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
     private static int getSqlType(String dataType) {
         // todo:strip everything from first blank
-    	String dataTypeNormalised = normaliseTypeName(dataType);
+        String dataTypeNormalised = normaliseTypeName(dataType);
 
         if (stringTypes.contains(dataTypeNormalised))
             return java.sql.Types.VARCHAR;
