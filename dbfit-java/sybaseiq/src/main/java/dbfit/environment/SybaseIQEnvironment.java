@@ -51,7 +51,7 @@ public class SybaseIQEnvironment extends AbstractDbEnvironment {
 
 		String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
 				.split("\\.");
-		String cols = " cname, coltype, length, 'OUT' As is_output, 0 As is_cursor_ref ";
+		String cols = " cname, coltype, length, 'IN' As is_output, 0 As is_cursor_ref ";
 		String qry = "select " + cols + "  from sys.SYSCOLUMNS where 1=1 and ";
 		if (qualifiers.length == 2) {
 			qry += " (creator=? and tname=?) ";
