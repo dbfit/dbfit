@@ -4,6 +4,35 @@ title: "What's New"
 nav_bar_name: docs
 show_comments: false
 ---
+## In 2.0.0 RC5 <small>25th May 2013</small>
+
+### New features
+
+* [Database password encryption](/dbfit/docs/dbfit-features.html#database-password-encryption) ([#97](https://github.com/benilovj/dbfit/issues/97), [#104](https://github.com/benilovj/dbfit/issues/104))
+* Oracle: support for Oracle BOOLEAN types ([#80](https://github.com/benilovj/dbfit/issues/80), [#87](https://github.com/benilovj/dbfit/issues/87))
+
+### Minor improvements and bugfixes
+
+* Oracle: Unclear stacktrace when the JDBC connector is missing ([#27](https://github.com/benilovj/dbfit/issues/27), [#75](https://github.com/benilovj/dbfit/issues/75))
+* Postgres: support the "unknown" datatype ([#92](https://github.com/benilovj/dbfit/issues/92))
+* DB2: support the "DECFLOAT" datatype ([#114](https://github.com/benilovj/dbfit/issues/114))
+* better error message for unsupported Oracle data types ([#115](https://github.com/benilovj/dbfit/issues/115))
+
+### Documentation improvements
+
+* documentation of database connection tables: [Connect](/dbfit/docs/reference.html#connect) and [Connect using file](/dbfit/docs/reference.html#connect-using-file) ([#94](https://github.com/benilovj/dbfit/issues/94))
+* add link to [the DbFit history article](http://quickpeople.wordpress.com/2013/03/21/dbfit-the-past-and-present/) ([#102](https://github.com/benilovj/dbfit/issues/102))
+
+### Development and project improvements
+
+* [travis-ci build for DbFit](https://travis-ci.org/benilovj/dbfit) ([#40](https://github.com/benilovj/dbfit/issues/40))
+* gradle build improvements ([#71](https://github.com/benilovj/dbfit/issues/71))
+* switch to FitNesse Bootstrap theme ([#74](https://github.com/benilovj/dbfit/issues/74))
+* improved automation and docs for Oracle setup ([#100](https://github.com/benilovj/dbfit/issues/100))
+* vagrant upgrade ([#107](https://github.com/benilovj/dbfit/issues/107))
+
+----
+
 ## In 2.0.0 RC4 <small>28th Mar 2013</small>
 
 ### Features
