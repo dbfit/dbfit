@@ -351,6 +351,84 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         return readIntoParams(qualifiers, qry);
     }
 
+
+    public Map<String, DbParameterAccessor> getAllProcedureParameters(
+            String procName, String params) throws SQLException {
+        String[] qualifiers = NameNormaliser.normaliseName(procName).split(
+                "\\.");
+        String cols = " argument_name, data_type, data_length,  IN_OUT, sequence ";
+        String qry = "select " + cols
+                + "  from all_arguments where data_level=0 and ";
+
+        if (qualifiers.length == 3) {
+            qry += " owner=? and package_name=? and object_name=? ";
+        } else if (qualifiers.length == 2) {
+            qry += " ((owner=? and package_name is null and object_name=?) or "
+                    + " (owner=user and package_name=? and object_name=?))";
+        } else {
+            qry += " (owner=user and package_name is null and object_name=?)";
+        }
+
+        //Added to overcome the overload issue with procedures/functions 
+        // inside a package
+        qry += " and NVL(overload, 1) = NVL((SELECT overload FROM (" +
+             "SELECT overload, sum(tr) tr, sum(trf) trf FROM (" +
+                   "SELECT overload, count(*) tr, 0 trf" +
+                  "  FROM all_arguments " +
+                  " WHERE data_level = 0 " +
+                  "	AND package_name = ? " +
+                  "	AND object_name	= ? " +
+                  "	AND position > 0 " +
+                  "	group by overload " +
+                  " UNION ALL " +
+                 " SELECT overload, 0 tr, count(*) trf " +
+                 "  FROM all_arguments " +
+                 " WHERE data_level = 0 " +
+                 "	AND package_name = ? " +
+                 "	AND object_name	= ? " +
+                 "	AND argument_name IN ( " + params + ")" +
+                 "	AND position > 0 " +
+                 "	group by overload) " +
+             "group by overload) " + 
+         " WHERE tr-trf = 0), 1)";
+
+        // map to public synonyms also
+        if (qualifiers.length < 3 && (!Options.is(SKIP_ORACLE_SYNONYMS))) {
+            qry += " union all "
+                    + " select "
+                    + cols
+                    + " from all_arguments, all_synonyms "
+                    + " where data_level=0 and all_synonyms.owner='PUBLIC' and all_arguments.owner=table_owner and ";
+            if (qualifiers.length == 2) { // package
+                qry += " package_name=table_name and synonym_name=? and object_name=? ";
+            } else {
+                qry += " package_name is null and object_name=table_name and synonym_name=? ";
+            }
+        }
+        
+        qry += " order by sequence ";
+        if (qualifiers.length == 2) {
+            String[] newQualifiers = new String[10];
+            newQualifiers[0] = qualifiers[0];
+            newQualifiers[1] = qualifiers[1];
+            newQualifiers[2] = qualifiers[0];
+            newQualifiers[3] = qualifiers[1];
+            newQualifiers[4] = qualifiers[0];
+            newQualifiers[5] = qualifiers[1];
+            newQualifiers[6] = qualifiers[0];
+            newQualifiers[7] = qualifiers[1];
+            newQualifiers[8] = qualifiers[0];
+            newQualifiers[9] = qualifiers[1];
+            qualifiers = newQualifiers;
+        } else if (qualifiers.length == 1) {
+            String[] newQualifiers = new String[2];
+            newQualifiers[0] = qualifiers[0];
+            newQualifiers[1] = qualifiers[0];
+            qualifiers = newQualifiers;
+        }
+        return readIntoParams(qualifiers, qry);
+    }
+
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
         String query = "select * from " + tableOrViewName + " where 1 = 2";

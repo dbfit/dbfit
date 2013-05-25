@@ -77,12 +77,28 @@ public abstract class DbObjectExecutionFixture extends Fixture{
 	private static DbParameterAccessor[] EMPTY=new DbParameterAccessor[0];
 	/** initialise db parameters for the dbObject based on table header cells */
     private DbParameterAccessor[] getAccessors( Parse headerCells) throws SQLException{
+        String givenParams = ""; //To store the parameters defined on the test defintion 
+        Parse headerCellsAux = headerCells; //Storing the original header cells to be used to get the given Parameters
+        
         if (headerCells == null) return EMPTY;
 		DbParameterAccessor accessors[]=new DbParameterAccessor[headerCells.size()];
-        for (int i = 0; headerCells != null; i++, headerCells = headerCells.more) {
+        
+		//Looping on the header of the test Cells
+        for (int k = 0; headerCellsAux != null; k++, headerCellsAux = headerCellsAux.more) {
+           if (! isOutput(headerCellsAux.text())) {//Verifying the cell is not an output
+               //Adding parameters to the variable
+        	   if (k == 0) {
+        		   givenParams += "'" + headerCellsAux.text() + "'";
+              } else {
+            	  givenParams += ", " + "'" + headerCellsAux.text() + "'";
+              }
+           }
+        }
+
+		for (int i = 0; headerCells != null; i++, headerCells = headerCells.more) {
 			String name=headerCells.text();
 			accessors[i]=dbObject.getDbParameterAccessor(name, 
-        			isOutput(name)? OUTPUT:INPUT);
+        			isOutput(name)? OUTPUT:INPUT, givenParams);
 			if (accessors[i]==null) {
 					exception (headerCells,new IllegalArgumentException("Parameter/column "+name+" not found"));
 					return null;
