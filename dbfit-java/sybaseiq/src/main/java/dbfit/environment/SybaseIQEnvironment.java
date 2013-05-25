@@ -51,7 +51,7 @@ public class SybaseIQEnvironment extends AbstractDbEnvironment {
 
 		String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
 				.split("\\.");
-		String cols = " cname, coltype, length, 'OUT' As is_output, 0 As is_cursor_ref ";
+		String cols = " cname, coltype, length, 'IN' As is_output, 0 As is_cursor_ref ";
 		String qry = "select " + cols + "  from sys.SYSCOLUMNS where 1=1 and ";
 		if (qualifiers.length == 2) {
 			qry += " (creator=? and tname=?) ";
@@ -106,6 +106,7 @@ public class SybaseIQEnvironment extends AbstractDbEnvironment {
 		} else {
 			qry += " (creator=user and  upper(procname) = upper(?))";
 		}
+		qry += " order by param_id ";
 
 		return readIntoParams(procName, qry);
 	}
@@ -202,13 +203,17 @@ public class SybaseIQEnvironment extends AbstractDbEnvironment {
 			String direction = rs.getString(4);
 			DbParameterAccessor.Direction paramDirection;
 			// if ( paramName.trim().equalsIgnoreCase(procName))
-			if (paramName.trim().length() == 0)
+			int parameterPosition = position;
+			if (paramName.trim().length() == 0) {
 				paramDirection = DbParameterAccessor.Direction.RETURN_VALUE;
-			else
+				parameterPosition = -1;
+			} else {
 				paramDirection = getParameterDirection(direction);
+				++position;
+			}
 			DbParameterAccessor dbp = new DbParameterAccessor(paramName,
 					paramDirection, getSqlType(dataType),
-					getJavaClass(dataType), position++);
+					getJavaClass(dataType), parameterPosition);
 			allParams.put(NameNormaliser.normaliseName(paramName), dbp);
 		}
 		rs.close();
