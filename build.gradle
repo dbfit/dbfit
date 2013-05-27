@@ -7,6 +7,7 @@ task cleanFitnesseroot(type:Exec) {
 
 task cleanDist << {
     delete 'dist'
+    delete 'zips'
 }
 
 task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAll', ':dbfit-java:libs']) << {
@@ -60,7 +61,8 @@ task bundle(type: Zip, dependsOn: [copyLocal, bundleFitsharp]) {
     description = 'creates the zip file for distributing dbfit'
     from 'dist'
     baseName 'dbfit-complete'
-    version dbfitVersion 
+    version dbfitVersion
+    destinationDir new File('zips')
 }
 
 task start(type: Exec, dependsOn: [copyLocal, bundleFitsharp]) {

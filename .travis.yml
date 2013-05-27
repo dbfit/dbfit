@@ -12,4 +12,4 @@ jdk:
 after_success:
   - "gradle bundle"
   - "gem install travis-artifacts"
-  - "travis-artifacts upload --path dbfit-complete.*.zip  --target-path artifacts/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID"
+  - "travis-artifacts upload --path zips --target-path artifacts/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID"
