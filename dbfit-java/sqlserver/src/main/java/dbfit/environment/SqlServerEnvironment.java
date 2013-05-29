@@ -95,13 +95,20 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
             // int length = rs.getInt(3);
             int direction = rs.getInt(4);
             Direction paramDirection;
-            if (paramName.trim().length() == 0)
+            
+            int parameterPosition = position;
+            
+            if (paramName.trim().length() == 0){
                 paramDirection = Direction.RETURN_VALUE;
-            else
+            	parameterPosition = -1;
+            }
+            else {
                 paramDirection = getParameterDirection(direction);
+            	++position;
+            }
             DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                     paramDirection, getSqlType(dataType),
-                    getJavaClass(dataType), position++);
+                    getJavaClass(dataType), parameterPosition);
             allParams.put(NameNormaliser.normaliseName(paramName), dbp);
         }
         rs.close();
