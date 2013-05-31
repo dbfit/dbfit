@@ -1,0 +1,37 @@
+!3 To extract values from output ref cursors, just store them in variables and use Query/Ordered Query
+
+!|Execute procedure|RCTest.TestRefCursor|
+|how much|lvl cursor?|
+|5|>>curs|
+
+!|Query|<<curs|
+|Username|Name?|User ID?|
+|Username1|User 1||
+|Username4|User 4||
+|Username3|User 3||
+|Username2|User 2||
+|Username5|User 5||
+
+{{{
+create or replace package RCTest as
+type URefCursor IS REF CURSOR RETURN USERS%ROWTYPE;
+procedure TestRefCursor (howmuch number,lvlcursor out URefCursor);
+end; 
+/
+
+create or replace package body RCTest as 
+procedure TestRefCursor (
+howmuch number,
+lvlcursor out URefCursor
+)
+as 
+begin
+ for i in 1..howmuch loop
+ 	insert into users(name, username) values ('User '||i, 'Username'||i);	
+ end loop;
+ OPEN lvlcursor FOR
+	  SELECT * FROM users;
+ end;
+end;	 
+/
+}}}

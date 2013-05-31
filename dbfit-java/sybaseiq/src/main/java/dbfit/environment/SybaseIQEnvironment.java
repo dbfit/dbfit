@@ -66,18 +66,8 @@ public class SybaseIQEnvironment extends AbstractDbEnvironment {
 	// map types
 	private static List<String> stringTypes = Arrays.asList(new String[] {
 			"VARCHAR", "CHAR" });
-	private static List<String> intTypes = Arrays.asList(new String[] {
-			"INTEGER", "INT" });
-	private static List<String> floatTypes = Arrays
-			.asList(new String[] { "REAL" });
-	private static List<String> doubleTypes = Arrays.asList(new String[] {
-			"FLOAT", "DOUBLE" });
-	private static List<String> longTypes = Arrays
-			.asList(new String[] { "BIGINT" });
-	private static List<String> shortTypes = Arrays.asList(new String[] {
-			"TINYINT", "SMALLINT" });
 	private static List<String> decimalTypes = Arrays.asList(new String[] {
-			"DECIMAL", "NUMERIC" });
+			"INTEGER", "INT", "DECIMAL", "NUMERIC"   });
 	private static List<String> timestampTypes = Arrays.asList(new String[] {
 			"SMALLDATETIME", "DATETIME", "TIMESTAMP", "DATE" });
 
@@ -106,7 +96,7 @@ public class SybaseIQEnvironment extends AbstractDbEnvironment {
 		} else {
 			qry += " (creator=user and  upper(procname) = upper(?))";
 		}
-		qry += " order by param_id ";
+		qry += " order by parm_id ";
 
 		return readIntoParams(procName, qry);
 	}
@@ -130,22 +120,11 @@ public class SybaseIQEnvironment extends AbstractDbEnvironment {
 			return java.sql.Types.VARCHAR;
 		if (decimalTypes.contains(dataType))
 			return java.sql.Types.NUMERIC;
-		if (intTypes.contains(dataType))
-			return java.sql.Types.INTEGER;
-		if (timestampTypes.contains(dataType))
+			if (timestampTypes.contains(dataType))
 			return java.sql.Types.TIMESTAMP;
 		if (timeTypes.contains(dataType))
 			return java.sql.Types.TIME;
-		if (floatTypes.contains(dataType))
-			return java.sql.Types.FLOAT;
-		if (doubleTypes.contains(dataType))
-			return java.sql.Types.DOUBLE;
-
-		if (longTypes.contains(dataType))
-			return java.sql.Types.BIGINT;
-		if (shortTypes.contains(dataType))
-			return java.sql.Types.SMALLINT;
-
+	
 		throw new UnsupportedOperationException("Type " + dataType
 				+ " is not supported");
 	}
@@ -156,20 +135,10 @@ public class SybaseIQEnvironment extends AbstractDbEnvironment {
 			return String.class;
 		if (decimalTypes.contains(dataType))
 			return BigDecimal.class;
-		if (intTypes.contains(dataType))
-			return Integer.class;
 		if (timestampTypes.contains(dataType))
 			return java.sql.Timestamp.class;
 		if (timeTypes.contains(dataType))
 			return java.sql.Time.class;
-		if (floatTypes.contains(dataType))
-			return Float.class;
-		if (doubleTypes.contains(dataType))
-			return Double.class;
-		if (longTypes.contains(dataType))
-			return Long.class;
-		if (shortTypes.contains(dataType))
-			return Short.class;
 
 		throw new UnsupportedOperationException("Type " + dataType
 				+ " is not supported");

@@ -1,0 +1,9 @@
+!3 Query Results do not have to be in the same order as table data
+
+|Query|SELECT '1' as n union SELECT '10' as n union SELECT '15' as n union SELECT '20' as n union SELECT '25' as n|
+|n|
+|1|
+|25|
+|10|
+|20|
+|15|

@@ -1,0 +1,6 @@
+
+Pipes (||) have special meaning both in FitNesse and Oracle - so they may break a query into several columns incorrectly: here is an example:
+
+|Query|!-select substring('|1',2) as x-!|
+|x|
+|1|
