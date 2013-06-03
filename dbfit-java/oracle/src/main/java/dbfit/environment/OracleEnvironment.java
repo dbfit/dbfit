@@ -354,6 +354,11 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
     public Map<String, DbParameterAccessor> getAllProcedureParameters(
             String procName, String params) throws SQLException {
+
+        String[] tempParams = params.split(",");
+        // Number of parameters defined on the test header
+        int nParams = tempParams.length;
+
         String[] qualifiers = NameNormaliser.normaliseName(procName).split(
                 "\\.");
         String cols = " argument_name, data_type, data_length,  IN_OUT, sequence ";
@@ -369,28 +374,20 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             qry += " (owner=user and package_name is null and object_name=?)";
         }
 
-        //Added to overcome the overload issue with procedures/functions 
+        // Added to overcome the overload issue with procedures/functions
         // inside a package
-        qry += " and NVL(overload, 1) = NVL((SELECT overload FROM (" +
-             "SELECT overload, sum(tr) tr, sum(trf) trf FROM (" +
-                   "SELECT overload, count(*) tr, 0 trf" +
-                  "  FROM all_arguments " +
-                  " WHERE data_level = 0 " +
-                  "	AND package_name = ? " +
-                  "	AND object_name	= ? " +
-                  "	AND position > 0 " +
-                  "	group by overload " +
-                  " UNION ALL " +
-                 " SELECT overload, 0 tr, count(*) trf " +
-                 "  FROM all_arguments " +
-                 " WHERE data_level = 0 " +
-                 "	AND package_name = ? " +
-                 "	AND object_name	= ? " +
-                 "	AND argument_name IN ( " + params + ")" +
-                 "	AND position > 0 " +
-                 "	group by overload) " +
-             "group by overload) " + 
-         " WHERE tr-trf = 0), 1)";
+        qry += " and NVL(overload, 1) = NVL((SELECT overload FROM ("
+                + "SELECT overload, sum(tr) tr, sum(trf) trf FROM ("
+                + "SELECT overload, count(*) tr, 0 trf"
+                + "  FROM all_arguments " + " WHERE data_level = 0 "
+                + " AND package_name = ? " + "  AND object_name = ? "
+                + " group by overload " + " UNION ALL "
+                + " SELECT overload, 0 tr, count(*) trf "
+                + "  FROM all_arguments " + " WHERE data_level = 0 "
+                + " AND package_name = ? " + "  AND object_name = ? "
+                + " AND NVL(argument_name, 'RETURN_ARG') IN ( " + params + ")"
+                + " group by overload) " + "group by overload) "
+                + " WHERE tr-trf = 0" + "   AND  trf = " + nParams + "), 1)";
 
         // map to public synonyms also
         if (qualifiers.length < 3 && (!Options.is(SKIP_ORACLE_SYNONYMS))) {
@@ -405,7 +402,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                 qry += " package_name is null and object_name=table_name and synonym_name=? ";
             }
         }
-        
+
         qry += " order by sequence ";
         if (qualifiers.length == 2) {
             String[] newQualifiers = new String[10];
