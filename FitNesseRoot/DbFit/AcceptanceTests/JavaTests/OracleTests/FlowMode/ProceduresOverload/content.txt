@@ -1,0 +1,46 @@
+!3 Function with an IN parameter
+
+!|Execute|!-
+create or replace function Toverload(param_first IN NUMBER) 
+return number
+as
+begin
+ return param_first;
+end;
+-!|
+
+
+!3 Procedure which overloads the function above
+
+!|Execute|!-
+create or replace procedure Toverload(param_first IN NUMBER) as
+begin
+ null;
+end;
+-!|
+
+
+!3 Procedure which overloads the two procedures above and the difference is on the output parameter
+
+!|Execute|!-
+create or replace procedure Toverload(param_first IN NUMBER, param_second out number) as
+begin
+ param_second := param_first;
+end;
+-!|
+
+
+!3 Testing if it is calling the first function
+!|execute procedure | Toverload |
+|param_first        | ?         |
+|1                  |1          |
+
+
+!3 Testing if it is calling the third function
+!|execute procedure | Toverload     |
+|param_first        | param_second? |
+|3                  |3              |
+
+
+
+
