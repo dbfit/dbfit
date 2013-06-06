@@ -81,6 +81,16 @@ The subsequent steps need to be followed on the project folder within the VM. To
 
 See the [ORACLE file](ORACLE.md).
 
+#### Running from the build
+
+DbFit can be run from within the build area by running:
+
+    $ gradle start
+
+This will compile the source, copy the jars and resources to the `dist` directory and run up FitNesse with DbFit installed.  Point your browser to [http://localhost:8085](http://localhost:8085) to access the running instance.
+
+Please be aware that if you change any code whilst the `gradle start` command is running you will have to stop the command and re-run it in order to compile and pick up the changes.  To stop the running instance it is preferable to point your browser to [http://localhost:8085/?shutdown](http://localhost:8085/?shutdown) rather than killing it at the command line, i.e. don't do a Ctrl+C or equivalent.
+
 #### IDE Integration
 
 ##### IntelliJ
