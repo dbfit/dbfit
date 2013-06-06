@@ -3,6 +3,8 @@ package dbfit.util.oracle;
 import static dbfit.util.oracle.OraclePlSqlGenerateUtils.callExpr;
 import static dbfit.util.oracle.OraclePlSqlGenerateUtils.getSpCallLeftSide;
 
+import org.apache.commons.io.IOUtils;
+
 public class OracleBooleanSpInnerWrapperGenerator {
 
     OracleBooleanSpCommand cmd;
@@ -13,17 +15,17 @@ public class OracleBooleanSpInnerWrapperGenerator {
 
     public void generate() {
         genWrapperHeader();
-        append("\n");
-        append("    is\n");
+        append(IOUtils.LINE_SEPARATOR);
+        append("    is").append(IOUtils.LINE_SEPARATOR);
         genWrapperVariables();
-        append("    begin\n");
+        append("    begin").append(IOUtils.LINE_SEPARATOR);
         append("        ");
         genSpCallWithinWrapper();
-        append(";\n");
+        append(";").append(IOUtils.LINE_SEPARATOR);
         assignOutputVariables();
         genWrapperReturnStatement();
-        append("    end ").append(getWrapperName()).append(";\n");
-        append("\n");
+        append("    end ").append(getWrapperName()).append(";").append(IOUtils.LINE_SEPARATOR);
+        append(IOUtils.LINE_SEPARATOR);
     }
 
     private String getWrapperArguments() {
@@ -84,7 +86,7 @@ public class OracleBooleanSpInnerWrapperGenerator {
     private void genWrapperReturnStatement() {
         if (cmd.isFunction()) {
             append("        ").append("return ")
-               .append(getWrapperReturnVar()).append(";\n");
+               .append(getWrapperReturnVar()).append(";").append(IOUtils.LINE_SEPARATOR);
         }
     }
 
