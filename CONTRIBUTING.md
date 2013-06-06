@@ -111,9 +111,13 @@ An Eclipse project can be created by running:
 
         dbfit$ gradle bundle
 
-*  Start fitness as a webservice on http://localhost:8085
+*  Start fitnesse as a webservice on http://localhost:8085
 
         dbfit$ gradle start
+
+This will compile the source, copy the jars and resources to the `dist` directory and run up FitNesse with DbFit installed.  Point your browser to [http://localhost:8085](http://localhost:8085) to access the running instance (please adjust `localhost` to match the host on which the instance is actually running).
+
+Please be aware that if you change any code whilst the `gradle start` command is running you will have to stop the command and re-run it in order to compile and pick up the changes.  To stop the running instance it is preferable to point your browser to [http://localhost:8085/?shutdown](http://localhost:8085/?shutdown) rather than killing it at the command line, i.e. don't do a Ctrl+C or equivalent (again adjust `localhost` to match the host on which the instance is actually running).
 
 ### Useful development commands
 
