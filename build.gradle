@@ -1,8 +1,13 @@
 ext.dbfitVersion = '2.0.0-RC5'
 
 task cleanFitnesseroot(type:Exec) {
-    executable '/bin/sh'
-    args '-c', 'git clean -d -x -f FitNesseRoot/'
+    if (onWindows()) {
+        executable 'cmd.exe'
+        args '/C', 'git clean -d -x -f FitNesseRoot/'
+    } else {
+        executable '/bin/sh'
+        args '-c', 'git clean -d -x -f FitNesseRoot/'
+    }
 }
 
 task cleanDist << {
@@ -68,8 +73,17 @@ task bundle(type: Zip, dependsOn: [copyLocal, bundleFitsharp]) {
 task start(type: Exec, dependsOn: [copyLocal, bundleFitsharp]) {
     workingDir './dist'
     description = 'starts fitness with dbfit'
-    executable '/bin/sh'
-    args '-c', './startFitnesse.sh'
+    if (onWindows()) {
+        executable 'cmd.exe'
+        args '/C', 'startFitnesse.bat'
+    } else {
+        executable '/bin/sh'
+        args '-c', './startFitnesse.sh'
+    }
 }
 
 task fastbuild(dependsOn: [':dbfit-java:core:check', ':dbfit-java:derby:check'])
+
+def onWindows() {
+    System.properties['os.name'].toLowerCase().contains('windows')
+}
