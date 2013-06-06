@@ -2,6 +2,8 @@ package dbfit.util.oracle;
 
 import static dbfit.util.DbParameterAccessor.Direction;
 
+import org.apache.commons.io.IOUtils;
+
 public class OracleSpParameter extends OracleSpParameterBase {
 
     public static OracleSpParameter newInstance(String paramName, Direction direction,
@@ -78,7 +80,7 @@ public class OracleSpParameter extends OracleSpParameterBase {
 
             initializeVariable();
 
-            out.append(";\n");
+            out.append(";").append(IOUtils.LINE_SEPARATOR);
         }
     }
 
@@ -88,7 +90,7 @@ public class OracleSpParameter extends OracleSpParameterBase {
                 .append(getWrapperArgumentName())
                 .append(" := ")
                 .append(bool2chr(getWrapperVarName()))
-                .append(";\n");
+                .append(";").append(IOUtils.LINE_SEPARATOR);
         }
     }
 
