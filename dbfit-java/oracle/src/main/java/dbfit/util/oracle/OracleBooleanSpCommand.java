@@ -2,8 +2,6 @@ package dbfit.util.oracle;
 
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
-
 import static dbfit.util.oracle.OraclePlSqlGenerateUtils.callExpr;
 import static dbfit.util.oracle.OraclePlSqlGenerateUtils.getSpCallLeftSide;
 import static dbfit.util.oracle.OracleBooleanConversions.*;
@@ -46,16 +44,16 @@ public class OracleBooleanSpCommand extends OracleBooleanSpCommandBase {
      * Generate the whole database call on the configured SpGeneratorOutput
      */
     public void generate() {
-        append("declare").append(IOUtils.LINE_SEPARATOR);
+        append("declare\n");
         genBool2Chr();
         genChr2Bool();
         genWrapperSp();
-        append("begin").append(IOUtils.LINE_SEPARATOR);
+        append("begin\n");
         append("    ");
         genCall();
-        append(";").append(IOUtils.LINE_SEPARATOR);
-        append("end;").append(IOUtils.LINE_SEPARATOR);
-        append(IOUtils.LINE_SEPARATOR);
+        append(";\n");
+        append("end;\n");
+        append("\n");
     }
 
     private void genWrapperSp() {
