@@ -1,0 +1,36 @@
+!3 To extract CLOB values from output ref cursors, just store the cursor in variables and use Query/Ordered Query
+
+|Insert|clobtypetest|
+|s1|c2|
+|1|This is a clob of distinction|
+|2|Obviously, so is this one...|
+
+!|Execute procedure|RCLOBTest.TestRefCursor|
+|how many|out cursor?|
+|1|>>curs|
+
+!|Query|<<curs|
+|s1|c2?|
+|1|This is a clob of distinction|
+
+{{{
+create or replace package RCLOBTest as
+type URefCursor IS REF CURSOR RETURN clobtypetest%ROWTYPE;
+procedure TestRefCursor (howmany number,outcursor out URefCursor);
+end; 
+/
+
+create or replace package body RCLOBTest as 
+procedure TestRefCursor (
+howmany number,
+outcursor out URefCursor
+)
+as 
+begin
+ OPEN outcursor FOR
+	  SELECT * FROM clobtypetest
+	    WHERE s1<=howmany;
+ end;
+end;	 
+/
+}}}

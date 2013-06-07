@@ -84,6 +84,28 @@ begin
 end;
 /
 
+Create table clobtypetest (s1 number(5), c2 CLOB);
+/
+
+create or replace package RCLOBTest as
+type URefCursor IS REF CURSOR RETURN clobtypetest%ROWTYPE;
+procedure TestRefCursor (howmany number,outcursor out URefCursor);
+end; 
+/
+
+create or replace package body RCLOBTest as 
+procedure TestRefCursor (
+howmany number,
+outcursor out URefCursor
+)
+as 
+begin
+ OPEN outcursor FOR
+    SELECT * FROM clobtypetest
+	    WHERE s1<=howmany;
+ end;
+end;	 
+/
 
 set define on
 
