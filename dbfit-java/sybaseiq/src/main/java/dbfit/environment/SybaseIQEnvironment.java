@@ -65,11 +65,22 @@ public class SybaseIQEnvironment extends AbstractDbEnvironment {
 	// List interface has sequential search, so using list instead of array to
 	// map types
 	private static List<String> stringTypes = Arrays.asList(new String[] {
-			"VARCHAR", "CHAR" });
+			"VARCHAR", "CHAR", "LONG VARCHAR" });
 	private static List<String> decimalTypes = Arrays.asList(new String[] {
-			"INTEGER", "INT", "DECIMAL", "NUMERIC"   });
+			"DECIMAL", "NUMERIC"   });
+	private static List<String> intTypes = Arrays.asList(new String[] {
+            "TINYINT", "SMALLINT", "INT", "INTEGER" });
+    private static List<String> longTypes = Arrays.asList(new String[] {
+            "BIGINT", "UNSIGNED INTEGER", "UNSIGNED INT" });
 	private static List<String> timestampTypes = Arrays.asList(new String[] {
-			"SMALLDATETIME", "DATETIME", "TIMESTAMP", "DATE" });
+			"SMALLDATETIME", "DATETIME", "TIMESTAMP" });
+	private static List<String> dateTypes = Arrays
+            .asList(new String[] { "DATE" });
+	private static List<String> floatTypes = Arrays
+	            .asList(new String[] { "FLOAT" });
+	private static List<String> doubleTypes = Arrays
+	            .asList(new String[] { "DOUBLE" });
+
 
 	private static List<String> timeTypes = Arrays
 			.asList(new String[] { "TIME" });
@@ -115,13 +126,25 @@ public class SybaseIQEnvironment extends AbstractDbEnvironment {
 	private static int getSqlType(String dataType) {
 		// todo:strip everything from first blank
 		dataType = normaliseTypeName(dataType);
+		
+		
 
-		if (stringTypes.contains(dataType))
-			return java.sql.Types.VARCHAR;
-		if (decimalTypes.contains(dataType))
-			return java.sql.Types.NUMERIC;
-			if (timestampTypes.contains(dataType))
-			return java.sql.Types.TIMESTAMP;
+        if (stringTypes.contains(dataType))
+            return java.sql.Types.VARCHAR;
+        if (decimalTypes.contains(dataType))
+            return java.sql.Types.NUMERIC;
+        if (intTypes.contains(dataType))
+            return java.sql.Types.INTEGER;
+        if (floatTypes.contains(dataType))
+            return java.sql.Types.FLOAT;
+        if (doubleTypes.contains(dataType))
+            return java.sql.Types.DOUBLE;
+        if (longTypes.contains(dataType))
+            return java.sql.Types.BIGINT;
+        if (timestampTypes.contains(dataType))
+            return java.sql.Types.TIMESTAMP;
+        if (dateTypes.contains(dataType))
+            return java.sql.Types.DATE;
 		if (timeTypes.contains(dataType))
 			return java.sql.Types.TIME;
 	
@@ -131,12 +154,22 @@ public class SybaseIQEnvironment extends AbstractDbEnvironment {
 
 	public Class<?> getJavaClass(String dataType) {
 		dataType = normaliseTypeName(dataType);
-		if (stringTypes.contains(dataType))
-			return String.class;
-		if (decimalTypes.contains(dataType))
-			return BigDecimal.class;
-		if (timestampTypes.contains(dataType))
+        if (stringTypes.contains(dataType))
+            return String.class;
+        if (decimalTypes.contains(dataType))
+            return BigDecimal.class;
+        if (intTypes.contains(dataType))
+            return Integer.class;
+        if (floatTypes.contains(dataType))
+            return Float.class;
+        if (doubleTypes.contains(dataType))
+            return Double.class;
+        if (longTypes.contains(dataType))
+            return Long.class;
+    	if (timestampTypes.contains(dataType))
 			return java.sql.Timestamp.class;
+    	if (dateTypes.contains(dataType))
+			return java.sql.Date.class;
 		if (timeTypes.contains(dataType))
 			return java.sql.Time.class;
 
