@@ -85,7 +85,6 @@ end;
 /
 
 Create table clobtypetest (s1 number(5), c2 CLOB);
-/
 
 create or replace package RCLOBTest as
 type URefCursor IS REF CURSOR RETURN clobtypetest%ROWTYPE;
