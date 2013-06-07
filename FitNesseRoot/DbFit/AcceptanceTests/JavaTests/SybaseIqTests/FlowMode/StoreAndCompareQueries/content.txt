@@ -1,0 +1,17 @@
+|execute|create table tn(n integer, name varchar(100))|
+
+|insert|tn|
+|n|name|
+|5|T1|
+|10|T2|
+|15|T3|
+
+
+|Store query|!-select '5' as n, 'T1' as name union select '10' as n, 'T2' as name union select '15' as n ,'T3' as name-!|fromdual|
+
+|store query|select * from tn|fromtable|
+
+|compare stored queries|fromtable|fromdual|
+|n?|name|
+
+|execute|drop table tn|

@@ -145,3 +145,10 @@ project('teradata') {
     }
 }
 
+project('sybaseiq') {
+    description = 'DBFit SybaseIQ engine'
+
+    dependencies {
+        compile project(':dbfit-java:core')
+    }
+}

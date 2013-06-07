@@ -1,0 +1,7 @@
+|Store query|!- select '1' as n, 'T1' as name union select '2' as n, 'T2' as name union select '3' as n ,'T3' as name-!|fromdual|
+
+|query|<<fromdual|
+|n|name?|
+|1|T1|
+|2|T2|
+|3|T3|

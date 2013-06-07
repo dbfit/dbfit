@@ -1,0 +1,19 @@
+!3 Query Stats 
+
+|Query Stats|
+|query|row count?|is empty?|
+|SELECT 1 as n union select 2 as n|2|false|
+
+
+!|Query Stats|
+|query | row count? |is empty?|
+| SELECT * from dummy where 0=1 |0|true|
+
+!|Query Stats|
+|table name| row count? |is empty?|
+| dummy |1|false|
+
+
+!|Query Stats|
+|table name| where|row count? |is empty?|
+| dummy |1=0|0|true|

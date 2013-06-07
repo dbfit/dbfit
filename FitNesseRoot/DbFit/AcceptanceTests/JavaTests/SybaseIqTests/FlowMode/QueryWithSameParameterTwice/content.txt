@@ -1,0 +1,15 @@
+|Set Parameter|depth|10|
+
+|Query|SELECT ROWNUM+:depth n FROM ( SELECT 1 FROM dual CONNECT BY LEVEL <= :depth )|
+|n|
+|12|
+|11|
+|13|
+|14|
+|15|
+|16|
+|17|
+|18|
+|19|
+|20|
+

@@ -1,0 +1,8 @@
+This table matches only n, so it will report that 4 is a wrong value for 2
+
+#|Query|SELECT 1 as n, 2 as l union SELECT 2 as n, 4 as l union SELECT 3 as n, 6 as l|
+|Query|SELECT convert(int,1) as n, convert(int,2) as l|
+|n|l?|
+|1|2|
+|2|fail[7]|
+|3|6|

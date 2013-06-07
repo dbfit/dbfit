@@ -1,0 +1,14 @@
+This stored proc tests output parameters - CalcLength returns string length as second output param
+
+|Execute|!-create or replace procedure CalcLength(name varchar, out strlength integer)as
+begin
+set strlength=length(name)
+end-!|
+
+
+!|Execute Procedure |CalcLength|
+|name |str length?|
+|mika |  4|
+|paradajz |  8|
+|saeiluhrweurhfi7fhi7rhgf |  24|
+

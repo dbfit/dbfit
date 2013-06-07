@@ -1,0 +1,22 @@
+|Query|SELECT null n|
+|n?|
+|fail[3]|
+
+|Execute|!- Create or replace PROCEDURE nulls_back(
+OUT out1    VARCHAR
+ ,OUT out2    INTEGER
+ ,OUT out3    DATE
+)
+AS
+BEGIN
+set out1 = null
+set out2 = null
+set out3 = null
+END;
+-!|
+
+!|Execute Procedure|nulls_back|
+|out1?|out2?|out3?|
+|fail[ABC]|fail[10]|fail[2008-01-01]|
+
+ 
