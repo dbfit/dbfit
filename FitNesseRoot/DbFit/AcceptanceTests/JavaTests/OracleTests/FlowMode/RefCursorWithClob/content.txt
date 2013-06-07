@@ -1,0 +1,47 @@
+!3 To extract CLOB values from output ref cursors, just store the cursor in variables and use Query/Ordered Query
+
+|Insert|clobtypetest|
+|s1|c2|
+|1|This is a clob of distinction|
+|2|Obviously, so is this one...|
+
+!|Execute procedure|RCLOBTest.TestRefCursor|
+|how many|out cursor?|
+|1|>>curs|
+
+!|Query|<<curs|
+|s1|c2?|
+|1|This is a clob of distinction|
+
+!3 Troubleshooting
+
+If this test fails with an exception when querying the value from the ''curs'' variable and the standard error output shows...
+{{{
+java.sql.SQLException: Invalid Arguments
+	at oracle.jdbc.rowset.OracleSerialClob.getSubString(OracleSerialClob.java:168)
+	at dbfit.environment.OracleEnvironment$OracleSerialClobNormaliser.normalise(OracleEnvironment.java:103)
+	at dbfit.util.DbParameterAccessor.normaliseValue(DbParameterAccessor.java:68)
+}}}
+Then this is (probably) caused by using an earlier Oracle JDBC driver than version 11.  Prior to the 11g ojdbc driver the start position of a CLOB is 0 (zero) whereas from 11g onwards the start position is 1 and the !-DbFit-! code expects the 11g driver.
+
+{{{
+create or replace package RCLOBTest as
+type URefCursor IS REF CURSOR RETURN clobtypetest%ROWTYPE;
+procedure TestRefCursor (howmany number,outcursor out URefCursor);
+end; 
+/
+
+create or replace package body RCLOBTest as 
+procedure TestRefCursor (
+howmany number,
+outcursor out URefCursor
+)
+as 
+begin
+ OPEN outcursor FOR
+	  SELECT * FROM clobtypetest
+	    WHERE s1<=howmany;
+ end;
+end;	 
+/
+}}}

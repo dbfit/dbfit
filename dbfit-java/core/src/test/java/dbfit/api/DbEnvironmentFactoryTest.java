@@ -1,12 +1,8 @@
-package dbfit.environment;
+package dbfit.api;
 
-import dbfit.api.*;
-
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.Before;
-import org.junit.Ignore;
-import static org.junit.Assert.*;
 import org.junit.rules.ExpectedException;
 
 public class DbEnvironmentFactoryTest {
@@ -38,7 +34,7 @@ public class DbEnvironmentFactoryTest {
         expectedEx.expectMessage("Cannot load " + SOME_ENVIRONMENT_NAME
                 + " database driver " + NE_DRIVER_CLASS_NAME);
 
-        DBEnvironment env = factory.createEnvironmentInstance(SOME_ENVIRONMENT_NAME);
+        factory.createEnvironmentInstance(SOME_ENVIRONMENT_NAME);
     }
 }
 
