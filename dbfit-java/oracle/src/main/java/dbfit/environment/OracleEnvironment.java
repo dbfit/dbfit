@@ -86,24 +86,6 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         }
     }
 
-    public static class OracleSerialClobNormaliser implements TypeNormaliser {
-        private static final int MAX_CLOB_LENGTH = 10000;
-
-        public Object normalise(Object o) throws SQLException {
-            if (o == null)
-                return null;
-            if (!(o instanceof oracle.jdbc.rowset.OracleSerialClob)) {
-                throw new UnsupportedOperationException(
-                        "OracleSerialClobNormaliser cannot work with " + o.getClass());
-            }
-            oracle.jdbc.rowset.OracleSerialClob clob = (oracle.jdbc.rowset.OracleSerialClob) o;
-            if (clob.length() > MAX_CLOB_LENGTH)
-                throw new UnsupportedOperationException("Clobs larger than "
-                        + MAX_CLOB_LENGTH + " bytes are not supported by DBFIT");
-            return clob.getSubString(1, (int)clob.length());
-        }
-    }
-
     public static class OracleRefNormaliser implements TypeNormaliser {
         public Object normalise(Object o) throws SQLException {
             if (o == null)
@@ -287,7 +269,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                 new OracleDateNormaliser());
         TypeNormaliserFactory.setNormaliser(oracle.sql.CLOB.class,
                 new OracleClobNormaliser());
-		TypeNormaliserFactory.setNormaliser(oracle.jdbc.rowset.OracleSerialClob.class,
+        TypeNormaliserFactory.setNormaliser(oracle.jdbc.rowset.OracleSerialClob.class,
                 new OracleSerialClobNormaliser());
         TypeNormaliserFactory.setNormaliser(java.sql.Date.class,
                 new SqlDateNormaliser());
