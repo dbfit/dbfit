@@ -97,6 +97,11 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
         throw new UnsupportedOperationException();
     }
 
+    public Map<String, DbParameterAccessor> getAllProcedureParameters(
+            String s, String params) throws SQLException {
+        return getAllProcedureParameters(s);
+    }
+    
     public Class<?> getJavaClass(String dataType) {
         return typeMapper.getJavaClassForDBType(dataType);
     }

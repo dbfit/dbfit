@@ -26,6 +26,8 @@ public interface DBEnvironment {
     Map<String, DbParameterAccessor> getAllProcedureParameters(String procName)
             throws SQLException;
 
+    Map<String, DbParameterAccessor> getAllProcedureParameters(String procName, String params)
+            throws SQLException;
     /**
      * Meta-data retrieval method that provides a list of columns a given stored
      * table or view. The name may contain a schema qualifier.

@@ -351,6 +351,10 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         return readIntoParams(qualifiers, qry);
     }
 
+    public Map<String, DbParameterAccessor> getAllProcedureParameters(
+            String procName, String params) throws SQLException {
+        return getAllProcedureParameters(procName);
+    }
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
         String query = "select * from " + tableOrViewName + " where 1 = 2";

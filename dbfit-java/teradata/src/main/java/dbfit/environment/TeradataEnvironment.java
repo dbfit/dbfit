@@ -206,6 +206,11 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
         return readIntoParams(qualifiers, qry);
     }
+    
+    public Map<String, DbParameterAccessor> getAllProcedureParameters(
+            String procName, String params) throws SQLException {
+        return getAllProcedureParameters(procName);
+    }
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {

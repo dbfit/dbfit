@@ -189,5 +189,10 @@ public class DB2Environment extends AbstractDbEnvironment {
         qry += " order by ordinal";
         return readIntoParams(qualifiers, qry);
     }
+    
+    public Map<String, DbParameterAccessor> getAllProcedureParameters(
+            String procName, String params) throws SQLException {
+        return getAllProcedureParameters(procName);
+    }
 }
 

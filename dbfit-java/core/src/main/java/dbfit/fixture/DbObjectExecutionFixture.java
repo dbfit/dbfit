@@ -104,7 +104,7 @@ public abstract class DbObjectExecutionFixture extends Fixture{
         for (int i = 0; headerCells != null; i++, headerCells = headerCells.more) {
 			String name=headerCells.text();
 			accessors[i]=dbObject.getDbParameterAccessor(name, 
-        			isOutput(name)? OUTPUT:INPUT);
+        			isOutput(name)? OUTPUT:INPUT, givenParams);
 			if (accessors[i]==null) {
 					exception (headerCells,new IllegalArgumentException("Parameter/column "+name+" not found"));
 					return null;
