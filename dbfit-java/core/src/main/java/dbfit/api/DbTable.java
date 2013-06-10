@@ -54,6 +54,12 @@ public class DbTable implements DbObject {
         return accessor;
     }
 
+    
+    public DbParameterAccessor getDbParameterAccessor(String paramName,
+            Direction expectedDirection, String params) {
+        
+        return getDbParameterAccessor(paramName, expectedDirection);
+    }
     public DBEnvironment getDbEnvironment() {
         return dbEnvironment;
     }

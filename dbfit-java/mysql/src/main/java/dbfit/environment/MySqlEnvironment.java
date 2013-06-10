@@ -223,5 +223,11 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
         }
         return allParams;
     }
+    
+    
+    public Map<String, DbParameterAccessor> getAllProcedureParameters(
+            String procName, String params) throws SQLException {
+        return getAllProcedureParameters(procName);
+    }
 }
 

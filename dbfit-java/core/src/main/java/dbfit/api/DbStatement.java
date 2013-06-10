@@ -26,6 +26,11 @@ public class DbStatement implements DbObject {
 	public DbParameterAccessor getDbParameterAccessor(String paramName, Direction expectedDirection){
 		return null;
 	}
+	
+	public DbParameterAccessor getDbParameterAccessor(String paramName, Direction expectedDirection, String params){
+		return getDbParameterAccessor(paramName, expectedDirection);
+	}
+	
 	public DBEnvironment getDbEnvironment() {
 		return environment;
 	}
