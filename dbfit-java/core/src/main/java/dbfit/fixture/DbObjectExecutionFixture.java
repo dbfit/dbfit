@@ -90,7 +90,7 @@ public abstract class DbObjectExecutionFixture extends Fixture{
 		        if (headerCellsAux.text() == "?") {
 		            //Adding this NVL to be used on a query performed on the
 		            // environment class: getAllProcedureParameters
-		            givenParams += "NVL('" + headerCellsAux.text() + "','RETURN_NAME')";
+		            givenParams += "NVL('" + headerCellsAux.text() + "','RETURN_ARG')";
 		        } else {
 		            givenParams += "upper('" + headerCellsAux.text() + "')";
 		        }
