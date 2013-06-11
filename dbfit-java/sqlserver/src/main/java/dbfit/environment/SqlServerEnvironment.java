@@ -222,10 +222,6 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
                         + " where p.object_id = OBJECT_ID(?) order by parameter_id ");
 
     }
-    
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(
-            String procName, String params) throws SQLException {
-        return getAllProcedureParameters(procName);
-    }
+
 }
 

@@ -190,9 +190,5 @@ public class DB2Environment extends AbstractDbEnvironment {
         return readIntoParams(qualifiers, qry);
     }
     
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(
-            String procName, String params) throws SQLException {
-        return getAllProcedureParameters(procName);
-    }
 }
 
