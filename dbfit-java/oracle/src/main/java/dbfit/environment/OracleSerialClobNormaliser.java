@@ -8,8 +8,8 @@ public class OracleSerialClobNormaliser implements TypeNormaliser {
 
     private static final int MAX_CLOB_LENGTH = 10000;
 
-	@Override
-	public Object normalise(Object o) throws SQLException {
+    @Override
+    public Object normalise(Object o) throws SQLException {
         if (o == null)
             return null;
         if (!(o instanceof oracle.jdbc.rowset.OracleSerialClob)) {
@@ -21,6 +21,6 @@ public class OracleSerialClobNormaliser implements TypeNormaliser {
             throw new UnsupportedOperationException("Clobs larger than "
                     + MAX_CLOB_LENGTH + " bytes are not supported by DBFIT");
         return clob.getSubString(1, (int)clob.length());
-	}
+    }
 
 }
