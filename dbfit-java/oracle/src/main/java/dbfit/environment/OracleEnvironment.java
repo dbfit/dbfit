@@ -5,7 +5,6 @@ import dbfit.api.AbstractDbEnvironment;
 import dbfit.api.DbStoredProcedureCall;
 import dbfit.util.*;
 import oracle.jdbc.OracleTypes;
-import oracle.jdbc.rowset.OracleCachedRowSet;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -22,81 +21,6 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         public static Object parse(String s) throws Exception {
             return new oracle.sql.TIMESTAMP(
                     (java.sql.Timestamp) SqlTimestampParseDelegate.parse(s));
-        }
-    }
-
-    public static class OracleTimestampNormaliser implements TypeNormaliser {
-        public Object normalise(Object o) throws SQLException {
-            if (o == null)
-                return null;
-            if (!(o instanceof oracle.sql.TIMESTAMP)) {
-                throw new UnsupportedOperationException(
-                        "OracleTimestampNormaliser cannot work with "
-                                + o.getClass());
-            }
-            oracle.sql.TIMESTAMP ts = (oracle.sql.TIMESTAMP) o;
-            return ts.timestampValue();
-        }
-    }
-
-    public static class OracleDateNormaliser implements TypeNormaliser {
-        public Object normalise(Object o) throws SQLException {
-            if (o == null)
-                return null;
-            if (!(o instanceof oracle.sql.DATE)) {
-                throw new UnsupportedOperationException(
-                        "OracleDateNormaliser cannot work with " + o.getClass());
-            }
-            oracle.sql.DATE ts = (oracle.sql.DATE) o;
-            return ts.timestampValue();
-        }
-    }
-
-    // transparently convert outcoming sql date into sql timestamps
-    public static class SqlDateNormaliser implements TypeNormaliser {
-        public Object normalise(Object o) throws SQLException {
-            if (o == null)
-                return null;
-            if (!(o instanceof java.sql.Date)) {
-                throw new UnsupportedOperationException(
-                        "SqlDateNormaliser cannot work with " + o.getClass());
-            }
-            java.sql.Date ts = (java.sql.Date) o;
-            return new java.sql.Timestamp(ts.getTime());
-        }
-    }
-
-    public static class OracleClobNormaliser implements TypeNormaliser {
-        private static final int MAX_CLOB_LENGTH = 10000;
-
-        public Object normalise(Object o) throws SQLException {
-            if (o == null)
-                return null;
-            if (!(o instanceof oracle.sql.CLOB)) {
-                throw new UnsupportedOperationException(
-                        "OracleClobNormaliser cannot work with " + o.getClass());
-            }
-            oracle.sql.CLOB clob = (oracle.sql.CLOB) o;
-            if (clob.length() > MAX_CLOB_LENGTH)
-                throw new UnsupportedOperationException("Clobs larger than "
-                        + MAX_CLOB_LENGTH + "bytes are not supported by DBFIT");
-            char[] buffer = new char[MAX_CLOB_LENGTH];
-            int total = clob.getChars(1, MAX_CLOB_LENGTH, buffer);
-            return String.valueOf(buffer, 0, total);
-        }
-    }
-
-    public static class OracleRefNormaliser implements TypeNormaliser {
-        public Object normalise(Object o) throws SQLException {
-            if (o == null)
-                return null;
-            if (!(o instanceof ResultSet))
-                throw new UnsupportedOperationException(
-                        "OracleRefNormaliser cannot work on " + o.getClass());
-            ResultSet rs = (ResultSet) o;
-            OracleCachedRowSet ocrs = new OracleCachedRowSet();
-            ocrs.populate(rs);
-            return ocrs;
         }
     }
 
@@ -269,6 +193,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                 new OracleDateNormaliser());
         TypeNormaliserFactory.setNormaliser(oracle.sql.CLOB.class,
                 new OracleClobNormaliser());
+        TypeNormaliserFactory.setNormaliser(oracle.jdbc.rowset.OracleSerialClob.class,
+                new OracleSerialClobNormaliser());
         TypeNormaliserFactory.setNormaliser(java.sql.Date.class,
                 new SqlDateNormaliser());
         try {
