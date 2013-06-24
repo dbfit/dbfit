@@ -44,6 +44,8 @@ show_comments: false
 
 ### [What's new](/dbfit/docs/whats-new.html) <small>The changes in each release.</small>
 
+### [The team behind DbFit](/dbfit/docs/the-team-behind-dbfit.html) <small>Which part of DbFit is maintained by whom.</small>
+
 ### [Contributing](https://github.com/benilovj/dbfit/blob/master/CONTRIBUTING.md) <small>Contributing code or documentation improvements to DbFit.</small>
 
 ### [DbFit: past and present](http://quickpeople.wordpress.com/2013/03/21/dbfit-the-past-and-present/) <small>A brief history of the project and its variants.</small>
