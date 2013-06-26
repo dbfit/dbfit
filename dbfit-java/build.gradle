@@ -9,6 +9,12 @@ allprojects {
     apply plugin: 'java'
     sourceCompatibility = 1.6
     targetCompatibility = 1.6
+
+    apply plugin: 'checkstyle'
+
+    checkstyle {
+        configFile = new File(parent.projectDir, "config/checkstyle/checkstyle.xml")
+    }
 }
 
 subprojects {
