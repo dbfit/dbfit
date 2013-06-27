@@ -49,7 +49,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
 
     protected String getConnectionString(String dataSource, String database) {
         return "jdbc:sqlserver://" + getInstanceString(dataSource)
-                + ";database=" + database;
+                + ";databaseName=" + database;
     }
 
     private static String paramNamePattern = "@([A-Za-z0-9_]+)";
