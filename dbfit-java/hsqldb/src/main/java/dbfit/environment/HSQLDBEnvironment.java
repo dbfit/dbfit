@@ -96,7 +96,7 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
             throws SQLException {
         throw new UnsupportedOperationException();
     }
-
+    
     public Class<?> getJavaClass(String dataType) {
         return typeMapper.getJavaClassForDBType(dataType);
     }

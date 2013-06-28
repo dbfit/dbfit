@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -227,6 +228,10 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
                             + "Make sure your database is running and that you have connected before performing any queries.");
         }
     }
-
+    
+    public Map<String, DbParameterAccessor> getAllProcedureParameters(String procName, String params)
+            throws SQLException {
+        return null;
+    }
 }
 

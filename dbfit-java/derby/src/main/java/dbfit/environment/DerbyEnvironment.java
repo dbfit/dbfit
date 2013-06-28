@@ -85,7 +85,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
             String procName) throws SQLException {
         throw new UnsupportedOperationException();
     }
-
+    
     public Class<?> getJavaClass(final String dataType) {
         return typeMapper.getJavaClassForDBType(dataType);
     }

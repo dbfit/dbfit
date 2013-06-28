@@ -77,12 +77,34 @@ public abstract class DbObjectExecutionFixture extends Fixture{
 	private static DbParameterAccessor[] EMPTY=new DbParameterAccessor[0];
 	/** initialise db parameters for the dbObject based on table header cells */
     private DbParameterAccessor[] getAccessors( Parse headerCells) throws SQLException{
+        String givenParams = ""; //To store the paramerters defined on the test definition
+        Parse headerCellsAux = headerCells; //To store the original header cells to be used to get the given Parameters
+        
         if (headerCells == null) return EMPTY;
 		DbParameterAccessor accessors[]=new DbParameterAccessor[headerCells.size()];
+		
+		//Looping on the header of the test Cells
+		for (int k = 0; headerCellsAux != null; k++, headerCellsAux = headerCellsAux.more) {
+		    //Adding parameters to the variable
+		    if (k == 0) {
+		        if (headerCellsAux.text() == "?") {
+		            //Adding this NVL to be used on a query performed on the
+		            // environment class: getAllProcedureParameters
+		            givenParams += "NVL('" + headerCellsAux.text() + "','RETURN_ARG')";
+		        } else {
+		            givenParams += "upper('" + headerCellsAux.text() + "')";
+		        }
+		    } else {
+		        givenParams += ", " + "upper('" + headerCellsAux.text() + "')";
+		    }
+		}
+		
+		givenParams = givenParams.replace("?", "");
+		
         for (int i = 0; headerCells != null; i++, headerCells = headerCells.more) {
 			String name=headerCells.text();
 			accessors[i]=dbObject.getDbParameterAccessor(name, 
-        			isOutput(name)? OUTPUT:INPUT);
+        			isOutput(name)? OUTPUT:INPUT, givenParams);
 			if (accessors[i]==null) {
 					exception (headerCells,new IllegalArgumentException("Parameter/column "+name+" not found"));
 					return null;
