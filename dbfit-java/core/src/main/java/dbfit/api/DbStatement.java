@@ -26,7 +26,10 @@ public class DbStatement implements DbObject {
 	public DbParameterAccessor getDbParameterAccessor(String paramName, Direction expectedDirection){
 		return null;
 	}
-	public DBEnvironment getDbEnvironment() {
-		return environment;
-	}
+
+    @Override
+    public int getExceptionCode(SQLException e) {
+        return environment.getExceptionCode(e);
+    }
+
 }

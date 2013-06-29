@@ -45,6 +45,11 @@ public class DbStoredProcedure implements DbObject {
         return accessor;
     }
 
+    @Override
+    public int getExceptionCode(SQLException e) {
+        return environment.getExceptionCode(e);
+    }
+
     private DbParameterAccessor findAccessorForParamWithName(String name) throws SQLException {
         String paramName = NameNormaliser.normaliseName(name);
         DbParameterAccessor accessor = getAllParams().get(paramName);
@@ -66,10 +71,6 @@ public class DbStoredProcedure implements DbObject {
 
     public String getName() {
         return name;
-    }
-
-    public DBEnvironment getDbEnvironment() {
-        return environment;
     }
 
 }
