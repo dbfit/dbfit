@@ -36,7 +36,7 @@ public class Update extends fit.Fixture {
 		this.tableName= tableName;
 		this.environment = dbEnvironment;		
 	}
-	public PreparedStatement BuildUpdateCommand() throws SQLException {
+	private PreparedStatement buildUpdateCommand() throws SQLException {
 		if (updateAccessors.length==0){
 			throw new Error("Update fixture must have at least one field to update. Have you forgotten = after the column name?");
 		}
@@ -73,7 +73,7 @@ public class Update extends fit.Fixture {
 		}
         try {
 			initParameters(rows.parts);//init parameters from the first row			
-	        statement= BuildUpdateCommand();
+	        statement= buildUpdateCommand();
 	        Parse row = rows;
 			while ((row = row.more) != null) {				
 						runRow(row);
