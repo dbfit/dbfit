@@ -14,14 +14,14 @@ public class DbTable implements DbObject {
 
     private DBEnvironment dbEnvironment;
     private String tableOrViewName;
-    private Map<String, DbParameterAccessor> allParams;
+    private Map<String, DbParameterAccessor> columns;
 
     public DbTable(DBEnvironment dbEnvironment, String tableName)
             throws SQLException {
         this.dbEnvironment = dbEnvironment;
         this.tableOrViewName = tableName;
-        allParams = dbEnvironment.getAllColumns(tableName);
-        if (allParams.isEmpty()) {
+        columns = dbEnvironment.getAllColumns(tableName);
+        if (columns.isEmpty()) {
             throw new SQLException("Cannot retrieve list of columns for "
                     + tableName + " - check spelling and access rights");
         }
@@ -37,10 +37,10 @@ public class DbTable implements DbObject {
         return statement;
     }
 
-    public DbParameterAccessor getDbParameterAccessor(String paramName,
+    public DbParameterAccessor getDbParameterAccessor(String columnName,
             Direction expectedDirection) {
-        String normalisedName = NameNormaliser.normaliseName(paramName);
-        DbParameterAccessor accessor = allParams.get(normalisedName);
+        String normalisedName = NameNormaliser.normaliseName(columnName);
+        DbParameterAccessor accessor = columns.get(normalisedName);
         if (null == accessor) {
             throw new RuntimeException(
                     "No such database column or parameter: '" + normalisedName + "'");
