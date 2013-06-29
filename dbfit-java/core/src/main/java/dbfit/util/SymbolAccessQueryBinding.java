@@ -27,10 +27,10 @@ public class SymbolAccessQueryBinding extends Binding.QueryBinding {
 			}
 			if (content.isExpectingInequality()){
 				//expect failing comparison
-				Object value=this.adapter.get();
+				Object actual=this.adapter.get();
 				String expectedVal=content.getExpectedFailureValue();
-				cell.addToBody(Fixture.gray("= "+String.valueOf(value)));
-				if (adapter.equals(value,adapter.parse(expectedVal)))
+				cell.addToBody(Fixture.gray("= "+String.valueOf(actual)));
+				if (adapter.equals(actual,adapter.parse(expectedVal)))
 					fixture.wrong(cell);
 				else
 					fixture.right(cell);
