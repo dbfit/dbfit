@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.AbstractCollection;
 import java.util.AbstractList;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
 
 public class TypeNormaliserFactoryTest {
     private static TypeNormaliser createTypeNormaliserFake(final String tag) {

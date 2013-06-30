@@ -3,7 +3,7 @@ package dbfit.util;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class LangUtilsTest {
     @Test public void repeat() {
