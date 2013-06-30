@@ -1,8 +1,8 @@
 package dbfit.util;
 
+import dbfit.fixture.StatementExecution;
+
 import java.lang.reflect.InvocationTargetException;
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import static dbfit.util.DbParameterAccessor.Direction.*;
@@ -60,7 +60,7 @@ public class DbParameterAccessor {
     protected int sqlType;
     protected Class<?> javaType;
     protected int position; //zero-based index of parameter in procedure or column in table
-    protected PreparedStatement cs;
+    protected StatementExecution cs;
 
     public static Object normaliseValue(Object currVal) throws SQLException {        
         if (currVal==null) return null;
@@ -104,18 +104,12 @@ public class DbParameterAccessor {
         this.direction = direction;
     }
 
-    //really ugly, but a hack to support mysql, because it will not execute inserts with a callable statement
-    private CallableStatement convertStatementToCallable() throws SQLException{
-        if (cs instanceof CallableStatement) return (CallableStatement) cs;
-        throw new SQLException("This operation requires a callable statement instead of "+cs.getClass().getName());
-    }
-
     /*******************************************/
-    public void bindTo(PreparedStatement cs, int ind) throws SQLException{
+    public void bindTo(StatementExecution cs, int ind) throws SQLException{
         this.cs=cs;
         this.index=ind;    
         if (direction != INPUT){
-            convertStatementToCallable().registerOutParameter(ind, getSqlType());
+            cs.registerOutParameter(ind, getSqlType());
         }
     }
 
@@ -129,7 +123,7 @@ public class DbParameterAccessor {
         try{
             if (direction.equals(INPUT))
                 throw new UnsupportedOperationException("Trying to get value of input parameter "+name);            
-            return normaliseValue(convertStatementToCallable().getObject(index));
+            return normaliseValue(cs.getObject(index));
         }
         catch (SQLException sqle){
             throw new InvocationTargetException(sqle);

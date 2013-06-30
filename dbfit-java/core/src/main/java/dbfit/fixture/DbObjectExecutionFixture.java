@@ -57,13 +57,15 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             dbObject = getTargetDbObject();
             if (dbObject == null) throw new Error("DB Object not specified!");
             if (rows == null) {//single execution, no args
-                dbObject.buildPreparedStatement(accessors).execute();
+                StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors);
+                preparedStatement.run();
                 return;
             }
             accessors = getAccessors(rows.parts);
             if (accessors == null) return;// error reading args
             columnBindings = getColumnBindings(rows.parts, accessors);
-            execution = new StatementExecution(dbObject.buildPreparedStatement(accessors));
+            StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors);
+            execution = preparedStatement;
             Parse row = rows;
             while ((row = row.more) != null) {
                 runRow(row);

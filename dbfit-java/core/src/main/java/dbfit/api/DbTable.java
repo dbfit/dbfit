@@ -1,14 +1,15 @@
 package dbfit.api;
 
+import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 
 import static dbfit.util.DbParameterAccessor.Direction;
-import static dbfit.util.DbParameterAccessor.Direction.*;
+import static dbfit.util.DbParameterAccessor.Direction.INPUT;
+import static dbfit.util.DbParameterAccessor.Direction.OUTPUT;
 
 public class DbTable implements DbObject {
 
@@ -27,10 +28,11 @@ public class DbTable implements DbObject {
         }
     }
 
-    public PreparedStatement buildPreparedStatement(
+    public StatementExecution buildPreparedStatement(
             DbParameterAccessor[] accessors) throws SQLException {
-        PreparedStatement statement = dbEnvironment
-                .buildInsertPreparedStatement(tableOrViewName, accessors);
+        StatementExecution statement = new StatementExecution(dbEnvironment
+                .buildInsertPreparedStatement(tableOrViewName, accessors));
+
         for (int i = 0; i < accessors.length; i++) {
             accessors[i].bindTo(statement, i + 1);
         }
