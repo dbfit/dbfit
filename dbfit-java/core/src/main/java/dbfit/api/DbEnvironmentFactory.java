@@ -1,15 +1,16 @@
 package dbfit.api;
 
-import dbfit.api.DBEnvironment;
 import dbfit.annotations.DatabaseEnvironment;
-import java.util.Map;
-import java.util.HashMap;
+import org.reflections.Reflections;
+
 import java.lang.reflect.Constructor;
-import org.atteo.evo.classindex.ClassIndex;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DbEnvironmentFactory {
     private void initDefaultEnvironments() {
-        for (Class<?> c: ClassIndex.getAnnotated(DatabaseEnvironment.class)) {
+        Reflections reflections = new Reflections("dbfit");
+        for (Class<?> c: reflections.getTypesAnnotatedWith(DatabaseEnvironment.class)) {
             DatabaseEnvironment envAnnotation =
                 c.getAnnotation(DatabaseEnvironment.class);
             registerEnv(envAnnotation.name(), envAnnotation.driver());
