@@ -6,9 +6,7 @@ import fit.Binding;
 import fit.Fixture;
 import fit.Parse;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Savepoint;
 
 import static dbfit.util.DbParameterAccessor.Direction.*;
 
@@ -28,7 +26,7 @@ import static dbfit.util.DbParameterAccessor.Direction.*;
 public abstract class DbObjectExecutionFixture extends Fixture {
     private DbParameterAccessor[] accessors = new DbParameterAccessor[0];
     private Binding[] columnBindings;
-    private PreparedStatement statement;
+    private StatementExecution execution;
     private DbObject dbObject; // intentionally private, subclasses should extend getTargetObject
 
     /**
@@ -58,14 +56,14 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         try {
             dbObject = getTargetDbObject();
             if (dbObject == null) throw new Error("DB Object not specified!");
-            if (rows == null) {//single statement, no args
+            if (rows == null) {//single execution, no args
                 dbObject.buildPreparedStatement(accessors).execute();
                 return;
             }
             accessors = getAccessors(rows.parts);
             if (accessors == null) return;// error reading args
             columnBindings = getColumnBindings(rows.parts, accessors);
-            statement = dbObject.buildPreparedStatement(accessors);
+            execution = new StatementExecution(dbObject.buildPreparedStatement(accessors));
             Parse row = rows;
             while ((row = row.more) != null) {
                 runRow(row);
@@ -126,7 +124,6 @@ public abstract class DbObjectExecutionFixture extends Fixture {
      * execute a single row
      */
     private void runRow(Parse row) throws Throwable {
-        statement.clearParameters();
         Parse cell = row.parts;
         //first set input params
         for (int column = 0; column < accessors.length; column++, cell = cell.more) {
@@ -144,12 +141,9 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     }
 
     private void executeStatementExpectingException(Parse row) throws Exception {
-        String savepointName = "eee" + this.hashCode();
-        if (savepointName.length() > 10) savepointName = savepointName.substring(1, 9);
-        Savepoint savepoint = null;
         try {
-            savepoint = statement.getConnection().setSavepoint(savepointName);
-            statement.execute();
+            execution.createSavepoint();
+            execution.run();
             wrong(row);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -166,16 +160,13 @@ public abstract class DbObjectExecutionFixture extends Fixture {
                 }
             }
         }
-        if (savepoint != null) {
-            statement.getConnection().rollback(savepoint);
-        }
-
+        execution.restoreSavepoint();
     }
 
 
     private void executeStatementAndEvaluateOutputs(Parse row)
             throws SQLException, Throwable {
-        statement.execute();
+        execution.run();
         Parse cells = row.parts;
         for (int column = 0; column < accessors.length; column++, cells = cells.more) {
             if (accessors[column].getDirection().equals(OUTPUT) ||
