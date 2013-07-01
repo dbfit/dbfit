@@ -97,12 +97,10 @@ An Eclipse project can be created by running:
 
     dbfit-java$ gradle eclipse
 
-**Note: the `dbfit-core` module uses [Evo Class Index library](https://github.com/atteo/evo-classindex), which requires [a workaround for Eclipse comilation to work](https://github.com/atteo/evo-classindex#eclipse).**
-
 #### Building
 
 *  Clean, build, test and install to local maven repo
-    
+
         dbfit-java$ gradle clean check install
 
 *  Build and package all java projects:
