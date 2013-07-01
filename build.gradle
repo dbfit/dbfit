@@ -33,9 +33,6 @@ task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAl
         eachFile {details ->
             details.path = flattenPath(details.path)
         }
-        rename { String fileName ->
-             fileName.replace('fitnesse-standalone-20130321.jar', 'fitnesse-standalone.jar')
-        }
         includeEmptyDirs = false 
     }
 }
