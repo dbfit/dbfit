@@ -20,8 +20,7 @@ allprojects {
 subprojects {
     jar.baseName = "dbfit-" + project.archivesBaseName
     repositories {
-        mavenRepo url: "http://repo1.maven.org/maven2"
-        mavenRepo url: "http://repo.maven.apache.org/maven2"
+        mavenCentral()
         ivy {
             artifactPattern "https://s3.amazonaws.com/dbfit/[artifact]-[revision].[ext]"
             ivyPattern "https://aws.amazon.com/s3/ivy.xml"
@@ -64,7 +63,7 @@ project('core') {
     description = 'DBFit core api and fixtures'
 
     dependencies {
-        compile "dummy:fitnesse-standalone:20130321@jar"
+        compile "org.fitnesse:fitnesse:20130530"
         compile "dummy:fitlibrary:20081102@jar"
         compile "org.reflections:reflections:0.9.9-RC1"
         compile "commons-codec:commons-codec:1.7"
