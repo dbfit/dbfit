@@ -1,0 +1,19 @@
+|Execute|Create table Test_DBFit_int(name varchar(50), luckyNumber int, test_int_id int GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1))|
+
+|Execute|Create table Test_DBFit_long(name varchar(50), luckyNumber int, test_long_id bigint GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1))|
+
+|Insert|Test_DBFit_int|
+|name|luckyNumber|test_int_id?|
+|pera|1|1|
+|nuja|2|2|
+|nnn|3|3|
+
+|Insert|Test_DBFit_long|
+|name|luckyNumber|test_long_id?|
+|pera|1|1|
+|nuja|2|2|
+|nnn|3|3|
+
+|Execute|Drop table Test_DBFit_int|
+
+|Execute|Drop table Test_DBFit_long|
