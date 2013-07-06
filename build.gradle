@@ -13,10 +13,6 @@ task cleanDist << {
 
 task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAll', ':dbfit-java:libs']) << {
     copy {
-        from 'FitNesseRoot'
-        into 'dist/FitNesseRoot'
-    }
-    copy {
         from 'LICENSE', 'README.md'
         into 'dist'
     }
