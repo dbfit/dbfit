@@ -14,7 +14,7 @@ This Wiki contains the [[reference documentation][.DbFit.DbFitReference]] and [[
 For a detailed introduction on how to use FitNesse, see [[!-Test Driven .NET Development With FitNesse-!][http://gojko.net/fitnesse/book]]. See http://benilovj.github.com/dbfit/ for more information on !-DbFit-!. You can leave your comments and feedback [[here][http://benilovj.github.com/dbfit/]].
 !-</div>-!
 ----
-!3 DbFit is based on [[FitNesse][FitNesse.FitNesse]] framework.
+!3 DbFit is based on the [[FitNesse][FitNesse.FitNesse]] framework.
 
 | '''To Learn More about FitNesse...'''|
 | [[A One-Minute Description][FitNesse.UserGuide.OneMinuteDescription]]|''What is [[FitNesse][FitNesse.FitNesse]]? Start here.''|
