@@ -1,0 +1,8 @@
+|Execute|Create table Test_DBFit(id SERIAL, name varchar(50))|
+
+|Insert|Test_DBFit|
+|name|id?|
+|pera|1|
+|nuja|2|
+
+|Execute|Drop table Test_DBFit|
