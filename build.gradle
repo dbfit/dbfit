@@ -8,6 +8,7 @@ task cleanFitnesseroot(type:Exec) {
 task cleanDist << {
     delete 'dist'
     delete 'zips'
+    delete 'docs'
 }
 
 task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAll', ':dbfit-java:libs']) << {
@@ -37,6 +38,50 @@ task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAl
     }
 }
 
+
+task wikiDocsDir << {
+    mkdir('docs/Resources/')
+}
+
+task fitnesseUpdateList << {
+    copy {
+        from zipTree(fitnesseJar()).matching { include 'Resources/updateList' }
+        into 'docs'
+        rename 'updateList', 'updateList.fitnesse'
+    }
+}
+
+task dbfitUpdateList(dependsOn: wikiDocsDir) << {
+    File f = file('docs/Resources/updateList.dbfit')
+
+    fileTree('FitNesseRoot').each {
+        f << "${relativePath(it)}\n"
+    }
+}
+
+task wikiDocsUpdateList(dependsOn: [fitnesseUpdateList, dbfitUpdateList]) << {
+    File f = file('docs/Resources/updateList')
+
+    f << file('docs/Resources/updateList.dbfit').text
+    f << file('docs/Resources/updateList.fitnesse').text
+
+    delete 'docs/Resources/updateList.fitnesse'
+    delete 'docs/Resources/updateList.dbfit'
+}
+
+task wikiDocs(dependsOn: [wikiDocsUpdateList]) << {
+    copy {
+        from 'FitNesseRoot'
+        into 'docs/Resources/FitNesseRoot'
+    }
+
+    ant.jar(destfile: 'dist/lib/dbfit-docs.jar', basedir: 'docs', level: 9)
+}
+
+def fitnesseJar() {
+    fileTree(dir: 'dist/lib', include: 'fitnesse-*.jar').getSingleFile()
+}
+
 def flattenPath(def path) {
     path.replaceAll('.*/([^/]*?\\.jar)', {"${it[1]}"})
 }
@@ -54,7 +99,8 @@ task bundleFitsharp(dependsOn: copyLocal) << {
     file('dist/fitsharp/Runner.exe.config') << '<configuration><runtime><loadFromRemoteSources enabled="true"/></runtime></configuration>'
 }
 
-task bundle(type: Zip, dependsOn: [copyLocal, bundleFitsharp]) {
+
+task bundle(type: Zip, dependsOn: [copyLocal, wikiDocs, bundleFitsharp]) {
     description = 'creates the zip file for distributing dbfit'
     from 'dist'
     baseName 'dbfit-complete'
@@ -74,3 +120,4 @@ task fastbuild(dependsOn: [':dbfit-java:core:check', ':dbfit-java:derby:check'])
 def onWindows() {
     System.properties['os.name'].toLowerCase().contains('windows')
 }
+
