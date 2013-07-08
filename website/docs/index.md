@@ -61,7 +61,7 @@ show_comments: false
   </div>
   <div class="span8">
 
-    <h3><a href="https://s3.amazonaws.com/dbfit/dbfit-20080822.pdf" onclick="recordOutboundLink(this, 'Documentation', 'Manual', 'Docs');return false;">DbFit 1.1 manual</a> <small>A PDF version of the original manual.</small></h3>
+    <h3><a href="https://github.com/benilovj/dbfit/releases/v1.1/2429/dbfit-20080822.pdf" onclick="recordOutboundLink(this, 'Documentation', 'Manual', 'Docs');return false;">DbFit 1.1 manual</a> <small>A PDF version of the original manual.</small></h3>
 
     <h3><a href="http://gojko.net/FitNesse/book/" onclick="recordOutboundLink(this, 'Outbound links', 'Gojko Fitnesse Book', 'Docs');return false;">Test Driven .NET Development with FitNesse</a> <small>Gojko's free book about using FitNesse.</small></h3>
 
