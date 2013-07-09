@@ -42,7 +42,7 @@ show_comments: false
   </div>
   <div class="span8" markdown="1">
 
-### [What's new](/dbfit/docs/whats-new.html) <small>The changes in each release.</small>
+### [What's new](https://github.com/benilovj/dbfit/releases) <small>The changes in each release.</small>
 
 ### [The team behind DbFit](/dbfit/docs/the-team-behind-dbfit.html) <small>Which part of DbFit is maintained by whom.</small>
 
