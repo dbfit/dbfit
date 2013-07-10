@@ -1,14 +1,15 @@
 package dbfit.util;
 
-import java.lang.reflect.InvocationTargetException;
 import fit.Fixture;
 import fit.TypeAdapter;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class DbParameterAccessorTypeAdapter extends TypeAdapter {	
 	private DbParameterAccessor parameterAccessor;
 	public DbParameterAccessorTypeAdapter(DbParameterAccessor accessor,Fixture f){
 		this.fixture=f;
-		this.type=accessor.javaType;
+		this.type=accessor.getJavaType();
 		this.parameterAccessor=accessor;		
 	}
 	@Override
