@@ -91,31 +91,20 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return commandText;
     }
 
-    /*
-     * from .Net, not needed since JDBC has a better interface protected static
-     * void AddInput(CallableStatement dbCommand, String name, Object value) can
-     * be directly invoked using dbCommand.setObject(parameterName, x,
-     * targetSqlType)
-     */
     public final PreparedStatement createStatementWithBoundFixtureSymbols(
             TestHost testHost, String commandText) throws SQLException {
-        // System.out.println("paramNames length "+paramNames.length);
+        String command = Options.isBindSymbols() ? parseCommandText(commandText) : commandText;
+        PreparedStatement cs = getConnection().prepareStatement(
+                command);
+
         if (Options.isBindSymbols()) {
-            PreparedStatement cs = getConnection().prepareStatement(
-                    parseCommandText(commandText));
             String paramNames[] = extractParamNames(commandText);
             for (int i = 0; i < paramNames.length; i++) {
                 Object value = testHost.getSymbolValue(paramNames[i]);
                 cs.setObject(i + 1, value);
             }
-            return cs;
-        } else {
-            // no parsing, return directly what is there and execute as native
-            // code
-            PreparedStatement cs = currentConnection
-                    .prepareStatement(commandText);
-            return cs;
         }
+        return cs;
     }
 
     public void closeConnection() throws SQLException {

@@ -9,7 +9,6 @@ import dbfit.util.SymbolAccessSetBinding;
 import fit.Binding;
 import fit.Parse;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ import static dbfit.util.DbParameterAccessor.Direction;
 
 public class Update extends fit.Fixture {
 	private DBEnvironment environment;
-	private PreparedStatement statement;
+	private StatementExecution statement;
 	private String tableName;
 	private Binding[] columnBindings;
 	private DbParameterAccessor[] updateAccessors;
@@ -36,7 +35,7 @@ public class Update extends fit.Fixture {
 		this.tableName= tableName;
 		this.environment = dbEnvironment;		
 	}
-	public PreparedStatement BuildUpdateCommand() throws SQLException {
+	private StatementExecution buildUpdateCommand() throws SQLException {
 		if (updateAccessors.length==0){
 			throw new Error("Update fixture must have at least one field to update. Have you forgotten = after the column name?");
 		}
@@ -51,8 +50,8 @@ public class Update extends fit.Fixture {
 			s.append(selectAccessors[i].getName()).append("=").append("?");		
 		}
 //		System.out.println(s);
-		PreparedStatement cs=
-			environment.getConnection().prepareStatement(s.toString());
+		StatementExecution cs=
+			new StatementExecution(environment.getConnection().prepareStatement(s.toString()));
 		for (int i=0; i<updateAccessors.length; i++){
 			updateAccessors[i].bindTo(cs, i+1);
 		}
@@ -73,7 +72,7 @@ public class Update extends fit.Fixture {
 		}
         try {
 			initParameters(rows.parts);//init parameters from the first row			
-	        statement= BuildUpdateCommand();
+	        statement= buildUpdateCommand();
 	        Parse row = rows;
 			while ((row = row.more) != null) {				
 						runRow(row);
@@ -120,13 +119,12 @@ public class Update extends fit.Fixture {
 	}
 	private void runRow(Parse row)  throws Throwable{
 		try{
-			statement.clearParameters();
 			Parse cell = row.parts;
 			//first set input params
 			for(int column=0; column<columnBindings.length; column++,	cell = cell.more){
 					columnBindings[column].doCell(this, cell);
 			} 
-			statement.execute();
+			statement.run();
 		}
 		catch (SQLException sqle){
 			sqle.printStackTrace();

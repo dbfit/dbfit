@@ -1,46 +1,48 @@
 package dbfit.api;
 
+import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 
 import static dbfit.util.DbParameterAccessor.Direction;
-import static dbfit.util.DbParameterAccessor.Direction.*;
+import static dbfit.util.DbParameterAccessor.Direction.INPUT;
+import static dbfit.util.DbParameterAccessor.Direction.OUTPUT;
 
 public class DbTable implements DbObject {
 
     private DBEnvironment dbEnvironment;
     private String tableOrViewName;
-    private Map<String, DbParameterAccessor> allParams;
+    private Map<String, DbParameterAccessor> columns;
 
     public DbTable(DBEnvironment dbEnvironment, String tableName)
             throws SQLException {
         this.dbEnvironment = dbEnvironment;
         this.tableOrViewName = tableName;
-        allParams = dbEnvironment.getAllColumns(tableName);
-        if (allParams.isEmpty()) {
+        columns = dbEnvironment.getAllColumns(tableName);
+        if (columns.isEmpty()) {
             throw new SQLException("Cannot retrieve list of columns for "
                     + tableName + " - check spelling and access rights");
         }
     }
 
-    public PreparedStatement buildPreparedStatement(
+    public StatementExecution buildPreparedStatement(
             DbParameterAccessor[] accessors) throws SQLException {
-        PreparedStatement statement = dbEnvironment
-                .buildInsertPreparedStatement(tableOrViewName, accessors);
+        StatementExecution statement = new StatementExecution(dbEnvironment
+                .buildInsertPreparedStatement(tableOrViewName, accessors));
+
         for (int i = 0; i < accessors.length; i++) {
             accessors[i].bindTo(statement, i + 1);
         }
         return statement;
     }
 
-    public DbParameterAccessor getDbParameterAccessor(String paramName,
+    public DbParameterAccessor getDbParameterAccessor(String columnName,
             Direction expectedDirection) {
-        String normalisedName = NameNormaliser.normaliseName(paramName);
-        DbParameterAccessor accessor = allParams.get(normalisedName);
+        String normalisedName = NameNormaliser.normaliseName(columnName);
+        DbParameterAccessor accessor = columns.get(normalisedName);
         if (null == accessor) {
             throw new RuntimeException(
                     "No such database column or parameter: '" + normalisedName + "'");
@@ -54,8 +56,9 @@ public class DbTable implements DbObject {
         return accessor;
     }
 
-    public DBEnvironment getDbEnvironment() {
-        return dbEnvironment;
+    @Override
+    public int getExceptionCode(SQLException e) {
+        return dbEnvironment.getExceptionCode(e);
     }
 
 }

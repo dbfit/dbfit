@@ -1,6 +1,7 @@
 package dbfit.util;
 
-import java.sql.PreparedStatement;
+import dbfit.fixture.StatementExecution;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +17,7 @@ public class DbParameterAccessors {
         this.accessors = accessors;
     }
 
-    public void bindParameters(PreparedStatement statement) throws SQLException {
+    public void bindParameters(StatementExecution statement) throws SQLException {
         List<String> accessorNames = getSortedAccessorNames();
         for (DbParameterAccessor ac : accessors) {
             int realindex = accessorNames.indexOf(ac.getName());

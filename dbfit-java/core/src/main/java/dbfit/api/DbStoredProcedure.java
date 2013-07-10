@@ -1,14 +1,14 @@
 package dbfit.api;
 
+import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 
 import static dbfit.util.DbParameterAccessor.Direction;
-import static dbfit.util.DbParameterAccessor.Direction.*;
+import static dbfit.util.DbParameterAccessor.Direction.INPUT_OUTPUT;
 
 public class DbStoredProcedure implements DbObject {
     private DBEnvironment environment;
@@ -20,11 +20,11 @@ public class DbStoredProcedure implements DbObject {
         this.name = name;
     }
 
-    public PreparedStatement buildPreparedStatement(
+    public StatementExecution buildPreparedStatement(
             DbParameterAccessor[] accessors) throws SQLException {
         DbStoredProcedureCall call = environment.newStoredProcedureCall(name, accessors);
 
-        return call.toCallableStatement();
+        return call.toStatementExecution();
     }
 
     public DbParameterAccessor getDbParameterAccessor(String name,
@@ -43,6 +43,11 @@ public class DbStoredProcedure implements DbObject {
             accessor.setDirection(Direction.INPUT);
         }
         return accessor;
+    }
+
+    @Override
+    public int getExceptionCode(SQLException e) {
+        return environment.getExceptionCode(e);
     }
 
     private DbParameterAccessor findAccessorForParamWithName(String name) throws SQLException {
@@ -66,10 +71,6 @@ public class DbStoredProcedure implements DbObject {
 
     public String getName() {
         return name;
-    }
-
-    public DBEnvironment getDbEnvironment() {
-        return environment;
     }
 
 }

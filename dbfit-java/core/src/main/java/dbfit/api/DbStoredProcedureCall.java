@@ -1,9 +1,9 @@
 package dbfit.api;
 
+import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessors;
 
-import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -46,12 +46,12 @@ public class DbStoredProcedureCall {
         }
     }
 
-    void bindParametersTo(CallableStatement cs) throws SQLException {
+    void bindParametersTo(StatementExecution cs) throws SQLException {
         new DbParameterAccessors(getAccessors()).bindParameters(cs);
     }
 
-    public CallableStatement toCallableStatement() throws SQLException {
-        CallableStatement cs = this.environment.getConnection().prepareCall(toSqlString());
+    public StatementExecution toStatementExecution() throws SQLException {
+        StatementExecution cs = new StatementExecution(this.environment.getConnection().prepareCall(toSqlString()));
         bindParametersTo(cs);
         return cs;
     }
