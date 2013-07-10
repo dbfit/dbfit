@@ -16,7 +16,7 @@ public class StatementExecution {
             try {
                 statement.clearParameters();
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Exception while clearing parameters on PreparedStatement", e);
             }
         }
     }
@@ -29,7 +29,7 @@ public class StatementExecution {
         try {
             savepoint = statement.getConnection().setSavepoint(savepointName);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Exception while setting savepoint", e);
         }
     }
 
@@ -38,7 +38,7 @@ public class StatementExecution {
             try {
                 statement.getConnection().rollback(savepoint);
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Exception while restoring savepoint", e);
             }
         }
     }
