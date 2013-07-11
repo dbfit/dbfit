@@ -7,6 +7,8 @@ import fit.Fixture;
 import fit.Parse;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static dbfit.util.Direction.*;
 
@@ -24,7 +26,7 @@ import static dbfit.util.Direction.*;
  * so users have to extend this fixture.
  */
 public abstract class DbObjectExecutionFixture extends Fixture {
-    private DbParameterAccessor[] accessors = new DbParameterAccessor[0];
+    private List<DbParameterAccessor> accessors = new ArrayList<DbParameterAccessor>();
     private Binding[] columnBindings;
     private StatementExecution execution;
     private DbObject dbObject; // intentionally private, subclasses should extend getTargetObject
@@ -55,16 +57,16 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     public void doRows(Parse rows) {
         try {
             dbObject = getTargetDbObject();
-            if (dbObject == null) throw new Error("DB Object not specified!");
             if (rows == null) {//single execution, no args
-                StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors);
+                StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray(new DbParameterAccessor[]{}));
                 preparedStatement.run();
                 return;
             }
-            accessors = getAccessors(rows.parts);
-            if (accessors == null) return;// error reading args
-            columnBindings = getColumnBindings(rows.parts, accessors);
-            StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors);
+            List<Heading> headings = getHeadingsFrom(rows.parts);
+
+            accessors = getAccessors(headings);
+            columnBindings = getColumnBindings(accessors, headings);
+            StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray(new DbParameterAccessor[]{}));
             execution = preparedStatement;
             Parse row = rows;
             while ((row = row.more) != null) {
@@ -78,48 +80,61 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     }
 
     /**
-     * does the column name map to an output argument
-     */
-    private static boolean isOutput(String name) {
-        return name.endsWith("?");
-    }
-
-    private static DbParameterAccessor[] EMPTY = new DbParameterAccessor[0];
-
-    /**
      * initialise db parameters for the dbObject based on table header cells
      */
-    private DbParameterAccessor[] getAccessors(Parse headerCells) throws SQLException {
-        if (headerCells == null) return EMPTY;
-        DbParameterAccessor accessors[] = new DbParameterAccessor[headerCells.size()];
-        for (int i = 0; headerCells != null; i++, headerCells = headerCells.more) {
-            String name = headerCells.text();
-            accessors[i] = dbObject.getDbParameterAccessor(name,
-                    isOutput(name) ? OUTPUT : INPUT);
-            if (accessors[i] == null) {
-                exception(headerCells, new IllegalArgumentException("Parameter/column " + name + " not found"));
-                return null;
+    private List<DbParameterAccessor> getAccessors(List<Heading> headings) throws SQLException {
+        List<DbParameterAccessor> accessors = new ArrayList<DbParameterAccessor>();
+        for (Heading heading : headings) {
+            DbParameterAccessor parameterAccessor = dbObject.getDbParameterAccessor(heading.getName(),
+                    heading.isOutput() ? OUTPUT : INPUT);
+            if (parameterAccessor == null) {
+                throw new IllegalArgumentException("Parameter/column " + heading.getName() + " not found");
             }
+            accessors.add(parameterAccessor);
         }
         return accessors;
+    }
+
+    public static class Heading {
+        private String name;
+
+        public Heading(String name) {
+            this.name = name;
+        }
+
+        public boolean isOutput() {
+            return name.endsWith("?");
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
     /**
      * bind db accessors to columns based on the text in the header
      */
-    private Binding[] getColumnBindings(Parse headerCells, DbParameterAccessor[] accessors) throws Exception {
-        if (headerCells == null) return new Binding[0];
-        Binding[] columns = new Binding[headerCells.size()];
-        for (int i = 0; headerCells != null; i++, headerCells = headerCells.more) {
-            String name = headerCells.text();
-            if (isOutput(name)) {
+    private Binding[] getColumnBindings(List<DbParameterAccessor> accessors, List<Heading> headings) throws Exception {
+        Binding[] columns = new Binding[headings.size()];
+        for (Heading heading : headings) {
+            int i = headings.indexOf(heading);
+            if (heading.isOutput()) {
                 columns[i] = new SymbolAccessQueryBinding();
             } else {
                 columns[i] = new SymbolAccessSetBinding();
             }
-            columns[i].adapter = new DbParameterAccessorTypeAdapter(accessors[i], this);
+            columns[i].adapter = new DbParameterAccessorTypeAdapter(accessors.get(i), this);
         }
         return columns;
+    }
+
+    private List<Heading> getHeadingsFrom(Parse headerCells) {
+        List<Heading> headings = new ArrayList<Heading>();
+        for (int i = 0; headerCells != null; i++, headerCells = headerCells.more) {
+            String text = headerCells.text();
+            headings.add(new Heading(text));
+        }
+        return headings;
     }
 
     /**
@@ -128,8 +143,8 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     private void runRow(Parse row) throws Throwable {
         Parse cell = row.parts;
         //first set input params
-        for (int column = 0; column < accessors.length; column++, cell = cell.more) {
-            if (accessors[column].hasDirection(INPUT)) {
+        for (int column = 0; column < accessors.size(); column++, cell = cell.more) {
+            if (accessors.get(column).hasDirection(INPUT)) {
                 columnBindings[column].doCell(this, cell);
             }
         }
@@ -168,8 +183,8 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             throws SQLException, Throwable {
         execution.run();
         Parse cells = row.parts;
-        for (int column = 0; column < accessors.length; column++, cells = cells.more) {
-            if (accessors[column].hasDirection(OUTPUT) || accessors[column].hasDirection(RETURN_VALUE)) {
+        for (int column = 0; column < accessors.size(); column++, cells = cells.more) {
+            if (accessors.get(column).hasDirection(OUTPUT) || accessors.get(column).hasDirection(RETURN_VALUE)) {
                 columnBindings[column].doCell(this, cells);
             }
         }
