@@ -135,11 +135,9 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         }
         if (getExpectedBehaviour() == ExpectedBehaviour.NO_EXCEPTION) {
             executeStatementAndEvaluateOutputs(row);
-        } else if (getExpectedBehaviour() == ExpectedBehaviour.ANY_EXCEPTION ||
-                getExpectedBehaviour() == ExpectedBehaviour.SPECIFIC_EXCEPTION) {
+        } else {
             executeStatementExpectingException(row);
-        } else throw new UnsupportedOperationException("Got unsupported expected behaviour enum value");
-
+        };
     }
 
     private void executeStatementExpectingException(Parse row) throws Exception {
