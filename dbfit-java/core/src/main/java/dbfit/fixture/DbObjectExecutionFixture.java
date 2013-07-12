@@ -17,8 +17,6 @@ import static dbfit.util.Direction.*;
  * given inputs and verifying optional outputs or exceptions. it also handles a special case
  * when just a single statement is executed without binding parameters to columns. Examples are
  * - Inserting data into tables/views
- * - Executing statements
- * - Updates
  * - Stored procedures/functions
  * <p/>
  * the object under test is defined by overriding getTargetObject. Unfortunately, because of the way FIT
