@@ -344,7 +344,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
     private CallableStatement openDbCallWithParameters(String query,
             String[] queryParameters) throws SQLException {
-        Log.log("preparing call " + query, queryParameters);
+        Log.log("preparing call " + query, (Object[]) queryParameters);
         CallableStatement dc = currentConnection.prepareCall(query);
         Log.log("setting parameters");
         for (int i = 0; i < queryParameters.length; i++) {
