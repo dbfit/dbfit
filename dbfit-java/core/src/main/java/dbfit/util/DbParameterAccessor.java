@@ -9,12 +9,12 @@ import static dbfit.util.Direction.*;
 
 public class DbParameterAccessor {
 
-    protected int index; //index in effective sql statement (not necessarily the same as position below)
-    protected Direction direction;
-    protected String name;
-    protected int sqlType;
+    private int index; //index in effective sql statement (not necessarily the same as position below)
+    private Direction direction;
+    private String name;
+    private int sqlType;
     private Class<?> javaType;
-    protected int position; //zero-based index of parameter in procedure or column in table
+    private int position; //zero-based index of parameter in procedure or column in table
     protected StatementExecution cs;
 
     public static Object normaliseValue(Object currVal) throws SQLException {        
