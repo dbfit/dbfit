@@ -129,7 +129,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         Parse cell = row.parts;
         //first set input params
         for (int column = 0; column < accessors.length; column++, cell = cell.more) {
-            if (accessors[column].getDirection().equals(INPUT)) {
+            if (accessors[column].hasDirection(INPUT)) {
                 columnBindings[column].doCell(this, cell);
             }
         }
@@ -169,8 +169,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         execution.run();
         Parse cells = row.parts;
         for (int column = 0; column < accessors.length; column++, cells = cells.more) {
-            if (accessors[column].getDirection().equals(OUTPUT) ||
-                    accessors[column].getDirection().equals(RETURN_VALUE)) {
+            if (accessors[column].hasDirection(OUTPUT) || accessors[column].hasDirection(RETURN_VALUE)) {
                 columnBindings[column].doCell(this, cells);
             }
         }
