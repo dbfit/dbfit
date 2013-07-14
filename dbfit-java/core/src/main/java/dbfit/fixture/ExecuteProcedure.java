@@ -13,8 +13,7 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
     private DBEnvironment environment;
     private String procName;
     private boolean exceptionExpected = false;
-    private boolean excNumberDefined = false;
-    private int excNumberExpected;
+    private Integer expectedErrorCode;
 
     public ExecuteProcedure() {
         this.environment = DbEnvironmentFactory.getDefaultEnvironment();
@@ -25,8 +24,7 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
         this.procName = procName;
         this.environment = dbEnvironment;
         this.exceptionExpected = true;
-        this.excNumberDefined = true;
-        this.excNumberExpected = expectedErrorCode;
+        this.expectedErrorCode = expectedErrorCode;
     }
 
     public ExecuteProcedure(DBEnvironment dbEnvironment, String procName,
@@ -34,7 +32,6 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
         this.procName = procName;
         this.environment = dbEnvironment;
         this.exceptionExpected = exceptionExpected;
-        this.excNumberDefined = false;
     }
 
     public ExecuteProcedure(DBEnvironment dbEnvironment, String procName) {
@@ -49,12 +46,8 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
 
     protected ExpectedBehaviour getExpectedBehaviour() {
         if (!exceptionExpected) return ExpectedBehaviour.NO_EXCEPTION;
-        if (!excNumberDefined) return ExpectedBehaviour.ANY_EXCEPTION;
+        if (expectedErrorCode == null) return ExpectedBehaviour.ANY_EXCEPTION;
         return ExpectedBehaviour.SPECIFIC_EXCEPTION;
-    }
-
-    protected int getExpectedErrorCode() {
-        return excNumberExpected;
     }
 
     private void executeStatementExpectingException(Parse row) throws Exception {
@@ -68,12 +61,12 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
             if (getExpectedBehaviour() == ExpectedBehaviour.ANY_EXCEPTION) {
                 right(row);
             } else {
-                int realError = ((DbStoredProcedure) dbObject).getExceptionCode(e);
-                if (realError == getExpectedErrorCode())
+                int realErrorCode = ((DbStoredProcedure) dbObject).getExceptionCode(e);
+                if (expectedErrorCode.equals(realErrorCode))
                     right(row);
                 else {
                     wrong(row);
-                    row.parts.addToBody(fit.Fixture.gray(" got error code " + realError));
+                    row.parts.addToBody(fit.Fixture.gray(" got error code " + realErrorCode));
                 }
             }
         }
