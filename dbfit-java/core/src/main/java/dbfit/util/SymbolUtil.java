@@ -44,4 +44,16 @@ public class SymbolUtil {
     public static boolean isSymbolSetter(String text) {
         return text != null && text.startsWith(">>");
     }
+
+    public static Object getValueOfSymbol(String s, Class<?> type) throws Exception{
+        Object value = dbfit.util.SymbolUtil.getSymbol(s);
+        if (value.getClass().equals(type))
+            return value;
+        try {
+            return type.cast(value);
+        } catch (Exception e) {
+            throw new UnsupportedOperationException(
+                    "Incompatible types between symbol and cell value: expected " + type + "; but symbol is " + value.getClass(), e);
+        }
+    }
 }

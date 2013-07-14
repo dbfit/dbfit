@@ -34,4 +34,22 @@ public class ContentOfTableCell {
     public boolean isEmpty() {
         return content.isEmpty();
     }
+
+    public boolean isNull() {
+        return getTrimmedContent().toLowerCase().equals("null");
+    }
+
+    public boolean doesFixedLengthParsingApply() {
+        return Options.isFixedLengthStringParsing() &&
+                getTrimmedContent().startsWith("'") &&
+                getTrimmedContent().endsWith("'");
+    }
+
+    private String getTrimmedContent() {
+        return content.trim();
+    }
+
+    public String getFixedLengthParsedString() {
+        return getTrimmedContent().substring(1, getTrimmedContent().length() - 1);
+    }
 }

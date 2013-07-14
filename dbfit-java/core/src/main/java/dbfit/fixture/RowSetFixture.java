@@ -1,10 +1,10 @@
 package dbfit.fixture;
+import dbfit.util.*;
 import fit.*;
 
-import java.sql.*;
-import java.util.*;
-
-import dbfit.util.*;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public abstract class RowSetFixture extends ColumnFixture {
@@ -34,7 +34,7 @@ public abstract class RowSetFixture extends ColumnFixture {
 	    }
 	    @Override
 	    public Object parse(String s) throws Exception {
-	    	return new ParseHelper(this.fixture,this.type).parse(s);
+	    	return new ParseHelper(TypeAdapter.on(fixture, this.type),this.type).parse(s);
 	    }
 	}	
 	private int findColumn(String name) throws Exception{
