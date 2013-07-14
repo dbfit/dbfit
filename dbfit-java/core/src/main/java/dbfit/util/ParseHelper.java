@@ -51,10 +51,7 @@ public class ParseHelper {
 				trim.startsWith("'") && trim.endsWith("'")){
 			return trim.substring(1,trim.length()-1);
 		}
-		TypeAdapter ta=TypeAdapter.adapterFor(this.type);
-		ta.init(fixture, type);
-	       
-//		if (ta.getClass().equals(TypeAdapter.class)) return super.parse(s);
+		TypeAdapter ta=TypeAdapter.on(fixture, this.type);
 		return ta.parse(s);
 	}
 }
