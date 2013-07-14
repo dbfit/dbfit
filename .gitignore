@@ -11,6 +11,7 @@ dbfit-java/derby/dbfit/
 out
 
 dist
+tmp/*
 
 # the VM
 test_vm/cookbooks
