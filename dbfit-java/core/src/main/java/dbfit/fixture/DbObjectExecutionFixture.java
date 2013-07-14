@@ -8,7 +8,7 @@ import fit.Parse;
 
 import java.sql.SQLException;
 
-import static dbfit.util.DbParameterAccessor.Direction.*;
+import static dbfit.util.Direction.*;
 
 /**
  * this class handles all cases where a statement should be executed for each row with

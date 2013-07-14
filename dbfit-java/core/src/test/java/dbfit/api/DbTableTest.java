@@ -8,7 +8,7 @@ import org.junit.rules.ExpectedException;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-import static dbfit.util.DbParameterAccessor.Direction.*;
+import static dbfit.util.Direction.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

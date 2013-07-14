@@ -7,9 +7,9 @@ import dbfit.util.NameNormaliser;
 import java.sql.SQLException;
 import java.util.Map;
 
-import static dbfit.util.DbParameterAccessor.Direction;
-import static dbfit.util.DbParameterAccessor.Direction.INPUT;
-import static dbfit.util.DbParameterAccessor.Direction.OUTPUT;
+import dbfit.util.Direction;
+import static dbfit.util.Direction.INPUT;
+import static dbfit.util.Direction.OUTPUT;
 
 public class DbTable implements DbObject {
 

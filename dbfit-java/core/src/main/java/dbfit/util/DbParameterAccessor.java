@@ -5,54 +5,9 @@ import dbfit.fixture.StatementExecution;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
-import static dbfit.util.DbParameterAccessor.Direction.*;
+import static dbfit.util.Direction.*;
 
 public class DbParameterAccessor {
-    public static enum Direction {
-        RETURN_VALUE,
-        INPUT,
-        OUTPUT,
-        INPUT_OUTPUT;
-
-        public boolean isInput() {
-            return this == INPUT;
-        }
-
-        public boolean isOutOrInout() {
-            switch (this) {
-                case OUTPUT:
-                case INPUT_OUTPUT:
-                    return true;
-            }
-
-            return false;
-        }
-
-        public boolean isInOrInout() {
-            switch (this) {
-                case INPUT:
-                case INPUT_OUTPUT:
-                    return true;
-            }
-
-            return false;
-        }
-
-        public boolean isOutputOrReturnValue() {
-            switch (this) {
-                case RETURN_VALUE:
-                case OUTPUT:
-                case INPUT_OUTPUT:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public boolean isReturnValue() {
-            return this == RETURN_VALUE;
-        }
-    }
 
     protected int index; //index in effective sql statement (not necessarily the same as position below)
     protected Direction direction;

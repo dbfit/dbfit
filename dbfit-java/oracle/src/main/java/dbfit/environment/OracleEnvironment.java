@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import static dbfit.util.DbParameterAccessor.Direction;
+import dbfit.util.Direction;
 
 @DatabaseEnvironment(name="Oracle", driver="oracle.jdbc.OracleDriver")
 public class OracleEnvironment extends AbstractDbEnvironment {

@@ -8,8 +8,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import static dbfit.util.DbParameterAccessor.Direction;
-
 public class DbParameterAccessors {
     private DbParameterAccessor[] accessors;
 

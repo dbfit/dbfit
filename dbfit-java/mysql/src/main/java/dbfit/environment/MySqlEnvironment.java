@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import static dbfit.util.DbParameterAccessor.Direction;
+import dbfit.util.Direction;
 
 @DatabaseEnvironment(name="MySql", driver="com.mysql.jdbc.Driver")
 public class MySqlEnvironment extends AbstractDbEnvironment {

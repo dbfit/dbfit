@@ -7,8 +7,8 @@ import dbfit.util.NameNormaliser;
 import java.sql.SQLException;
 import java.util.Map;
 
-import static dbfit.util.DbParameterAccessor.Direction;
-import static dbfit.util.DbParameterAccessor.Direction.INPUT_OUTPUT;
+import dbfit.util.Direction;
+import static dbfit.util.Direction.INPUT_OUTPUT;
 
 public class DbStoredProcedure implements DbObject {
     private DBEnvironment environment;
