@@ -25,7 +25,7 @@ public class OracleDbParameterAccessor extends DbParameterAccessor {
     @Override
     public OracleDbParameterAccessor clone() {
         OracleDbParameterAccessor copy = new OracleDbParameterAccessor(
-                name, direction, sqlType, javaType, position, originalTypeName);
+                name, direction, sqlType, getJavaType(), position, originalTypeName);
         copy.cs = null;
 
         return copy;

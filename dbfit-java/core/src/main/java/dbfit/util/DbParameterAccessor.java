@@ -13,7 +13,7 @@ public class DbParameterAccessor {
     protected Direction direction;
     protected String name;
     protected int sqlType;
-    protected Class<?> javaType;
+    private Class<?> javaType;
     protected int position; //zero-based index of parameter in procedure or column in table
     protected StatementExecution cs;
 
