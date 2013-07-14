@@ -125,6 +125,11 @@ public abstract class DbObjectExecutionFixture extends Fixture {
      * execute a single row
      */
     private void runRow(Parse row) throws Throwable {
+        setInputs(row);
+        executeStatementAndEvaluateOutputs(row);
+    }
+
+    private void setInputs(Parse row) throws Throwable {
         Parse cell = row.parts;
         //first set input params
         for (int column = 0; column < accessors.size(); column++, cell = cell.more) {
@@ -132,7 +137,6 @@ public abstract class DbObjectExecutionFixture extends Fixture {
                 columnBindings[column].doCell(this, cell);
             }
         }
-        executeStatementAndEvaluateOutputs(row);
     }
 
     protected void executeStatementAndEvaluateOutputs(Parse row)
