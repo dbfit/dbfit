@@ -6,8 +6,8 @@ import fit.TypeAdapter;
 import java.lang.reflect.InvocationTargetException;
 
 public class DbParameterAccessorTypeAdapter extends TypeAdapter {	
-	private DbParameterAccessor parameterAccessor;
-	public DbParameterAccessorTypeAdapter(DbParameterAccessor accessor,Fixture f){
+	private ParameterOrColumn parameterAccessor;
+	public DbParameterAccessorTypeAdapter(ParameterOrColumn accessor,Fixture f){
 		this.fixture=f;
 		this.type=accessor.getJavaType();
 		this.parameterAccessor=accessor;		

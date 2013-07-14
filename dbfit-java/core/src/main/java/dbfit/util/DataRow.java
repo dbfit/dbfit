@@ -15,7 +15,7 @@ public  class DataRow{
 //						val==null?"NULL":(val.getClass() + " "+ val));
 				values.put(
 						NameNormaliser.normaliseName(rsmd.getColumnName(i)), 
-						DbParameterAccessor.normaliseValue(val));
+						ParameterOrColumn.normaliseValue(val));
 				
 			}
 		}

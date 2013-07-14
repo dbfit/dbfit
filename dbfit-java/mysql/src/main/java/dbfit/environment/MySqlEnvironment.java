@@ -2,9 +2,9 @@ package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
-import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
+import dbfit.util.ParameterOrColumn;
 
 import javax.sql.RowSet;
 import java.math.BigDecimal;
@@ -46,7 +46,7 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
         return super.parseCommandText(commandText);
     }
 
-    public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
+    public Map<String, ParameterOrColumn> getAllColumns(String tableOrViewName)
             throws SQLException {
         String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
                 .split("\\.");
@@ -61,7 +61,7 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
         return readColumnsFromDb(qualifiers, qry);
     }
 
-    private Map<String, DbParameterAccessor> readColumnsFromDb(
+    private Map<String, ParameterOrColumn> readColumnsFromDb(
             String[] parametersForColumnQuery, String query) throws SQLException {
         PreparedStatement dc = currentConnection.prepareStatement(query);
         for (int i = 0; i < parametersForColumnQuery.length; i++) {
@@ -69,14 +69,14 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
                     NameNormaliser.normaliseName(parametersForColumnQuery[i]));
         }
         ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> columns = new HashMap<String, DbParameterAccessor>();
+        Map<String, ParameterOrColumn> columns = new HashMap<String, ParameterOrColumn>();
         int position = 0;
         while (rs.next()) {
             String columnName = rs.getString(1);
             if (columnName == null)
                 columnName = "";
             String dataType = rs.getString(2);
-            DbParameterAccessor dbp = new DbParameterAccessor(columnName,
+            ParameterOrColumn dbp = new ParameterOrColumn(columnName,
                     Direction.INPUT, getSqlType(dataType),
                     getJavaClass(dataType), position++);
             columns.put(NameNormaliser.normaliseName(columnName), dbp);
@@ -160,7 +160,7 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
                 + " is not supported");
     }
 
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(
+    public Map<String, ParameterOrColumn> getAllProcedureParameters(
             String procName) throws SQLException {
 
         String[] qualifiers = NameNormaliser.normaliseName(procName).split(
@@ -180,7 +180,7 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
         if (!rs.next()) {
             throw new SQLException("Unknown procedure " + procName);
         }
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+        Map<String, ParameterOrColumn> allParams = new HashMap<String, ParameterOrColumn>();
         String type = rs.getString(1);
         String paramList = rs.getString(2);
         String returns = rs.getString(3);
@@ -207,7 +207,7 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             String paramName = token;
             String dataType = s.nextToken();
 
-            DbParameterAccessor dbp = new DbParameterAccessor(paramName,
+            ParameterOrColumn dbp = new ParameterOrColumn(paramName,
                     direction, getSqlType(dataType), getJavaClass(dataType),
                     position++);
             allParams.put(NameNormaliser.normaliseName(paramName), dbp);
@@ -216,7 +216,7 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             StringTokenizer s = new StringTokenizer(returns.trim()
                     .toLowerCase(), " ()");
             String dataType = s.nextToken();
-            allParams.put("", new DbParameterAccessor("",
+            allParams.put("", new ParameterOrColumn("",
                     Direction.RETURN_VALUE, getSqlType(dataType),
                     getJavaClass(dataType), -1));
         }

@@ -24,7 +24,7 @@ import static dbfit.util.Direction.*;
  * so users have to extend this fixture.
  */
 public abstract class DbObjectExecutionFixture extends Fixture {
-    private List<DbParameterAccessor> accessors = new ArrayList<DbParameterAccessor>();
+    private List<ParameterOrColumn> accessors = new ArrayList<ParameterOrColumn>();
     private Binding[] columnBindings;
     private StatementExecution execution;
     private DbObject dbObject; // intentionally private, subclasses should extend getTargetObject
@@ -56,7 +56,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         try {
             dbObject = getTargetDbObject();
             if (rows == null) {//single execution, no args
-                StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray(new DbParameterAccessor[]{}));
+                StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray(new ParameterOrColumn[]{}));
                 preparedStatement.run();
                 return;
             }
@@ -64,7 +64,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
 
             accessors = getAccessors(headings);
             columnBindings = getColumnBindings(accessors, headings);
-            StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray(new DbParameterAccessor[]{}));
+            StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray(new ParameterOrColumn[]{}));
             execution = preparedStatement;
             Parse row = rows;
             while ((row = row.more) != null) {
@@ -80,10 +80,10 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     /**
      * initialise db parameters for the dbObject based on table header cells
      */
-    private List<DbParameterAccessor> getAccessors(List<Heading> headings) throws SQLException {
-        List<DbParameterAccessor> accessors = new ArrayList<DbParameterAccessor>();
+    private List<ParameterOrColumn> getAccessors(List<Heading> headings) throws SQLException {
+        List<ParameterOrColumn> accessors = new ArrayList<ParameterOrColumn>();
         for (Heading heading : headings) {
-            DbParameterAccessor parameterAccessor = dbObject.getDbParameterAccessor(heading.getName(),
+            ParameterOrColumn parameterAccessor = dbObject.getDbParameterAccessor(heading.getName(),
                     heading.isOutput() ? OUTPUT : INPUT);
             if (parameterAccessor == null) {
                 throw new IllegalArgumentException("Parameter/column " + heading.getName() + " not found");
@@ -112,7 +112,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     /**
      * bind db accessors to columns based on the text in the header
      */
-    private Binding[] getColumnBindings(List<DbParameterAccessor> accessors, List<Heading> headings) throws Exception {
+    private Binding[] getColumnBindings(List<ParameterOrColumn> accessors, List<Heading> headings) throws Exception {
         Binding[] columns = new Binding[headings.size()];
         for (Heading heading : headings) {
             int i = headings.indexOf(heading);

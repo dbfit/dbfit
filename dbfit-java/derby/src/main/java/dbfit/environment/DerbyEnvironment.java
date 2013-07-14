@@ -2,7 +2,7 @@ package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
-import dbfit.util.DbParameterAccessor;
+import dbfit.util.ParameterOrColumn;
 import dbfit.util.NameNormaliser;
 
 import java.math.BigDecimal;
@@ -51,7 +51,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
         return paramRegex;
     }
 
-    public Map<String, DbParameterAccessor> getAllColumns(
+    public Map<String, ParameterOrColumn> getAllColumns(
             final String tableOrViewName) throws SQLException {
         String qry = "SELECT COLUMNNAME, COLUMNDATATYPE "
                 + "FROM SYS.SYSCOLUMNS WHERE REFERENCEID = "
@@ -59,19 +59,19 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
         return readIntoParams(tableOrViewName.toUpperCase(), qry);
     }
 
-    private Map<String, DbParameterAccessor> readIntoParams(
+    private Map<String, ParameterOrColumn> readIntoParams(
             String tableOrViewName, String query) throws SQLException {
         checkConnectionValid(currentConnection);
         PreparedStatement dc = currentConnection.prepareStatement(query);
         dc.setString(1, tableOrViewName);
 
         ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+        Map<String, ParameterOrColumn> allParams = new HashMap<String, ParameterOrColumn>();
         int position = 0;
         while (rs.next()) {
             String columnName = rs.getString(1);
             String dataType = rs.getString(2);
-            DbParameterAccessor dbp = new DbParameterAccessor(columnName,
+            ParameterOrColumn dbp = new ParameterOrColumn(columnName,
                     Direction.INPUT,
                     typeMapper.getJDBCSQLTypeForDBType(dataType),
                     getJavaClass(dataType), position++);
@@ -81,7 +81,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
         return allParams;
     }
 
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(
+    public Map<String, ParameterOrColumn> getAllProcedureParameters(
             String procName) throws SQLException {
         throw new UnsupportedOperationException();
     }

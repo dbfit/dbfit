@@ -2,10 +2,8 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
-import dbfit.util.DbParameterAccessor;
-import dbfit.util.DbParameterAccessorTypeAdapter;
-import dbfit.util.NameNormaliser;
-import dbfit.util.SymbolAccessSetBinding;
+import dbfit.util.*;
+import dbfit.util.ParameterOrColumn;
 import fit.Binding;
 import fit.Parse;
 
@@ -14,15 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import dbfit.util.Direction;
-
 public class Update extends fit.Fixture {
 	private DBEnvironment environment;
 	private StatementExecution statement;
 	private String tableName;
 	private Binding[] columnBindings;
-	private DbParameterAccessor[] updateAccessors;
-	private DbParameterAccessor[] selectAccessors;
+	private ParameterOrColumn[] updateAccessors;
+	private ParameterOrColumn[] selectAccessors;
     public Update()
     {
         this.environment = DbEnvironmentFactory.getDefaultEnvironment();
@@ -85,26 +81,26 @@ public class Update extends fit.Fixture {
       }
 	
 	private void initParameters(Parse headerCells) throws SQLException {			
-		Map<String, DbParameterAccessor> allParams=
+		Map<String, ParameterOrColumn> allParams=
 			environment.getAllColumns(tableName);
 		if (allParams.isEmpty()){
 			throw new SQLException("Cannot retrieve list of columns for "+tableName+" - check spelling and access rights");
 		}
 		columnBindings=new Binding[headerCells.size()];
-		List<DbParameterAccessor> selectAcc=new ArrayList<DbParameterAccessor>();
-		List<DbParameterAccessor> updateAcc=new ArrayList<DbParameterAccessor>();
+		List<ParameterOrColumn> selectAcc=new ArrayList<ParameterOrColumn>();
+		List<ParameterOrColumn> updateAcc=new ArrayList<ParameterOrColumn>();
 		
 		for (int i = 0; headerCells != null; i++, headerCells = headerCells.more) {
 			String name=headerCells.text();
 			String paramName= NameNormaliser.normaliseName(name);
 			//need to clone db param accessors here because same column may be in the update and select part
-			DbParameterAccessor orig=allParams.get(paramName);
+			ParameterOrColumn orig=allParams.get(paramName);
 			if (orig==null){
 				wrong(headerCells);
 				throw new SQLException("Cannot find column "+paramName);
 			}
 			//clone parameter because there may be multiple usages of the same column
-			DbParameterAccessor acc = orig.clone();
+			ParameterOrColumn acc = orig.clone();
 			acc.setDirection(Direction.INPUT);
 			if (headerCells.text().endsWith("="))
 				updateAcc.add(acc);
@@ -114,8 +110,8 @@ public class Update extends fit.Fixture {
         	columnBindings[i].adapter=new DbParameterAccessorTypeAdapter(acc,this);
 		}
 		// weird jdk syntax, method param is the type of array.
-		selectAccessors=selectAcc.toArray(new DbParameterAccessor[0]);
-		updateAccessors=updateAcc.toArray(new DbParameterAccessor[0]);
+		selectAccessors=selectAcc.toArray(new ParameterOrColumn[0]);
+		updateAccessors=updateAcc.toArray(new ParameterOrColumn[0]);
 	}
 	private void runRow(Parse row)  throws Throwable{
 		try{

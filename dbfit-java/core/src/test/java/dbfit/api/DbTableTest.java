@@ -1,6 +1,6 @@
 package dbfit.api;
 
-import dbfit.util.DbParameterAccessor;
+import dbfit.util.ParameterOrColumn;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -22,13 +22,13 @@ public class DbTableTest {
 
         when(env.getAllColumns("mytable")).thenReturn(columns("some_column"));
         expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("No such database column or parameter: 'nonexistent_column'");
+        expectedEx.expectMessage("No such database column: 'nonexistent_column'");
 
         new DbTable(env, "mytable").getDbParameterAccessor("nonexistent_column", INPUT);
     }
 
-    private HashMap<String, DbParameterAccessor> columns(String... columnNames) {
-        HashMap<String, DbParameterAccessor> columns = new HashMap<String, DbParameterAccessor>();
+    private HashMap<String, ParameterOrColumn> columns(String... columnNames) {
+        HashMap<String, ParameterOrColumn> columns = new HashMap<String, ParameterOrColumn>();
         for (String columnName : columnNames) {
             columns.put(columnName, null);
         }

@@ -1,7 +1,7 @@
 package dbfit.api;
 
 import dbfit.fixture.StatementExecution;
-import dbfit.util.DbParameterAccessor;
+import dbfit.util.ParameterOrColumn;
 import dbfit.util.DbParameterAccessors;
 
 import java.sql.SQLException;
@@ -13,9 +13,9 @@ import static dbfit.util.sql.PreparedStatements.buildStoredProcedureCall;
 public class DbStoredProcedureCall {
     private DBEnvironment environment;
     private String name;
-    private DbParameterAccessor[] accessors;
+    private ParameterOrColumn[] accessors;
 
-    public DbStoredProcedureCall(DBEnvironment environment, String name, DbParameterAccessor[] accessors) {
+    public DbStoredProcedureCall(DBEnvironment environment, String name, ParameterOrColumn[] accessors) {
         this.environment = environment;
         this.name = name;
         this.accessors = accessors;
@@ -24,7 +24,7 @@ public class DbStoredProcedureCall {
         return name;
     }
 
-    public DbParameterAccessor[] getAccessors() {
+    public ParameterOrColumn[] getAccessors() {
         return accessors;
     }
 

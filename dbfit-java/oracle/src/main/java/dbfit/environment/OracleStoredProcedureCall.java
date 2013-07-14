@@ -2,9 +2,9 @@ package dbfit.environment;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbStoredProcedureCall;
-import dbfit.util.DbParameterAccessor;
+import dbfit.util.ParameterOrColumn;
 import dbfit.util.DbParameterAccessors;
-import dbfit.util.OracleDbParameterAccessor;
+import dbfit.util.OracleParameterOrColumn;
 import dbfit.util.oracle.OracleBooleanSpCommand;
 import dbfit.util.oracle.OracleSpParameter;
 import dbfit.util.oracle.SpGeneratorOutput;
@@ -17,7 +17,7 @@ import java.util.Map;
 import dbfit.util.Direction;
 
 public class OracleStoredProcedureCall extends DbStoredProcedureCall {
-    public OracleStoredProcedureCall(DBEnvironment environment, String name, DbParameterAccessor[] accessors) {
+    public OracleStoredProcedureCall(DBEnvironment environment, String name, ParameterOrColumn[] accessors) {
         super(environment, name, accessors);
     }
 
@@ -32,8 +32,8 @@ public class OracleStoredProcedureCall extends DbStoredProcedureCall {
         return command.toString();
     }
 
-    private void addAccessor(Map<String, DbParameterAccessor> map, DbParameterAccessor acc) {
-        DbParameterAccessor prevAcc = map.get(acc.getName());
+    private void addAccessor(Map<String, ParameterOrColumn> map, ParameterOrColumn acc) {
+        ParameterOrColumn prevAcc = map.get(acc.getName());
         if (prevAcc != null) {
             // Duplicated parameters are indication for single IN/OUT one.
             // So merging them here.
@@ -44,18 +44,18 @@ public class OracleStoredProcedureCall extends DbStoredProcedureCall {
         }
     }
 
-    private Map<String, DbParameterAccessor> getAccessorsMap(
-            DbParameterAccessor[] accessors) {
-        Map<String, DbParameterAccessor> map = new HashMap<String, DbParameterAccessor>();
-        for (DbParameterAccessor ac: accessors) {
+    private Map<String, ParameterOrColumn> getAccessorsMap(
+            ParameterOrColumn[] accessors) {
+        Map<String, ParameterOrColumn> map = new HashMap<String, ParameterOrColumn>();
+        for (ParameterOrColumn ac: accessors) {
             addAccessor(map, ac);
         }
 
         return map;
     }
 
-    private OracleSpParameter makeOracleSpParameter(DbParameterAccessor ac) {
-        String originalType = ((OracleDbParameterAccessor) ac).getOriginalTypeName();
+    private OracleSpParameter makeOracleSpParameter(ParameterOrColumn ac) {
+        String originalType = ((OracleParameterOrColumn) ac).getOriginalTypeName();
         return OracleSpParameter.newInstance(
                 ac.getName(), ac.getDirection(), originalType);
     }
@@ -76,7 +76,7 @@ public class OracleStoredProcedureCall extends DbStoredProcedureCall {
 
     private SpParamsSpec initSpParams() {
         List<String> accessorNames = new DbParameterAccessors(getAccessors()).getSortedAccessorNames();
-        Map<String, DbParameterAccessor> accessorsMap = getAccessorsMap(getAccessors());
+        Map<String, ParameterOrColumn> accessorsMap = getAccessorsMap(getAccessors());
 
         SpParamsSpec params = new SpParamsSpec();
 
@@ -98,8 +98,8 @@ public class OracleStoredProcedureCall extends DbStoredProcedureCall {
     }
 
     private boolean containsBooleanType() {
-        for (DbParameterAccessor ac: getAccessors()) {
-            if (((OracleDbParameterAccessor) ac).isOriginalTypeBoolean()) {
+        for (ParameterOrColumn ac: getAccessors()) {
+            if (((OracleParameterOrColumn) ac).isOriginalTypeBoolean()) {
                 return true;
             }
         }

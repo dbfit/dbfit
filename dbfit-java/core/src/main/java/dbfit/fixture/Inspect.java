@@ -1,7 +1,7 @@
 package dbfit.fixture;
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
-import dbfit.util.DbParameterAccessor;
+import dbfit.util.ParameterOrColumn;
 import dbfit.util.FitNesseTestHost;
 import fit.Fixture;
 import fit.Parse;
@@ -47,7 +47,7 @@ public class Inspect extends fit.Fixture {
 		}
 	}
 	private void inspectTable(Parse table) throws SQLException {
-		Map<String, DbParameterAccessor> allParams=
+		Map<String, ParameterOrColumn> allParams=
 			environment.getAllColumns(objectName);
 		if (allParams.isEmpty()){
 			throw new SQLException("Cannot retrieve list of columns for table or view "+objectName + " - check spelling and access rights");
@@ -55,7 +55,7 @@ public class Inspect extends fit.Fixture {
 		addRowWithParamNames(table,allParams);
 	}
 	private void inspectProcedure(Parse table) throws SQLException {
-		Map<String, DbParameterAccessor> allParams=
+		Map<String, ParameterOrColumn> allParams=
 			environment.getAllProcedureParameters(objectName);
 		if (allParams.isEmpty()){
 			throw new SQLException("Cannot retrieve list of parameters for procedure "+objectName + " - check spelling and access rights");
@@ -79,7 +79,7 @@ public class Inspect extends fit.Fixture {
 		Parse prevCell=null;
 		for (int i=0; i<rsmd.getColumnCount(); i++){
 			Object value=rs.getObject(i+1);
-			value=DbParameterAccessor.normaliseValue(value);
+			value= ParameterOrColumn.normaliseValue(value);
 			Parse cell=new Parse("td",
 					Fixture.gray(value==null?"null":value.toString()),null,null);
 			if (prevCell==null) 
@@ -105,7 +105,7 @@ public class Inspect extends fit.Fixture {
 		}
 		return newRow;
 	}
-	private void addRowWithParamNames(Parse table, Map<String,DbParameterAccessor> params){
+	private void addRowWithParamNames(Parse table, Map<String,ParameterOrColumn> params){
 		Parse newRow=new Parse("tr",null,null,null);
 		table.parts.more=newRow;
 		Parse prevCell=null;

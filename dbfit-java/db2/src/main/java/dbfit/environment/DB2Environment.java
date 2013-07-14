@@ -2,7 +2,7 @@ package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
-import dbfit.util.DbParameterAccessor;
+import dbfit.util.ParameterOrColumn;
 import dbfit.util.NameNormaliser;
 
 import java.math.BigDecimal;
@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import dbfit.util.Direction;
+
 import static dbfit.util.Direction.*;
 
 @DatabaseEnvironment(name="DB2", driver="com.ibm.db2.jcc.DB2Driver")
@@ -45,7 +46,7 @@ public class DB2Environment extends AbstractDbEnvironment {
         return "jdbc:db2://" + dataSource + "/" + database;
     }
 
-    public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
+    public Map<String, ParameterOrColumn> getAllColumns(String tableOrViewName)
             throws SQLException {
         String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
                 .split("\\.");
@@ -60,7 +61,7 @@ public class DB2Environment extends AbstractDbEnvironment {
         return readIntoParams(qualifiers, qry);
     }
 
-    private Map<String, DbParameterAccessor> readIntoParams(
+    private Map<String, ParameterOrColumn> readIntoParams(
             String[] queryParameters, String query) throws SQLException {
         PreparedStatement dc = currentConnection.prepareStatement(query);
 
@@ -70,7 +71,7 @@ public class DB2Environment extends AbstractDbEnvironment {
         }
 
         ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+        Map<String, ParameterOrColumn> allParams = new HashMap<String, ParameterOrColumn>();
         int position = 0;
         while (rs.next()) {
             String paramName = rs.getString(1);
@@ -80,7 +81,7 @@ public class DB2Environment extends AbstractDbEnvironment {
             // int length=rs.getInt(3);
             String direction = rs.getString(4);
             Direction paramDirection = getParameterDirection(direction);
-            DbParameterAccessor dbp = new DbParameterAccessor(paramName,
+            ParameterOrColumn dbp = new ParameterOrColumn(paramName,
                     paramDirection, getSqlType(dataType),
                     getJavaClass(dataType),
                     paramDirection == RETURN_VALUE ? -1
@@ -175,7 +176,7 @@ public class DB2Environment extends AbstractDbEnvironment {
                 + " is not supported");
     }
 
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(
+    public Map<String, ParameterOrColumn> getAllProcedureParameters(
             String procName) throws SQLException {
         String[] qualifiers = NameNormaliser.normaliseName(procName).split(
                 "\\.");

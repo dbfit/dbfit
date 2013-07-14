@@ -2,7 +2,7 @@ package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
-import dbfit.util.DbParameterAccessor;
+import dbfit.util.ParameterOrColumn;
 import dbfit.util.NameNormaliser;
 
 import java.math.BigDecimal;
@@ -64,7 +64,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
         return super.parseCommandText(commandText);
     }
 
-    public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
+    public Map<String, ParameterOrColumn> getAllColumns(String tableOrViewName)
             throws SQLException {
         String qry = " select c.[name], TYPE_NAME(c.system_type_id) as [Type], c.max_length, "
                 + " 0 As is_output, 0 As is_cursor_ref "
@@ -74,7 +74,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
         return readIntoParams(tableOrViewName, qry);
     }
 
-    private Map<String, DbParameterAccessor> readIntoParams(String objname,
+    private Map<String, ParameterOrColumn> readIntoParams(String objname,
             String query) throws SQLException {
         if (objname.contains(".")) {
             String[] schemaAndName = objname.split("[\\.]", 2);
@@ -85,7 +85,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
         PreparedStatement dc = currentConnection.prepareStatement(query);
         dc.setString(1, NameNormaliser.normaliseName(objname));
         ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+        Map<String, ParameterOrColumn> allParams = new HashMap<String, ParameterOrColumn>();
         int position = 0;
         while (rs.next()) {
             String paramName = rs.getString(1);
@@ -99,7 +99,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
                 paramDirection = Direction.RETURN_VALUE;
             else
                 paramDirection = getParameterDirection(direction);
-            DbParameterAccessor dbp = new DbParameterAccessor(paramName,
+            ParameterOrColumn dbp = new ParameterOrColumn(paramName,
                     paramDirection, getSqlType(dataType),
                     getJavaClass(dataType), position++);
             allParams.put(NameNormaliser.normaliseName(paramName), dbp);
@@ -213,7 +213,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
                 + " is not supported");
     }
 
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(
+    public Map<String, ParameterOrColumn> getAllProcedureParameters(
             String procName) throws SQLException {
         return readIntoParams(
                 procName,
