@@ -14,7 +14,7 @@ public class SqlServerRegressionTest {
 
     @Before
     public void setUp() {
-        helper = new JUnitHelper("../..", new File(System.getProperty("java.io.tmpdir"),"fitnesse").getAbsolutePath());
+        helper = new JUnitHelper("../..", new File("../../tmp").getAbsolutePath());
         helper.setPort(1234);
     }
 

@@ -9,7 +9,7 @@ import static fitnesse.junit.FitNesseSuite.*;
 @RunWith(FitNesseSuite.class)
 @Name("DbFit.AcceptanceTests.JavaTests.OracleTests.FlowMode")
 @FitnesseDir("../..")
-@OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "fitnesse")
+@OutputDir("../../tmp")
 @Port(1234)
 public class FlowModeTest {
     @Test public void dummy(){}
