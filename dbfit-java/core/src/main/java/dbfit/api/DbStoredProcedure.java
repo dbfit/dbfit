@@ -28,7 +28,7 @@ public class DbStoredProcedure implements DbObject {
     }
 
     public ParameterOrColumn getDbParameterAccessor(String name,
-                                                      Direction expectedDirection) throws SQLException{
+                                                    Direction expectedDirection) throws SQLException{
         ParameterOrColumn parameter = findAccessorForParamWithName(name);
         if (parameter.hasDirection(INPUT_OUTPUT)) {
             // clone, separate into input and output
