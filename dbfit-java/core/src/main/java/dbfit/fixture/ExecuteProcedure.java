@@ -5,6 +5,7 @@ import dbfit.api.DbEnvironmentFactory;
 import dbfit.api.DbObject;
 import dbfit.api.DbStoredProcedure;
 import dbfit.util.ExpectedBehaviour;
+import fit.Parse;
 
 import java.sql.SQLException;
 
@@ -46,15 +47,45 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
         return new DbStoredProcedure(environment, procName);
     }
 
-    @Override
     protected ExpectedBehaviour getExpectedBehaviour() {
         if (!exceptionExpected) return ExpectedBehaviour.NO_EXCEPTION;
         if (!excNumberDefined) return ExpectedBehaviour.ANY_EXCEPTION;
         return ExpectedBehaviour.SPECIFIC_EXCEPTION;
     }
 
-    @Override
     protected int getExpectedErrorCode() {
         return excNumberExpected;
+    }
+
+    private void executeStatementExpectingException(Parse row) throws Exception {
+        try {
+            execution.createSavepoint();
+            execution.run();
+            wrong(row);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // all good, exception expected
+            if (getExpectedBehaviour() == ExpectedBehaviour.ANY_EXCEPTION) {
+                right(row);
+            } else {
+                int realError = ((DbStoredProcedure) dbObject).getExceptionCode(e);
+                if (realError == getExpectedErrorCode())
+                    right(row);
+                else {
+                    wrong(row);
+                    row.parts.addToBody(fit.Fixture.gray(" got error code " + realError));
+                }
+            }
+        }
+        execution.restoreSavepoint();
+    }
+
+    @Override
+    protected void executeStatementAndEvaluateOutputs(Parse row) throws Throwable {
+        if (getExpectedBehaviour() == ExpectedBehaviour.NO_EXCEPTION) {
+            super.executeStatementAndEvaluateOutputs(row);
+        } else {
+            executeStatementExpectingException(row);
+        };
     }
 }

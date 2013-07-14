@@ -55,10 +55,4 @@ public class DbTable implements DbObject {
         }
         return column;
     }
-
-    @Override
-    public int getExceptionCode(SQLException e) {
-        return dbEnvironment.getExceptionCode(e);
-    }
-
 }

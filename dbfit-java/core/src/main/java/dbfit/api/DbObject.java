@@ -9,5 +9,4 @@ import java.sql.SQLException;
 public interface DbObject {
     public StatementExecution buildPreparedStatement(ParameterOrColumn accessors[]) throws SQLException ;
     public ParameterOrColumn getDbParameterAccessor(String paramName, Direction expectedDirection) throws SQLException;
-    int getExceptionCode(SQLException e);
 }
