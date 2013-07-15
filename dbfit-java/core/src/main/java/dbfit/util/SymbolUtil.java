@@ -9,14 +9,29 @@ import java.sql.SQLException;
  */
 public class SymbolUtil {
 	private static final Object dbNull=new Object();
+
 	public static void setSymbol(String name, Object value){
 		fit.Fixture.setSymbol(getSymbolName(name), value==null?dbNull:value);
 	}
+
 	public static Object getSymbol(String name){
 		Object value=fit.Fixture.getSymbol(getSymbolName(name));
 		if (value==dbNull) return null;
 		return value;
 	}
+
+    public static Object getSymbol(String s, Class<?> type) throws Exception{
+        Object value = getSymbol(s);
+        if (value.getClass().equals(type))
+            return value;
+        try {
+            return type.cast(value);
+        } catch (Exception e) {
+            throw new UnsupportedOperationException(
+                    "Incompatible types between symbol and cell value: expected " + type + "; but symbol is " + value.getClass(), e);
+        }
+    }
+
 	public static void clearSymbols(){
 		fit.Fixture.ClearSymbols();
 	}
@@ -41,19 +56,8 @@ public class SymbolUtil {
     public static boolean isSymbolGetter(String text) {
         return text != null && text.startsWith("<<");
     }
+
     public static boolean isSymbolSetter(String text) {
         return text != null && text.startsWith(">>");
-    }
-
-    public static Object getValueOfSymbol(String s, Class<?> type) throws Exception{
-        Object value = dbfit.util.SymbolUtil.getSymbol(s);
-        if (value.getClass().equals(type))
-            return value;
-        try {
-            return type.cast(value);
-        } catch (Exception e) {
-            throw new UnsupportedOperationException(
-                    "Incompatible types between symbol and cell value: expected " + type + "; but symbol is " + value.getClass(), e);
-        }
     }
 }

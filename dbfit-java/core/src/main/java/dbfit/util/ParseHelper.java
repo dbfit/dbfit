@@ -24,7 +24,7 @@ public class ParseHelper {
         if (content.isNull()) {
             return null;
         } else if (content.isSymbolGetter()) {
-            return SymbolUtil.getValueOfSymbol(s, type);
+            return SymbolUtil.getSymbol(s, type);
         } else if (this.type.equals(String.class) && content.doesFixedLengthParsingApply()) {
 			return content.getFixedLengthParsedString();
 		} else {
