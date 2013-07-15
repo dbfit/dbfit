@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static dbfit.util.DbParameterAccessor.Direction.*;
+import static dbfit.util.Direction.*;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.junit.Assert.*;

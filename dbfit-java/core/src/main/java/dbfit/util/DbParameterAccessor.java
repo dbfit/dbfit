@@ -5,61 +5,16 @@ import dbfit.fixture.StatementExecution;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
-import static dbfit.util.DbParameterAccessor.Direction.*;
+import static dbfit.util.Direction.*;
 
 public class DbParameterAccessor {
-    public static enum Direction {
-        RETURN_VALUE,
-        INPUT,
-        OUTPUT,
-        INPUT_OUTPUT;
 
-        public boolean isInput() {
-            return this == INPUT;
-        }
-
-        public boolean isOutOrInout() {
-            switch (this) {
-                case OUTPUT:
-                case INPUT_OUTPUT:
-                    return true;
-            }
-
-            return false;
-        }
-
-        public boolean isInOrInout() {
-            switch (this) {
-                case INPUT:
-                case INPUT_OUTPUT:
-                    return true;
-            }
-
-            return false;
-        }
-
-        public boolean isOutputOrReturnValue() {
-            switch (this) {
-                case RETURN_VALUE:
-                case OUTPUT:
-                case INPUT_OUTPUT:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public boolean isReturnValue() {
-            return this == RETURN_VALUE;
-        }
-    }
-
-    protected int index; //index in effective sql statement (not necessarily the same as position below)
-    protected Direction direction;
-    protected String name;
-    protected int sqlType;
-    protected Class<?> javaType;
-    protected int position; //zero-based index of parameter in procedure or column in table
+    private int index; //index in effective sql statement (not necessarily the same as position below)
+    private Direction direction;
+    private String name;
+    private int sqlType;
+    private Class<?> javaType;
+    private int position; //zero-based index of parameter in procedure or column in table
     protected StatementExecution cs;
 
     public static Object normaliseValue(Object currVal) throws SQLException {        

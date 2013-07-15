@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static dbfit.util.DbParameterAccessor.Direction;
+import dbfit.util.Direction;
 
 @DatabaseEnvironment(name="Teradata", driver="com.teradata.jdbc.TeraDriver")
 public class TeradataEnvironment extends AbstractDbEnvironment {

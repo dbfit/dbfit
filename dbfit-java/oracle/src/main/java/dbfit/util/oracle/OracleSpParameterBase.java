@@ -1,6 +1,6 @@
 package dbfit.util.oracle;
 
-import static dbfit.util.DbParameterAccessor.Direction;
+import dbfit.util.Direction;
 import static dbfit.util.oracle.OraclePlSqlGenerateUtils.callExpr;
 
 public class OracleSpParameterBase {

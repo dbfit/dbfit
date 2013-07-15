@@ -1,6 +1,6 @@
 package dbfit.util.oracle;
 
-import static dbfit.util.DbParameterAccessor.Direction;
+import dbfit.util.Direction;
 
 public class OracleSpParameter extends OracleSpParameterBase {
 

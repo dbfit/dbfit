@@ -5,7 +5,7 @@ import dbfit.util.DbParameterAccessor;
 
 import java.sql.SQLException;
 
-import static dbfit.util.DbParameterAccessor.Direction;
+import dbfit.util.Direction;
 
 public class DbStatement implements DbObject {
     private DBEnvironment environment;
