@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static dbfit.util.DbParameterAccessor.Direction;
+import dbfit.util.Direction;
 
 public class OracleStoredProcedureCall extends DbStoredProcedureCall {
     public OracleStoredProcedureCall(DBEnvironment environment, String name, DbParameterAccessor[] accessors) {

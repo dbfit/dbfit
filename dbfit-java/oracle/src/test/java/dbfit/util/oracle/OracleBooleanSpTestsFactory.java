@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static dbfit.util.DbParameterAccessor.Direction;
-import static dbfit.util.DbParameterAccessor.Direction.*;
+import dbfit.util.Direction;
+import static dbfit.util.Direction.*;
 
 public class OracleBooleanSpTestsFactory {
     private SpGeneratorOutput output;

@@ -12,7 +12,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Map;
 
-import static dbfit.util.DbParameterAccessor.Direction.*;
+import static dbfit.util.Direction.*;
 
 public class Inspect extends fit.Fixture {
     private DBEnvironment environment;

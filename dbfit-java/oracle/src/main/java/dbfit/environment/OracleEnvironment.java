@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import static dbfit.util.DbParameterAccessor.Direction;
+import dbfit.util.Direction;
 
 @DatabaseEnvironment(name="Oracle", driver="oracle.jdbc.OracleDriver")
 public class OracleEnvironment extends AbstractDbEnvironment {
@@ -344,7 +344,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
     private CallableStatement openDbCallWithParameters(String query,
             String[] queryParameters) throws SQLException {
-        Log.log("preparing call " + query, queryParameters);
+        Log.log("preparing call " + query, (Object[]) queryParameters);
         CallableStatement dc = currentConnection.prepareCall(query);
         Log.log("setting parameters");
         for (int i = 0; i < queryParameters.length; i++) {

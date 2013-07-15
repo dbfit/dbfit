@@ -1,26 +1,25 @@
 package dbfit.util.oracle;
 
-import dbfit.util.DbParameterAccessor;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static dbfit.util.DbParameterAccessor.Direction;
-import static dbfit.util.DbParameterAccessor.Direction.*;
+import dbfit.util.Direction;
+import static dbfit.util.Direction.*;
 import static dbfit.util.oracle.OracleBooleanSpTestsFactory.*;
 import static org.junit.Assert.assertEquals;
 
 public class OracleSpParameterTest {
-    private Map<DbParameterAccessor.Direction, String> expectedDirections;
+    private Map<Direction, String> expectedDirections;
     private SpGeneratorOutput output;
     private OracleBooleanSpTestsFactory factory;
     private OracleSpParameter pin;
     private Map<String, OracleSpParameter> spParams;
 
     public void initExpectedDirections() {
-        expectedDirections = new HashMap<DbParameterAccessor.Direction, String>();
+        expectedDirections = new HashMap<Direction, String>();
         expectedDirections.put(INPUT, "IN");
         expectedDirections.put(OUTPUT, "OUT");
         expectedDirections.put(INPUT_OUTPUT, "IN OUT");
