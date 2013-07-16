@@ -8,17 +8,17 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-public class DbParameterAccessors {
-    private ParameterOrColumn[] accessors;
+public class ParametersOrColumns {
+    private ParameterOrColumn[] parametersOrColumns;
 
-    public DbParameterAccessors(ParameterOrColumn[] accessors) {
-        this.accessors = accessors;
+    public ParametersOrColumns(ParameterOrColumn[] parametersOrColumns) {
+        this.parametersOrColumns = parametersOrColumns;
     }
 
     public void bindParameters(StatementExecution statement) throws SQLException {
-        List<String> accessorNames = getSortedAccessorNames();
-        for (ParameterOrColumn ac : accessors) {
-            int realindex = accessorNames.indexOf(ac.getName());
+        List<String> names = getSortedNames();
+        for (ParameterOrColumn ac : parametersOrColumns) {
+            int realindex = names.indexOf(ac.getName());
             ac.bindTo(statement, realindex + 1); // jdbc params are 1-based
             if (ac.hasDirection(Direction.RETURN_VALUE)) {
                 ac.bindTo(statement, Math.abs(ac.getPosition()));
@@ -32,9 +32,9 @@ public class DbParameterAccessors {
         }
     }
 
-    public List<String> getSortedAccessorNames() {
-        ParameterOrColumn[] newacc = new ParameterOrColumn[accessors.length];
-        System.arraycopy(accessors, 0, newacc, 0, accessors.length);
+    public List<String> getSortedNames() {
+        ParameterOrColumn[] newacc = new ParameterOrColumn[parametersOrColumns.length];
+        System.arraycopy(parametersOrColumns, 0, newacc, 0, parametersOrColumns.length);
         Arrays.sort(newacc, new PositionComparator());
         List<String> nameList = new ArrayList<String>();
         String lastName = null;
@@ -48,13 +48,11 @@ public class DbParameterAccessors {
     }
 
     public boolean containsReturnValue() {
-        for (ParameterOrColumn ac : accessors) {
+        for (ParameterOrColumn ac : parametersOrColumns) {
             if (ac.isReturnValueAccessor()) {
                 return true;
             }
         }
         return false;
     }
-
 }
-

@@ -2,7 +2,7 @@ package dbfit.api;
 
 import dbfit.fixture.StatementExecution;
 import dbfit.util.ParameterOrColumn;
-import dbfit.util.DbParameterAccessors;
+import dbfit.util.ParametersOrColumns;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -29,11 +29,11 @@ public class DbStoredProcedureCall {
     }
 
     public boolean isFunction() {
-        return new DbParameterAccessors(accessors).containsReturnValue();
+        return new ParametersOrColumns(accessors).containsReturnValue();
     }
 
     public int getNumberOfInputParameters() {
-        List<String> accessorNames = new DbParameterAccessors(getAccessors()).getSortedAccessorNames();
+        List<String> accessorNames = new ParametersOrColumns(getAccessors()).getSortedNames();
         int numberOfAccessors = accessorNames.size();
         return isFunction() ? numberOfAccessors - 1 : numberOfAccessors;
     }
@@ -47,7 +47,7 @@ public class DbStoredProcedureCall {
     }
 
     void bindParametersTo(StatementExecution cs) throws SQLException {
-        new DbParameterAccessors(getAccessors()).bindParameters(cs);
+        new ParametersOrColumns(getAccessors()).bindParameters(cs);
     }
 
     public StatementExecution toStatementExecution() throws SQLException {

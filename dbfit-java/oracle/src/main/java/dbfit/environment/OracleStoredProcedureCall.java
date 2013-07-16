@@ -3,7 +3,7 @@ package dbfit.environment;
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbStoredProcedureCall;
 import dbfit.util.ParameterOrColumn;
-import dbfit.util.DbParameterAccessors;
+import dbfit.util.ParametersOrColumns;
 import dbfit.util.OracleParameterOrColumn;
 import dbfit.util.oracle.OracleBooleanSpCommand;
 import dbfit.util.oracle.OracleSpParameter;
@@ -75,7 +75,7 @@ public class OracleStoredProcedureCall extends DbStoredProcedureCall {
     }
 
     private SpParamsSpec initSpParams() {
-        List<String> accessorNames = new DbParameterAccessors(getAccessors()).getSortedAccessorNames();
+        List<String> accessorNames = new ParametersOrColumns(getAccessors()).getSortedNames();
         Map<String, ParameterOrColumn> accessorsMap = getAccessorsMap(getAccessors());
 
         SpParamsSpec params = new SpParamsSpec();
