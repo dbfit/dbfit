@@ -2,15 +2,16 @@ package dbfit.fixture;
 
 import dbfit.api.DbObject;
 import dbfit.util.*;
-import fit.Binding;
 import fit.Fixture;
 import fit.Parse;
+import fit.TypeAdapter;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static dbfit.util.Direction.*;
+import static dbfit.util.SymbolUtil.isSymbolGetter;
 
 /**
  * this class handles all cases where a statement should be executed for each row with
@@ -25,7 +26,6 @@ import static dbfit.util.Direction.*;
  */
 public abstract class DbObjectExecutionFixture extends Fixture {
     private List<ParameterOrColumn> accessors = new ArrayList<ParameterOrColumn>();
-    private Binding[] columnBindings;
     protected StatementExecution execution;
     protected DbObject dbObject; // intentionally private, subclasses should extend getTargetObject
 
@@ -49,7 +49,6 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             List<Heading> headings = getHeadingsFrom(rows.parts);
 
             accessors = getAccessors(headings);
-            columnBindings = getColumnBindings(accessors, headings);
             StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray(new ParameterOrColumn[]{}));
             execution = preparedStatement;
             Parse row = rows;
@@ -95,23 +94,6 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         }
     }
 
-    /**
-     * bind db accessors to columns based on the text in the header
-     */
-    private Binding[] getColumnBindings(List<ParameterOrColumn> accessors, List<Heading> headings) throws Exception {
-        Binding[] columns = new Binding[headings.size()];
-        for (Heading heading : headings) {
-            int i = headings.indexOf(heading);
-            if (heading.isOutput()) {
-                columns[i] = new SymbolAccessQueryBinding();
-            } else {
-                columns[i] = new SymbolAccessSetBinding();
-            }
-            columns[i].adapter = new DbParameterAccessorTypeAdapter(accessors.get(i), this);
-        }
-        return columns;
-    }
-
     private List<Heading> getHeadingsFrom(Parse headerCells) {
         List<Heading> headings = new ArrayList<Heading>();
         for (int i = 0; headerCells != null; i++, headerCells = headerCells.more) {
@@ -119,6 +101,55 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             headings.add(new Heading(text));
         }
         return headings;
+    }
+
+    public void doQueryCell(final Parse cell, ParameterOrColumn parameterOrColumn) {
+        Class<?> type = parameterOrColumn.getJavaType();
+        ParseHelper parseHelper = new ParseHelper(TypeAdapter.on(this, type), type);
+        final Fixture fixture = this;
+        new CellTest(new TestResultHandler() {
+            public void pass() {
+                fixture.right(cell);
+            }
+
+            public void fail(String actualValue) {
+                fixture.wrong(cell, actualValue);
+            }
+
+            public void exception(Throwable e) {
+                fixture.exception(cell, e);
+            }
+
+            public void annotate(String message) {
+                cell.addToBody(Fixture.gray(message));
+            }
+        }).test(cell.text(), parseHelper, parameterOrColumn);
+    }
+
+    public void doSetCell(final Parse cell, ParameterOrColumn parameterOrColumn) throws Exception {
+        Class<?> type = parameterOrColumn.getJavaType();
+        String text=cell.text();
+        ParseHelper parseHelper = new ParseHelper(TypeAdapter.on(this, type), type);
+        if (isSymbolGetter(text)){
+            Object value=dbfit.util.SymbolUtil.getSymbol(text);
+            cell.addToBody(Fixture.gray(" = "+String.valueOf(value)));
+            parameterOrColumn.set(value);
+        } else {
+            parameterOrColumn.set(parseHelper.parse(cell.text()));
+        }
+    }
+
+    public void doCell(Parse cell, int columnNumber) {
+        try {
+            ParameterOrColumn parameterOrColumn = accessors.get(columnNumber);
+            if (parameterOrColumn.hasDirection(Direction.INPUT)) {
+                doSetCell(cell, parameterOrColumn);
+            } else {
+                doQueryCell(cell, parameterOrColumn);
+            }
+        } catch (Throwable throwable) {
+            throw new RuntimeException(throwable);
+        }
     }
 
     /**
@@ -134,7 +165,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         //first set input params
         for (int column = 0; column < accessors.size(); column++, cell = cell.more) {
             if (accessors.get(column).hasDirection(INPUT)) {
-                columnBindings[column].doCell(this, cell);
+                doCell(cell, column);
             }
         }
     }
@@ -145,7 +176,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         Parse cells = row.parts;
         for (int column = 0; column < accessors.size(); column++, cells = cells.more) {
             if (accessors.get(column).hasDirection(OUTPUT) || accessors.get(column).hasDirection(RETURN_VALUE)) {
-                columnBindings[column].doCell(this, cells);
+                doCell(cells, column);
             }
         }
     }

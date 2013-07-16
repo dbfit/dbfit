@@ -22,6 +22,9 @@ public class SymbolUtil {
 
     public static Object getSymbol(String s, Class<?> type) throws Exception{
         Object value = getSymbol(s);
+        if (value == null) {
+            throw new IllegalArgumentException("No value found for symbol " + s);
+        }
         if (value.getClass().equals(type))
             return value;
         try {
