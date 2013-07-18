@@ -1,13 +1,10 @@
 package dbfit.api;
 
 import dbfit.fixture.StatementExecution;
-import dbfit.util.DbParameterAccessor;
 
 import java.sql.SQLException;
 
-import dbfit.util.Direction;
-
-public class DbStatement implements DbObject {
+public class DbStatement {
     private DBEnvironment environment;
     private String statementText;
     private TestHost testHost;
@@ -22,16 +19,7 @@ public class DbStatement implements DbObject {
         this.testHost = testHost;
     }
 
-    public StatementExecution buildPreparedStatement(DbParameterAccessor[] accessors) throws SQLException {
+    public StatementExecution buildPreparedStatement() throws SQLException {
         return new StatementExecution(environment.createStatementWithBoundFixtureSymbols(testHost, statementText), false);
-    }
-
-    public DbParameterAccessor getDbParameterAccessor(String paramName, Direction expectedDirection) {
-        return null;
-    }
-
-    @Override
-    public int getExceptionCode(SQLException e) {
-        return environment.getExceptionCode(e);
     }
 }
