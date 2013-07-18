@@ -3,6 +3,7 @@ package dbfit.environment;
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
+import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
 
 import javax.sql.RowSet;
@@ -12,8 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Pattern;
-
-import dbfit.util.Direction;
 
 @DatabaseEnvironment(name="MySql", driver="com.mysql.jdbc.Driver")
 public class MySqlEnvironment extends AbstractDbEnvironment {
@@ -59,31 +58,31 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             qry += " (table_schema=database() and lower(table_name)=?)";
         }
         qry += " order by ordinal_position";
-        return readIntoParams(qualifiers, qry);
+        return readColumnsFromDb(qualifiers, qry);
     }
 
-    private Map<String, DbParameterAccessor> readIntoParams(
-            String[] queryParameters, String query) throws SQLException {
+    private Map<String, DbParameterAccessor> readColumnsFromDb(
+            String[] parametersForColumnQuery, String query) throws SQLException {
         PreparedStatement dc = currentConnection.prepareStatement(query);
-        for (int i = 0; i < queryParameters.length; i++) {
+        for (int i = 0; i < parametersForColumnQuery.length; i++) {
             dc.setString(i + 1,
-                    NameNormaliser.normaliseName(queryParameters[i]));
+                    NameNormaliser.normaliseName(parametersForColumnQuery[i]));
         }
         ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+        Map<String, DbParameterAccessor> columns = new HashMap<String, DbParameterAccessor>();
         int position = 0;
         while (rs.next()) {
-            String paramName = rs.getString(1);
-            if (paramName == null)
-                paramName = "";
+            String columnName = rs.getString(1);
+            if (columnName == null)
+                columnName = "";
             String dataType = rs.getString(2);
-            DbParameterAccessor dbp = new DbParameterAccessor(paramName,
+            DbParameterAccessor dbp = new DbParameterAccessor(columnName,
                     Direction.INPUT, getSqlType(dataType),
                     getJavaClass(dataType), position++);
-            allParams.put(NameNormaliser.normaliseName(paramName), dbp);
+            columns.put(NameNormaliser.normaliseName(columnName), dbp);
         }
         rs.close();
-        return allParams;
+        return columns;
     }
 
     // List interface has sequential search, so using list instead of array to
