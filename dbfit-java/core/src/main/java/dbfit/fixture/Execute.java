@@ -2,13 +2,12 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
-import dbfit.api.DbObject;
 import dbfit.api.DbStatement;
 import dbfit.util.FitNesseTestHost;
+import fit.Fixture;
+import fit.Parse;
 
-import java.sql.SQLException;
-
-public class Execute extends DbObjectExecutionFixture {
+public class Execute extends Fixture {
     private String statementText;
     private DBEnvironment dbEnvironment;
 
@@ -21,8 +20,18 @@ public class Execute extends DbObjectExecutionFixture {
         this.dbEnvironment = env;
     }
 
-    protected DbObject getTargetDbObject() throws SQLException {
-        if (statementText == null) statementText = args[0];
-        return new DbStatement(dbEnvironment, statementText, FitNesseTestHost.getInstance());
+    public void doRows(Parse rows) {
+        try {
+            DbStatement dbObject = new DbStatement(dbEnvironment, getStatementText(), FitNesseTestHost.getInstance());
+            StatementExecution preparedStatement = dbObject.buildPreparedStatement();
+            preparedStatement.run();
+        } catch (Throwable e) {
+            throw new Error(e);
+        }
+    }
+
+    private String getStatementText() {
+        if (statementText == null) statementText=args[0];
+        return statementText;
     }
 }
