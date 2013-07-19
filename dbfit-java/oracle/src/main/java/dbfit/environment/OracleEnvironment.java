@@ -11,8 +11,6 @@ import java.sql.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import dbfit.util.Direction;
-
 @DatabaseEnvironment(name="Oracle", driver="oracle.jdbc.OracleDriver")
 public class OracleEnvironment extends AbstractDbEnvironment {
     private static String SKIP_ORACLE_SYNONYMS = "SKIPORACLESYNONYMS";
@@ -452,7 +450,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         StringBuilder retValues = new StringBuilder();
 
         for (DbParameterAccessor accessor : accessors) {
-            if (accessor.getDirection() == Direction.INPUT) {
+            if (accessor.hasDirection(Direction.INPUT)) {
                 sb.append(comma);
                 values.append(comma);
                 sb.append(accessor.getName());

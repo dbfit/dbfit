@@ -43,7 +43,7 @@ public class DbParameterAccessor {
         this.position=position;
     }
 
-    public int getSqlType() {
+    protected int getSqlType() {
         return sqlType;
     }
 
@@ -98,6 +98,14 @@ public class DbParameterAccessor {
 
     public boolean isReturnValueAccessor() {
         return direction.isReturnValue();
+    }
+
+    public boolean hasDirection(Direction expectedDirection) {
+        return getDirection() == expectedDirection;
+    }
+
+    public boolean doesNotHaveDirection(Direction expectedDirection) {
+        return !hasDirection(expectedDirection);
     }
 }
 
