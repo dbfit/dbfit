@@ -34,20 +34,6 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     private DbObject dbObject; // intentionally private, subclasses should extend getTargetObject
 
     /**
-     * override this method to control whether an exception is expected or not. By default, expects no exception to happen
-     */
-    protected ExpectedBehaviour getExpectedBehaviour() {
-        return ExpectedBehaviour.NO_EXCEPTION;
-    }
-
-    /**
-     * override this method and supply the expected exception number, if one is expected
-     */
-    protected int getExpectedErrorCode() {
-        return 0;
-    }
-
-    /**
      * override this method and supply the dbObject implementation that will be executed for each row
      */
     protected abstract DbObject getTargetDbObject() throws SQLException;
@@ -142,36 +128,11 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             Parse cell = cellMap.get(inputAccessor);
             columnBindings.get(inputAccessor).doCell(this, cell);
         }
-
-        if (getExpectedBehaviour() == ExpectedBehaviour.NO_EXCEPTION) {
-            executeStatementAndEvaluateOutputs(row);
-        } else {
-            executeStatementExpectingException(row);
-        };
+        executeStatementAndEvaluateOutputs(row);
     }
 
-    private void executeStatementExpectingException(Parse row) throws Exception {
-        try {
-            execution.run();
-            wrong(row);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // all good, exception expected
-            if (getExpectedBehaviour() == ExpectedBehaviour.ANY_EXCEPTION) {
-                right(row);
-            } else {
-                int realError = e.getErrorCode();
-                if (realError == getExpectedErrorCode())
-                    right(row);
-                else {
-                    wrong(row);
-                    row.parts.addToBody(fit.Fixture.gray(" got error code " + realError));
-                }
-            }
-        }
-    }
 
-    private void executeStatementAndEvaluateOutputs(Parse row)
+    protected void executeStatementAndEvaluateOutputs(Parse row)
             throws SQLException, Throwable {
         execution.run();
         Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(asCellList(row));
@@ -187,5 +148,13 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             cells.add(cell);
         }
         return cells;
+    }
+
+    protected StatementExecution getExecution() {
+        return execution;
+    }
+
+    protected DbObject getDbObject() {
+        return dbObject;
     }
 }
