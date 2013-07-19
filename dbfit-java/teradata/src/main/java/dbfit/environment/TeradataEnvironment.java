@@ -1,8 +1,8 @@
 package dbfit.environment;
 
+import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.*;
-import dbfit.annotations.DatabaseEnvironment;
 import fit.TypeAdapter;
 
 import java.math.BigDecimal;
@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import dbfit.util.Direction;
 
 @DatabaseEnvironment(name="Teradata", driver="com.teradata.jdbc.TeraDriver")
 public class TeradataEnvironment extends AbstractDbEnvironment {
@@ -523,7 +521,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         StringBuilder retValues = new StringBuilder();
 
         for (DbParameterAccessor accessor : accessors) {
-            if (accessor.getDirection() == Direction.INPUT) {
+            if (accessor.hasDirection(Direction.INPUT)) {
                 sb.append(comma);
                 values.append(comma);
                 sb.append(accessor.getName());

@@ -119,7 +119,7 @@ public class Inspect extends fit.Fixture {
 		for(int i=0; i<orderedNames.length; i++){
 			String name=orderedNames[i];
       if (name == null) name = "";
-			if (params.get(name).getDirection()!= INPUT) name=name+"?";
+			if (params.get(name).doesNotHaveDirection(INPUT)) name=name+"?";
 			Parse cell=new Parse("td",Fixture.gray(name),null,null);
 			if (prevCell==null) 
 					newRow.parts=cell;

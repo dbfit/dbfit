@@ -262,7 +262,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
         StringBuilder retValues = new StringBuilder();
 
         for (DbParameterAccessor accessor : accessors) {
-            if (accessor.getDirection() == Direction.INPUT) {
+            if (accessor.hasDirection(Direction.INPUT)) {
                 sb.append(comma);
                 values.append(comma);
                 sb.append(accessor.getName());

@@ -2,12 +2,12 @@ package dbfit.api;
 
 import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
+import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
 
 import java.sql.SQLException;
 import java.util.Map;
 
-import dbfit.util.Direction;
 import static dbfit.util.Direction.INPUT_OUTPUT;
 
 public class DbStoredProcedure implements DbObject {
@@ -28,24 +28,22 @@ public class DbStoredProcedure implements DbObject {
     }
 
     public DbParameterAccessor getDbParameterAccessor(String name,
-            Direction expectedDirection) throws SQLException{
-        DbParameterAccessor accessor = findAccessorForParamWithName(name);
-        if (accessor.getDirection() == INPUT_OUTPUT) {
+                                                      Direction expectedDirection) throws SQLException{
+        DbParameterAccessor parameter = findAccessorForParamWithName(name);
+        if (parameter.hasDirection(INPUT_OUTPUT)) {
             // clone, separate into input and output
-            accessor = accessor.clone();
-            accessor.setDirection(expectedDirection);
+            parameter = parameter.clone();
+            parameter.setDirection(expectedDirection);
         }
         // sql server quirk. if output parameter is used in an input column,
         // then the param should be cloned and remapped to IN/OUT
-        if (expectedDirection!=Direction.OUTPUT &&
-                accessor.getDirection() == Direction.OUTPUT) {
-            accessor = accessor.clone();
-            accessor.setDirection(Direction.INPUT);
+        if (expectedDirection!=Direction.OUTPUT && parameter.hasDirection(Direction.OUTPUT)) {
+            parameter = parameter.clone();
+            parameter.setDirection(Direction.INPUT);
         }
-        return accessor;
+        return parameter;
     }
 
-    @Override
     public int getExceptionCode(SQLException e) {
         return environment.getExceptionCode(e);
     }
@@ -74,4 +72,3 @@ public class DbStoredProcedure implements DbObject {
     }
 
 }
-
