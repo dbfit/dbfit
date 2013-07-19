@@ -122,23 +122,17 @@ public abstract class DbObjectExecutionFixture extends Fixture {
      * execute a single row
      */
     private void runRow(Parse row) throws Throwable {
+        setInputs(row);
+        executeStatement(row);
+        evaluateOutputs(row);
+    }
+
+    protected void setInputs(Parse row) throws Throwable {
         //first set input params
         Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(asCellList(row));
         for (DbParameterAccessor inputAccessor : accessors.getInputAccessors()) {
             Parse cell = cellMap.get(inputAccessor);
             columnBindings.get(inputAccessor).doCell(this, cell);
-        }
-        executeStatementAndEvaluateOutputs(row);
-    }
-
-
-    protected void executeStatementAndEvaluateOutputs(Parse row)
-            throws SQLException, Throwable {
-        execution.run();
-        Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(asCellList(row));
-        for (DbParameterAccessor outputAccessor : accessors.getOutputAccessors()) {
-            Parse cell = cellMap.get(outputAccessor);
-            columnBindings.get(outputAccessor).doCell(this, cell);
         }
     }
 
@@ -148,6 +142,18 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             cells.add(cell);
         }
         return cells;
+    }
+
+    protected void evaluateOutputs(Parse row) throws Throwable {
+        Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(asCellList(row));
+        for (DbParameterAccessor outputAccessor : accessors.getOutputAccessors()) {
+            Parse cell = cellMap.get(outputAccessor);
+            columnBindings.get(outputAccessor).doCell(this, cell);
+        }
+    }
+
+    protected void executeStatement(Parse row) throws SQLException {
+        execution.run();
     }
 
     protected StatementExecution getExecution() {
