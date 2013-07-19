@@ -16,8 +16,11 @@ public class SymbolAccessSetBinding extends Binding.SetBinding {
 			cell.addToBody(Fixture.gray(" = "+String.valueOf(value)));
 			adapter.set(value);
 			return;
-		}
-		super.doCell(fixture, cell);
+		} else {
+            if ("".equals(cell.text()))
+                fixture.handleBlankCell(cell, adapter);
+            adapter.set(adapter.parse(cell.text()));
+        }
 	}
 
 }

@@ -1,7 +1,7 @@
 package dbfit.api;
 
 import dbfit.fixture.StatementExecution;
-import dbfit.util.DbParameterAccessor;
+import dbfit.util.ParameterOrColumn;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
 
@@ -13,7 +13,7 @@ import static dbfit.util.Direction.INPUT_OUTPUT;
 public class DbStoredProcedure implements DbObject {
     private DBEnvironment environment;
     private String name;
-    private Map<String, DbParameterAccessor> allParams;
+    private Map<String, ParameterOrColumn> allParams;
 
     public DbStoredProcedure(DBEnvironment environment, String name) {
         this.environment = environment;
@@ -21,15 +21,15 @@ public class DbStoredProcedure implements DbObject {
     }
 
     public StatementExecution buildPreparedStatement(
-            DbParameterAccessor[] accessors) throws SQLException {
+            ParameterOrColumn[] accessors) throws SQLException {
         DbStoredProcedureCall call = environment.newStoredProcedureCall(name, accessors);
 
         return call.toStatementExecution();
     }
 
-    public DbParameterAccessor getDbParameterAccessor(String name,
-                                                      Direction expectedDirection) throws SQLException{
-        DbParameterAccessor parameter = findAccessorForParamWithName(name);
+    public ParameterOrColumn getDbParameterAccessor(String name,
+                                                    Direction expectedDirection) throws SQLException{
+        ParameterOrColumn parameter = findAccessorForParamWithName(name);
         if (parameter.hasDirection(INPUT_OUTPUT)) {
             // clone, separate into input and output
             parameter = parameter.clone();
@@ -48,15 +48,15 @@ public class DbStoredProcedure implements DbObject {
         return environment.getExceptionCode(e);
     }
 
-    private DbParameterAccessor findAccessorForParamWithName(String name) throws SQLException {
+    private ParameterOrColumn findAccessorForParamWithName(String name) throws SQLException {
         String paramName = NameNormaliser.normaliseName(name);
-        DbParameterAccessor accessor = getAllParams().get(paramName);
+        ParameterOrColumn accessor = getAllParams().get(paramName);
         if (accessor == null)
             throw new SQLException("Cannot find parameter \"" + paramName + "\"");
         return accessor;
     }
 
-    private Map<String, DbParameterAccessor> getAllParams() throws SQLException {
+    private Map<String, ParameterOrColumn> getAllParams() throws SQLException {
         if (allParams==null){
             allParams = environment.getAllProcedureParameters(this.name);
             if (allParams.isEmpty()) {

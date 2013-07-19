@@ -6,8 +6,8 @@ import fit.TypeAdapter;
 import java.lang.reflect.InvocationTargetException;
 
 public class DbParameterAccessorTypeAdapter extends TypeAdapter {	
-	private DbParameterAccessor parameterAccessor;
-	public DbParameterAccessorTypeAdapter(DbParameterAccessor accessor,Fixture f){
+	private ParameterOrColumn parameterAccessor;
+	public DbParameterAccessorTypeAdapter(ParameterOrColumn accessor,Fixture f){
 		this.fixture=f;
 		this.type=accessor.getJavaType();
 		this.parameterAccessor=accessor;		
@@ -23,6 +23,6 @@ public class DbParameterAccessorTypeAdapter extends TypeAdapter {
 	}
 	@Override
 	public Object parse(String s) throws Exception {
-		return new ParseHelper(this.fixture,this.type).parse(s);
+		return new ParseHelper(TypeAdapter.on(fixture, this.type),this.type).parse(s);
 	}
 }

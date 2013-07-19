@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import static dbfit.util.Direction.*;
 
-public class DbParameterAccessor {
+public class ParameterOrColumn {
 
     private int index; //index in effective sql statement (not necessarily the same as position below)
     private Direction direction;
@@ -25,8 +25,8 @@ public class DbParameterAccessor {
     }
 
     @Override
-    public DbParameterAccessor clone() {
-        DbParameterAccessor copy = new DbParameterAccessor(name, direction,
+    public ParameterOrColumn clone() {
+        ParameterOrColumn copy = new ParameterOrColumn(name, direction,
                 sqlType, javaType, position);
 
         copy.cs = null;
@@ -35,7 +35,7 @@ public class DbParameterAccessor {
     }
 
     @SuppressWarnings("unchecked")
-    public DbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {
+    public ParameterOrColumn(String name, Direction direction, int sqlType, Class javaType, int position) {
         this.name = name;
         this.direction = direction;
         this.sqlType = sqlType;

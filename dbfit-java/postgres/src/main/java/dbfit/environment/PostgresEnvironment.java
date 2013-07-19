@@ -2,7 +2,7 @@ package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
-import dbfit.util.DbParameterAccessor;
+import dbfit.util.ParameterOrColumn;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
 
@@ -45,7 +45,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
         return super.parseCommandText(commandText);
     }
 
-    public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
+    public Map<String, ParameterOrColumn> getAllColumns(String tableOrViewName)
             throws SQLException {
         String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
                 .split("\\.");
@@ -61,7 +61,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
         return readIntoParams(qualifiers, qry);
     }
 
-    private Map<String, DbParameterAccessor> readIntoParams(
+    private Map<String, ParameterOrColumn> readIntoParams(
             String[] queryParameters, String query) throws SQLException {
         PreparedStatement dc = currentConnection.prepareStatement(query);
         for (int i = 0; i < queryParameters.length; i++) {
@@ -69,14 +69,14 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
                     NameNormaliser.normaliseName(queryParameters[i]));
         }
         ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+        Map<String, ParameterOrColumn> allParams = new HashMap<String, ParameterOrColumn>();
         int position = 0;
         while (rs.next()) {
             String paramName = rs.getString(1);
             if (paramName == null)
                 paramName = "";
             String dataType = rs.getString(2);
-            DbParameterAccessor dbp = new DbParameterAccessor(paramName,
+            ParameterOrColumn dbp = new ParameterOrColumn(paramName,
                     Direction.INPUT, getSqlType(dataType),
                     getJavaClass(dataType), position++);
             allParams.put(NameNormaliser.normaliseName(paramName), dbp);
@@ -163,7 +163,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
                 + " is not supported");
     }
 
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(
+    public Map<String, ParameterOrColumn> getAllProcedureParameters(
             String procName) throws SQLException {
 
         String[] qualifiers = NameNormaliser.normaliseName(procName).split(
@@ -186,7 +186,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
         if (!rs.next()) {
             throw new SQLException("Unknown procedure " + procName);
         }
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+        Map<String, ParameterOrColumn> allParams = new HashMap<String, ParameterOrColumn>();
         String type = rs.getString(1);
         String paramList = rs.getString(2);
         String returns = rs.getString(3);
@@ -222,7 +222,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
                 dataType = token;
             }
 
-            DbParameterAccessor dbp = new DbParameterAccessor(paramName,
+            ParameterOrColumn dbp = new ParameterOrColumn(paramName,
                     direction, getSqlType(dataType), getJavaClass(dataType),
                     position++);
             allParams.put(NameNormaliser.normaliseName(paramName), dbp);
@@ -234,7 +234,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
             dataType = s.nextToken();
 
             if (!dataType.equals("void")) {
-                allParams.put("", new DbParameterAccessor("",
+                allParams.put("", new ParameterOrColumn("",
                         Direction.RETURN_VALUE, getSqlType(dataType),
                         getJavaClass(dataType), -1));
             }
@@ -244,7 +244,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
     }
 
     public String buildInsertCommand(String tableName,
-            DbParameterAccessor[] accessors) {
+            ParameterOrColumn[] accessors) {
         /*
          * oracle jdbc interface with callablestatement has problems with
          * returning into...
@@ -261,7 +261,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
         StringBuilder retNames = new StringBuilder();
         StringBuilder retValues = new StringBuilder();
 
-        for (DbParameterAccessor accessor : accessors) {
+        for (ParameterOrColumn accessor : accessors) {
             if (accessor.hasDirection(Direction.INPUT)) {
                 sb.append(comma);
                 values.append(comma);

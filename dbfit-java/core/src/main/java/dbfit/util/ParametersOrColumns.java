@@ -8,17 +8,17 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-public class DbParameterAccessors {
-    private DbParameterAccessor[] accessors;
+public class ParametersOrColumns {
+    private ParameterOrColumn[] parametersOrColumns;
 
-    public DbParameterAccessors(DbParameterAccessor[] accessors) {
-        this.accessors = accessors;
+    public ParametersOrColumns(ParameterOrColumn[] parametersOrColumns) {
+        this.parametersOrColumns = parametersOrColumns;
     }
 
     public void bindParameters(StatementExecution statement) throws SQLException {
-        List<String> accessorNames = getSortedAccessorNames();
-        for (DbParameterAccessor ac : accessors) {
-            int realindex = accessorNames.indexOf(ac.getName());
+        List<String> names = getSortedNames();
+        for (ParameterOrColumn ac : parametersOrColumns) {
+            int realindex = names.indexOf(ac.getName());
             ac.bindTo(statement, realindex + 1); // jdbc params are 1-based
             if (ac.hasDirection(Direction.RETURN_VALUE)) {
                 ac.bindTo(statement, Math.abs(ac.getPosition()));
@@ -26,19 +26,19 @@ public class DbParameterAccessors {
         }
     }
 
-    private class PositionComparator implements Comparator<DbParameterAccessor> {
-        public int compare(DbParameterAccessor o1, DbParameterAccessor o2) {
+    private class PositionComparator implements Comparator<ParameterOrColumn> {
+        public int compare(ParameterOrColumn o1, ParameterOrColumn o2) {
             return (int) Math.signum(o1.getPosition() - o2.getPosition());
         }
     }
 
-    public List<String> getSortedAccessorNames() {
-        DbParameterAccessor[] newacc = new DbParameterAccessor[accessors.length];
-        System.arraycopy(accessors, 0, newacc, 0, accessors.length);
+    public List<String> getSortedNames() {
+        ParameterOrColumn[] newacc = new ParameterOrColumn[parametersOrColumns.length];
+        System.arraycopy(parametersOrColumns, 0, newacc, 0, parametersOrColumns.length);
         Arrays.sort(newacc, new PositionComparator());
         List<String> nameList = new ArrayList<String>();
         String lastName = null;
-        for (DbParameterAccessor p : newacc) {
+        for (ParameterOrColumn p : newacc) {
             if (lastName != p.getName()) {
                 lastName = p.getName();
                 nameList.add(p.getName());
@@ -48,13 +48,11 @@ public class DbParameterAccessors {
     }
 
     public boolean containsReturnValue() {
-        for (DbParameterAccessor ac : accessors) {
+        for (ParameterOrColumn ac : parametersOrColumns) {
             if (ac.isReturnValueAccessor()) {
                 return true;
             }
         }
         return false;
     }
-
 }
-

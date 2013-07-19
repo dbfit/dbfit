@@ -1,14 +1,12 @@
 package dbfit.api;
 
 import dbfit.fixture.StatementExecution;
-import dbfit.util.DbParameterAccessor;
+import dbfit.util.Direction;
+import dbfit.util.ParameterOrColumn;
 
 import java.sql.SQLException;
 
-import dbfit.util.Direction;
-
 public interface DbObject {
-    public StatementExecution buildPreparedStatement(DbParameterAccessor accessors[]) throws SQLException ;
-    public DbParameterAccessor getDbParameterAccessor(String paramName, Direction expectedDirection) throws SQLException;
-    int getExceptionCode(SQLException e);
+    public StatementExecution buildPreparedStatement(ParameterOrColumn accessors[]) throws SQLException ;
+    public ParameterOrColumn getDbParameterAccessor(String paramName, Direction expectedDirection) throws SQLException;
 }

@@ -2,7 +2,7 @@ package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
-import dbfit.util.DbParameterAccessor;
+import dbfit.util.ParameterOrColumn;
 import dbfit.util.NameNormaliser;
 
 import java.math.BigDecimal;
@@ -40,7 +40,7 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
      * see AbstractDbEnvironment#buildInsertPreparedStatement
      */
     public PreparedStatement buildInsertPreparedStatement(String tableName,
-            DbParameterAccessor[] accessors) throws SQLException {
+            ParameterOrColumn[] accessors) throws SQLException {
         return getConnection().prepareStatement(
                 buildInsertCommand(tableName, accessors));
     }
@@ -63,26 +63,26 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
         return paramRegex;
     }
 
-    public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
+    public Map<String, ParameterOrColumn> getAllColumns(String tableOrViewName)
             throws SQLException {
         String qry = "SELECT COLUMN_NAME, TYPE_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS\n"
                 + "WHERE TABLE_NAME= ?";
         return readIntoParams(tableOrViewName, qry);
     }
 
-    private Map<String, DbParameterAccessor> readIntoParams(
+    private Map<String, ParameterOrColumn> readIntoParams(
             String tableOrViewName, String query) throws SQLException {
         checkConnectionValid(currentConnection);
         PreparedStatement dc = currentConnection.prepareStatement(query);
         dc.setString(1, tableOrViewName);
 
         ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+        Map<String, ParameterOrColumn> allParams = new HashMap<String, ParameterOrColumn>();
         int position = 0;
         while (rs.next()) {
             String columnName = rs.getString(1);
             String dataType = rs.getString(2);
-            DbParameterAccessor dbp = new DbParameterAccessor(columnName,
+            ParameterOrColumn dbp = new ParameterOrColumn(columnName,
                     INPUT,
                     typeMapper.getJDBCSQLTypeForDBType(dataType),
                     getJavaClass(dataType), position++);
@@ -92,7 +92,7 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
         return allParams;
     }
 
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(String s)
+    public Map<String, ParameterOrColumn> getAllProcedureParameters(String s)
             throws SQLException {
         throw new UnsupportedOperationException();
     }

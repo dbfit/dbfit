@@ -1,11 +1,11 @@
 package dbfit.util;
 
-public class OracleDbParameterAccessor extends DbParameterAccessor {
+public class OracleParameterOrColumn extends ParameterOrColumn {
     private String originalTypeName;
 
-    public OracleDbParameterAccessor(String name, Direction direction, int sqlType,
-            Class javaType, int position,
-            String originalTypeName) {
+    public OracleParameterOrColumn(String name, Direction direction, int sqlType,
+                                   Class javaType, int position,
+                                   String originalTypeName) {
         super(name, direction, sqlType, javaType, position);
         setOriginalTypeName(originalTypeName);
     }
@@ -23,8 +23,8 @@ public class OracleDbParameterAccessor extends DbParameterAccessor {
     }
 
     @Override
-    public OracleDbParameterAccessor clone() {
-        OracleDbParameterAccessor copy = new OracleDbParameterAccessor(
+    public OracleParameterOrColumn clone() {
+        OracleParameterOrColumn copy = new OracleParameterOrColumn(
                 getName(), getDirection(), getSqlType(), getJavaType(), getPosition(), originalTypeName);
         copy.cs = null;
 

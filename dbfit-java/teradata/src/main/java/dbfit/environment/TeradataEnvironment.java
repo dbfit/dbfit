@@ -143,7 +143,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         return super.parseCommandText(commandText);
     }
 
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(
+    public Map<String, ParameterOrColumn> getAllProcedureParameters(
             String procName) throws SQLException {
         System.out
                 .println("TeradataEnvironment: getAllProcedureParameters: tableOrViewName: "
@@ -205,7 +205,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         return readIntoParams(qualifiers, qry);
     }
 
-    public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
+    public Map<String, ParameterOrColumn> getAllColumns(String tableOrViewName)
             throws SQLException {
         System.out
                 .println("TeradataEnvironment: getAllColumns: tableOrViewName: "
@@ -248,7 +248,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         return readIntoParams(qualifiers, qry);
     }
 
-    private Map<String, DbParameterAccessor> readIntoParams(
+    private Map<String, ParameterOrColumn> readIntoParams(
             String[] queryParameters, String query) throws SQLException {
 
         System.out.println("TeradataEnvironment: readIntoParams: query: "
@@ -266,7 +266,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
             dc.setString(i + 1, queryParameters[i].toUpperCase());
         }
         ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+        Map<String, ParameterOrColumn> allParams = new HashMap<String, ParameterOrColumn>();
         int position = 0;
         while (rs.next()) {
             String paramName = rs.getString(1);
@@ -309,20 +309,20 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
             }
 
             System.out
-                    .println("TeradataEnvironment: readIntoParams: creating new DbParameterAccessor for paramName: "
+                    .println("TeradataEnvironment: readIntoParams: creating new ParameterOrColumn for paramName: "
                             + paramName
                             + ", paramDirection: "
                             + paramDirection
                             + ", dataType: " + dataType);
             int intSqlType = getSqlType(dataType);
             Class<?> clsJavaClass = getJavaClass(dataType);
-            DbParameterAccessor dbp = new DbParameterAccessor(paramName,
+            ParameterOrColumn dbp = new ParameterOrColumn(paramName,
                     paramDirection, intSqlType, clsJavaClass,
                     paramDirection == Direction.RETURN_VALUE ? -1
                             : position++);
-            // DbParameterAccessor dbp = new DbParameterAccessor(paramName,
+            // ParameterOrColumn dbp = new ParameterOrColumn(paramName,
             // paramDirection, getSqlType(dataType), getJavaClass(dataType),
-            // paramDirection == DbParameterAccessor.RETURN_VALUE ? -1 :
+            // paramDirection == ParameterOrColumn.RETURN_VALUE ? -1 :
             // position++);
             allParams.put(NameNormaliser.normaliseName(paramName), dbp);
         }
@@ -509,7 +509,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     }
 
     public String buildInsertCommand(String tableName,
-            DbParameterAccessor[] accessors) {
+            ParameterOrColumn[] accessors) {
         System.out.println("TeradataEnvironment: buildInsertCommand");
         StringBuilder sb = new StringBuilder("insert into ");
         sb.append(tableName).append("(");
@@ -520,7 +520,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         StringBuilder retNames = new StringBuilder();
         StringBuilder retValues = new StringBuilder();
 
-        for (DbParameterAccessor accessor : accessors) {
+        for (ParameterOrColumn accessor : accessors) {
             if (accessor.hasDirection(Direction.INPUT)) {
                 sb.append(comma);
                 values.append(comma);

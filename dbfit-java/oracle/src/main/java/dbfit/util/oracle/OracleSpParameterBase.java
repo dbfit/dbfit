@@ -4,7 +4,7 @@ import dbfit.util.Direction;
 import static dbfit.util.oracle.OraclePlSqlGenerateUtils.callExpr;
 
 public class OracleSpParameterBase {
-    public Direction direction; // In terms of DbParameterAccessor constants
+    public Direction direction; // In terms of ParameterOrColumn constants
     protected SpGeneratorOutput out = null;
     protected String dataType; // original type name in the original sp
     protected String id; // id to be used for generating param/arg names
