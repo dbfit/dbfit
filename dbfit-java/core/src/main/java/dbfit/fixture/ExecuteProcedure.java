@@ -56,13 +56,17 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
         if (notExpectingException()) {
             super.executeStatement(row);
         } else {
-            try {
-                getExecution().run();
-                wrong(row);
-            } catch (SQLException e) {
-                actualErrorCode = e.getErrorCode();
-                e.printStackTrace();
-            }
+            executeStatementExpectingException(row);
+        }
+    }
+
+    private void executeStatementExpectingException(Parse row) {
+        try {
+            getExecution().run();
+            wrong(row);
+        } catch (SQLException e) {
+            actualErrorCode = e.getErrorCode();
+            e.printStackTrace();
         }
     }
 
