@@ -142,7 +142,6 @@ public abstract class DbObjectExecutionFixture extends Fixture {
 
     private void executeStatementExpectingException(Parse row) throws Exception {
         try {
-            execution.createSavepoint();
             execution.run();
             wrong(row);
         } catch (SQLException e) {
@@ -160,7 +159,6 @@ public abstract class DbObjectExecutionFixture extends Fixture {
                 }
             }
         }
-        execution.restoreSavepoint();
     }
 
 
