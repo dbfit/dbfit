@@ -5,6 +5,7 @@ import java.sql.*;
 public class StatementExecution {
     private Savepoint savepoint;
     private PreparedStatement statement;
+    private SQLException encounteredException;
 
     public StatementExecution(PreparedStatement statement) {
         this(statement, true);
@@ -68,19 +69,22 @@ public class StatementExecution {
         }
     }
 
-    public void run() throws SQLException {
+    public boolean run() {
+        encounteredException = null;
         createSavepoint();
 
         try {
             statement.execute();
             savepoint.release();
+            return true;
         } catch (SQLException e) {
+            encounteredException = e;
             savepoint.restore();
-            throw e;
+            return false;
         }
     }
 
-    private void createSavepoint() {
+    protected void createSavepoint() {
         try {
             savepoint = new Savepoint(statement.getConnection());
         } catch (SQLException e) {
@@ -98,6 +102,10 @@ public class StatementExecution {
 
     public Object getObject(int index) throws SQLException {
         return convertStatementToCallable().getObject(index);
+    }
+
+    public SQLException getEncounteredException() {
+        return encounteredException;
     }
 
     //really ugly, but a hack to support mysql, because it will not execute inserts with a callable statement
