@@ -61,10 +61,11 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
     }
 
     private void executeStatementExpectingException(Parse row) {
-        try {
-            getExecution().run();
+        boolean succeeded = getExecution().run();
+        if (succeeded) {
             wrong(row);
-        } catch (SQLException e) {
+        } else {
+            SQLException e = getExecution().getEncounteredException();
             actualErrorCode = e.getErrorCode();
             e.printStackTrace();
         }
