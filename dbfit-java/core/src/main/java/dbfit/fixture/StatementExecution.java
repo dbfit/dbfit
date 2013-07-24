@@ -1,16 +1,20 @@
 package dbfit.fixture;
 
+import dbfit.api.DBEnvironment;
+
 import java.sql.*;
 
 public class StatementExecution {
     private Savepoint savepoint;
+    private DBEnvironment.StatementExecutionFeatures statementExecutionFeatures;
     private PreparedStatement statement;
 
-    public StatementExecution(PreparedStatement statement) {
-        this(statement, true);
+    public StatementExecution(DBEnvironment.StatementExecutionFeatures statementExecutionFeatures, PreparedStatement statement) {
+        this(statementExecutionFeatures, statement, true);
     }
 
-    public StatementExecution(PreparedStatement statement, boolean clearParameters) {
+    public StatementExecution(DBEnvironment.StatementExecutionFeatures statementExecutionFeatures, PreparedStatement statement, boolean clearParameters) {
+        this.statementExecutionFeatures = statementExecutionFeatures;
         this.statement = statement;
         if (clearParameters) {
             try {
@@ -64,7 +68,7 @@ public class StatementExecution {
 
         try {
             statement.execute();
-            savepoint.release();
+            if (statementExecutionFeatures.supportsSavepointReleasing()) savepoint.release();
         } catch (SQLException e) {
             savepoint.restore();
             throw e;

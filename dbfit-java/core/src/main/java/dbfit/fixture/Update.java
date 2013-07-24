@@ -2,10 +2,7 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
-import dbfit.util.DbParameterAccessor;
-import dbfit.util.DbParameterAccessorTypeAdapter;
-import dbfit.util.NameNormaliser;
-import dbfit.util.SymbolAccessSetBinding;
+import dbfit.util.*;
 import fit.Binding;
 import fit.Parse;
 
@@ -13,8 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import dbfit.util.Direction;
 
 public class Update extends fit.Fixture {
 	private DBEnvironment environment;
@@ -51,7 +46,7 @@ public class Update extends fit.Fixture {
 		}
 //		System.out.println(s);
 		StatementExecution cs=
-			new StatementExecution(environment.getConnection().prepareStatement(s.toString()));
+			new StatementExecution(environment.getStatementExecutionFeatures(), environment.getConnection().prepareStatement(s.toString()));
 		for (int i=0; i<updateAccessors.length; i++){
 			updateAccessors[i].bindTo(cs, i+1);
 		}

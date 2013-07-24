@@ -12,6 +12,12 @@ import java.util.Map;
 
 
 public interface DBEnvironment {
+    public interface StatementExecutionFeatures {
+        boolean supportsSavepointReleasing();
+    }
+
+    StatementExecutionFeatures getStatementExecutionFeatures();
+
     /**
      * Meta-data retrieval method that provides a list of parameters for a given
      * stored procedure or function name. The name may contain a schema
