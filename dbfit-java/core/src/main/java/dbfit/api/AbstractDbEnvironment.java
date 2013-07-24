@@ -211,5 +211,13 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         }
     }
 
+    public StatementExecutionFeatures getStatementExecutionFeatures() {
+        return new StatementExecutionFeatures() {
+            @Override
+            public boolean supportsSavepointReleasing() {
+                return true;
+            }
+        };
+    }
 }
 

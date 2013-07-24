@@ -1,16 +1,20 @@
 package dbfit.fixture;
 
+import dbfit.api.DBEnvironment;
+
 import java.sql.*;
 
 public class StatementExecution {
     private Savepoint savepoint;
+    private DBEnvironment.StatementExecutionFeatures statementExecutionFeatures;
     private PreparedStatement statement;
 
-    public StatementExecution(PreparedStatement statement) {
-        this(statement, true);
+    public StatementExecution(DBEnvironment.StatementExecutionFeatures statementExecutionFeatures, PreparedStatement statement) {
+        this(statementExecutionFeatures, statement, true);
     }
 
-    public StatementExecution(PreparedStatement statement, boolean clearParameters) {
+    public StatementExecution(DBEnvironment.StatementExecutionFeatures statementExecutionFeatures, PreparedStatement statement, boolean clearParameters) {
+        this.statementExecutionFeatures = statementExecutionFeatures;
         this.statement = statement;
         if (clearParameters) {
             try {
@@ -21,22 +25,38 @@ public class StatementExecution {
         }
     }
 
-    public void createSavepoint() {
-        String savepointName = "eee" + this.hashCode();
-        if (savepointName.length() > 10) savepointName = savepointName.substring(1, 9);
-        savepoint = null;
+    public static class Savepoint {
+        private Connection connection;
+        private java.sql.Savepoint savepoint;
 
-        try {
-            savepoint = statement.getConnection().setSavepoint(savepointName);
-        } catch (SQLException e) {
-            throw new RuntimeException("Exception while setting savepoint", e);
+        public Savepoint(Connection connection) {
+            this.connection = connection;
+            create();
         }
-    }
 
-    public void restoreSavepoint() {
-        if (savepoint != null) {
+        protected void create() {
+            String savepointName = "eee" + this.hashCode();
+            if (savepointName.length() > 10) savepointName = savepointName.substring(1, 9);
+            savepoint = null;
+
             try {
-                statement.getConnection().rollback(savepoint);
+                savepoint = connection.setSavepoint(savepointName);
+            } catch (SQLException e) {
+                throw new RuntimeException("Exception while setting savepoint", e);
+            }
+        }
+
+        public void release() {
+            try {
+                connection.releaseSavepoint(savepoint);
+            } catch (SQLException e) {
+                throw new RuntimeException("Exception while releasing savepoint", e);
+            }
+        }
+
+        public void restore() {
+            try {
+                connection.rollback(savepoint);
             } catch (SQLException e) {
                 throw new RuntimeException("Exception while restoring savepoint", e);
             }
@@ -44,7 +64,23 @@ public class StatementExecution {
     }
 
     public void run() throws SQLException {
-        statement.execute();
+        createSavepoint();
+
+        try {
+            statement.execute();
+            if (statementExecutionFeatures.supportsSavepointReleasing()) savepoint.release();
+        } catch (SQLException e) {
+            savepoint.restore();
+            throw e;
+        }
+    }
+
+    private void createSavepoint() {
+        try {
+            savepoint = new Savepoint(statement.getConnection());
+        } catch (SQLException e) {
+            throw new RuntimeException("Error while getting connection for setting savepoint", e);
+        }
     }
 
     public void registerOutParameter(int index, int sqlType) throws SQLException {
