@@ -26,9 +26,6 @@ For the case where no parameters are passed to function/procedure, `Execute Proc
     !3 If there are no parameters, Execute Procedure needs just one row
 
     !|Execute Procedure|MakeUser|
-    |query|select * from users|
-    |name|username|
-    |user1|fromproc|
 
 ### Calling functions
 
