@@ -6,6 +6,7 @@ public class StatementExecution {
     private Savepoint savepoint;
     private PreparedStatement statement;
     private SQLException encounteredException;
+    private Boolean didExecutionSucceed;
 
     public StatementExecution(PreparedStatement statement) {
         this(statement, true);
@@ -69,6 +70,11 @@ public class StatementExecution {
         }
     }
 
+    public boolean didExecutionSucceed() {
+        if (didExecutionSucceed == null) throw new IllegalStateException("Statement hasn't been executed yet!");
+        return didExecutionSucceed;
+    }
+
     public boolean run() {
         encounteredException = null;
         createSavepoint();
@@ -76,12 +82,13 @@ public class StatementExecution {
         try {
             statement.execute();
             savepoint.release();
-            return true;
+            didExecutionSucceed = true;
         } catch (SQLException e) {
             encounteredException = e;
             savepoint.restore();
-            return false;
+            didExecutionSucceed = false;
         }
+        return didExecutionSucceed;
     }
 
     protected void createSavepoint() {

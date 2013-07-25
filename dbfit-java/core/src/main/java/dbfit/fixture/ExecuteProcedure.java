@@ -14,7 +14,6 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
     private String procName;
     private boolean exceptionExpected = false;
     private Integer expectedErrorCode;
-    private int actualErrorCode;
 
     public ExecuteProcedure() {
         this.environment = DbEnvironmentFactory.getDefaultEnvironment();
@@ -52,46 +51,37 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
     }
 
     @Override
-    protected void executeStatement(Parse row) throws SQLException {
-        if (notExpectingException()) {
-            super.executeStatement(row);
-        } else {
-            executeStatementExpectingException(row);
-        }
-    }
-
-    private void executeStatementExpectingException(Parse row) {
-        boolean succeeded = getExecution().run();
-        if (succeeded) {
-            wrong(row);
-        } else {
-            SQLException e = getExecution().getEncounteredException();
-            actualErrorCode = e.getErrorCode();
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     protected void evaluateOutputs(Parse row) throws Throwable {
-        if (notExpectingException()) {
-            super.evaluateOutputs(row);
-        } else if (isExpectingAnyException()) {
-            right(row);
-        } else {
-            if (expectedErrorCode.equals(actualErrorCode))
-                right(row);
-            else {
-                wrong(row);
-                row.parts.addToBody(fit.Fixture.gray(" got error code " + actualErrorCode));
-            }
+        switch (getExpectedBehaviour()) {
+            case NO_EXCEPTION:
+                super.evaluateOutputs(row);
+                break;
+
+            case ANY_EXCEPTION:
+                if (getExecution().didExecutionSucceed()) {
+                    wrong(row);
+                    row.parts.addToBody(fit.Fixture.gray(" no exception raised"));
+                } else {
+                    right(row);
+                }
+                break;
+
+            case SPECIFIC_EXCEPTION:
+                if (getExecution().didExecutionSucceed()) {
+                    wrong(row);
+                    row.parts.addToBody(fit.Fixture.gray(" no exception raised"));
+                } else if (expectedErrorCode.equals(getActualErrorCode())) {
+                    right(row);
+                } else {
+                    wrong(row);
+                    row.parts.addToBody(fit.Fixture.gray(" got error code " + getActualErrorCode()));
+                }
+                break;
         }
     }
 
-    private boolean notExpectingException() {
-        return getExpectedBehaviour() == ExpectedBehaviour.NO_EXCEPTION;
-    }
-
-    private boolean isExpectingAnyException() {
-        return getExpectedBehaviour() == ExpectedBehaviour.ANY_EXCEPTION;
+    private int getActualErrorCode() {
+        SQLException e = getExecution().getEncounteredException();
+        return e.getErrorCode();
     }
 }
