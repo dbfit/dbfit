@@ -130,10 +130,6 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return currentConnection;
     }
 
-    public int getExceptionCode(SQLException dbException) {
-        return dbException.getErrorCode();
-    }
-
     /**
      * MUST RETURN PARAMETER NAMES IN EXACT ORDER AS IN STATEMENT. IF SINGLE
      * PARAMETER APPEARS MULTIPLE TIMES, MUST BE LISTED MULTIPLE TIMES IN THE
