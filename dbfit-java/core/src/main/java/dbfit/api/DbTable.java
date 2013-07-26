@@ -56,9 +56,4 @@ public class DbTable implements DbObject {
         return accessor;
     }
 
-    @Override
-    public int getExceptionCode(SQLException e) {
-        return dbEnvironment.getExceptionCode(e);
-    }
-
 }
