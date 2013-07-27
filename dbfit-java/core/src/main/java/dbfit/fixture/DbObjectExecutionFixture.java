@@ -30,20 +30,6 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     private DbObject dbObject; // intentionally private, subclasses should extend getTargetObject
 
     /**
-     * override this method to control whether an exception is expected or not. By default, expects no exception to happen
-     */
-    protected ExpectedBehaviour getExpectedBehaviour() {
-        return ExpectedBehaviour.NO_EXCEPTION;
-    }
-
-    /**
-     * override this method and supply the expected exception number, if one is expected
-     */
-    protected int getExpectedErrorCode() {
-        return 0;
-    }
-
-    /**
      * override this method and supply the dbObject implementation that will be executed for each row
      */
     protected abstract DbObject getTargetDbObject() throws SQLException;
@@ -126,6 +112,12 @@ public abstract class DbObjectExecutionFixture extends Fixture {
      * execute a single row
      */
     private void runRow(Parse row) throws Throwable {
+        setInputs(row);
+        executeStatement(row);
+        evaluateOutputs(row);
+    }
+
+    protected void setInputs(Parse row) throws Throwable {
         Parse cell = row.parts;
         //first set input params
         for (int column = 0; column < accessors.length; column++, cell = cell.more) {
@@ -133,43 +125,26 @@ public abstract class DbObjectExecutionFixture extends Fixture {
                 columnBindings[column].doCell(this, cell);
             }
         }
-        if (getExpectedBehaviour() == ExpectedBehaviour.NO_EXCEPTION) {
-            executeStatementAndEvaluateOutputs(row);
-        } else {
-            executeStatementExpectingException(row);
-        };
     }
 
-    private void executeStatementExpectingException(Parse row) throws Exception {
-        try {
-            execution.run();
-            wrong(row);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // all good, exception expected
-            if (getExpectedBehaviour() == ExpectedBehaviour.ANY_EXCEPTION) {
-                right(row);
-            } else {
-                int realError = e.getErrorCode();
-                if (realError == getExpectedErrorCode())
-                    right(row);
-                else {
-                    wrong(row);
-                    row.parts.addToBody(fit.Fixture.gray(" got error code " + realError));
-                }
-            }
-        }
-    }
-
-
-    private void executeStatementAndEvaluateOutputs(Parse row)
-            throws SQLException, Throwable {
-        execution.run();
+    protected void evaluateOutputs(Parse row) throws Throwable {
         Parse cells = row.parts;
         for (int column = 0; column < accessors.length; column++, cells = cells.more) {
             if (accessors[column].hasDirection(OUTPUT) || accessors[column].hasDirection(RETURN_VALUE)) {
                 columnBindings[column].doCell(this, cells);
             }
         }
+    }
+
+    protected void executeStatement(Parse row) throws SQLException {
+        execution.run();
+    }
+
+    protected StatementExecution getExecution() {
+        return execution;
+    }
+
+    protected DbObject getDbObject() {
+        return dbObject;
     }
 }
