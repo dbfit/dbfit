@@ -112,13 +112,6 @@ public interface DBEnvironment {
     void rollback() throws SQLException;
 
     /**
-     * Retrieve an exception code from a database exception. This method should
-     * perform any required conversion between a JDBC exception and the real
-     * database error code.
-     */
-    int getExceptionCode(SQLException ex);
-
-    /**
      * Retrieve current connection. Could be used by 3rd party classes to
      * execute database commands in the same session.
      */

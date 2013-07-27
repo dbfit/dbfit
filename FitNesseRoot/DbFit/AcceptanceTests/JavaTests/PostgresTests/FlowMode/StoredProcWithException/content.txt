@@ -10,8 +10,13 @@
 |new name|new username|
 |arthur dent|adent|
 
+{{{
+This doesn't work currently, because Postgres does not support the vendor-specific getErrorCode() API.
+Instead of mapping to made-up error codes, a feature needs to be added to check against the SQL state.
+
 #!3 check for a specific error code
 
 !|execute procedure expect exception|createuser|2304|
 |new name|new username|
 |arthur dent|adent|
+}}}

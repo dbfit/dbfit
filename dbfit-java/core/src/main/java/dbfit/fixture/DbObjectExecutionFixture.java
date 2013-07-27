@@ -150,7 +150,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             if (getExpectedBehaviour() == ExpectedBehaviour.ANY_EXCEPTION) {
                 right(row);
             } else {
-                int realError = dbObject.getExceptionCode(e);
+                int realError = e.getErrorCode();
                 if (realError == getExpectedErrorCode())
                     right(row);
                 else {
