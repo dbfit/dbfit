@@ -4,35 +4,36 @@ import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
 import dbfit.api.DbObject;
 import dbfit.api.DbStoredProcedure;
+import dbfit.util.DbParameterAccessors;
+import fit.Fixture;
 import fit.Parse;
 
 import java.sql.SQLException;
 
 public class ExecuteProcedure extends DbObjectExecutionFixture {
-    public interface ExecutionExpectation {
-        void evaluateOutputs(StatementExecution execution, Parse row) throws Throwable;
+    public enum Expectation {
+        SUCCESS,
+        ANY_EXCEPTION,
+        SPECIFIC_EXCEPTION;
+
+        Integer expectedErrorCode;
+
+        public void setExpectedErrorCode(Integer expectedErrorCode) {
+            this.expectedErrorCode = expectedErrorCode;
+        }
+
+        public Integer getExpectedErrorCode() {
+            return expectedErrorCode;
+        }
     }
 
-    public static class SuccessfulExecutionExpectation implements ExecutionExpectation {
-        private ExecuteProcedure fixture;
-
-        public SuccessfulExecutionExpectation(ExecuteProcedure fixture) {
-            this.fixture = fixture;
+    public static class AnyExceptionRowTest extends RowTest {
+        public AnyExceptionRowTest(DbParameterAccessors accessors, StatementExecution execution, Fixture parentFixture) {
+            super(accessors, execution, parentFixture);
         }
 
-        public void evaluateOutputs(StatementExecution execution, Parse row) throws Throwable {
-            fixture.evaluateOutputsUsingSuperclass(row);
-        }
-    }
-
-    public static class AnyExceptionExpectation implements ExecutionExpectation {
-        private DbObjectExecutionFixture parentFixture;
-
-        public AnyExceptionExpectation(DbObjectExecutionFixture parentFixture) {
-            this.parentFixture = parentFixture;
-        }
-
-        public void evaluateOutputs(StatementExecution execution, Parse row) throws Throwable {
+        @Override
+        protected void evaluateOutputs(Parse row) throws Throwable {
             if (execution.didExecutionSucceed()) {
                 parentFixture.wrong(row);
                 row.parts.addToBody(fit.Fixture.gray(" no exception raised"));
@@ -42,17 +43,19 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
         }
     }
 
-    public static class SpecificExceptionExpectation implements ExecutionExpectation {
-        private DbObjectExecutionFixture parentFixture;
+    public static class SpecificExceptionRowTest extends RowTest {
         private Integer expectedErrorCode;
 
-        public SpecificExceptionExpectation(DbObjectExecutionFixture parentFixture,
-                                            Integer expectedErrorCode) {
-            this.parentFixture = parentFixture;
+        public SpecificExceptionRowTest(DbParameterAccessors accessors,
+                                        StatementExecution execution,
+                                        Fixture parentFixture,
+                                        Integer expectedErrorCode) {
+            super(accessors, execution, parentFixture);
             this.expectedErrorCode = expectedErrorCode;
         }
 
-        public void evaluateOutputs(StatementExecution execution, Parse row) throws Throwable {
+        @Override
+        protected void evaluateOutputs(Parse row) throws Throwable {
             if (execution.didExecutionSucceed()) {
                 parentFixture.wrong(row);
                 row.parts.addToBody(fit.Fixture.gray(" no exception raised"));
@@ -72,7 +75,7 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
 
     private DBEnvironment environment;
     private String procName;
-    private ExecutionExpectation expectation;
+    private Expectation expectation;
 
     public ExecuteProcedure() {
         this.environment = DbEnvironmentFactory.getDefaultEnvironment();
@@ -81,21 +84,22 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
     public ExecuteProcedure(DBEnvironment dbEnvironment, String procName, int expectedErrorCode) {
         this(dbEnvironment, procName);
 
-        expectation = new SpecificExceptionExpectation(this, expectedErrorCode);
+        expectation = Expectation.SPECIFIC_EXCEPTION;
+        expectation.setExpectedErrorCode(expectedErrorCode);
     }
 
     public ExecuteProcedure(DBEnvironment dbEnvironment, String procName, boolean exceptionExpected) {
         this(dbEnvironment, procName);
 
         if (exceptionExpected)
-            expectation = new AnyExceptionExpectation(this);
+            expectation = Expectation.ANY_EXCEPTION;
     }
 
     public ExecuteProcedure(DBEnvironment dbEnvironment, String procName) {
         this.procName = procName;
         this.environment = dbEnvironment;
 
-        expectation = new SuccessfulExecutionExpectation(this);
+        expectation = Expectation.SUCCESS;
     }
 
     @Override
@@ -103,17 +107,18 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
         return new DbStoredProcedure(environment, getProcedureName());
     }
 
-    protected void evaluateOutputsUsingSuperclass(Parse row) throws Throwable {
-        super.evaluateOutputs(row);
+    @Override
+    protected RowTest newRowTest(DbParameterAccessors accessors, StatementExecution execution) {
+        switch (expectation) {
+            case SUCCESS: return new RowTest(accessors, execution, this);
+            case ANY_EXCEPTION: return new AnyExceptionRowTest(accessors, execution, this);
+            case SPECIFIC_EXCEPTION: return new SpecificExceptionRowTest(accessors, execution, this, expectation.getExpectedErrorCode());
+            default: throw new RuntimeException("Internal error: expectation not set");
+        }
     }
 
     protected String getProcedureName() {
         if (procName==null) procName=args[0];
         return procName;
-    }
-
-    @Override
-    protected void evaluateOutputs(Parse row) throws Throwable {
-        expectation.evaluateOutputs(getExecution(), row);
     }
 }

@@ -28,11 +28,6 @@ import static dbfit.util.Direction.*;
  * so users have to extend this fixture.
  */
 public abstract class DbObjectExecutionFixture extends Fixture {
-    private DbParameterAccessors accessors = new DbParameterAccessors();
-    private Map<DbParameterAccessor, Binding> columnBindings;
-    private StatementExecution execution;
-    private DbObject dbObject; // intentionally private, subclasses should extend getTargetObject
-
     /**
      * override this method and supply the dbObject implementation that will be executed for each row
      */
@@ -44,22 +39,18 @@ public abstract class DbObjectExecutionFixture extends Fixture {
      */
     public void doRows(Parse rows) {
         try {
-            dbObject = getTargetDbObject();
-            if (dbObject == null) throw new Error("DB Object not specified!");
+            DbObject dbObject = getTargetDbObject();
             if (rows == null) {//single execution, no args
-                StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray());
+                StatementExecution preparedStatement = dbObject.buildPreparedStatement(DbParameterAccessors.EMPTY);
                 preparedStatement.run();
-                return;
-            }
-            List<String> columnNames = getColumnNamesFrom(rows.parts);
-            accessors = getAccessors(rows.parts, columnNames);
-            if (accessors == null) return;// error reading args
-            columnBindings = getColumnBindings();
-            StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray());
-            execution = preparedStatement;
-            Parse row = rows;
-            while ((row = row.more) != null) {
-                runRow(row);
+            } else {
+                List<String> columnNames = FitHelpers.getCellTextFrom(rows.parts);
+                DbParameterAccessors accessors = new HeaderRow(columnNames, dbObject).getAccessors();
+                StatementExecution execution = dbObject.buildPreparedStatement(accessors.toArray());
+                Parse row = rows;
+                while ((row = row.more) != null) {
+                    newRowTest(accessors, execution).runRow(row);
+                }
             }
         } catch (Throwable e) {
             e.printStackTrace();
@@ -68,99 +59,110 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         }
     }
 
-    /**
-     * does the column name map to an output argument
-     */
-    private static boolean isOutput(String name) {
-        return name.endsWith("?");
+    protected RowTest newRowTest(DbParameterAccessors accessors, StatementExecution execution) {
+        return new RowTest(accessors, execution, this);
     }
 
-    private List<String> getColumnNamesFrom(Parse headerCells) {
-        List<String> columnNames = new ArrayList<String>();
-        for (; headerCells != null; headerCells = headerCells.more) {
-            columnNames.add(headerCells.text());
+    public static class HeaderRow {
+        private List<String> columnNames;
+        private DbObject dbObject;
+
+        public HeaderRow(List<String> columnNames, DbObject dbObject) {
+            this.columnNames = columnNames;
+            this.dbObject = dbObject;
         }
-        return columnNames;
-    }
 
-    private DbParameterAccessors getAccessors(Parse headerRow, List<String> columnNames) throws SQLException {
-        try {
-            return getAccessors(columnNames);
-        } catch (IllegalArgumentException e) {
-            exception(headerRow, e);
-            return null;
+        public DbParameterAccessors getAccessors() throws SQLException {
+            DbParameterAccessors accessors = new DbParameterAccessors();
+            for (String name : columnNames) {
+                DbParameterAccessor accessor = dbObject.getDbParameterAccessor(name, isOutput(name) ? OUTPUT : INPUT);
+                if (accessor == null) throw new IllegalArgumentException("Parameter/column " + name + " not found");
+                accessors.add(accessor);
+            }
+            return accessors;
         }
-    }
 
-    /**
-     * initialise db parameters for the dbObject based on table header cells
-     */
-    private DbParameterAccessors getAccessors(List<String> columnNames) throws SQLException {
-        DbParameterAccessors accessors = new DbParameterAccessors();
-        for (String name : columnNames) {
-            DbParameterAccessor accessor = dbObject.getDbParameterAccessor(name, isOutput(name) ? OUTPUT : INPUT);
-            if (accessor == null) throw new IllegalArgumentException("Parameter/column " + name + " not found");
-            accessors.add(accessor);
-        }
-        return accessors;
-    }
-
-    /**
-     * bind db accessors to columns based on the text in the header
-     */
-    private Map<DbParameterAccessor, Binding> getColumnBindings() throws Exception {
-        Map<DbParameterAccessor, Binding> bindings = new HashMap<DbParameterAccessor, Binding>();
-        for (DbParameterAccessor accessor : accessors.toArray()) {
-            Binding binding = (accessor.hasDirection(INPUT) ? new SymbolAccessSetBinding() : new SymbolAccessQueryBinding());
-            binding.adapter = new DbParameterAccessorTypeAdapter(accessor, this);
-            bindings.put(accessor, binding);
-        }
-        return bindings;
-    }
-
-    /**
-     * execute a single row
-     */
-    private void runRow(Parse row) throws Throwable {
-        setInputs(row);
-        executeStatement(row);
-        evaluateOutputs(row);
-    }
-
-    protected void setInputs(Parse row) throws Throwable {
-        //first set input params
-        Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(asCellList(row));
-        for (DbParameterAccessor inputAccessor : accessors.getInputAccessors()) {
-            Parse cell = cellMap.get(inputAccessor);
-            columnBindings.get(inputAccessor).doCell(this, cell);
+        private static boolean isOutput(String name) {
+            return name.endsWith("?");
         }
     }
 
-    private List<Parse> asCellList(Parse row) {
-        List<Parse> cells = new ArrayList<Parse>();
-        for (Parse cell = row.parts; cell != null; cell = cell.more) {
-            cells.add(cell);
+    public static class FitHelpers {
+        public static List<String> getCellTextFrom(Parse cells) {
+            List<String> cellText = new ArrayList<String>();
+            for (; cells != null; cells = cells.more) {
+                cellText.add(cells.text());
+            }
+            return cellText;
         }
-        return cells;
-    }
 
-    protected void evaluateOutputs(Parse row) throws Throwable {
-        Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(asCellList(row));
-        for (DbParameterAccessor outputAccessor : accessors.getOutputAccessors()) {
-            Parse cell = cellMap.get(outputAccessor);
-            columnBindings.get(outputAccessor).doCell(this, cell);
+        public static List<Parse> asCellList(Parse row) {
+            List<Parse> cells = new ArrayList<Parse>();
+            for (Parse cell = row.parts; cell != null; cell = cell.more) {
+                cells.add(cell);
+            }
+            return cells;
         }
     }
 
-    protected void executeStatement(Parse row) throws SQLException {
-        execution.run();
-    }
+    public static class RowTest {
+        private DbParameterAccessors accessors;
+        protected StatementExecution execution;
+        protected Fixture parentFixture;
+        private Map<DbParameterAccessor, Binding> columnBindings;
 
-    protected StatementExecution getExecution() {
-        return execution;
-    }
+        public RowTest(DbParameterAccessors accessors, StatementExecution execution, Fixture parentFixture) {
+            this.accessors = accessors;
+            this.execution = execution;
+            this.parentFixture = parentFixture;
+        }
 
-    protected DbObject getDbObject() {
-        return dbObject;
+        /**
+         * execute a single row
+         */
+        public void runRow(Parse row) throws Throwable {
+            setInputs(row);
+            run();
+            evaluateOutputs(row);
+        }
+
+        private void run() {
+            execution.run();
+        }
+
+        protected void setInputs(Parse row) throws Throwable {
+            //first set input params
+            Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(FitHelpers.asCellList(row));
+            for (DbParameterAccessor inputAccessor : accessors.getInputAccessors()) {
+                Parse cell = cellMap.get(inputAccessor);
+                getColumnBindings().get(inputAccessor).doCell(parentFixture, cell);
+            }
+        }
+
+        protected void evaluateOutputs(Parse row) throws Throwable {
+            Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(FitHelpers.asCellList(row));
+            for (DbParameterAccessor outputAccessor : accessors.getOutputAccessors()) {
+                Parse cell = cellMap.get(outputAccessor);
+                getColumnBindings().get(outputAccessor).doCell(parentFixture, cell);
+            }
+        }
+
+        private Map<DbParameterAccessor, Binding> getColumnBindings() throws Exception {
+            if (columnBindings == null) columnBindings = buildColumnBindings();
+            return columnBindings;
+        }
+
+        /**
+         * bind db accessors to columns based on the text in the header
+         */
+        private Map<DbParameterAccessor, Binding> buildColumnBindings() throws Exception {
+            Map<DbParameterAccessor, Binding> bindings = new HashMap<DbParameterAccessor, Binding>();
+            for (DbParameterAccessor accessor : accessors.toArray()) {
+                Binding binding = (accessor.hasDirection(INPUT) ? new SymbolAccessSetBinding() : new SymbolAccessQueryBinding());
+                binding.adapter = new DbParameterAccessorTypeAdapter(accessor, this.parentFixture);
+                bindings.put(accessor, binding);
+            }
+            return bindings;
+        }
     }
 }
