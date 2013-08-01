@@ -3,6 +3,7 @@ package dbfit.environment;
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
+import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
 
 import java.math.BigDecimal;
@@ -14,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import dbfit.util.Direction;
 
 @DatabaseEnvironment(name="SqlServer", driver="com.microsoft.sqlserver.jdbc.SQLServerDriver")
 public class SqlServerEnvironment extends AbstractDbEnvironment {
@@ -129,7 +128,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
     private static List<String> decimalTypes = Arrays.asList(new String[] {
             "DECIMAL", "NUMERIC", "MONEY", "SMALLMONEY" });
     private static List<String> timestampTypes = Arrays.asList(new String[] {
-            "SMALLDATETIME", "DATETIME", "TIMESTAMP" });
+            "SMALLDATETIME", "DATETIME", "DATETIME2", "TIMESTAMP" });
 
     // private static List<String> refCursorTypes = Arrays.asList(new String[] {
     // });
