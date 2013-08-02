@@ -43,32 +43,4 @@ public class SymbolAccessQueryBinding extends Binding.QueryBinding {
 		}
 		super.doCell(fixture,cell);
 	}
-
-    static class ContentOfTableCell {
-        private String content;
-
-        ContentOfTableCell(String content) {
-            this.content = content;
-        }
-
-        public boolean isSymbolSetter() {
-            return SymbolUtil.isSymbolSetter(content);
-        }
-
-        public String text() {
-            return content;
-        }
-
-        public boolean isSymbolGetter() {
-            return SymbolUtil.isSymbolGetter(content);
-        }
-
-        private boolean isExpectingInequality() {
-            return content.startsWith("fail[")|| content.endsWith("]");
-        }
-
-        public String getExpectedFailureValue() {
-            return content.substring(5, content.length()-1);
-        }
-    }
 }

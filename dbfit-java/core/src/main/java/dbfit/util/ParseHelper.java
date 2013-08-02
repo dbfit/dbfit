@@ -1,9 +1,6 @@
 package dbfit.util;
 
-import fit.Fixture;
 import fit.TypeAdapter;
-
-import static dbfit.util.SymbolUtil.isSymbolGetter;
 /* this class addresses several issues with parsing, and is used as a base for any other dbfit type adapters:
  * 1: TypeAdapter does not check the parse delegates directly when parsing, it relies on appropriate delegate
  * 	being selected when adapter is created; this creates problems for dbfit adapters which need to delegate parsing
@@ -15,46 +12,24 @@ import static dbfit.util.SymbolUtil.isSymbolGetter;
  */
 
 public class ParseHelper {
-	private Class<?> type;
-	private Fixture fixture;
-	public ParseHelper(Fixture fixture, Class<?> type){
-		this.type=type;
-		this.fixture=fixture;
-	}
-	private Object tryToConvert(Object value) throws Exception{
-		try{
-			return type.cast(value);
-		}
-		catch (ClassCastException cex){
-				return parse(value.toString());
-		}
-	}
-	private Object parseSymbol(String s) throws Exception{
-		Object value=dbfit.util.SymbolUtil.getSymbol(s);
-		if (value.getClass().equals(type))
-			return value;
-		// else try to convert
-		try{
-			return tryToConvert(value);
-		} catch (Exception e){
-			throw new UnsupportedOperationException(
-						"Incompatible types between symbol and cell value: expected "+type +"; but symbol is "+value.getClass(),e);
-		}
-	}
-	public Object parse(String s) throws Exception {
-		if (isSymbolGetter(s)){
-			return parseSymbol(s);
-		}
-		String trim=s.trim();
-		if (trim.toLowerCase().equals("null")) return null;
-		if (this.type.equals(String.class) && Options.isFixedLengthStringParsing() &&
-				trim.startsWith("'") && trim.endsWith("'")){
-			return trim.substring(1,trim.length()-1);
-		}
-		TypeAdapter ta=TypeAdapter.adapterFor(this.type);
-		ta.init(fixture, type);
-	       
-//		if (ta.getClass().equals(TypeAdapter.class)) return super.parse(s);
-		return ta.parse(s);
-	}
+    private Class<?> type;
+    private TypeAdapter typeAdapter;
+
+    public ParseHelper(TypeAdapter typeAdapter, Class<?> type) {
+        this.type = type;
+        this.typeAdapter = typeAdapter;
+    }
+
+    public Object parse(String s) throws Exception {
+        ContentOfTableCell content = new ContentOfTableCell(s);
+        if (content.isNull()) {
+            return null;
+        } else if (content.isSymbolGetter()) {
+            return SymbolUtil.getSymbol(s, type);
+        } else if (this.type.equals(String.class) && content.doesFixedLengthParsingApply()) {
+            return content.getFixedLengthParsedString();
+        } else {
+            return typeAdapter.parse(s);
+        }
+    }
 }

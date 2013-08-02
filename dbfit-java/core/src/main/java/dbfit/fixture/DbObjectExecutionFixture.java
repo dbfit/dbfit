@@ -2,17 +2,17 @@ package dbfit.fixture;
 
 import dbfit.api.DbObject;
 import dbfit.util.*;
-import fit.Binding;
 import fit.Fixture;
 import fit.Parse;
+import fit.TypeAdapter;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static dbfit.util.Direction.*;
+import static dbfit.util.Direction.INPUT;
+import static dbfit.util.Direction.OUTPUT;
 
 /**
  * this class handles all cases where a statement should be executed for each row with
@@ -109,7 +109,6 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         private DbParameterAccessors accessors;
         protected StatementExecution execution;
         protected Fixture parentFixture;
-        private Map<DbParameterAccessor, Binding> columnBindings;
 
         public RowTest(DbParameterAccessors accessors, StatementExecution execution, Fixture parentFixture) {
             this.accessors = accessors;
@@ -135,7 +134,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(FitHelpers.asCellList(row));
             for (DbParameterAccessor inputAccessor : accessors.getInputAccessors()) {
                 Parse cell = cellMap.get(inputAccessor);
-                getColumnBindings().get(inputAccessor).doCell(parentFixture, cell);
+                doCell(inputAccessor, cell);
             }
         }
 
@@ -143,26 +142,56 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(FitHelpers.asCellList(row));
             for (DbParameterAccessor outputAccessor : accessors.getOutputAccessors()) {
                 Parse cell = cellMap.get(outputAccessor);
-                getColumnBindings().get(outputAccessor).doCell(parentFixture, cell);
+                doCell(outputAccessor, cell);
             }
         }
 
-        private Map<DbParameterAccessor, Binding> getColumnBindings() throws Exception {
-            if (columnBindings == null) columnBindings = buildColumnBindings();
-            return columnBindings;
+        private void doCell(DbParameterAccessor accessor, Parse cell) throws Throwable {
+            try {
+                if (accessor.hasDirection(Direction.INPUT)) {
+                    doSetCell(cell, accessor);
+                } else {
+                    doQueryCell(cell, accessor);
+                }
+            } catch (Throwable throwable) {
+                throw new RuntimeException(throwable);
+            }
         }
 
-        /**
-         * bind db accessors to columns based on the text in the header
-         */
-        private Map<DbParameterAccessor, Binding> buildColumnBindings() throws Exception {
-            Map<DbParameterAccessor, Binding> bindings = new HashMap<DbParameterAccessor, Binding>();
-            for (DbParameterAccessor accessor : accessors.toArray()) {
-                Binding binding = (accessor.hasDirection(INPUT) ? new SymbolAccessSetBinding() : new SymbolAccessQueryBinding());
-                binding.adapter = new DbParameterAccessorTypeAdapter(accessor, this.parentFixture);
-                bindings.put(accessor, binding);
+        public void doQueryCell(final Parse cell, DbParameterAccessor parameterOrColumn) {
+            Class<?> type = parameterOrColumn.getJavaType();
+            ParseHelper parseHelper = new ParseHelper(TypeAdapter.on(parentFixture, type), type);
+            final Fixture fixture = parentFixture;
+            new CellTest(new TestResultHandler() {
+                public void pass() {
+                    fixture.right(cell);
+                }
+
+                public void fail(String actualValue) {
+                    fixture.wrong(cell, actualValue);
+                }
+
+                public void exception(Throwable e) {
+                    fixture.exception(cell, e);
+                }
+
+                public void annotate(String message) {
+                    cell.addToBody(Fixture.gray(message));
+                }
+            }).test(cell.text(), parseHelper, parameterOrColumn);
+        }
+
+        public void doSetCell(final Parse cell, DbParameterAccessor parameterOrColumn) throws Exception {
+            Class<?> type = parameterOrColumn.getJavaType();
+            String text=cell.text();
+            ParseHelper parseHelper = new ParseHelper(TypeAdapter.on(parentFixture, type), type);
+            if (SymbolUtil.isSymbolGetter(text)){
+                Object value=dbfit.util.SymbolUtil.getSymbol(text);
+                cell.addToBody(Fixture.gray(" = "+String.valueOf(value)));
+                parameterOrColumn.set(value);
+            } else {
+                parameterOrColumn.set(parseHelper.parse(cell.text()));
             }
-            return bindings;
         }
     }
 }
