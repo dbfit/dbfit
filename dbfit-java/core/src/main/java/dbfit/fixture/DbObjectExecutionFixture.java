@@ -147,6 +147,18 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         }
 
         private void doCell(DbParameterAccessor accessor, Parse cell) throws Throwable {
+            new CellTest2(parentFixture).doCell(accessor, cell);
+        }
+    }
+
+    public static class CellTest2 {
+        private Fixture parentFixture;
+
+        public CellTest2(Fixture parentFixture) {
+            this.parentFixture = parentFixture;
+        }
+
+        private void doCell(DbParameterAccessor accessor, Parse cell) throws Throwable {
             try {
                 if (accessor.hasDirection(Direction.INPUT)) {
                     doSetCell(cell, accessor);
@@ -158,7 +170,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             }
         }
 
-        public void doQueryCell(final Parse cell, DbParameterAccessor parameterOrColumn) {
+        private void doQueryCell(final Parse cell, DbParameterAccessor parameterOrColumn) {
             Class<?> type = parameterOrColumn.getJavaType();
             ParseHelper parseHelper = new ParseHelper(TypeAdapter.on(parentFixture, type), type);
             final Fixture fixture = parentFixture;
@@ -181,7 +193,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             }).test(cell.text(), parseHelper, parameterOrColumn);
         }
 
-        public void doSetCell(final Parse cell, DbParameterAccessor parameterOrColumn) throws Exception {
+        private void doSetCell(final Parse cell, DbParameterAccessor parameterOrColumn) throws Exception {
             Class<?> type = parameterOrColumn.getJavaType();
             String text=cell.text();
             ParseHelper parseHelper = new ParseHelper(TypeAdapter.on(parentFixture, type), type);
