@@ -11,6 +11,7 @@ public class CellAction {
         private String specifiedText;
         private ParseHelper parseHelper;
         private DbParameterAccessor parameterOrColumn;
+        private Object actual; // this needs to be memoized because Oracle ResultSets can't be fetched twice
 
         public Cell(String specifiedText, ParseHelper parseHelper, DbParameterAccessor parameterOrColumn) {
             this.specifiedText = specifiedText;
@@ -19,7 +20,9 @@ public class CellAction {
         }
 
         public Object getActual() throws InvocationTargetException, IllegalAccessException {
-            return parameterOrColumn.get();
+            if (actual == null)
+                actual = parameterOrColumn.get();
+            return actual;
         }
 
         public Object parse(String string) throws Exception {
