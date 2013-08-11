@@ -2,10 +2,10 @@ package dbfit.util;
 
 import fit.TypeAdapter;
 
-public class CellTest {
+public class CellAction {
     private TestResultHandler resultHandler;
 
-    public CellTest(TestResultHandler resultHandler) {
+    public CellAction(TestResultHandler resultHandler) {
         this.resultHandler = resultHandler;
     }
 

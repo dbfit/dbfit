@@ -174,7 +174,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             Class<?> type = parameterOrColumn.getJavaType();
             ParseHelper parseHelper = new ParseHelper(TypeAdapter.on(parentFixture, type), type);
             final Fixture fixture = parentFixture;
-            new CellTest(new TestResultHandler() {
+            new CellAction(new TestResultHandler() {
                 public void pass() {
                     fixture.right(cell);
                 }
