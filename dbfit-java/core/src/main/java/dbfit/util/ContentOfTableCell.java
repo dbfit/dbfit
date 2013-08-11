@@ -52,4 +52,8 @@ public class ContentOfTableCell {
     public String getFixedLengthParsedString() {
         return getTrimmedContent().substring(1, getTrimmedContent().length() - 1);
     }
+
+    public boolean hasSpecialSyntax() {
+        return (isSymbolGetter() || isSymbolSetter() || isExpectingInequality());
+    }
 }

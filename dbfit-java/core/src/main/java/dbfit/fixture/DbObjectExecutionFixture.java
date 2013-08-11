@@ -158,52 +158,32 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             this.parentFixture = parentFixture;
         }
 
-        private void doCell(DbParameterAccessor accessor, Parse cell) throws Throwable {
+        private void doCell(DbParameterAccessor accessor, final Parse cell) throws Throwable {
             try {
-                if (accessor.hasDirection(Direction.INPUT)) {
-                    doSetCell(cell, accessor);
-                } else {
-                    doQueryCell(cell, accessor);
-                }
+                Class<?> type = accessor.getJavaType();
+                ParseHelper parseHelper = new ParseHelper(TypeAdapter.on(parentFixture, type), type);
+                final Fixture fixture = parentFixture;
+                new CellAction(new TestResultHandler() {
+                    public void pass() {
+                        fixture.right(cell);
+                    }
+
+                    public void fail(String actualValue) {
+                        fixture.wrong(cell, actualValue);
+                    }
+
+                    public void exception(Throwable e) {
+                        fixture.exception(cell, e);
+                    }
+
+                    public void annotate(String message) {
+                        cell.addToBody(Fixture.gray(message));
+                    }
+                }).test(cell.text(), parseHelper, accessor);
             } catch (Throwable throwable) {
                 throw new RuntimeException(throwable);
             }
         }
 
-        private void doQueryCell(final Parse cell, DbParameterAccessor parameterOrColumn) {
-            Class<?> type = parameterOrColumn.getJavaType();
-            ParseHelper parseHelper = new ParseHelper(TypeAdapter.on(parentFixture, type), type);
-            final Fixture fixture = parentFixture;
-            new CellAction(new TestResultHandler() {
-                public void pass() {
-                    fixture.right(cell);
-                }
-
-                public void fail(String actualValue) {
-                    fixture.wrong(cell, actualValue);
-                }
-
-                public void exception(Throwable e) {
-                    fixture.exception(cell, e);
-                }
-
-                public void annotate(String message) {
-                    cell.addToBody(Fixture.gray(message));
-                }
-            }).test(cell.text(), parseHelper, parameterOrColumn);
-        }
-
-        private void doSetCell(final Parse cell, DbParameterAccessor parameterOrColumn) throws Exception {
-            Class<?> type = parameterOrColumn.getJavaType();
-            String text=cell.text();
-            ParseHelper parseHelper = new ParseHelper(TypeAdapter.on(parentFixture, type), type);
-            if (SymbolUtil.isSymbolGetter(text)){
-                Object value=dbfit.util.SymbolUtil.getSymbol(text);
-                cell.addToBody(Fixture.gray(" = "+String.valueOf(value)));
-                parameterOrColumn.set(value);
-            } else {
-                parameterOrColumn.set(parseHelper.parse(cell.text()));
-            }
-        }
     }
 }

@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
+import static dbfit.util.Direction.INPUT;
+
 public class CellAction {
     public static class Cell {
         private String specifiedText;
@@ -31,6 +33,14 @@ public class CellAction {
         public String getSpecifiedText() {
             return specifiedText;
         }
+
+        public void set(Object newValue) throws Exception {
+            parameterOrColumn.set(newValue);
+        }
+
+        public boolean isInput() {
+            return parameterOrColumn.hasDirection(INPUT);
+        }
     }
 
     private TestResultHandler resultHandler;
@@ -44,22 +54,36 @@ public class CellAction {
             new SaveActualValueToSymbolAction(),
             new StoredValueEqualsSpecifiedValueAssertion(),
             new ActualValueDoesNotEqualSpecifiedValueAssertion(),
-            new NoSpecifiedValueAction(),
-            new ActualValueEqualsSpecifiedValueAssertion());
+            new DisplayActualValueAction(),
+            new ActualValueEqualsSpecifiedValueAssertion(),
+            new AssignSpecifiedValueToAccessor(),
+            new AssignStoredValueToAccessor());
 
     public void test(String expectedString, ParseHelper parseHelper, DbParameterAccessor parameterOrColumn) {
         Cell cell = new Cell(expectedString, parseHelper, parameterOrColumn);
+        Action mostAppropriateAction = null;
         try {
             for (Action action : possibleActions) {
                 if (action.appliesTo(cell)) {
-                    action.run(cell, resultHandler);
-                    break;
+                    mostAppropriateAction = action;
                 }
+                if (mostAppropriateAction != null) break;
+            }
+            if (mostAppropriateAction != null) {
+                mostAppropriateAction.run(cell, resultHandler);
+            } else {
+                noSuitableActionFoundFor(cell);
             }
         }
         catch (Throwable t){
             resultHandler.exception(t);
         }
+    }
+
+    private void noSuitableActionFoundFor(Cell cell) throws IllegalArgumentException {
+        String cellDirection = (cell.isInput() ? "input" : "output or return value");
+        throw new IllegalArgumentException("Unexpected text [" + cell.getSpecifiedText() +
+                "] specified in " + cellDirection + " cell. No suitable action found.");
     }
 
     public static class SaveActualValueToSymbolAction implements Action {
@@ -70,7 +94,7 @@ public class CellAction {
         }
 
         public boolean appliesTo(Cell cell) {
-            return cell.getSpecifiedContent().isSymbolSetter();
+            return (!cell.isInput() && cell.getSpecifiedContent().isSymbolSetter());
         }
     }
 
@@ -85,7 +109,7 @@ public class CellAction {
         }
 
         public boolean appliesTo(Cell cell) {
-            return cell.getSpecifiedContent().isSymbolGetter();
+            return (!cell.isInput() && cell.getSpecifiedContent().isSymbolGetter());
         }
     }
 
@@ -101,17 +125,17 @@ public class CellAction {
         }
 
         public boolean appliesTo(Cell cell) {
-            return cell.getSpecifiedContent().isExpectingInequality();
+            return (!cell.isInput() && cell.getSpecifiedContent().isExpectingInequality());
         }
     }
 
-    public static class NoSpecifiedValueAction implements Action {
+    public static class DisplayActualValueAction implements Action {
         public void run(Cell cell, TestResultHandler resultHandler) throws InvocationTargetException, IllegalAccessException {
             resultHandler.annotate(cell.getActual().toString());
         }
 
         public boolean appliesTo(Cell cell) {
-            return cell.getSpecifiedContent().isEmpty();
+            return (!cell.isInput() && cell.getSpecifiedContent().isEmpty());
         }
     }
 
@@ -125,7 +149,29 @@ public class CellAction {
         }
 
         public boolean appliesTo(Cell cell) {
-            return true;
+            return (!cell.isInput() && !cell.getSpecifiedContent().hasSpecialSyntax());
+        }
+    }
+
+    public static class AssignSpecifiedValueToAccessor implements Action {
+        public void run(Cell cell, TestResultHandler resultHandler) throws Exception {
+            cell.set(cell.parse(cell.getSpecifiedText()));
+        }
+
+        public boolean appliesTo(Cell cell) {
+            return (cell.isInput() && !cell.getSpecifiedContent().isSymbolGetter());
+        }
+    }
+
+    public static class AssignStoredValueToAccessor implements Action {
+        public void run(Cell cell, TestResultHandler resultHandler) throws Exception {
+            Object storedValue = cell.parse(cell.getSpecifiedText());
+            resultHandler.annotate(String.valueOf(storedValue));
+            cell.set(storedValue);
+        }
+
+        public boolean appliesTo(Cell cell) {
+            return (cell.isInput() && cell.getSpecifiedContent().isSymbolGetter());
         }
     }
 
