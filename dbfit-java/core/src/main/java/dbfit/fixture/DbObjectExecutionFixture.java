@@ -2,6 +2,7 @@ package dbfit.fixture;
 
 import dbfit.api.DbObject;
 import dbfit.util.*;
+import dbfit.util.actions.MostAppropriateAction;
 import fit.Fixture;
 import fit.Parse;
 import fit.TypeAdapter;
@@ -158,28 +159,31 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             this.parentFixture = parentFixture;
         }
 
-        private void doCell(DbParameterAccessor accessor, final Parse cell) throws Throwable {
+        private void doCell(DbParameterAccessor accessor, final Parse fitCell) throws Throwable {
             try {
                 Class<?> type = accessor.getJavaType();
                 ParseHelper parseHelper = new ParseHelper(TypeAdapter.on(parentFixture, type), type);
+                Cell cell = new Cell(fitCell.text(), parseHelper, accessor);
+
                 final Fixture fixture = parentFixture;
-                new CellAction(new TestResultHandler() {
+                TestResultHandler handler = new TestResultHandler() {
                     public void pass() {
-                        fixture.right(cell);
+                        fixture.right(fitCell);
                     }
 
                     public void fail(String actualValue) {
-                        fixture.wrong(cell, actualValue);
+                        fixture.wrong(fitCell, actualValue);
                     }
 
                     public void exception(Throwable e) {
-                        fixture.exception(cell, e);
+                        fixture.exception(fitCell, e);
                     }
 
                     public void annotate(String message) {
-                        cell.addToBody(Fixture.gray(message));
+                        fitCell.addToBody(Fixture.gray(message));
                     }
-                }).test(cell.text(), parseHelper, accessor);
+                };
+                new MostAppropriateAction().run(cell, handler);
             } catch (Throwable throwable) {
                 throw new RuntimeException(throwable);
             }
