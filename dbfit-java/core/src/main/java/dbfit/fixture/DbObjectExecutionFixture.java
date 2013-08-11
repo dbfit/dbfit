@@ -165,29 +165,31 @@ public abstract class DbObjectExecutionFixture extends Fixture {
                 ParseHelper parseHelper = new ParseHelper(TypeAdapter.on(parentFixture, type), type);
                 Cell cell = new Cell(fitCell.text(), parseHelper, accessor);
 
-                final Fixture fixture = parentFixture;
-                TestResultHandler handler = new TestResultHandler() {
-                    public void pass() {
-                        fixture.right(fitCell);
-                    }
-
-                    public void fail(String actualValue) {
-                        fixture.wrong(fitCell, actualValue);
-                    }
-
-                    public void exception(Throwable e) {
-                        fixture.exception(fitCell, e);
-                    }
-
-                    public void annotate(String message) {
-                        fitCell.addToBody(Fixture.gray(message));
-                    }
-                };
+                TestResultHandler handler = makeTestResultHandler(fitCell, parentFixture);
                 new MostAppropriateAction().run(cell, handler);
             } catch (Throwable throwable) {
                 throw new RuntimeException(throwable);
             }
         }
 
+        private TestResultHandler makeTestResultHandler(final Parse fitCell, final Fixture fixture) {
+            return new TestResultHandler() {
+                public void pass() {
+                    fixture.right(fitCell);
+                }
+
+                public void fail(String actualValue) {
+                    fixture.wrong(fitCell, actualValue);
+                }
+
+                public void exception(Throwable e) {
+                    fixture.exception(fitCell, e);
+                }
+
+                public void annotate(String message) {
+                    fitCell.addToBody(Fixture.gray(message));
+                }
+            };
+        }
     }
 }
