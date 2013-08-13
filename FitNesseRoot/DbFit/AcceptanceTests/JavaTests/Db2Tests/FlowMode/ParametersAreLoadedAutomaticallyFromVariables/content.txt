@@ -11,3 +11,5 @@ Parameters are loaded automatically from variables, no need to set them explicit
 |Query|Select * from users where userid=@pera|
 |username|name|userid|
 |pera|Petar Detlic|<<pera|
+
+|Execute|delete from users|

@@ -1,3 +1,4 @@
 !|dbfit.DB2Test|
 
-!|Connect|localhost:50000|DFTEST|DFTEST|DBFIT|
+##!|Connect|localhost:50000|DFTEST|DFTEST|DBFIT|
+!|ConnectUsingFile|c:\Users\mpatrick\Downloads\FitnesseWiki\FitnesseRoot\files\lib\connect.properties|
