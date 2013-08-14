@@ -1,31 +1,27 @@
 !3 Numbers
 
-
-|Execute|Create table datatypetest (n1 SMALLINT, n2 INT, n3 INTEGER,n4 BIGINT,n5 FLOAT,n6 DOUBLE,N7 DECIMAL(10,2),n8 DECFLOAT(16))|
+|Execute|Create table datatypetest (n1 SMALLINT, n2 INT, n3 INTEGER,n4 BIGINT,n5 FLOAT,n6 DOUBLE,N7 DECIMAL(10,2), n8 REAL, n9 NUMERIC)|
 
 |Insert|datatypetest|
-|n1|n2|n3|n4|n5|n6|n7|n8|
-|1|2|3|4|55.5|66.6|77.77|8.8|
+|n1|n2|n3|n4|n5|n6|n7|n8|n9|
+|1|2|3|4|55.5|123456.789|77.77|9.99|22|
 
 |Ordered Query|select * from datatypetest|
-|n1|n2|n3|n4|n5|n6|n7|n8|
-|1|2|3|4|55.5|66.6|77.77|8.8|
+|n1|n2|n3|n4|n5|n6|n7|n8|n9|
+|1|2|3|4|55.5|123456.789|77.77|9.99|22|
 
 !3 should accept fail[null]
 
 |Ordered Query|select * from datatypetest|
-|n1|n2|n3|n4|n5|n6|n7|n8|
-|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|
+|n1|n2|n3|n4|n5|n6|n7|n8|n9|
+|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|
 
 |execute|delete from datatypetest|
 
-
 |Insert|datatypetest|
-|n1|n2|n3|n4|n5|n6|n7|n8|
-|null|null|null|null|null|null|null|null|
+|n1|n2|n3|n4|n5|n6|n7|n8|n9|
+|null|null|null|null|null|null|null|null|null|null|
 
 |Ordered Query|select * from datatypetest|
-|n1|n2|n3|n4|n5|n6|n7|n8|
-|null|null|null|null|null|null|null|null|
-
-
+|n1|n2|n3|n4|n5|n6|n7|n8|n9|
+|null|null|null|null|null|null|null|null|null|

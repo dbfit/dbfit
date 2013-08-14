@@ -5,7 +5,7 @@
 
 newlines are replaced with blanks - so don't use them in string values. edit page source to see that query is multi-line
 
-|Query|!- select n from ( SELECT 1 as n from sysibm.sysdummy1 union select 2 as n from sysibm.sysdummy1 union select 3 as n from sysibm.sysdummy1 )  -!|
+|Query|!- select n from ( SELECT 1 as n from sysibm.sysdummy1 union select 2 as n from sysibm.sysdummy1 union select 3 as n from sysibm.sysdummy1 ) as A  -!|
 |n|
 |2|
 |1|
