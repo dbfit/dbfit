@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import static dbfit.util.DbParameterAccessor.Direction;
 import static dbfit.util.DbParameterAccessor.Direction.*;
 
-@DatabaseEnvironment(name="DB2", driver="com.ibm.as400.access.AS400JDBCDriver")
+@DatabaseEnvironment(name="DB2", driver="com.ibm.db2.jcc.DB2Driver")
 public class DB2Environment extends AbstractDbEnvironment {
 
     public DB2Environment(String driverClassName) {
@@ -38,25 +38,25 @@ public class DB2Environment extends AbstractDbEnvironment {
     }
 
     protected String getConnectionString(String dataSource) {
-        return "jdbc:as400://" + dataSource;
+        return "jdbc:db2://" + dataSource;
     }
 
     protected String getConnectionString(String dataSource, String database) {
-        return "jdbc:as400://" + dataSource + "/" + database;
+        return "jdbc:db2://" + dataSource + "/" + database;
     }
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
         String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
                 .split("\\.");
-        String qry = " select name as column_name, coltype as data_type, length, "
-                + "	'P' as direction from QSYS2.SYSCOLUMNS where ";
+        String qry = " select colname as column_name, typename as data_type, length, "
+                + "	'P' as direction from syscat.columns where ";
         if (qualifiers.length == 2) {
-            qry += " lower(dbname)=? and lower(tbname)=? ";
+            qry += " lower(tabschema)=? and lower(tabname)=? ";
         } else {
-            qry += " lower(tbname)=?";
+            qry += " (lower(tabname)=?)";
         }
-        qry += " order by name";
+        qry += " order by colname";
         return readIntoParams(qualifiers, qry);
     }
 
@@ -92,14 +92,11 @@ public class DB2Environment extends AbstractDbEnvironment {
     }
 
     private static Direction getParameterDirection(String direction) {
-        if (("P".equals(direction)) ||
-           ("IN".equals(direction)))
+        if ("P".equals(direction))
             return INPUT;
-        if (("O".equals(direction)) ||
-           ("OUT".equals(direction)))
+        if ("O".equals(direction))
             return OUTPUT;
-        if (("B".equals(direction)) ||
-           ("INOUT".equals(direction)))
+        if ("B".equals(direction))
             return INPUT_OUTPUT;
         if ("C".equals(direction))
             return RETURN_VALUE;
@@ -111,26 +108,27 @@ public class DB2Environment extends AbstractDbEnvironment {
     // List interface has sequential search, so using list instead of array to
     // map types
     private static List<String> stringTypes = Arrays.asList(new String[] {
-            "VARCHAR", "CHAR", "CHARACTER", "GRAPHIC", "VARGRAPHIC", "CHARACTER VARYING" });
+            "VARCHAR", "CHAR", "CHARACTER", "GRAPHIC", "VARGRAPHIC" });
     private static List<String> intTypes = Arrays.asList(new String[] {
             "SMALLINT", "INT", "INTEGER" });
     private static List<String> longTypes = Arrays
             .asList(new String[] { "BIGINT" });
     private static List<String> floatTypes = Arrays
-            .asList(new String[] { "FLOAT", "REAL" });
+            .asList(new String[] { "FLOAT" });
     private static List<String> doubleTypes = Arrays
             .asList(new String[] { "DOUBLE" });
     private static List<String> decimalTypes = Arrays.asList(new String[] {
-            "DECIMAL", "DEC", "DECFLOAT", "NUMERIC" });
+            "DECIMAL", "DEC", "DECFLOAT" });
     private static List<String> dateTypes = Arrays
             .asList(new String[] { "DATE" });
     private static List<String> timestampTypes = Arrays
-            .asList(new String[] { "TIMESTAMP", "TIMESTMP" });
+            .asList(new String[] { "TIMESTAMP" });
 
     private static String NormaliseTypeName(String dataType) {
         dataType = dataType.toUpperCase().trim();
         return dataType;
     }
+
     private static int getSqlType(String dataType) {
         // todo:strip everything from first blank
         dataType = NormaliseTypeName(dataType);
@@ -151,7 +149,7 @@ public class DB2Environment extends AbstractDbEnvironment {
             return java.sql.Types.TIMESTAMP;
         if (dateTypes.contains(dataType))
             return java.sql.Types.DATE;
-        throw new UnsupportedOperationException("SQL - Type " + dataType
+        throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
     }
 
@@ -173,7 +171,7 @@ public class DB2Environment extends AbstractDbEnvironment {
             return Long.class;
         if (timestampTypes.contains(dataType))
             return java.sql.Timestamp.class;
-        throw new UnsupportedOperationException("Java - Type " + dataType
+        throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
     }
 
@@ -181,14 +179,14 @@ public class DB2Environment extends AbstractDbEnvironment {
             String procName) throws SQLException {
         String[] qualifiers = NameNormaliser.normaliseName(procName).split(
                 "\\.");
-        String qry = " select parmname as column_name, data_type as data_type, precision,"
-                + "	parmmode as direction, parmno from QSYS2.SYSPARMS where ";
+        String qry = " select parmname as column_name, typename as data_type, length, "
+                + "	rowtype as direction, ordinal from SYSIBM.SYSroutinePARMS  where ";
         if (qualifiers.length == 2) {
-            qry += " lower(specschema)=? and lower(specname)=? ";
+            qry += " lower(routineschema)=? and lower(routinename)=? ";
         } else {
-            qry += " (lower(specname)=?)";
+            qry += " (lower(routinename)=?)";
         }
-        qry += " order by parmno";
+        qry += " order by ordinal";
         return readIntoParams(qualifiers, qry);
     }
 }

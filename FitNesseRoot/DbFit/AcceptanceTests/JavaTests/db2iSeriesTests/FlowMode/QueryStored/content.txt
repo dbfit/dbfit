@@ -1,0 +1,7 @@
+|Store Query|select n from ( select 1 as n from sysibm.sysdummy1 union select 2 as n from sysibm.sysdummy1 union select 3 as n from sysibm.sysdummy1) as A|firsttable|
+
+|query|<<firsttable|
+|n|
+|1|
+|2|
+|3|
