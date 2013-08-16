@@ -4,7 +4,7 @@
 
 |Execute|call dbdrop (' table ${storedlib}.datatypetest')| 
 
-|Execute|Create table datatypetest (n1 SMALLINT, n2 INT, n3 INTEGER,n4 BIGINT,n5 FLOAT,n6 DOUBLE,N7 DECIMAL(10,2), n8 REAL, n9 REAL, n10 NUMERIC)|
+|Execute|Create table datatypetest (n1 SMALLINT, n2 INT, n3 INTEGER,n4 BIGINT,n5 FLOAT,n6 DOUBLE,N7 DECIMAL(10,2), n8 DECFLOAT(16), n9 REAL, n10 NUMERIC)|
 
 |Insert|datatypetest|
 |n1|n2|n3|n4|n5|n6|n7|n8|n9|n10|
