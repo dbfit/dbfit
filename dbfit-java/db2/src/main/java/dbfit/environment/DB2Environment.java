@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import dbfit.util.Direction;
-import static dbfit.util.Direction.*;
+import static dbfit.util.DbParameterAccessor.Direction;
+import static dbfit.util.DbParameterAccessor.Direction.*;
 
 @DatabaseEnvironment(name="DB2", driver="com.ibm.db2.jcc.DB2Driver")
 public class DB2Environment extends AbstractDbEnvironment {
