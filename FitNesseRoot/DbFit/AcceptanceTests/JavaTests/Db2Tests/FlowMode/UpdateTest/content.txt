@@ -69,5 +69,3 @@
 |john travolta|jtrav|
 |ford prefect|fpref|
 |zaphod beeblebrox|zaphod|
-
-|Execute|delete from users|
