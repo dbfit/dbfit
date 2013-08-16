@@ -114,11 +114,11 @@ public class DB2Environment extends AbstractDbEnvironment {
     private static List<String> longTypes = Arrays
             .asList(new String[] { "BIGINT" });
     private static List<String> floatTypes = Arrays
-            .asList(new String[] { "FLOAT", "REAL" });
+            .asList(new String[] { "FLOAT"});
     private static List<String> doubleTypes = Arrays
             .asList(new String[] { "DOUBLE" });
     private static List<String> decimalTypes = Arrays.asList(new String[] {
-            "DECIMAL", "DEC", "DECFLOAT", "NUMERIC" });
+            "DECIMAL", "DEC", "DECFLOAT" });
     private static List<String> dateTypes = Arrays
             .asList(new String[] { "DATE" });
     private static List<String> timestampTypes = Arrays
