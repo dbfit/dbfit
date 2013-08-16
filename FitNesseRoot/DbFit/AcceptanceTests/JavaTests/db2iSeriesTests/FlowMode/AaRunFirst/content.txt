@@ -1,0 +1,54 @@
+##!define COMMAND_PATTERN {java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=1044 -cp %p %m}
+
+|Execute|!- CREATE PROCEDURE dbdrop( IN STMT VARCHAR(1000) )  
+             LANGUAGE SQL                                                 
+             BEGIN                                                        
+                DECLARE SQLSTATE CHAR(5);                                 
+                DECLARE NotThere    CONDITION FOR SQLSTATE '42704';       
+                DECLARE NotThereSig CONDITION FOR SQLSTATE '42883';       
+                DECLARE EXIT HANDLER FOR NotThere, NotThereSig            
+                SET SQLSTATE = '     ';                                
+                SET STMT = 'DROP' || STMT;                                
+                EXECUTE IMMEDIATE STMT;                                   
+              END -!|
+
+|Execute|call dbdrop (' table ${storedlib}.users')| 
+
+|Execute|call dbdrop (' table ${storedlib}.test_dbfit')|
+
+|Execute|call dbdrop (' table ${storedlib}.testtbl')|  
+
+|Execute|call dbdrop (' table ${storedlib}.test_1')| 
+
+|Execute|call dbdrop (' table ${storedlib}.datatypetest')| 
+
+
+|Execute|call dbdrop (' procedure ${storedlib}.calclength')| 
+
+|Execute|call dbdrop (' procedure ${storedlib}.makeuser')| 
+
+|Execute|call dbdrop (' procedure ${storedlib}.createuser')|
+
+|Execute|call dbdrop (' procedure ${storedlib}.multiply')|
+
+|Execute|call dbdrop (' procedure ${storedlib}.concatenatestrings')|
+
+|Execute|call dbdrop (' function ${storedlib}.concatenatef')|
+
+|Execute|call dbdrop (' procedure ${storedlib}.makeusertest')|
+
+|Execute|CREATE TABLE ${storedlib}.USERS(NAME VARCHAR(50) UNIQUE, USERNAME VARCHAR(50), USERID INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1))|
+
+|Execute|CREATE PROCEDURE ${storedlib}.CALCLENGTH(IN name varchar(100), OUT strlength INT) set strlength = length(name)|
+
+|Execute|create procedure ${storedlib}.makeuser() insert into users (name, username) values ('user1', 'fromproc')|                                   
+
+|Execute|CREATE PROCEDURE ${storedlib}.createuser(IN newname varchar(100), IN newusername varchar(100)) insert into users (name,username) values(newname, newusername)|    
+
+|Execute|CREATE PROCEDURE ${storedlib}.multiply(IN factor int, INOUT val int) set val = val*factor|                                                                                                      
+
+|Execute|CREATE FUNCTION ${storedlib}.concatenatef (firststring varchar(100), secondstring varchar(100)) RETURNS varchar(200) RETURN CONCAT(firststring, concat(' ', secondstring))|
+
+|Execute|CREATE PROCEDURE ${storedlib}.concatenatestrings (IN firststring varchar(100), IN secondstring varchar(100), OUT concatenated varchar(200))Set concatenated = concat(firststring , concat(' ' , secondstring ))|
+ 
+                                                         

@@ -1,0 +1,8 @@
+!3 !-MySql-! test framework allows using @xxx as parameter format
+ 
+|Set Parameter|depth|3|
+
+|Query|SELECT @depth+n as n FROM ( SELECT 1 as n from sysibm.sysdummy1 union select 2 as n from sysibm.sysdummy1 union select 3 as n from sysibm.sysdummy1 union select 4 as n from sysibm.sysdummy1) as A where A.n<@depth |
+|n|
+|4|
+|5|

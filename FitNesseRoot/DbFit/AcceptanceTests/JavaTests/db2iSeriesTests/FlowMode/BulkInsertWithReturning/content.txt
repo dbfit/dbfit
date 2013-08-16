@@ -22,3 +22,5 @@
 |Query|Select * from users where userid=@zeka|
 |username|name|userid|
 |Zeka|Dusko Dugousko|<<zeka|
+
+|Execute|delete from users|
