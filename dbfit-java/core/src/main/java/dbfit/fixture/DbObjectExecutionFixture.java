@@ -5,12 +5,10 @@ import dbfit.util.*;
 import dbfit.util.actions.MostAppropriateAction;
 import fit.Fixture;
 import fit.Parse;
-import fit.TypeAdapter;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static dbfit.util.Direction.INPUT;
 import static dbfit.util.Direction.OUTPUT;
@@ -50,7 +48,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
                 StatementExecution execution = dbObject.buildPreparedStatement(accessors.toArray());
                 Parse row = rows;
                 while ((row = row.more) != null) {
-                    newRowTest(accessors, execution).runRow(row);
+                    newRowTest(execution).runRow(new Row(accessors, row, this));
                 }
             }
         } catch (Throwable e) {
@@ -60,8 +58,8 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         }
     }
 
-    protected RowTest newRowTest(DbParameterAccessors accessors, StatementExecution execution) {
-        return new RowTest(accessors, execution, this);
+    protected RowAction newRowTest(StatementExecution execution) {
+        return new RowAction(execution);
     }
 
     public static class HeaderRow {
@@ -106,21 +104,17 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         }
     }
 
-    public static class RowTest {
-        private DbParameterAccessors accessors;
+    public static class RowAction {
         protected StatementExecution execution;
-        protected Fixture parentFixture;
 
-        public RowTest(DbParameterAccessors accessors, StatementExecution execution, Fixture parentFixture) {
-            this.accessors = accessors;
+        public RowAction(StatementExecution execution) {
             this.execution = execution;
-            this.parentFixture = parentFixture;
         }
 
         /**
          * execute a single row
          */
-        public void runRow(Parse row) throws Throwable {
+        public void runRow(Row row) throws Throwable {
             setInputs(row);
             run();
             evaluateOutputs(row);
@@ -130,66 +124,24 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             execution.run();
         }
 
-        protected void setInputs(Parse row) throws Throwable {
-            //first set input params
-            Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(FitHelpers.asCellList(row));
-            for (DbParameterAccessor inputAccessor : accessors.getInputAccessors()) {
-                Parse cell = cellMap.get(inputAccessor);
-                doCell(inputAccessor, cell);
+        protected void setInputs(Row row) throws Throwable {
+            for (Cell cell : row.getInputCells()) {
+                doCell(cell);
             }
         }
 
-        protected void evaluateOutputs(Parse row) throws Throwable {
-            Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(FitHelpers.asCellList(row));
-            for (DbParameterAccessor outputAccessor : accessors.getOutputAccessors()) {
-                Parse cell = cellMap.get(outputAccessor);
-                doCell(outputAccessor, cell);
+        protected void evaluateOutputs(Row row) throws Throwable {
+            for (Cell cell : row.getOutputCells()) {
+                doCell(cell);
             }
         }
 
-        private void doCell(DbParameterAccessor accessor, Parse cell) throws Throwable {
-            new CellTest2(parentFixture).doCell(accessor, cell);
-        }
-    }
-
-    public static class CellTest2 {
-        private Fixture parentFixture;
-
-        public CellTest2(Fixture parentFixture) {
-            this.parentFixture = parentFixture;
-        }
-
-        private void doCell(DbParameterAccessor accessor, final Parse fitCell) throws Throwable {
+        private void doCell(Cell cell) throws Throwable {
             try {
-                Class<?> type = accessor.getJavaType();
-                ParseHelper parseHelper = new ParseHelper(TypeAdapter.on(parentFixture, type), type);
-                Cell cell = new Cell(fitCell.text(), parseHelper, accessor);
-
-                TestResultHandler handler = makeTestResultHandler(fitCell, parentFixture);
-                new MostAppropriateAction().run(cell, handler);
+                new MostAppropriateAction().run(cell, cell.getTestResultHandler());
             } catch (Throwable throwable) {
                 throw new RuntimeException(throwable);
             }
-        }
-
-        private TestResultHandler makeTestResultHandler(final Parse fitCell, final Fixture fixture) {
-            return new TestResultHandler() {
-                public void pass() {
-                    fixture.right(fitCell);
-                }
-
-                public void fail(String actualValue) {
-                    fixture.wrong(fitCell, actualValue);
-                }
-
-                public void exception(Throwable e) {
-                    fixture.exception(fitCell, e);
-                }
-
-                public void annotate(String message) {
-                    fitCell.addToBody(Fixture.gray(message));
-                }
-            };
         }
     }
 }

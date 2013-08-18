@@ -4,9 +4,6 @@ import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
 import dbfit.api.DbObject;
 import dbfit.api.DbStoredProcedure;
-import dbfit.util.DbParameterAccessors;
-import fit.Fixture;
-import fit.Parse;
 
 import java.sql.SQLException;
 
@@ -27,43 +24,38 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
         }
     }
 
-    public static class AnyExceptionRowTest extends RowTest {
-        public AnyExceptionRowTest(DbParameterAccessors accessors, StatementExecution execution, Fixture parentFixture) {
-            super(accessors, execution, parentFixture);
+    public static class AnyExceptionRowAction extends RowAction {
+        public AnyExceptionRowAction(StatementExecution execution) {
+            super(execution);
         }
 
         @Override
-        protected void evaluateOutputs(Parse row) throws Throwable {
+        protected void evaluateOutputs(Row row) throws Throwable {
             if (execution.didExecutionSucceed()) {
-                parentFixture.wrong(row);
-                row.parts.addToBody(fit.Fixture.gray(" no exception raised"));
+                row.getTestResultHandler().fail("no exception raised");
             } else {
-                parentFixture.right(row);
+                row.getTestResultHandler().pass();
             }
         }
     }
 
-    public static class SpecificExceptionRowTest extends RowTest {
+    public static class SpecificExceptionRowAction extends RowAction {
         private Integer expectedErrorCode;
 
-        public SpecificExceptionRowTest(DbParameterAccessors accessors,
-                                        StatementExecution execution,
-                                        Fixture parentFixture,
-                                        Integer expectedErrorCode) {
-            super(accessors, execution, parentFixture);
+        public SpecificExceptionRowAction(StatementExecution execution,
+                                          Integer expectedErrorCode) {
+            super(execution);
             this.expectedErrorCode = expectedErrorCode;
         }
 
         @Override
-        protected void evaluateOutputs(Parse row) throws Throwable {
+        protected void evaluateOutputs(Row row) throws Throwable {
             if (execution.didExecutionSucceed()) {
-                parentFixture.wrong(row);
-                row.parts.addToBody(fit.Fixture.gray(" no exception raised"));
+                row.getTestResultHandler().fail("no exception raised");
             } else if (expectedErrorCode.equals(getActualErrorCodeFrom(execution))) {
-                parentFixture.right(row);
+                row.getTestResultHandler().pass();
             } else {
-                parentFixture.wrong(row);
-                row.parts.addToBody(fit.Fixture.gray(" got error code " + getActualErrorCodeFrom(execution)));
+                row.getTestResultHandler().fail(" got error code " + getActualErrorCodeFrom(execution));
             }
         }
 
@@ -108,11 +100,11 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
     }
 
     @Override
-    protected RowTest newRowTest(DbParameterAccessors accessors, StatementExecution execution) {
+    protected RowAction newRowTest(StatementExecution execution) {
         switch (expectation) {
-            case SUCCESS: return new RowTest(accessors, execution, this);
-            case ANY_EXCEPTION: return new AnyExceptionRowTest(accessors, execution, this);
-            case SPECIFIC_EXCEPTION: return new SpecificExceptionRowTest(accessors, execution, this, expectation.getExpectedErrorCode());
+            case SUCCESS: return new RowAction(execution);
+            case ANY_EXCEPTION: return new AnyExceptionRowAction(execution);
+            case SPECIFIC_EXCEPTION: return new SpecificExceptionRowAction(execution, expectation.getExpectedErrorCode());
             default: throw new RuntimeException("Internal error: expectation not set");
         }
     }
