@@ -24,7 +24,7 @@ public class Row {
         Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(DbObjectExecutionFixture.FitHelpers.asCellList(fitRow));
         for (DbParameterAccessor inputAccessor : accessors.getInputAccessors()) {
             Parse cell = cellMap.get(inputAccessor);
-            cells.add(new Cell(inputAccessor, cell, parentFixture));
+            cells.add(new FitCell(inputAccessor, cell, parentFixture));
         }
         return cells;
     }
@@ -34,7 +34,7 @@ public class Row {
         Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(DbObjectExecutionFixture.FitHelpers.asCellList(fitRow));
         for (DbParameterAccessor outputAccessor : accessors.getOutputAccessors()) {
             Parse cell = cellMap.get(outputAccessor);
-            cells.add(new Cell(outputAccessor, cell, parentFixture));
+            cells.add(new FitCell(outputAccessor, cell, parentFixture));
         }
         return cells;
     }
