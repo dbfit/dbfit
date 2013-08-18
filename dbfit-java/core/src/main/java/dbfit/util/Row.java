@@ -1,6 +1,7 @@
 package dbfit.util;
 
-import dbfit.fixture.DbObjectExecutionFixture;
+import dbfit.util.fit.FitCell;
+import dbfit.util.fit.FitHelpers;
 import fit.Fixture;
 import fit.Parse;
 
@@ -21,7 +22,7 @@ public class Row {
 
     public List<Cell> getInputCells() {
         List<Cell> cells = new ArrayList<Cell>();
-        Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(DbObjectExecutionFixture.FitHelpers.asCellList(fitRow));
+        Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(FitHelpers.asCellList(fitRow));
         for (DbParameterAccessor inputAccessor : accessors.getInputAccessors()) {
             Parse cell = cellMap.get(inputAccessor);
             cells.add(new FitCell(inputAccessor, cell, parentFixture));
@@ -31,7 +32,7 @@ public class Row {
 
     public List<Cell> getOutputCells() {
         List<Cell> cells = new ArrayList<Cell>();
-        Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(DbObjectExecutionFixture.FitHelpers.asCellList(fitRow));
+        Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(FitHelpers.asCellList(fitRow));
         for (DbParameterAccessor outputAccessor : accessors.getOutputAccessors()) {
             Parse cell = cellMap.get(outputAccessor);
             cells.add(new FitCell(outputAccessor, cell, parentFixture));

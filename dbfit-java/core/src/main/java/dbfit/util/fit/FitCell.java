@@ -1,5 +1,6 @@
-package dbfit.util;
+package dbfit.util.fit;
 
+import dbfit.util.*;
 import fit.Fixture;
 import fit.Parse;
 import fit.TypeAdapter;

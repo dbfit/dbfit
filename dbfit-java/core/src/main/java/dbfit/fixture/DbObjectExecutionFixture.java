@@ -3,15 +3,12 @@ package dbfit.fixture;
 import dbfit.api.DbObject;
 import dbfit.util.*;
 import dbfit.util.actions.RowAction;
+import dbfit.util.fit.FitHelpers;
 import fit.Fixture;
 import fit.Parse;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-
-import static dbfit.util.Direction.INPUT;
-import static dbfit.util.Direction.OUTPUT;
 
 /**
  * this class handles all cases where a statement should be executed for each row with
@@ -60,48 +57,6 @@ public abstract class DbObjectExecutionFixture extends Fixture {
 
     protected RowAction newRowTest(StatementExecution execution) {
         return new RowAction(execution);
-    }
-
-    public static class HeaderRow {
-        private List<String> columnNames;
-        private DbObject dbObject;
-
-        public HeaderRow(List<String> columnNames, DbObject dbObject) {
-            this.columnNames = columnNames;
-            this.dbObject = dbObject;
-        }
-
-        public DbParameterAccessors getAccessors() throws SQLException {
-            DbParameterAccessors accessors = new DbParameterAccessors();
-            for (String name : columnNames) {
-                DbParameterAccessor accessor = dbObject.getDbParameterAccessor(name, isOutput(name) ? OUTPUT : INPUT);
-                if (accessor == null) throw new IllegalArgumentException("Parameter/column " + name + " not found");
-                accessors.add(accessor);
-            }
-            return accessors;
-        }
-
-        private static boolean isOutput(String name) {
-            return name.endsWith("?");
-        }
-    }
-
-    public static class FitHelpers {
-        public static List<String> getCellTextFrom(Parse cells) {
-            List<String> cellText = new ArrayList<String>();
-            for (; cells != null; cells = cells.more) {
-                cellText.add(cells.text());
-            }
-            return cellText;
-        }
-
-        public static List<Parse> asCellList(Parse row) {
-            List<Parse> cells = new ArrayList<Parse>();
-            for (Parse cell = row.parts; cell != null; cell = cell.more) {
-                cells.add(cell);
-            }
-            return cells;
-        }
     }
 
 }
