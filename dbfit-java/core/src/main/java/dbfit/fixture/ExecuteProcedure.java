@@ -4,6 +4,9 @@ import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
 import dbfit.api.DbObject;
 import dbfit.api.DbStoredProcedure;
+import dbfit.util.actions.AnyExceptionRowAction;
+import dbfit.util.actions.RowAction;
+import dbfit.util.actions.SpecificExceptionRowAction;
 
 import java.sql.SQLException;
 
@@ -21,47 +24,6 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
 
         public Integer getExpectedErrorCode() {
             return expectedErrorCode;
-        }
-    }
-
-    public static class AnyExceptionRowAction extends RowAction {
-        public AnyExceptionRowAction(StatementExecution execution) {
-            super(execution);
-        }
-
-        @Override
-        protected void evaluateOutputs(Row row) throws Throwable {
-            if (execution.didExecutionSucceed()) {
-                row.getTestResultHandler().fail("no exception raised");
-            } else {
-                row.getTestResultHandler().pass();
-            }
-        }
-    }
-
-    public static class SpecificExceptionRowAction extends RowAction {
-        private Integer expectedErrorCode;
-
-        public SpecificExceptionRowAction(StatementExecution execution,
-                                          Integer expectedErrorCode) {
-            super(execution);
-            this.expectedErrorCode = expectedErrorCode;
-        }
-
-        @Override
-        protected void evaluateOutputs(Row row) throws Throwable {
-            if (execution.didExecutionSucceed()) {
-                row.getTestResultHandler().fail("no exception raised");
-            } else if (expectedErrorCode.equals(getActualErrorCodeFrom(execution))) {
-                row.getTestResultHandler().pass();
-            } else {
-                row.getTestResultHandler().fail(" got error code " + getActualErrorCodeFrom(execution));
-            }
-        }
-
-        private int getActualErrorCodeFrom(StatementExecution execution) {
-            SQLException e = execution.getEncounteredException();
-            return e.getErrorCode();
         }
     }
 

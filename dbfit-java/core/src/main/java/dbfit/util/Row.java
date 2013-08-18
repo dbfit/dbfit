@@ -1,6 +1,6 @@
-package dbfit.fixture;
+package dbfit.util;
 
-import dbfit.util.*;
+import dbfit.fixture.DbObjectExecutionFixture;
 import fit.Fixture;
 import fit.Parse;
 
