@@ -1,3 +1,0 @@
-http://publib.boulder.ibm.com/infocenter/db2luw/v8/index.jsp?topic=/com.ibm.db2.udb.doc/ad/rjvjdata.htm
-
-!contents -R
