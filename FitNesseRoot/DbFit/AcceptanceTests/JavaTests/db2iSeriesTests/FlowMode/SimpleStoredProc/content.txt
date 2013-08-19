@@ -1,7 +1,0 @@
-##!define COMMAND_PATTERN {java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=1044 -cp %p %m}
-
-!|Execute Procedure |CalcLength|
-|name |str length?|
-|mika |  4|
-|paradajz |  8|
-|saeiluhrweurhfi7fhi7rhgf |  24|

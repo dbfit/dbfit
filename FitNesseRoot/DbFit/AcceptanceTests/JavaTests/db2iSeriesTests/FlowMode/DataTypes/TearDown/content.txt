@@ -1,1 +1,0 @@
-|Execute|drop table ${storedlib}.datatypetest| 

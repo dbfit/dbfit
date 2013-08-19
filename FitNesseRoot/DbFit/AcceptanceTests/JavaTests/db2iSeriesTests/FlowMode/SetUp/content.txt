@@ -1,6 +1,0 @@
-!|dbfit.DB2iSeriesTest|
-!define fitnessePath {c:/users/mpatrick/downloads/fitnessewiki/fitnesseroot}
-
-!|ConnectUsingFile|${fitnessePath}/files/lib/connect.properties|
-
-!define storedlib {MPATRICK}
