@@ -35,19 +35,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
      */
     public void doRows(Parse rows) {
         try {
-            DbObject dbObject = getTargetDbObject();
-            if (rows == null) {//single execution, no args
-                StatementExecution preparedStatement = dbObject.buildPreparedStatement(DbParameterAccessors.EMPTY);
-                preparedStatement.run();
-            } else {
-                List<String> columnNames = FitHelpers.getCellTextFrom(rows.parts);
-                DbParameterAccessors accessors = new HeaderRow(columnNames, dbObject).getAccessors();
-                StatementExecution execution = dbObject.buildPreparedStatement(accessors.toArray());
-                Parse row = rows;
-                while ((row = row.more) != null) {
-                    newRowTest(execution).runRow(new Row(accessors, row, this));
-                }
-            }
+            new ExecutionTable(getTargetDbObject(), this, rows).run();
         } catch (Throwable e) {
             e.printStackTrace();
             if (rows == null) throw new Error(e);
@@ -59,4 +47,52 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         return new RowAction(execution);
     }
 
+    public static class ExecutionTable {
+        private DbObject dbObject;
+        private Fixture fixture;
+        private Parse rows;
+        private Parse currentRow;
+
+        public ExecutionTable(DbObject dbObject, Fixture fixture, Parse rows) {
+            this.dbObject = dbObject;
+            this.fixture = fixture;
+            this.rows = rows;
+            if (rows != null)
+                this.currentRow = rows.more;
+        }
+
+        public void run() throws Throwable {
+            if (!areDataRowsPresent()) {//single execution, no args
+                StatementExecution preparedStatement = dbObject.buildPreparedStatement(DbParameterAccessors.EMPTY);
+                preparedStatement.run();
+            } else {
+                DbParameterAccessors accessors = new HeaderRow(getColumnNames(), dbObject).getAccessors();
+                StatementExecution execution = dbObject.buildPreparedStatement(accessors.toArray());
+                RowAction action = newRowAction(execution);
+
+                for (Row row = nextRow(accessors); row != null; row = nextRow(accessors)) {
+                    action.runRow(row);
+                }
+            }
+        }
+
+        protected boolean areDataRowsPresent() {
+            return rows != null;
+        }
+
+        protected List<String> getColumnNames() {
+            return FitHelpers.getCellTextFrom(rows.parts);
+        }
+
+        protected Row nextRow(DbParameterAccessors accessors) throws Throwable {
+            if (currentRow == null) return null;
+            Row row = new Row(accessors, currentRow, fixture);
+            currentRow = currentRow.more;
+            return row;
+        }
+
+        protected RowAction newRowAction(StatementExecution execution) {
+            return new RowAction(execution);
+        }
+    }
 }
