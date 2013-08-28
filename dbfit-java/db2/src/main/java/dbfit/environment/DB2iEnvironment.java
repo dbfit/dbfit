@@ -143,9 +143,7 @@ public class DB2iEnvironment extends AbstractDbEnvironment {
         return dataType;
         
     }
-    private static int getInt(){
-     	return 4;
-    }
+
     private static int getSqlType(String dataType) {
         // todo:strip everything from first blank
         dataType = NormaliseTypeName(dataType);
