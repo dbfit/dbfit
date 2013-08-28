@@ -144,7 +144,7 @@ public class DB2iEnvironment extends AbstractDbEnvironment {
         
     }
     private static int getInt(){
-     	return 5;
+     	return 4;
     }
     private static int getSqlType(String dataType) {
         // todo:strip everything from first blank
