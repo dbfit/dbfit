@@ -1,5 +1,5 @@
 package dbfit.environment;
-
+ //this is DB2iEnvironment renamed  
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
@@ -18,10 +18,10 @@ import java.util.regex.Pattern;
 import static dbfit.util.DbParameterAccessor.Direction;
 import static dbfit.util.DbParameterAccessor.Direction.*;
 
-@DatabaseEnvironment(name="DB2iSeries", driver="com.ibm.as400.access.AS400JDBCDriver")
-public class DB2iSeriesEnvironment extends AbstractDbEnvironment {
+@DatabaseEnvironment(name="DB2i", driver="com.ibm.as400.access.AS400JDBCDriver")
+public class DB2iEnvironment extends AbstractDbEnvironment {
 
-    public DB2iSeriesEnvironment(String driverClassName) {
+    public DB2iEnvironment(String driverClassName) {
         super(driverClassName);
     }
 
@@ -101,7 +101,8 @@ public class DB2iSeriesEnvironment extends AbstractDbEnvironment {
         //	P - Input
         //	O - Output
         //	B - In/Out parameter
-        //	C - Result after casting (not applicable for stored procedures)    	
+        //	C - Result after casting (not applicable for stored procedures)  
+    	
         if (("P".equals(direction)) ||
            ("IN".equals(direction)))
             return INPUT;
@@ -111,8 +112,8 @@ public class DB2iSeriesEnvironment extends AbstractDbEnvironment {
         if (("B".equals(direction)) ||
            ("INOUT".equals(direction)))
             return INPUT_OUTPUT;
-        if ("C".equals(direction))
-            return RETURN_VALUE;
+          if ("C".equals(direction))
+              return RETURN_VALUE;
         // todo return val
         throw new UnsupportedOperationException("Direction " + direction
                 + " is not supported");
@@ -143,7 +144,7 @@ public class DB2iSeriesEnvironment extends AbstractDbEnvironment {
         
     }
     private static int getInt(){
-    	return 4;
+     	return 4;
     }
     private static int getSqlType(String dataType) {
         // todo:strip everything from first blank
@@ -190,7 +191,7 @@ public class DB2iSeriesEnvironment extends AbstractDbEnvironment {
         throw new UnsupportedOperationException("Java - Type " + dataType
                 + " is not supported");
     }
-
+       
     public Map<String, DbParameterAccessor> getAllProcedureParameters(
             String procName) throws SQLException {
         // iSeries uses PARMNO, zSeries uses ORDINAL.
@@ -209,4 +210,3 @@ public class DB2iSeriesEnvironment extends AbstractDbEnvironment {
         return readIntoParams(qualifiers, qry);
     }
 }
-
