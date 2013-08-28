@@ -112,8 +112,8 @@ public class DB2iEnvironment extends AbstractDbEnvironment {
         if (("B".equals(direction)) ||
            ("INOUT".equals(direction)))
             return INPUT_OUTPUT;
- //       if ("C".equals(direction))
- //           return RETURN_VALUE;
+          if ("C".equals(direction))
+              return RETURN_VALUE;
         // todo return val
         throw new UnsupportedOperationException("Direction " + direction
                 + " is not supported");
