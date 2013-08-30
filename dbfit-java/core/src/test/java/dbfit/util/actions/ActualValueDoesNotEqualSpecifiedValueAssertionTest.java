@@ -16,7 +16,7 @@ public class ActualValueDoesNotEqualSpecifiedValueAssertionTest {
         TestCell cell = new TestCell("fail[abc]");
         cell.actual = "abc";
 
-        action().run(cell, cell.resultHandler);
+        action().run(cell);
 
         verify(cell.resultHandler).annotate("= abc");
         verify(cell.resultHandler).fail("abc");
@@ -27,7 +27,7 @@ public class ActualValueDoesNotEqualSpecifiedValueAssertionTest {
         TestCell cell = new TestCell("fail[abc]");
         cell.actual = "def";
 
-        action().run(cell, cell.resultHandler);
+        action().run(cell);
 
         verify(cell.resultHandler).annotate("= def");
         verify(cell.resultHandler).pass();

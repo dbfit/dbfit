@@ -6,8 +6,8 @@ import dbfit.util.TestResultHandler;
 import java.lang.reflect.InvocationTargetException;
 
 public class DisplayActualValueAction implements Action {
-    public void run(Cell cell, TestResultHandler resultHandler) throws InvocationTargetException, IllegalAccessException {
-        resultHandler.annotate(cell.getActual().toString());
+    public void run(Cell cell) throws InvocationTargetException, IllegalAccessException {
+        cell.getTestResultHandler().annotate(cell.getActual().toString());
     }
 
     public boolean appliesTo(Cell cell) {

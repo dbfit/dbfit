@@ -38,7 +38,7 @@ public class RowAction {
 
     private void doCell(Cell cell) throws Throwable {
         try {
-            new MostAppropriateAction().run(cell, cell.getTestResultHandler());
+            new MostAppropriateAction().run(cell);
         } catch (Throwable throwable) {
             throw new RuntimeException(throwable);
         }

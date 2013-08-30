@@ -4,7 +4,7 @@ import dbfit.util.Cell;
 import dbfit.util.TestResultHandler;
 
 public class AssignSpecifiedValueToAccessor implements Action {
-    public void run(Cell cell, TestResultHandler resultHandler) throws Exception {
+    public void run(Cell cell) throws Exception {
         cell.set(cell.parse(cell.getSpecifiedText()));
     }
 

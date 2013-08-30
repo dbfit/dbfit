@@ -15,17 +15,17 @@ public class MostAppropriateAction implements Action {
             new AssignSpecifiedValueToAccessor(),
             new AssignStoredValueToAccessor());
 
-    public void run(Cell cell, TestResultHandler resultHandler) {
+    public void run(Cell cell) {
         try {
             Action mostAppropriateAction = getMostAppropriateAction(cell);
             if (mostAppropriateAction != null) {
-                mostAppropriateAction.run(cell, resultHandler);
+                mostAppropriateAction.run(cell);
             } else {
                 noSuitableActionFoundFor(cell);
             }
         }
         catch (Throwable t){
-            resultHandler.exception(t);
+            cell.getTestResultHandler().exception(t);
         }
     }
 

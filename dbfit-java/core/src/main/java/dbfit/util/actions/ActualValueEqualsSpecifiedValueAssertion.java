@@ -4,12 +4,12 @@ import dbfit.util.Cell;
 import dbfit.util.TestResultHandler;
 
 public class ActualValueEqualsSpecifiedValueAssertion extends Assertion {
-    public void run(Cell cell, TestResultHandler resultHandler) throws Exception {
+    public void run(Cell cell) throws Exception {
         Object expected = cell.parse(cell.getSpecifiedText());
         if (equals(cell.getActual(),expected))
-            resultHandler.pass();
+            cell.getTestResultHandler().pass();
         else
-            resultHandler.fail(String.valueOf(cell.getActual()));
+            cell.getTestResultHandler().fail(String.valueOf(cell.getActual()));
     }
 
     public boolean appliesTo(Cell cell) {

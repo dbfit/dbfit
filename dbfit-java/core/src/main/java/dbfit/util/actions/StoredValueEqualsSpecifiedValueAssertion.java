@@ -4,13 +4,13 @@ import dbfit.util.Cell;
 import dbfit.util.TestResultHandler;
 
 public class StoredValueEqualsSpecifiedValueAssertion extends Assertion {
-    public void run(Cell cell, TestResultHandler resultHandler) throws Exception {
+    public void run(Cell cell) throws Exception {
         Object expected = cell.parse(cell.getSpecifiedText());
-        resultHandler.annotate("= " + String.valueOf(expected));
+        cell.getTestResultHandler().annotate("= " + String.valueOf(expected));
         if (equals(cell.getActual(),expected))
-            resultHandler.pass();
+            cell.getTestResultHandler().pass();
         else
-            resultHandler.fail(String.valueOf(cell.getActual()));
+            cell.getTestResultHandler().fail(String.valueOf(cell.getActual()));
     }
 
     public boolean appliesTo(Cell cell) {

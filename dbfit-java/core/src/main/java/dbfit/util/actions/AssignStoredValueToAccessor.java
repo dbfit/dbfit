@@ -4,9 +4,9 @@ import dbfit.util.Cell;
 import dbfit.util.TestResultHandler;
 
 public class AssignStoredValueToAccessor implements Action {
-    public void run(Cell cell, TestResultHandler resultHandler) throws Exception {
+    public void run(Cell cell) throws Exception {
         Object storedValue = cell.parse(cell.getSpecifiedText());
-        resultHandler.annotate(String.valueOf(storedValue));
+        cell.getTestResultHandler().annotate(String.valueOf(storedValue));
         cell.set(storedValue);
     }
 
