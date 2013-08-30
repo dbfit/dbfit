@@ -5,6 +5,8 @@ package dbfit.util;
  * that DbFit has for cell contents (eg ?, >>, << etc)
  */
 public class ContentOfTableCell {
+    public static final String INEQUALITY_START_TOKEN = "fail[";
+    public static final String INEQUALITY_END_TOKEN = "]";
     private String content;
 
     ContentOfTableCell(String content) {
@@ -24,11 +26,11 @@ public class ContentOfTableCell {
     }
 
     public boolean isExpectingInequality() {
-        return content.startsWith("fail[")|| content.endsWith("]");
+        return content.startsWith(INEQUALITY_START_TOKEN)|| content.endsWith(INEQUALITY_END_TOKEN);
     }
 
     public String getExpectedFailureValue() {
-        return content.substring(5, content.length()-1);
+        return content.substring(INEQUALITY_START_TOKEN.length(), content.length()-INEQUALITY_END_TOKEN.length());
     }
 
     public boolean isEmpty() {
