@@ -1,5 +1,5 @@
 package dbfit.environment;
- //this is DB2iEnvironment renamed  
+
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static dbfit.util.DbParameterAccessor.Direction;
-import static dbfit.util.DbParameterAccessor.Direction.*;
+import dbfit.util.Direction;
+import static dbfit.util.Direction.*;
 
 @DatabaseEnvironment(name="DB2i", driver="com.ibm.as400.access.AS400JDBCDriver")
 public class DB2iEnvironment extends AbstractDbEnvironment {
@@ -112,15 +112,13 @@ public class DB2iEnvironment extends AbstractDbEnvironment {
         if (("B".equals(direction)) ||
            ("INOUT".equals(direction)))
             return INPUT_OUTPUT;
-          if ("C".equals(direction))
-              return RETURN_VALUE;
+        if ("C".equals(direction))
+            return RETURN_VALUE;
         // todo return val
         throw new UnsupportedOperationException("Direction " + direction
                 + " is not supported");
     }
 
-    // List interface has sequential search, so using list instead of array to
-    // map types
     private static List<String> stringTypes = Arrays.asList(new String[] {
             "VARCHAR", "CHAR", "CHARACTER", "GRAPHIC", "VARGRAPHIC", "CHARACTER VARYING" });
     private static List<String> intTypes = Arrays.asList(new String[] {
@@ -145,7 +143,7 @@ public class DB2iEnvironment extends AbstractDbEnvironment {
     }
 
     private static int getSqlType(String dataType) {
-        // todo:strip everything from first blank
+       
         dataType = NormaliseTypeName(dataType);
 
         if (stringTypes.contains(dataType))
