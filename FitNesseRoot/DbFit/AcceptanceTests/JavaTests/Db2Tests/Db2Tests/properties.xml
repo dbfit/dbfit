@@ -2,19 +2,16 @@
 <properties>
 	<Edit/>
 	<Files/>
-	<Help>(Shared Tests)</Help>
+	<Help>(Linux, Unix, Windows)</Help>
 	<LastModifyingUser>mpatrick</LastModifyingUser>
 	<Properties/>
 	<RecentChanges/>
 	<Refactor/>
 	<Search/>
 	<Suite/>
-	<Suites>(Shared Tests)</Suites>
 	<SymbolicLinks>
-		<StoredProcNoParams>.DbFit.AcceptanceTests.CoreTests.StoredProcNoParams</StoredProcNoParams>
+		<FlowMode>.TestingTests.JavaTests.Db2Tests.FlowMode</FlowMode>
 	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>
-	<saveId>1208652118171</saveId>
-	<ticketId>778780122649681989</ticketId>
 </properties>

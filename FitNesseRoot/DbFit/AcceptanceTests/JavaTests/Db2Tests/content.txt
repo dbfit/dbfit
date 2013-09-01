@@ -1,1 +1,1 @@
-!contents -R
+!contents -R -h
