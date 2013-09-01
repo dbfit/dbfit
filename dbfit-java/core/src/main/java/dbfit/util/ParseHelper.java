@@ -12,11 +12,9 @@ import fit.TypeAdapter;
  */
 
 public class ParseHelper {
-    private Class<?> type;
     private TypeAdapter typeAdapter;
 
-    public ParseHelper(TypeAdapter typeAdapter, Class<?> type) {
-        this.type = type;
+    public ParseHelper(TypeAdapter typeAdapter) {
         this.typeAdapter = typeAdapter;
     }
 
@@ -25,8 +23,8 @@ public class ParseHelper {
         if (content.isNull()) {
             return null;
         } else if (content.isSymbolGetter()) {
-            return SymbolUtil.getSymbol(s, type);
-        } else if (this.type.equals(String.class) && content.doesFixedLengthParsingApply()) {
+            return SymbolUtil.getSymbol(s, typeAdapter.type);
+        } else if (typeAdapter.type.equals(String.class) && content.doesFixedLengthParsingApply()) {
             return content.getFixedLengthParsedString();
         } else {
             return typeAdapter.parse(s);

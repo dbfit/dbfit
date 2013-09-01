@@ -34,7 +34,7 @@ public abstract class RowSetFixture extends ColumnFixture {
 	    }
 	    @Override
 	    public Object parse(String s) throws Exception {
-	    	return new ParseHelper(TypeAdapter.on(fixture, this.type),this.type).parse(s);
+	    	return new ParseHelper(TypeAdapter.on(fixture, this.type)).parse(s);
 	    }
 	}	
 	private int findColumn(String name) throws Exception{

@@ -23,6 +23,6 @@ public class DbParameterAccessorTypeAdapter extends TypeAdapter {
 	}
 	@Override
 	public Object parse(String s) throws Exception {
-		return new ParseHelper(TypeAdapter.on(fixture, this.type),this.type).parse(s);
+		return new ParseHelper(TypeAdapter.on(fixture, this.type)).parse(s);
 	}
 }

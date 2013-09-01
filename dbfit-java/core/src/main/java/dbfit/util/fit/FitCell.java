@@ -13,7 +13,7 @@ public class FitCell extends Cell {
         super(fitCell.text(), accessor);
 
         Class<?> type = accessor.getJavaType();
-        parseHelper = new ParseHelper(TypeAdapter.on(parentFixture, type), type);
+        parseHelper = new ParseHelper(TypeAdapter.on(parentFixture, type));
 
         testResultHandler = new DbFitActionResultHandler(fitCell, parentFixture);
     }
