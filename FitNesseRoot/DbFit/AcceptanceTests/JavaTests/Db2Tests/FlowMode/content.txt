@@ -1,1 +1,8 @@
+!4 This suite contains tests shared by all DB2 adapters.
+!4 To run, select a sub-suite, which contains a Set Up page to initialize the adapter.
+
+DB2 instance under test is on Linux, Unix, or Windows: .DbFit.AcceptanceTests.JavaTests.Db2Tests.Db2Tests
+DB2 instance under test is on System i: .DbFit.AcceptanceTests.JavaTests.Db2Tests.Db2iSeriesTests
+DB2 instance under test is on System z: .DbFit.AcceptanceTests.JavaTests.Db2Tests.Db2zSeriesTests
+
 !contents -R
