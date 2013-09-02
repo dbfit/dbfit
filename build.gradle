@@ -51,7 +51,7 @@ task dbfitUpdateList(dependsOn: wikiDocsDir) << {
     File f = file('docs/Resources/updateList.dbfit')
 
     fileTree('FitNesseRoot').each {
-        f << "${relativePath(it)}\n"
+        f << "${relativePath(it).toString().replace('\\', '/')}\n"
     }
 }
 
