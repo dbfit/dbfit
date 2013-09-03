@@ -29,6 +29,8 @@ show_comments: false
 
 ### [Command reference](/dbfit/docs/reference.html) <small>The test building blocks.</small>
 
+### [Datatbase-specific information](/dbfit/docs/database-specific-information.html) <small>Information on adapter-specific features and peculiarities.</small>
+
 ### [FAQ and troubleshooting](/dbfit/docs/faq.html)
 
 </div>
