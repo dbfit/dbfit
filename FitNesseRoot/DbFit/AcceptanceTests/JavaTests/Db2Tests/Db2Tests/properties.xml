@@ -10,7 +10,7 @@
 	<Search/>
 	<Suite/>
 	<SymbolicLinks>
-		<FlowMode>.TestingTests.JavaTests.Db2Tests.FlowMode</FlowMode>
+		<FlowMode>.DbFit.AcceptanceTests.JavaTests.Db2Tests.FlowMode</FlowMode>
 	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>
