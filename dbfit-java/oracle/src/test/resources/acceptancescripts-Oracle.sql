@@ -106,6 +106,15 @@ create or replace package body RCLOBTest as
 end;
 /
 
+-- Object types
+create or replace force type person_type as object
+(
+	id number,
+	name varchar2(50 char)
+);
+
+create table persons(reg_id integer, member person_type);
+
 set define on
 
 connect / as sysdba
