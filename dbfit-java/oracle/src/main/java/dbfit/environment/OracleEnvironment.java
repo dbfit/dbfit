@@ -11,6 +11,8 @@ import java.sql.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import fit.TypeAdapter;
+
 @DatabaseEnvironment(name="Oracle", driver="oracle.jdbc.OracleDriver")
 public class OracleEnvironment extends AbstractDbEnvironment {
     private static String SKIP_ORACLE_SYNONYMS = "SKIPORACLESYNONYMS";
@@ -157,11 +159,23 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             return false;
         }
 
+        private String getColumnType(int columnID) throws SQLException {
+            String columnClassName = md.getColumnClassName(columnID);
+            String columnTypeName = md.getColumnTypeName(columnID);
+            String prefix = "";
+
+            if ("oracle.jdbc.OracleStruct".equals(columnClassName)) {
+                prefix = "ABSTRACT_TYPE ";
+            }
+
+            return prefix + columnTypeName;
+        }
+
         private void readToInfo() throws SQLException {
             info = new DbParameterOrColumnInfo();
 
             info.name = md.getColumnName(currentColumn + 1);
-            info.dataType = md.getColumnTypeName(currentColumn + 1);
+            info.dataType = getColumnType(currentColumn + 1);
             info.direction = "IN";
             info.position = position;
         }
@@ -178,6 +192,13 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             default:
                 return null;
         }
+    }
+
+    @Override
+    public void connect(String connectionString, Properties info) throws SQLException {
+        super.connect(connectionString, info);
+        TypeAdapter.registerParseDelegate(java.sql.Struct.class,
+                new OracleObjectTypeParseDelegate(this));
     }
 
     public OracleEnvironment(String driverClassName) {
@@ -366,11 +387,18 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             "DATE", "TIMESTAMP" });
     private static List<String> refCursorTypes = Arrays
             .asList(new String[] { "REF" });
+    private static List<String> objectTypes = Arrays.asList(new String[] {
+            "ABSTRACT_TYPE" });
 
     private static String normaliseTypeName(String dataType) {
         dataType = dataType.toUpperCase().trim();
         if (dataType.endsWith("BOOLEAN")) {
             return "BOOLEAN";
+        }
+
+        // Abstract data type
+        if (dataType.startsWith("ABSTRACT_TYPE ")) {
+            return "ABSTRACT_TYPE";
         }
 
         int idx = dataType.indexOf(" ");
@@ -396,6 +424,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             return OracleTypes.CURSOR;
         if (timestampTypes.contains(dataTypeNormalised))
             return java.sql.Types.TIMESTAMP;
+        if (objectTypes.contains(dataTypeNormalised))
+            return OracleTypes.STRUCT;
 
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
@@ -413,6 +443,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             return ResultSet.class;
         if (timestampTypes.contains(dataType))
             return java.sql.Timestamp.class;
+        if (objectTypes.contains(dataType))
+            return java.sql.Struct.class;
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
     }
