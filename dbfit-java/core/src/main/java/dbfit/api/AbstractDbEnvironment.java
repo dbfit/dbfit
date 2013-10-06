@@ -8,6 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Properties;
 
 public abstract class AbstractDbEnvironment implements DBEnvironment {
 
@@ -37,31 +38,39 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         }
     }
 
-    public void connect(String connectionString) throws SQLException {
+    public void connect(String connectionString, Properties info) throws SQLException {
         registerDriver();
-        currentConnection = DriverManager.getConnection(connectionString);
+        currentConnection = DriverManager.getConnection(connectionString, info);
         currentConnection.setAutoCommit(false);
     }
 
+    @Override
+    public void connect(String connectionString) throws SQLException {
+        connect(connectionString, new Properties());
+    }
+
+    @Override
     public void connect(String dataSource, String username, String password)
             throws SQLException {
-        registerDriver();
-        password = new PropertiesLoader().parseValue(password);
-        currentConnection = DriverManager.getConnection(
-                getConnectionString(dataSource), username, password);
-        currentConnection.setAutoCommit(false);
+        connect(dataSource, username, password, null);
     }
 
+    @Override
     public void connect(String dataSource, String username, String password,
             String database) throws SQLException {
-        // if (true) throw new Error("S");
-        registerDriver();
-        password = new PropertiesLoader().parseValue(password);
-        currentConnection = DriverManager.getConnection(
-                getConnectionString(dataSource, database), username, password);
-        currentConnection.setAutoCommit(false);
+
+        String connectionString = (database == null)
+            ? getConnectionString(dataSource)
+            : getConnectionString(dataSource, database);
+
+        Properties props = new Properties();
+        props.put("user", username);
+        props.put("password", new PropertiesLoader().parseValue(password));
+
+        connect(connectionString, props);
     }
 
+    @Override
     public void connectUsingFile(String file) throws SQLException, IOException,
             FileNotFoundException {
         DbConnectionProperties dbp = DbConnectionProperties
