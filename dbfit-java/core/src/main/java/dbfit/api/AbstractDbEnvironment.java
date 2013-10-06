@@ -65,7 +65,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
 
         Properties props = new Properties();
         props.put("user", username);
-        props.put("password", password);
+        props.put("password", new PropertiesLoader().parseValue(password));
 
         connect(connectionString, props);
     }
