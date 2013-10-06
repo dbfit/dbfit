@@ -47,35 +47,35 @@ begin
 	insert into users (name,username) values ('user1','fromproc');
 end;
 /
- 
+
 CREATE OR REPLACE TRIGGER USERS_BIE
 BEFORE INSERT ON USERS
 FOR EACH ROW
 BEGIN
-	  SELECT s1.NEXTVAL INTO :new.userid FROM dual;
-END; 
+	SELECT s1.NEXTVAL INTO :new.userid FROM dual;
+END;
 /
 
 create or replace package RCTest as
-type URefCursor IS REF CURSOR RETURN USERS%ROWTYPE;
-procedure TestRefCursor (howmuch number,lvlcursor out URefCursor);
-end; 
+	type URefCursor IS REF CURSOR RETURN USERS%ROWTYPE;
+	procedure TestRefCursor (howmuch number,lvlcursor out URefCursor);
+end;
 /
 
-create or replace package body RCTest as 
-procedure TestRefCursor (
-howmuch number,
-lvlcursor out URefCursor
-)
-as 
-begin
- for i in 1..howmuch loop
- 	insert into users(name, username) values ('User '||i, 'Username'||i);	
- end loop;
- OPEN lvlcursor FOR
-	  SELECT * FROM users;
- end;
-end;	 
+create or replace package body RCTest as
+	procedure TestRefCursor (
+		howmuch number,
+		lvlcursor out URefCursor
+	)
+	as
+	begin
+		for i in 1..howmuch loop
+			insert into users(name, username) values ('User '||i, 'Username'||i);
+		end loop;
+		open lvlcursor for
+			select * from users;
+	end TestRefCursor;
+end;
 /
 
 create or replace function Multiply(n1 number, n2 number) return number as
@@ -87,23 +87,23 @@ end;
 Create table clobtypetest (s1 number(5), c2 CLOB);
 
 create or replace package RCLOBTest as
-type URefCursor IS REF CURSOR RETURN clobtypetest%ROWTYPE;
-procedure TestRefCursor (howmany number,outcursor out URefCursor);
-end; 
+	type URefCursor IS REF CURSOR RETURN clobtypetest%ROWTYPE;
+	procedure TestRefCursor (howmany number,outcursor out URefCursor);
+end;
 /
 
-create or replace package body RCLOBTest as 
-procedure TestRefCursor (
-howmany number,
-outcursor out URefCursor
-)
-as 
-begin
- OPEN outcursor FOR
-    SELECT * FROM clobtypetest
-	    WHERE s1<=howmany;
- end;
-end;	 
+create or replace package body RCLOBTest as
+	procedure TestRefCursor (
+		howmany number,
+		outcursor out URefCursor
+	)
+	as
+	begin
+		OPEN outcursor FOR
+			SELECT * FROM clobtypetest
+			WHERE s1<=howmany;
+	end;
+end;
 /
 
 set define on
@@ -118,7 +118,7 @@ alter user dfsyntest quota unlimited on &&tbs_data;
 
 create or replace procedure dfsyntest.standaloneproc(num1 number, num2 out number) as
 begin
-num2:=2*num1;
+	num2:=2*num1;
 end;
 /
 
@@ -149,3 +149,4 @@ create or replace synonym dftest.prv_syn_animals for dfsyntest.animals;
 create or replace public synonym pub_syn_animals for dfsyntest.animals;
 
 exit
+
