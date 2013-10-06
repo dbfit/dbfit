@@ -195,8 +195,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
-    public void connect(String connectionString, Properties info) throws SQLException {
-        super.connect(connectionString, info);
+    protected void afterConnectionEstablished() throws SQLException {
+        super.afterConnectionEstablished();
         TypeAdapter.registerParseDelegate(java.sql.Struct.class,
                 new OracleObjectTypeParseDelegate(this));
     }
