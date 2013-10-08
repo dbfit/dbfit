@@ -1,12 +1,6 @@
-{{{
-create or replace force type person_type as object
-(
-	id number,
-	name varchar2(50 char)
-);
+!|Execute|create or replace force type person_type as object(id number, name varchar2(50 char))|
 
-create table persons(reg_id integer, member person_type);
-}}}
+!|Execute|create table persons(reg_id integer, member person_type)|
 
 !|Insert|persons                 |
 |reg_id |member                  |

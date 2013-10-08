@@ -1,6 +1,4 @@
-{{{
-create table spatial_line(objectid integer, geometry sdo_geometry);
-}}}
+!|Execute|create table spatial_line(objectid integer, geometry sdo_geometry)|
 
 !|Insert |spatial_line                                                                                                                         |
 |objectid|geometry                                                                                                                             |
