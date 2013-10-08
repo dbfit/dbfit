@@ -1,0 +1,10 @@
+!|Execute|create table spatial_line(objectid integer, geometry sdo_geometry)|
+
+!|Insert |spatial_line                                                                                                                         |
+|objectid|geometry                                                                                                                             |
+|10      |sdo_geometry(3002, 27700, null, sdo_elem_info_array(1, 2, 1), sdo_ordinate_array(600000.0, 1200000.0, 0.0, 601000.0, 1201000.0, 0.0))|
+
+!|Query  |select objectid, treat(geometry as sdo_geometry).sdo_gtype sdo_gtype from spatial_line|
+|objectid|sdo_gtype?                                                                            |
+|10      |3002                                                                                  |
+

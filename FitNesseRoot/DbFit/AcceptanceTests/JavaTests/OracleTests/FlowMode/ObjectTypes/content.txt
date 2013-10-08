@@ -1,0 +1,11 @@
+!|Execute|create or replace force type person_type as object(id number, name varchar2(50 char))|
+
+!|Execute|create table persons(reg_id integer, member person_type)|
+
+!|Insert|persons                 |
+|reg_id |member                  |
+|1      |person_type(7, 'Batman')|
+
+!|Query|select reg_id, treat(member as person_type).id person_id, treat(member as person_type).name person_name from persons|
+|reg_id|person_id?                                               |person_name?                                              |
+|1     |7                                                        |Batman                                                    |
