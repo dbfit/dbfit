@@ -115,6 +115,9 @@ create or replace force type person_type as object
 
 create table persons(reg_id integer, member person_type);
 
+-- A table with spatial objects
+create table spatial_line(objectid integer, geometry sdo_geometry);
+
 set define on
 
 connect / as sysdba
