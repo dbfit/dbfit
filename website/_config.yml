@@ -17,8 +17,7 @@ author :
   github : benilovj
   twitter : benilov
 
-dbfit_version: "2.0.0-RC5"
-github_artifact_id: 321
+dbfit_version: "2.0.0"
 
 baseurl: /dbfit
 
