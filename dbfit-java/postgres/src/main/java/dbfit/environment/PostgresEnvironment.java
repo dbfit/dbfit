@@ -104,6 +104,8 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
             "TIMESTAMP WITH TIME ZONE", "TIMESTAMPTZ" });
     private static List<String> refCursorTypes = Arrays
             .asList(new String[] { "REFCURSOR" });
+    private static List<String> booleanTypes = Arrays.asList(new String[] {
+            "BOOL", "BOOLEAN" });
 
     private static String normaliseTypeName(String dataType) {
         dataType = dataType.toUpperCase().trim();
@@ -132,6 +134,8 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
             return java.sql.Types.DATE;
         if (refCursorTypes.contains(dataType))
             return java.sql.Types.REF;
+        if (booleanTypes.contains(dataType))
+            return java.sql.Types.BOOLEAN;
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
     }
@@ -156,6 +160,8 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
             return Long.class;
         if (timestampTypes.contains(dataType))
             return java.sql.Timestamp.class;
+        if (booleanTypes.contains(dataType))
+            return Boolean.class;
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
     }
