@@ -1,4 +1,4 @@
-ext.dbfitVersion = '2.0.0-RC5'
+ext.dbfitVersion = '2.0.0'
 
 task cleanFitnesseroot(type:Exec) {
     executable onWindows() ? 'cmd.exe' : '/bin/sh'
