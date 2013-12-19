@@ -8,7 +8,7 @@ language: java
 install: "gradle assemble"
 script: "gradle clean fastbuild"
 jdk:
-  - oraclejdk6
+  - oraclejdk7
 after_success:
   - "gradle bundle"
   - "gem install travis-artifacts"
