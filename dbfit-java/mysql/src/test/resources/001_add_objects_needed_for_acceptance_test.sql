@@ -1,10 +1,10 @@
-create table users(name varchar(50) unique, username varchar(50), userid int auto_increment primary key) ENGINE=InnoDB;
+﻿create table users(name varchar(50) unique, username varchar(50), userid int auto_increment primary key) ENGINE=InnoDB;
 
 CREATE PROCEDURE ConcatenateStrings (IN firststring varchar(100), IN secondstring varchar(100), OUT concatenated varchar(200)) set concatenated = concat(firststring , concat( ' ' , secondstring ));
 
 create procedure CalcLength(IN name varchar(100), OUT strlength int) set strlength =length(name);
 
-CREATE FUNCTION ConcatenateF (firststring  VARCHAR(100), secondstring varchar(100)) RETURNS VARCHAR(200) RETURN CONCAT(firststring,' ',secondstring);
+CREATE FUNCTION ConcatenateF (firststring  VARCHAR(100), secondstring varchar(100)) RETURNS VARCHAR(200) DETERMINISTIC RETURN CONCAT(firststring,' ',secondstring);
 
 create procedure makeuser() insert into users (name,username) values ('user1','fromproc');
 
