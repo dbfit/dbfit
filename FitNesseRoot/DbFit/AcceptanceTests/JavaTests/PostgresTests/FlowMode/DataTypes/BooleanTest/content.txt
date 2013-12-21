@@ -2,7 +2,7 @@
 
 |Execute|Create table datatypetest (b1 boolean)|
 
-|Ordered Query| select TRUE as t, FALSE as f|
+|Query| select TRUE as t, FALSE as f|
 |t  |f  |
 |>>t|>>f|
 
@@ -11,7 +11,7 @@
 |<<t|
 |<<f|
 
-|ordered query|select * from datatypetest|
+|Query|select * from datatypetest|
 |b1?|
 |<<t|
 |<<f|
