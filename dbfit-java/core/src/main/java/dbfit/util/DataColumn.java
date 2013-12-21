@@ -17,7 +17,7 @@ public class DataColumn {
 		this.dbTypeName = dbTypeName;
 	}
 	public DataColumn(ResultSetMetaData r, int columnIndex) throws SQLException{
-		this.name=r.getColumnName(columnIndex);
+		this.name=r.getColumnLabel(columnIndex);
 		this.javaClassName=r.getColumnClassName(columnIndex);
 		this.dbTypeName=r.getColumnTypeName(columnIndex);
 	}

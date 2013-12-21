@@ -96,7 +96,7 @@ public class Inspect extends fit.Fixture {
 		ResultSetMetaData rsmd=rs.getMetaData();
 		Parse prevCell=null;
 		for (int i=0; i<rsmd.getColumnCount(); i++){
-			Parse cell=new Parse("td",Fixture.gray(rsmd.getColumnName(i+1)),null,null);
+			Parse cell=new Parse("td",Fixture.gray(rsmd.getColumnLabel(i+1)),null,null);
 			if (prevCell==null) 
 					newRow.parts=cell;
 			else
