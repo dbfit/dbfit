@@ -1,0 +1,1 @@
+!|execute|drop table demo_table|

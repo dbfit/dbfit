@@ -1,0 +1,9 @@
+!|execute|create table demo_table(id int)|
+
+!|Insert|demo_table|
+|id|
+|7|
+
+!|Query|select id as my_id from demo_table|
+|my_id|
+|7|
