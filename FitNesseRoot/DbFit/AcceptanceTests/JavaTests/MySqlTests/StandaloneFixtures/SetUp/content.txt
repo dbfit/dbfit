@@ -2,4 +2,4 @@
 |dbfit.fixture|
 
 !|DatabaseEnvironment|mysql|
-|Connect|localhost|root||dbfit|
+|Connect|localhost|dbfit_user|password|dbfit|
