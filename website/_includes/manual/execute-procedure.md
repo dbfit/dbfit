@@ -14,7 +14,7 @@
     * first cell *(mandatory)*: Execute procedure
     * second cell *(mandatory)*: the procedure or function name
 
-2. **Second row** *(optional, if the procedure has no parameters)*
+2. **Second row** *(applicable only if the procedure has parameters)*
 
      * parameter names (output parameters followed by a question mark)
      * parameter order or case is not important
@@ -31,7 +31,7 @@
             |factor|val|val?           |
             |5     |10 |50             |
 
-3. **Subsequent rows** *(optional, if the procedure has no parameters)*
+3. **Subsequent rows** *(applicable only if the procedure has parameters)*
 
     * you can store any output value into a parameter with the `>>` syntax or send current parameter values to procedure using `<<` syntax:
 
@@ -40,12 +40,11 @@
             |Hello       |World        |Hello World  |
             |Ford        |Prefect      |Ford Prefect |
 
-    * if the procedure has **no** output parameters, then the `Execute Procedure` command has no effect on the outcome of the test — unless an error occurs during processing.
     * if the procedure has output parameters, then those values are compared to expectations specified in the FitNesse table, and are used to determine the outcome of the test.
 
 ### Calling procedures without parameters
 
-For the case where no parameters are passed to function/procedure, `Execute Procedure` can be specified with just one row (without a row for column header names).
+For the case where neither parameters nor return values are specified, `Execute Procedure` should be called with just one row (without a row for column header names).
 
     !|Execute Procedure|MakeUser|
 
