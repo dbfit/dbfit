@@ -10,6 +10,7 @@ import static dbfit.util.Direction.OUTPUT;
 import static dbfit.util.Direction.RETURN_VALUE;
 
 public class DbParameterAccessors {
+    public static final DbParameterAccessor[] EMPTY = new DbParameterAccessors().toArray();
     private List<DbParameterAccessor> accessors;
 
     public DbParameterAccessors(DbParameterAccessor[] accessors) {

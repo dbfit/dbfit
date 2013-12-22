@@ -55,5 +55,4 @@ public class DbTable implements DbObject {
         }
         return accessor;
     }
-
 }
