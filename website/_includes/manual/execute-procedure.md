@@ -11,7 +11,7 @@
 
 1. **First row** *(mandatory)*
 
-    * first cell *(mandatory)*: Execute procedure
+    * first cell *(mandatory)*: Execute Procedure
     * second cell *(mandatory)*: the procedure or function name
 
 2. **Second row** *(applicable only if the procedure has parameters)*
@@ -27,7 +27,7 @@
 
     * to use IN/OUT parameters, you'll need to specify the parameter twice. Once without the question mark, when it is used as the input; and one with the question mark when it is used as output:
 
-            |execute procedure|Multiply|
+            |Execute Procedure|Multiply|
             |factor|val|val?           |
             |5     |10 |50             |
 
@@ -68,9 +68,9 @@ If a function is getting called, then a column containing just the question mark
 
 ### Expecting exceptions
 
-If you want to test a boundary condition that should cause an exception, then use `Execute procedure expect exception` variant of the `Execute procedure` command, eg:
+If you want to test a boundary condition that should cause an exception, then use `Execute Procedure Expect Exception` variant of the `Execute Procedure` command, eg:
 
-    !|execute procedure expect exception|createuser|
+    !|Execute Procedure Expect Exception|createuser|
     |new name   |new username                      |
     |arthur dent|adent                             |
 
@@ -78,19 +78,19 @@ In flow mode, this command can also be used to check for exceptions during proce
 
     !3 create a user so that subsequent inserts would fail
 
-    !|execute procedure|createuser|
+    !|Execute Procedure|createuser|
     |new name   |new username     |
     |arthur dent|adent            |
 
     !3 check for any error
 
-    !|execute procedure expect exception|createuser|
+    !|Execute Procedure Expect Exception|createuser|
     |new name   |new username                      |
     |arthur dent|adent                             |
 
     !3 check for a specific error code
 
-    !|execute procedure expect exception|createuser|1062|
+    !|Execute Procedure Expect Exception|createuser|1062|
     |new name   |new username                           |
     |arthur dent|adent                                  |
 
@@ -98,4 +98,4 @@ For detailed exception code verifications to work with SQL Server, user message 
 
     sp_addmessage @msgnum = 53120, @severity=1, @msgtext = 'test user defined error msg' 
 
- `Execute procedure expect exception` variant is not directly available as a separate table in standalone mode. If you need this functionality in standalone mode, then extend the `ExecuteProcedure` fixture and call the appropriate constructor. That class has several constructors for exceptions and error codes.
+ `Execute Procedure Expect Exception` variant is not directly available as a separate table in standalone mode. If you need this functionality in standalone mode, then extend the `ExecuteProcedure` fixture and call the appropriate constructor. That class has several constructors for exceptions and error codes.
