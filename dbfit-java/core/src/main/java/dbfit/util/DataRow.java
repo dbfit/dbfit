@@ -24,23 +24,38 @@ public class DataRow {
 
         public String getStringValue(String columnName) {
             Object o = values.get(columnName);
-            if (o == null) return "null";
+            if (o == null) {
+                return "null";
+            }
+
             return o.toString();
         }
 
         public boolean matches(Map<String, Object> keyProperties) {
             for (String key: keyProperties.keySet()) {
                 String normalisedKey = NameNormaliser.normaliseName(key);
-                if (!values.containsKey(normalisedKey)) return false;
-                if (!equals(keyProperties.get(key),
-                        values.get(normalisedKey))) return false;
+
+                if (!values.containsKey(normalisedKey)) {
+                    return false;
+                }
+
+                if (!equals(keyProperties.get(key), values.get(normalisedKey))) {
+                    return false;
+                }
             }
+
             return true;
         }
 
         private boolean equals(Object a, Object b) {
-            if (a == null && b == null) return true;
-            if (a == null || b == null) return false;
+            if (a == null && b == null) {
+                return true;
+            }
+
+            if (a == null || b == null) {
+                return false;
+            }
+
             return a.equals(b);
         }
 
