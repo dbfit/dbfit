@@ -94,8 +94,13 @@ In flow mode, this command can also be used to check for exceptions during proce
     |new name   |new username                           |
     |arthur dent|adent                                  |
 
+#### Standalone mode
+
+ `Execute Procedure Expect Exception` variant is not directly available as a separate table in standalone mode. If you need this functionality in standalone mode, then extend the `ExecuteProcedure` fixture and call the appropriate constructor. That class has several constructors for exceptions and error codes.
+
+#### Exceptions with SQL Server
+
 For detailed exception code verifications to work with SQL Server, user message must be registered for that particular error code, or SQL Server throws a generic error code outside the database. Here is how you can declare your error code:
 
     sp_addmessage @msgnum = 53120, @severity=1, @msgtext = 'test user defined error msg' 
 
- `Execute Procedure Expect Exception` variant is not directly available as a separate table in standalone mode. If you need this functionality in standalone mode, then extend the `ExecuteProcedure` fixture and call the appropriate constructor. That class has several constructors for exceptions and error codes.
