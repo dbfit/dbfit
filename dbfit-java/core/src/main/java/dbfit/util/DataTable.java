@@ -16,17 +16,21 @@ public class DataTable {
 
     public DataTable(ResultSet rs) throws SQLException {
         try {
-            ResultSetMetaData rsmd = rs.getMetaData();
-
-            for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                columns.add(new DataColumn(rsmd,i));
-            }
-
-            while (rs.next()) {
-                rows.add(new DataRow(rs,rsmd));
-            }
+            init(rs);
         } finally {
             rs.close();
+        }
+    }
+
+    private void init(final ResultSet rs) throws SQLException {
+        ResultSetMetaData rsmd = rs.getMetaData();
+
+        for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+            columns.add(new DataColumn(rsmd,i));
+        }
+
+        while (rs.next()) {
+            rows.add(new DataRow(rs,rsmd));
         }
     }
 
