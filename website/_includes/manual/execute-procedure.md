@@ -68,27 +68,13 @@ If a function is getting called, then a column containing just the question mark
 
 ### Expecting exceptions
 
-If you want to test a boundary condition that should cause an exception, then use `Execute Procedure Expect Exception` variant of the `Execute Procedure` command, eg:
+Normally, the test would fail if a database exception occurs. If you want to test a boundary condition that should cause an exception, then use `Execute Procedure Expect Exception` variant of the `Execute Procedure` command, eg:
 
     !|Execute Procedure Expect Exception|createuser|
     |new name   |new username                      |
     |arthur dent|adent                             |
 
-In flow mode, this command can also be used to check for exceptions during processing. Normally, the test would fail if a database exception occurs. You can even specify an optional exception code as the third argument. If no exception code is specified, then the test will pass if any error occurs for each data row. If the third argument is specified, then the actual error code is also taken into consideration for failing the test.
-
-    !3 create a user so that subsequent inserts would fail
-
-    !|Execute Procedure|createuser|
-    |new name   |new username     |
-    |arthur dent|adent            |
-
-    !3 check for any error
-
-    !|Execute Procedure Expect Exception|createuser|
-    |new name   |new username                      |
-    |arthur dent|adent                             |
-
-    !3 check for a specific error code
+You can even specify an optional exception code as the third argument. If no exception code is specified, then the test will pass if any error occurs for each data row. If the third argument is specified, then the actual error code is also taken into consideration for failing the test.
 
     !|Execute Procedure Expect Exception|createuser|1062|
     |new name   |new username                           |
