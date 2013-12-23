@@ -30,20 +30,19 @@ public class DataRow {
         return ObjectUtils.toString(values.get(columnName), "null");
     }
 
-    public boolean matches(Map<String, Object> keyProperties) {
+    public boolean matches(final Map<String, Object> keyProperties) {
         for (String key: keyProperties.keySet()) {
-            String normalisedKey = normaliseName(key);
-
-            if (!values.containsKey(normalisedKey)) {
-                return false;
-            }
-
-            if (!equals(keyProperties.get(key), values.get(normalisedKey))) {
+            if (!matches(key, keyProperties.get(key))) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    private boolean matches(final String key, final Object value) {
+        String nkey = normaliseName(key);
+        return values.containsKey(nkey) && equals(value, values.get(nkey));
     }
 
     private boolean equals(Object a, Object b) {
