@@ -29,21 +29,33 @@ public class DataTable {
     }
 
     public DataRow findMatching (Map<String,Object> keyProperties) throws NoMatchingRowFoundException {
-        for (DataRow dr: rows)
-            if (!dr.isProcessed() && dr.matches(keyProperties)) return dr;
+        for (DataRow dr: rows) {
+            if (!dr.isProcessed() && dr.matches(keyProperties)) {
+                return dr;
+            }
+        }
+
         throw new NoMatchingRowFoundException();
     }
 
     public DataRow findFirstUnprocessedRow() throws NoMatchingRowFoundException {
-        for (DataRow dr: rows)
-            if (!dr.isProcessed()) return dr;
+        for (DataRow dr: rows) {
+            if (!dr.isProcessed()) {
+                return dr;
+            }
+        }
+
         throw new NoMatchingRowFoundException();
     }
 
     public List<DataRow> getUnprocessedRows() {
         List<DataRow> l = new ArrayList<DataRow>();
-        for (DataRow dr: rows)
-            if (!dr.isProcessed()) l.add(dr);
+        for (DataRow dr: rows) {
+            if (!dr.isProcessed()) {
+                l.add(dr);
+            }
+        }
+
         return l;
     }
 
