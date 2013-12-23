@@ -27,12 +27,7 @@ public class DataRow {
     }
 
     public String getStringValue(String columnName) {
-        Object o = values.get(columnName);
-        if (o == null) {
-            return "null";
-        }
-
-        return o.toString();
+        return ObjectUtils.toString(values.get(columnName), "null");
     }
 
     public boolean matches(Map<String, Object> keyProperties) {
