@@ -1,6 +1,7 @@
 package dbfit.util;
 
 import static dbfit.util.NameNormaliser.normaliseName;
+import static dbfit.util.DbParameterAccessor.normaliseValue;
 
 import java.util.*;
 import java.sql.*;
@@ -15,15 +16,13 @@ public class DataRow {
     }
 
     public DataRow(ResultSet rs, ResultSetMetaData rsmd) throws SQLException {
-        for(int i = 1; i <= rsmd.getColumnCount(); i++) {
-            Object val = rs.getObject(i);
-
-            // Log.log("loading data from "+rsmd.getColumnName(i) +" = "+
-            // val == null?"NULL":(val.getClass() + " " + val));
-            values.put(
-                    normaliseName(rsmd.getColumnLabel(i)),
-                    DbParameterAccessor.normaliseValue(val));
+        for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+            addValue(rsmd.getColumnLabel(i), rs.getObject(i));
         }
+    }
+
+    private void addValue(final String name, final Object value) throws SQLException {
+        values.put(normaliseName(name), normaliseValue(value));
     }
 
     public String getStringValue(String columnName) {
