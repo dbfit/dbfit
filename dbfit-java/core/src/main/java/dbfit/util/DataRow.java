@@ -2,6 +2,7 @@ package dbfit.util;
 
 import java.util.*;
 import java.sql.*;
+import org.apache.commons.lang3.ObjectUtils;
 
 public class DataRow {
     private Map<String, Object> values = new HashMap<String, Object>();
@@ -49,15 +50,7 @@ public class DataRow {
     }
 
     private boolean equals(Object a, Object b) {
-        if (a == null && b == null) {
-            return true;
-        }
-
-        if (a == null || b == null) {
-            return false;
-        }
-
-        return a.equals(b);
+        return ObjectUtils.equals(a, b);
     }
 
     public Object get(String key) {
