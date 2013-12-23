@@ -15,6 +15,14 @@ public class DataTable {
     private List <DataColumn> columns = new LinkedList<DataColumn>();
 
     public DataTable(ResultSet rs) throws SQLException {
+        try {
+            init(rs);
+        } finally {
+            rs.close();
+        }
+    }
+
+    private void init(final ResultSet rs) throws SQLException {
         ResultSetMetaData rsmd = rs.getMetaData();
 
         for (int i = 1; i <= rsmd.getColumnCount(); i++) {
@@ -24,8 +32,6 @@ public class DataTable {
         while (rs.next()) {
             rows.add(new DataRow(rs,rsmd));
         }
-
-        rs.close();
     }
 
     public DataRow findMatching (Map<String,Object> keyProperties) throws NoMatchingRowFoundException {
