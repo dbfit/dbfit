@@ -15,8 +15,10 @@ public class NameNormaliser {
     }
 
     public static String normaliseName(final String name) {
-        if (name == null)
+        if (name == null) {
             return "";
+        }
+
         return replaceIllegalCharacters(name.toLowerCase());
     }
 }
