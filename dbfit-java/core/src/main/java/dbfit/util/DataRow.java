@@ -4,6 +4,7 @@ import java.sql.*;
 
 public class DataRow {
         private Map<String, Object> values = new HashMap<String, Object>();
+        private boolean processed = false;
 
         public Set<String> getColumnNames() {
             return values.keySet();
@@ -47,8 +48,6 @@ public class DataRow {
             String normalisedKey = NameNormaliser.normaliseName(key);
             return values.get(normalisedKey);
         }
-
-        private boolean processed = false;
 
         public void markProcessed() {
             processed = true;
