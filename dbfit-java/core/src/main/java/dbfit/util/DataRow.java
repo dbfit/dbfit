@@ -1,7 +1,11 @@
 package dbfit.util;
 
+import static dbfit.util.NameNormaliser.normaliseName;
+import static dbfit.util.DbParameterAccessor.normaliseValue;
+
 import java.util.*;
 import java.sql.*;
+import org.apache.commons.lang3.ObjectUtils;
 
 public class DataRow {
     private Map<String, Object> values = new HashMap<String, Object>();
@@ -12,35 +16,22 @@ public class DataRow {
     }
 
     public DataRow(ResultSet rs, ResultSetMetaData rsmd) throws SQLException {
-        for(int i = 1; i <= rsmd.getColumnCount(); i++) {
-            Object val = rs.getObject(i);
-
-            // Log.log("loading data from "+rsmd.getColumnName(i) +" = "+
-            // val == null?"NULL":(val.getClass() + " " + val));
-            values.put(
-                    NameNormaliser.normaliseName(rsmd.getColumnLabel(i)),
-                    DbParameterAccessor.normaliseValue(val));
+        for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+            addValue(rsmd.getColumnLabel(i), rs.getObject(i));
         }
+    }
+
+    private void addValue(final String name, final Object value) throws SQLException {
+        values.put(normaliseName(name), normaliseValue(value));
     }
 
     public String getStringValue(String columnName) {
-        Object o = values.get(columnName);
-        if (o == null) {
-            return "null";
-        }
-
-        return o.toString();
+        return ObjectUtils.toString(values.get(columnName), "null");
     }
 
-    public boolean matches(Map<String, Object> keyProperties) {
+    public boolean matches(final Map<String, Object> keyProperties) {
         for (String key: keyProperties.keySet()) {
-            String normalisedKey = NameNormaliser.normaliseName(key);
-
-            if (!values.containsKey(normalisedKey)) {
-                return false;
-            }
-
-            if (!equals(keyProperties.get(key), values.get(normalisedKey))) {
+            if (!matches(key, keyProperties.get(key))) {
                 return false;
             }
         }
@@ -48,21 +39,17 @@ public class DataRow {
         return true;
     }
 
+    private boolean matches(final String key, final Object value) {
+        String nkey = normaliseName(key);
+        return values.containsKey(nkey) && equals(value, values.get(nkey));
+    }
+
     private boolean equals(Object a, Object b) {
-        if (a == null && b == null) {
-            return true;
-        }
-
-        if (a == null || b == null) {
-            return false;
-        }
-
-        return a.equals(b);
+        return ObjectUtils.equals(a, b);
     }
 
     public Object get(String key) {
-        String normalisedKey = NameNormaliser.normaliseName(key);
-        return values.get(normalisedKey);
+        return values.get(normaliseName(key));
     }
 
     public void markProcessed() {
