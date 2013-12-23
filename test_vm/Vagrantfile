@@ -6,7 +6,8 @@ Vagrant::Config.run do |config|
   config.vm.box_url = "https://dl.dropbox.com/u/31081437/Berkshelf-CentOS-6.3-x86_64-minimal.box"
   config.vm.host_name = "dbfitvm"
   config.vm.network :hostonly, "192.168.33.10"
-  config.vm.share_folder "dbfit", "/var/dbfit", "..", :nfs => !is_windows
+  config.vm.share_folder "dbfit", "/var/dbfit", "..", :nfs => !is_windows,
+    :nfs_version => 4, :mount_options => ["noatime", "nodiratime"]
 
   config.vm.provision :chef_solo do |chef|
     chef.add_recipe "dbfit_test"
