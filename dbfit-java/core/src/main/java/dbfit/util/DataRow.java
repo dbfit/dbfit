@@ -1,5 +1,7 @@
 package dbfit.util;
 
+import static dbfit.util.NameNormaliser.normaliseName;
+
 import java.util.*;
 import java.sql.*;
 import org.apache.commons.lang3.ObjectUtils;
@@ -19,7 +21,7 @@ public class DataRow {
             // Log.log("loading data from "+rsmd.getColumnName(i) +" = "+
             // val == null?"NULL":(val.getClass() + " " + val));
             values.put(
-                    NameNormaliser.normaliseName(rsmd.getColumnLabel(i)),
+                    normaliseName(rsmd.getColumnLabel(i)),
                     DbParameterAccessor.normaliseValue(val));
         }
     }
@@ -35,7 +37,7 @@ public class DataRow {
 
     public boolean matches(Map<String, Object> keyProperties) {
         for (String key: keyProperties.keySet()) {
-            String normalisedKey = NameNormaliser.normaliseName(key);
+            String normalisedKey = normaliseName(key);
 
             if (!values.containsKey(normalisedKey)) {
                 return false;
@@ -54,7 +56,7 @@ public class DataRow {
     }
 
     public Object get(String key) {
-        String normalisedKey = NameNormaliser.normaliseName(key);
+        String normalisedKey = normaliseName(key);
         return values.get(normalisedKey);
     }
 
