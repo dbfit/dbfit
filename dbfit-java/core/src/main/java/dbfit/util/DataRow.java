@@ -56,8 +56,7 @@ public class DataRow {
     }
 
     public Object get(String key) {
-        String normalisedKey = normaliseName(key);
-        return values.get(normalisedKey);
+        return values.get(normaliseName(key));
     }
 
     public void markProcessed() {
