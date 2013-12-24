@@ -17,6 +17,7 @@ SITE
       build-essential (~> 1.4)
       openssl (~> 1.1)
     openssl (1.1.0)
+    swap (0.3.6)
     xfs (1.1.0)
 
 GIT
@@ -45,6 +46,7 @@ PATH
       java (>= 0.0.0)
       mysql (>= 0.0.0)
       postgresql (>= 0.0.0)
+      swap (>= 0.0.0)
 
 DEPENDENCIES
   dbfit_test (>= 0)
