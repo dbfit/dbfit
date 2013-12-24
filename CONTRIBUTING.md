@@ -57,11 +57,15 @@ The VM doesn't include:
 
         vagrant plugin install vagrant-librarian-chef
 
-4.  Run every subsequent command from the `test_vm` folder:
+4. Install vagrant plugin [vagrant-omnibus](https://github.com/schisamo/vagrant-omnibus):
+
+        vagrant plugin install vagrant-omnibus
+
+5.  Run every subsequent command from the `test_vm` folder:
 
         cd test_vm
 
-5.  Provision and start the vagrant VM:
+6.  Provision and start the vagrant VM:
 
         vagrant up
 
