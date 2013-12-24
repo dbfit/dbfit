@@ -53,22 +53,23 @@ The VM doesn't include:
 
 2. [Install vagrant](http://docs.vagrantup.com/v2/installation/). Versions 1.2+.
 
-3. Install vagrant plugin [vagrant-librarian-chef](https://github.com/jimmycuadra/vagrant-librarian-chef):
+3. Install vagrant plugins
+   [vagrant-librarian-chef](https://github.com/jimmycuadra/vagrant-librarian-chef),
+   [vagrant-omnibus](https://github.com/schisamo/vagrant-omnibus),
+   [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest):
 
         vagrant plugin install vagrant-librarian-chef
-
-4. Install vagrant plugin [vagrant-omnibus](https://github.com/schisamo/vagrant-omnibus):
-
         vagrant plugin install vagrant-omnibus
+        vagrant plugin install vagrant-vbguest
 
-5. If you want to provision Oracle database - download the setup package as
+4. If you want to provision Oracle database - download the setup package as
    descried in 1st bullet of [ORACLE file](ORACLE.md).
 
-6. Run every subsequent command from the `test_vm` folder:
+5. Run every subsequent command from the `test_vm` folder:
 
         cd test_vm
 
-7. Provision and start the vagrant VM:
+6. Provision and start the vagrant VM:
 
         vagrant up
 
