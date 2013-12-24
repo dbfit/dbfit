@@ -1,16 +1,19 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
 require 'rbconfig'
 is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
 
-Vagrant.configure("2") do |config|
-  config.omnibus.chef_version = :latest
-end
+VAGRANTFILE_API_VERSION = "2"
 
-Vagrant::Config.run do |config|
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.omnibus.chef_version = :latest
+
   config.vm.box = "centos"
   config.vm.box_url = "https://dl.dropbox.com/u/31081437/Berkshelf-CentOS-6.3-x86_64-minimal.box"
   config.vm.host_name = "dbfitvm"
-  config.vm.network :hostonly, "192.168.33.10"
-  config.vm.share_folder "dbfit", "/var/dbfit", "..", :nfs => !is_windows,
+  config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.synced_folder "..", "/var/dbfit", :nfs => !is_windows,
     :nfs_version => 4, :mount_options => ["noatime", "nodiratime"]
 
   config.vm.provision :chef_solo do |chef|
@@ -52,3 +55,4 @@ Vagrant::Config.run do |config|
     }
   end
 end
+
