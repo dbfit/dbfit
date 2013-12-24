@@ -12,7 +12,7 @@ Pull requests are most welcome, but please try to test them with the existing te
 
 The quickest way to get feedback on your code changes is to run the fast build:
 
-    $ gradle clean fastbuild
+    $ ./gradlew clean fastbuild
 
 This is a pure-Java build that runs the `core` unit tests and the Derby integration tests (with Derby running embedded).
 
@@ -20,7 +20,7 @@ This is a pure-Java build that runs the `core` unit tests and the Derby integrat
 
 If you make changes to any database adapter, it's sufficient to make sure that the tests for only that adapter run eg if you make any changes to the Mysql adapter, you can run the Mysql integration tests:
 
-    $ gradle :dbfit-java:mysql:test
+    $ ./gradlew :dbfit-java:mysql:test
 
 If you have to make changes to `core`, please run all integration tests (because `core` changes can affect any of the adapters). This is easiest done from the test virtual machine.
 
@@ -87,7 +87,7 @@ See the [ORACLE file](ORACLE.md).
 
 An IntelliJ project can be created by running:
 
- 1. `dbfit-java$ gradle idea`
+ 1. `dbfit-java$ ./gradlew idea`
 
  2. set gradle.java.home=<gradle jdk path> in $IDEA_HOME/bin/idea.properties    
 
@@ -95,29 +95,29 @@ An IntelliJ project can be created by running:
 
 An Eclipse project can be created by running:
 
-    dbfit-java$ gradle eclipse
+    dbfit-java$ ./gradlew eclipse
 
 #### Building
 
 *  Clean, build, test and install to local maven repo
 
-        dbfit-java$ gradle clean check install
+        dbfit-java$ ./gradlew clean check install
 
 *  Build and package all java projects:
 
-        dbfit$ gradle assemble
+        dbfit$ ./gradlew assemble
 
 *  Create release zip
 
-        dbfit$ gradle bundle
+        dbfit$ ./gradlew bundle
 
 *  Start fitnesse as a webservice on http://localhost:8085
 
-        dbfit$ gradle start
+        dbfit$ ./gradlew start
 
 This will compile the source, copy the jars and resources to the `dist` directory and run up FitNesse with DbFit installed.  Point your browser to [http://localhost:8085](http://localhost:8085) to access the running instance (please adjust `localhost` to match the host on which the instance is actually running).
 
-Please be aware that if you change any code whilst the `gradle start` command is running you will have to stop the command and re-run it in order to compile and pick up the changes.  To stop the running instance it is preferable to point your browser to [http://localhost:8085/?shutdown](http://localhost:8085/?shutdown) rather than killing it at the command line, i.e. don't do a Ctrl+C or equivalent (again adjust `localhost` to match the host on which the instance is actually running).
+Please be aware that if you change any code whilst the `/.gradlew start` command is running you will have to stop the command and re-run it in order to compile and pick up the changes.  To stop the running instance it is preferable to point your browser to [http://localhost:8085/?shutdown](http://localhost:8085/?shutdown) rather than killing it at the command line, i.e. don't do a Ctrl+C or equivalent (again adjust `localhost` to match the host on which the instance is actually running).
 
 ### Useful development commands
 
