@@ -123,7 +123,7 @@ Please be aware that if you change any code whilst the `/.gradlew start` command
 
  *  Logging in as `root` for `mysql`:
 
-        mysql -u root
+        mysql -u root -ppassword
 
  *  Logging in as the `postgres` superuser for `postgresql`:
 
