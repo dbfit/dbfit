@@ -49,7 +49,7 @@ The VM doesn't include:
 
 ### Setting up the test VM
 
-1.  You first need to [install VirtualBox](https://www.virtualbox.org/wiki/Downloads).
+1. You first need to [install VirtualBox](https://www.virtualbox.org/wiki/Downloads).
 
 2. [Install vagrant](http://docs.vagrantup.com/v2/installation/). Versions 1.2+.
 
@@ -61,11 +61,14 @@ The VM doesn't include:
 
         vagrant plugin install vagrant-omnibus
 
-5.  Run every subsequent command from the `test_vm` folder:
+5. If you want to provision Oracle database - download the setup package as
+   descried in 1st bullet of [ORACLE file](ORACLE.md).
+
+6. Run every subsequent command from the `test_vm` folder:
 
         cd test_vm
 
-6.  Provision and start the vagrant VM:
+7. Provision and start the vagrant VM:
 
         vagrant up
 
@@ -83,7 +86,10 @@ The subsequent steps need to be followed on the project folder within the VM. To
 
 #### Installing Oracle XE
 
-See the [ORACLE file](ORACLE.md).
+If you downloaded Oracle setup package before provisioning vagrant VM - the
+Oracle database is automatically installed and configured.
+
+For manual setup instructions see [ORACLE file](ORACLE.md).
 
 #### IDE Integration
 
