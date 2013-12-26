@@ -7,7 +7,7 @@ package "unzip"
 execute 'install Oracle package if available' do
   project_root = node['dbfit']['project_root']
 
-  user 'vagrant'
+  user 'root'
   command "#{project_root}/dbfit-java/oracle/src/test/resources/install_oracle.sh"
   creates "/etc/oratab"
   action :run
