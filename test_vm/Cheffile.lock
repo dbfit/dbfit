@@ -29,16 +29,6 @@ SITE
       yum (~> 3.0)
 
 GIT
-  remote: https://github.com/benilovj/postgresql
-  ref: f866a8290ef021923deafc37012a91bee027ee92
-  sha: f866a8290ef021923deafc37012a91bee027ee92
-  specs:
-    postgresql (2.2.2)
-      apt (>= 0.0.0)
-      build-essential (>= 0.0.0)
-      openssl (>= 0.0.0)
-
-GIT
   remote: https://github.com/javornikolov/git
   ref: master
   sha: 84a409b33a57b7f2fa6728ec200a279119b6025c
@@ -50,6 +40,16 @@ GIT
       windows (>= 0.0.0)
       yum (~> 3.0)
       yum-epel (>= 0.0.0)
+
+GIT
+  remote: https://github.com/javornikolov/postgresql
+  ref: master
+  sha: e23ea6ecf36d102b58e0050bc44cdb8bc61205f3
+  specs:
+    postgresql (3.3.4)
+      apt (>= 0.0.0)
+      build-essential (>= 0.0.0)
+      openssl (>= 0.0.0)
 
 GIT
   remote: https://github.com/opscode-cookbooks/windows.git
