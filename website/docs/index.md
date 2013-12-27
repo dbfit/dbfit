@@ -29,6 +29,8 @@ show_comments: false
 
 ### [Command reference](/dbfit/docs/reference.html) <small>The test building blocks.</small>
 
+### [The test framework](/dbfit/docs/test-framework.html) <small>How to write and run tests in FitNesse.</small>
+
 ### [Database-specific information](/dbfit/docs/database-specific-information.html) <small>Information on adapter-specific features and peculiarities.</small>
 
 ### [FAQ and troubleshooting](/dbfit/docs/faq.html)

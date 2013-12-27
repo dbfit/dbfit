@@ -11,7 +11,7 @@ dbfit-java/derby/dbfit/
 out
 
 dist
-docs
+/docs
 tmp/*
 
 # the VM
