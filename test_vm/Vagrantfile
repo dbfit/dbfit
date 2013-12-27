@@ -10,7 +10,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.omnibus.chef_version = :latest
   config.vbguest.auto_update = true
 
-  config.vm.box = "centos"
+  config.vm.box = "dbfitvm-test"
   config.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-6.5_chef-provisionerless.box"
   config.vm.host_name = "dbfitvm"
   config.vm.network "private_network", ip: "192.168.33.10"
