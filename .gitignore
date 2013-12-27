@@ -18,6 +18,7 @@ tmp/*
 test_vm/cookbooks
 test_vm/.vagrant
 test_vm/tmp
+test_vm/Disk1
 oracle-xe-*.rpm.zip
 
 # the documentation
