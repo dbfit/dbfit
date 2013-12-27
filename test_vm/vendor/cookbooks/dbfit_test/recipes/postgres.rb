@@ -1,14 +1,6 @@
 include_recipe "postgresql::server"
 include_recipe "postgresql::client"
-
-package "postgresql92-devel" do
-  action :nothing
-end.run_action(:install)
-
-chef_gem "pg" do
-  options "-- --with-pg-config=/usr/pgsql-#{node['postgresql']['version']}/bin/pg_config"
-  action :install
-end
+include_recipe "postgresql::ruby"
 
 include_recipe "database::postgresql"
 
