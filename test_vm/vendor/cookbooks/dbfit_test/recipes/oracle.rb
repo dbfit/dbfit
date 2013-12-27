@@ -9,7 +9,7 @@ execute 'install Oracle package if available' do
 
   user 'root'
   command "#{project_root}/dbfit-java/oracle/src/test/resources/install_oracle.sh"
-  creates "/etc/oratab"
+  not_if "grep -q '^XE' /etc/oratab"
   action :run
   returns [0, 2]
 end
