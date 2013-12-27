@@ -63,7 +63,7 @@ The VM doesn't include:
         vagrant plugin install vagrant-vbguest
 
 4. If you want to provision Oracle database - download the setup package as
-   descried in 1st bullet of [ORACLE file](ORACLE.md).
+   described in 1st bullet of [ORACLE file](ORACLE.md).
 
 5. Run every subsequent command from the `test_vm` folder:
 
