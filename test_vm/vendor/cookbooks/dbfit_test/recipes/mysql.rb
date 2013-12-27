@@ -13,19 +13,6 @@ mysql_database 'dbfit' do
   action :create
 end
 
-# needed to support DbDeploy
-mysql_database 'dbfit' do
-  connection mysql_connection_info
-  sql "CREATE TABLE IF NOT EXISTS changelog (
-        change_number INTEGER NOT NULL,
-        complete_dt TIMESTAMP NOT NULL,
-        applied_by VARCHAR(100) NOT NULL,
-        description VARCHAR(500) NOT NULL,
-        CONSTRAINT Pkchangelog PRIMARY KEY (change_number)
-      );"
-  action :query
-end
-
 users.each do |username, password|
   mysql_database_user username do
     connection mysql_connection_info
@@ -51,3 +38,21 @@ end
     action :grant
   end
 end
+
+# needed to support DbDeploy
+mysql_database 'dbfit' do
+  connection(
+    :host => 'localhost',
+    :username => 'dbfit_user',
+    :password => users['dbfit_user']
+  )
+  sql "CREATE TABLE IF NOT EXISTS changelog (
+        change_number INTEGER NOT NULL,
+        complete_dt TIMESTAMP NOT NULL,
+        applied_by VARCHAR(100) NOT NULL,
+        description VARCHAR(500) NOT NULL,
+        CONSTRAINT Pkchangelog PRIMARY KEY (change_number)
+      );"
+  action :query
+end
+

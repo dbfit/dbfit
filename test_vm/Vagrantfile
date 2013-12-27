@@ -1,12 +1,24 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
 require 'rbconfig'
 is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
 
-Vagrant::Config.run do |config|
-  config.vm.box = "centos"
-  config.vm.box_url = "https://dl.dropbox.com/u/31081437/Berkshelf-CentOS-6.3-x86_64-minimal.box"
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.provider "virtualbox" do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "1100"]
+  end
+
+  config.omnibus.chef_version = :latest
+  config.vbguest.auto_update = true
+
+  config.vm.box = "dbfitvm-test"
+  config.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-6.5_chef-provisionerless.box"
   config.vm.host_name = "dbfitvm"
-  config.vm.network :hostonly, "192.168.33.10"
-  config.vm.share_folder "dbfit", "/var/dbfit", "..", :nfs => !is_windows,
+  config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.synced_folder "..", "/var/dbfit", :nfs => !is_windows,
     :nfs_version => 4, :mount_options => ["noatime", "nodiratime"]
 
   config.vm.provision :chef_solo do |chef|
@@ -14,36 +26,30 @@ Vagrant::Config.run do |config|
 
     chef.json = {
       "mysql" => {
-        "server_root_password" => "",
-        "server_repl_password" => "",
-        "server_debian_password" => "",
+        "server_root_password" => "password",
+        "server_repl_password" => "password",
+        "server_debian_password" => "password",
         "bind_address" => "127.0.0.1",
       },
       "postgresql" => {
         "password" => {
           "postgres" => "postgres"
         },
-        "version" => "9.2",
-        "enable_pgdg_yum" => true,
-        "dir" => "/var/lib/pgsql/9.2/data",
-        "client" => {
-          "packages" => ["postgresql92"]
-        },
-        "server" => {
-          "packages" => ["postgresql92-server"],
-          "service_name" => "postgresql-9.2"
-        },
-        "contrib" => {
-          "packages" => ["postgresql92-contrib"]
-        }
+        "version" => "9.3",
+        "enable_pgdg_yum" => true
       },
       "java" => {
         "install_flavor" => "oracle",
+        "jdk_version" => "7",
         "oracle" => {
           "accept_oracle_download_terms" => true
         }
+      },
+      "git" => {
+        "version" => "1.8.5.2"
       },
       "run_list" => ["recipe[dbfit_test]"]
     }
   end
 end
+

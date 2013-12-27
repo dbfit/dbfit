@@ -47,19 +47,27 @@ The VM doesn't include:
 
 ### Setting up the test VM
 
-1.  You first need to [install VirtualBox](https://www.virtualbox.org/wiki/Downloads).
+1. You first need to [install VirtualBox](https://www.virtualbox.org/wiki/Downloads).
 
 2. [Install vagrant](http://docs.vagrantup.com/v2/installation/). Versions 1.2+.
 
-3. Install vagrant plugin [vagrant-librarian-chef](https://github.com/jimmycuadra/vagrant-librarian-chef):
+3. Install vagrant plugins
+   [vagrant-librarian-chef](https://github.com/jimmycuadra/vagrant-librarian-chef),
+   [vagrant-omnibus](https://github.com/schisamo/vagrant-omnibus),
+   [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest):
 
         vagrant plugin install vagrant-librarian-chef
+        vagrant plugin install vagrant-omnibus
+        vagrant plugin install vagrant-vbguest
 
-4.  Run every subsequent command from the `test_vm` folder:
+4. If you want to provision Oracle database - download the setup package as
+   described in 1st bullet of [ORACLE file](ORACLE.md).
+
+5. Run every subsequent command from the `test_vm` folder:
 
         cd test_vm
 
-5.  Provision and start the vagrant VM:
+6. Provision and start the vagrant VM:
 
         vagrant up
 
@@ -77,7 +85,10 @@ The subsequent steps need to be followed on the project folder within the VM. To
 
 #### Installing Oracle XE
 
-See the [ORACLE file](ORACLE.md).
+If you downloaded Oracle setup package before provisioning vagrant VM - the
+Oracle database is automatically installed and configured.
+
+For manual setup instructions see [ORACLE file](ORACLE.md).
 
 #### IDE Integration
 
@@ -121,7 +132,7 @@ Please be aware that if you change any code whilst the `/.gradlew start` command
 
  *  Logging in as `root` for `mysql`:
 
-        mysql -u root
+        mysql -u root -ppassword
 
  *  Logging in as the `postgres` superuser for `postgresql`:
 
