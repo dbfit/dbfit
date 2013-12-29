@@ -66,6 +66,11 @@ If a function is getting called, then a column containing just the question mark
     |World        |Hello World |Hello       |
     |Prefect      |Ford Prefect|Ford        |
 
+### Influence on test results
+
+* If the procedure has no output parameters, then the `Execute Procedure` command has no effect on the [result of the test](/dbfit/docs/test-framework.html#test-results-and-cell-outcomes) - unless an error occurs during processing.
+* If the procedure has output parameters, then those cells are compared to the expectation cells specified in the test table, and are used to determine whether the test has passed or failed.
+
 ### Expecting exceptions
 
 Normally, the test would fail if a database exception occurs. If you want to test a boundary condition that should cause an exception, then use `Execute Procedure Expect Exception` variant of the `Execute Procedure` command, eg:
