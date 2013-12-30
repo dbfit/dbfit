@@ -37,8 +37,11 @@
 
             !|Execute Procedure|ConcatenateStrings   |
             |first string|second string|concatenated?|
-            |Hello       |World        |Hello World  |
-            |Ford        |Prefect      |Ford Prefect |
+            |Hello       |World        |>>result     |
+            
+            !|Execute Procedure|ConcatenateStrings       |
+            |first string|second string|concatenated?    |
+            |<<result    |Again        |Hello World Again|
 
 ### Calling procedures without parameters
 
