@@ -40,8 +40,6 @@
             |Hello       |World        |Hello World  |
             |Ford        |Prefect      |Ford Prefect |
 
-    * if the procedure has output parameters, then those values are compared to expectations specified in the FitNesse table, and are used to determine the outcome of the test.
-
 ### Calling procedures without parameters
 
 For the case where neither parameters nor return values are specified, `Execute Procedure` should be called with just one row (without a row for column header names).
