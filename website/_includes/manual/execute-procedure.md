@@ -16,7 +16,8 @@
 
 2. **Second row** *(applicable only if the procedure has parameters)*
 
-     * parameter names (output parameters followed by a question mark)
+     * each cell specifies a parameter name
+     * output parameters are defined by adding a question mark to the end of the name
      * parameter order or case is not important
      * you can even insert blanks and split names into several words to make the test page more readable. Blanks are removed by DbFit to get the parameter name (eg `second string` => `secondstring`):
 
