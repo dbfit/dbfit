@@ -1,8 +1,8 @@
-# DbFit [![Build Status](https://travis-ci.org/benilovj/dbfit.png?branch=master)](https://travis-ci.org/benilovj/dbfit)
+# DbFit [![Build Status](https://travis-ci.org/dbfit/dbfit.png?branch=master)](https://travis-ci.org/dbfit/dbfit)
 
 Test-driven database development. Write readable, easy-to-maintain unit and integration tests for your database code.
 
-Website: [benilovj.github.com/dbfit](http://benilovj.github.com/dbfit/).
+Website: [dbfit.github.com/dbfit](http://dbfit.github.io/dbfit/).
 
 ## Contributing
 
