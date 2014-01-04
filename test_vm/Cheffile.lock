@@ -18,18 +18,20 @@ SITE
       build-essential (~> 1.4)
       openssl (~> 1.1)
     openssl (1.1.0)
-    runit (1.5.3)
+    runit (1.5.8)
       build-essential (>= 0.0.0)
       yum (~> 3.0)
       yum-epel (>= 0.0.0)
     swap (0.3.6)
+    windows (1.12.6)
+      chef_handler (>= 0.0.0)
     xfs (1.1.0)
-    yum (3.0.2)
+    yum (3.0.4)
     yum-epel (0.2.0)
       yum (~> 3.0)
 
 GIT
-  remote: https://github.com/javornikolov/git
+  remote: https://github.com/dbfit/git
   ref: master
   sha: 84a409b33a57b7f2fa6728ec200a279119b6025c
   specs:
@@ -42,7 +44,7 @@ GIT
       yum-epel (>= 0.0.0)
 
 GIT
-  remote: https://github.com/javornikolov/postgresql
+  remote: https://github.com/dbfit/postgresql
   ref: master
   sha: e23ea6ecf36d102b58e0050bc44cdb8bc61205f3
   specs:
@@ -50,14 +52,6 @@ GIT
       apt (>= 0.0.0)
       build-essential (>= 0.0.0)
       openssl (>= 0.0.0)
-
-GIT
-  remote: https://github.com/opscode-cookbooks/windows.git
-  ref: 6346c0da614fad2152bb34184e1f7e35ebf662c5
-  sha: 6346c0da614fad2152bb34184e1f7e35ebf662c5
-  specs:
-    windows (1.11.1)
-      chef_handler (>= 0.0.0)
 
 PATH
   remote: vendor/cookbooks/dbfit_test
@@ -74,5 +68,4 @@ DEPENDENCIES
   dbfit_test (>= 0)
   git (>= 0)
   postgresql (>= 0)
-  windows (>= 0)
 
