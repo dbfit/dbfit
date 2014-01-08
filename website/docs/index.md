@@ -69,7 +69,7 @@ show_comments: false
 
     <h3><a href="http://gojko.net/FitNesse/book/" onclick="recordOutboundLink(this, 'Outbound links', 'Gojko Fitnesse Book', 'Docs');return false;">Test Driven .NET Development with FitNesse</a> <small>Gojko's free book about using FitNesse.</small></h3>
 
-    <h3><a href="http://skillsmatter.com/podcast/agile-scrum/test-driven-data-warehouse-development" onclick="recordOutboundLink(this, 'Outbound links', 'Andy Barker talk', 'Docs');return false;">Test Driven Data Warehouse Development <small>A video of Andy Barker's talk about testing SSIS packages using FitNesse/DbFit.</small></a></h3>
+    <h3><a href="http://skillsmatter.com/podcast/agile-scrum/test-driven-data-warehouse-development" onclick="recordOutboundLink(this, 'Outbound links', 'Andy Barker talk', 'Docs');return false;">Test Driven Data Warehouse Development</a> <small>A video of Andy Barker's talk about testing SSIS packages using FitNesse/DbFit.</small></h3>
 
     <h3><a href="http://blogs.perficient.com/businessintelligence/2012/06/07/bi-tools-testing-with-dbfit/" onclick="recordOutboundLink(this, 'Outbound links', 'Perficient blog', 'Docs');return false;">Testing with DBFit</a> <small>Short, sharp DbFit overview, plus how to integrate with SSIS.</small></h3>
   </div>
