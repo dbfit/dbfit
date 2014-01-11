@@ -2,12 +2,8 @@ package dbfit.util;
 
 import org.junit.Test;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-import static org.hamcrest.CoreMatchers.*;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
@@ -15,7 +11,6 @@ import static org.mockito.Mockito.*;
 
 import java.util.Map;
 import java.util.List;
-import java.util.LinkedList;
 import java.util.Iterator;
 import static java.util.Arrays.asList;
 
