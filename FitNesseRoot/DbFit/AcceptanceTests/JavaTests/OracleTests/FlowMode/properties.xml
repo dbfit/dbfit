@@ -9,7 +9,7 @@
 	<Suite/>
 	<Suites/>
 	<SymbolicLinks>
-		<CleanSuite>.DbFit.AcceptanceTests.CoreTests.CleanSuite</CleanSuite>
+		<CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
 	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>
