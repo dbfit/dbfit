@@ -1,0 +1,45 @@
+|execute|create table TESTTBL (N int, TWON int)|
+
+|execute|create table TESTTBLA (N int, TWON int)|
+
+!|insert|TESTTBL|
+|N      |TWON   |
+|1      |2      |
+|2      |4      |
+|3      |6      |
+
+!|insert|TESTTBLA|
+|N      |TWON    |
+|1      |2       |
+|2      |4       |
+|3      |6       |
+
+|Store Query|select * from TESTTBL|q1|
+
+|Store Query|select * from TESTTBLA|q2|
+
+|Store Query|select * from TESTTBL|q3|
+
+!|Query|<<q1 |
+|N     |TWON?|
+|1     |2    |
+|2     |4    |
+|3     |6    |
+
+# repeat to test for side effects (as in issue GH-205)
+!|Query|<<q1 |
+|N     |TWON?|
+|1     |2    |
+|2     |4    |
+|3     |6    |
+
+|compare stored queries|q1|q2|
+|TWON                  |N?   |
+
+# Reuse same query to test for side effects
+|compare stored queries|q1|q3|
+|TWON                  |N?   |
+
+|execute|drop table TESTTBL|
+
+|execute|drop table TESTTBLA|
