@@ -27,6 +27,7 @@ website/_site
 # FitNesse history files and excluded folders
 FitNesseRoot/ErrorLogs
 FitNesseRoot/files/testResults
+FitNesseRoot/files/testProgress
 FitNesseRoot/update*
 FitNesseRoot/RecentChanges
 [0-9]*-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].zip
