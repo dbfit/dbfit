@@ -10,6 +10,7 @@
 	<Suites/>
 	<SymbolicLinks>
 		<CleanSuite>.DbFit.AcceptanceTests.CoreTests.CleanSuite</CleanSuite>
+		<CommonSuite>.DbFit.AcceptanceTests.CoreTests.CommonSuite</CommonSuite>
 		<BulkInsert>.DbFit.AcceptanceTests.CoreTests.BulkInsert</BulkInsert>
 	</SymbolicLinks>
 	<Versions/>
