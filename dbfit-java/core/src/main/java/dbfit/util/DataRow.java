@@ -9,7 +9,6 @@ import org.apache.commons.lang3.ObjectUtils;
 
 public class DataRow {
     private Map<String, Object> values = new HashMap<String, Object>();
-    private boolean processed = false;
 
     public Set<String> getColumnNames() {
         return values.keySet();
@@ -52,12 +51,5 @@ public class DataRow {
         return values.get(normaliseName(key));
     }
 
-    public void markProcessed() {
-        processed = true;
-    }
-
-    public boolean isProcessed() {
-        return processed;
-    }
 }
 

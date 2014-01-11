@@ -9,7 +9,7 @@ import dbfit.util.*;
 
 public abstract class RowSetFixture extends ColumnFixture {
     
-	private DataTable dt;
+	private MatchableDataTable dt;
 	//private ResultSetMetaData rsmd;
 	private DataRow currentRow;
 	
@@ -70,7 +70,7 @@ public abstract class RowSetFixture extends ColumnFixture {
 			exception(heads,sqle);
 		}
 	}
-	protected abstract DataTable getDataTable() throws SQLException;
+	protected abstract MatchableDataTable getDataTable() throws SQLException;
 	protected abstract boolean isOrdered();
 	public void doRows(Parse rows)
 	{
@@ -91,7 +91,7 @@ public abstract class RowSetFixture extends ColumnFixture {
 			else
 				currentRow=findMatchingRow(row);
 		super.doRow(row);
-		currentRow.markProcessed();
+		dt.markProcessed(currentRow);
 		}
 		catch (NoMatchingRowFoundException e){
 			row.parts.addToBody(Fixture.gray(" missing"));

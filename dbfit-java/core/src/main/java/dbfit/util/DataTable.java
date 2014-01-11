@@ -7,8 +7,6 @@ import java.util.*;
  * Vendor-invariant detached rowset implementation.
  * Because oracle-specific extensions effectively prevent us from using
  * a generic cached result set, this class plays that role instead.
- * It is also responsible for efficient data row matching and tracking
- * processed/unprocessed rows.
  */
 public class DataTable {
     private List <DataRow> rows = new LinkedList<DataRow>();
@@ -34,39 +32,12 @@ public class DataTable {
         }
     }
 
-    public DataRow findMatching (Map<String,Object> keyProperties) throws NoMatchingRowFoundException {
-        for (DataRow dr: rows) {
-            if (!dr.isProcessed() && dr.matches(keyProperties)) {
-                return dr;
-            }
-        }
-
-        throw new NoMatchingRowFoundException();
-    }
-
-    public DataRow findFirstUnprocessedRow() throws NoMatchingRowFoundException {
-        for (DataRow dr: rows) {
-            if (!dr.isProcessed()) {
-                return dr;
-            }
-        }
-
-        throw new NoMatchingRowFoundException();
-    }
-
-    public List<DataRow> getUnprocessedRows() {
-        List<DataRow> l = new ArrayList<DataRow>();
-        for (DataRow dr: rows) {
-            if (!dr.isProcessed()) {
-                l.add(dr);
-            }
-        }
-
-        return l;
-    }
-
     public List<DataColumn> getColumns() {
         return columns;
+    }
+
+    public List<DataRow> getRows() {
+        return rows;
     }
 }
 
