@@ -50,8 +50,7 @@ public class MatchableDataTable {
         Iterator<DataRow> unprocIter = unprocessedRows.iterator();
 
         while (unprocIter.hasNext()) {
-            DataRow dr = unprocIter.next();
-            processor.process(dr);
+            processor.process(unprocIter.next());
             unprocIter.remove();
         }
     }
