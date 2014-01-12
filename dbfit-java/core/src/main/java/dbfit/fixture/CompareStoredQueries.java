@@ -68,18 +68,23 @@ public class CompareStoredQueries extends fit.Fixture {
         }
     }
 
+    private Map<String, Object> buildMatchingMask(final DataRow dr) {
+        final Map<String, Object> matchingMask = new HashMap<String, Object>();
+        for (int i = 0; i < keyProperties.length; i++) {
+            if (keyProperties[i])
+                matchingMask.put(columnNames[i], dr.get(columnNames[i]));
+        }
+
+        return matchingMask;
+    }
+
     private Parse processDataTable(final MatchableDataTable t1, final MatchableDataTable t2, final Parse lastScreenRow, final String queryName) {
         class DataTablesMatchProcessor implements DataRowProcessor {
             Parse screenRow = lastScreenRow;
 
             public void process(DataRow dr) {
-                Map<String, Object> matchingMask = new HashMap<String, Object>();
-                for (int i = 0; i < keyProperties.length; i++) {
-                    if (keyProperties[i])
-                        matchingMask.put(columnNames[i], dr.get(columnNames[i]));
-                }
                 try {
-                    DataRow dr2 = t2.findMatching(matchingMask);
+                    DataRow dr2 = t2.findMatching(buildMatchingMask(dr));
                     t2.markProcessed(dr2);
                     screenRow = addRow(screenRow, dr, dr2);
                 } catch (NoMatchingRowFoundException nex) {
