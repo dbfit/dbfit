@@ -11,6 +11,7 @@
 	<Suite/>
 	<Suites>(Shared Tests)</Suites>
 	<SymbolicLinks>
+		<CommonSuite>.DbFit.AcceptanceTests.CoreTests.CommonSuite</CommonSuite>
 		<StoredProcNoParams>.DbFit.AcceptanceTests.CoreTests.StoredProcNoParams</StoredProcNoParams>
 	</SymbolicLinks>
 	<Versions/>
