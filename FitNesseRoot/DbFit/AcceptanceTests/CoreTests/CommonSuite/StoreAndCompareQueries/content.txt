@@ -26,7 +26,7 @@
 |2     |4    |
 |3     |6    |
 
-# repeat to test for side effects (as in issue GH-205)
+# Reuse same stored query to verify that there are no side effects
 !|Query|<<q1 |
 |N     |TWON?|
 |1     |2    |
@@ -36,7 +36,7 @@
 !|Compare Stored Queries|q1|q2|
 |TWON                   |N?   |
 
-# Reuse same query to test for side effects
+# Reuse same stored query to verify that there are no side effects
 !|Compare Stored Queries|q1|q3|
 |TWON                   |N?   |
 
