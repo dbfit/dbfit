@@ -68,27 +68,29 @@ public class CompareStoredQueries extends fit.Fixture {
         }
     }
 
-    private Parse processDataTable(MatchableDataTable t1, MatchableDataTable t2, Parse lastScreenRow, String queryName) {
-        // Explicit iterator to avoid ConcurrentModificationException on remove
-        java.util.Iterator<DataRow> unprocIter = t1.getUnprocessedRows().iterator();
+    private Parse processDataTable(final MatchableDataTable t1, final MatchableDataTable t2, final Parse lastScreenRow, final String queryName) {
+        class DataTablesMatchProcessor implements DataRowProcessor {
+            Parse screenRow = lastScreenRow;
 
-        while (unprocIter.hasNext()) {
-            DataRow dr = unprocIter.next();
-            Map<String, Object> matchingMask = new HashMap<String, Object>();
-            for (int i = 0; i < keyProperties.length; i++) {
-                if (keyProperties[i])
-                    matchingMask.put(columnNames[i], dr.get(columnNames[i]));
+            public void process(DataRow dr) {
+                Map<String, Object> matchingMask = new HashMap<String, Object>();
+                for (int i = 0; i < keyProperties.length; i++) {
+                    if (keyProperties[i])
+                        matchingMask.put(columnNames[i], dr.get(columnNames[i]));
+                }
+                try {
+                    DataRow dr2 = t2.findMatching(matchingMask);
+                    t2.markProcessed(dr2);
+                    screenRow = addRow(screenRow, dr, dr2);
+                } catch (NoMatchingRowFoundException nex) {
+                    screenRow = addRow(screenRow, dr, true, " missing from " + queryName);
+                }
             }
-            try {
-                DataRow dr2 = t2.findMatching(matchingMask);
-                t2.markProcessed(dr2);
-                lastScreenRow = addRow(lastScreenRow, dr, dr2);
-            } catch (NoMatchingRowFoundException nex) {
-                lastScreenRow = addRow(lastScreenRow, dr, true, " missing from " + queryName);
-            }
-            unprocIter.remove();
         }
-        return lastScreenRow;
+
+        DataTablesMatchProcessor processor = new DataTablesMatchProcessor();
+        t1.processDataRows(processor);
+        return processor.screenRow;
     }
 
     private Parse addRow(Parse lastRow, DataRow dr, DataRow dr2) {
