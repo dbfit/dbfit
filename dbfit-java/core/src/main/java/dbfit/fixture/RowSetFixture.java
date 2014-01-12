@@ -11,6 +11,11 @@ public abstract class RowSetFixture extends ColumnFixture {
     
     private MatchableDataTable dt;
     private DataRow currentRow;
+    // if element not 0, fixture column -> result set column index
+    private String[] keyColumns;
+
+    protected abstract MatchableDataTable getDataTable() throws SQLException;
+    protected abstract boolean isOrdered();
 
     private class CurrentDataRowTypeAdapter extends TypeAdapter {
         public String key;
@@ -55,9 +60,6 @@ public abstract class RowSetFixture extends ColumnFixture {
         throw new Exception("Unknown column " + normalisedName);
     }
 
-    // if element not 0, fixture column -> result set column index
-    private String[] keyColumns;
-
     protected void bind(Parse heads) {
         try {
             columnBindings = new Binding[heads.size()];
@@ -79,10 +81,6 @@ public abstract class RowSetFixture extends ColumnFixture {
             exception(heads, sqle);
         }
     }
-
-    protected abstract MatchableDataTable getDataTable() throws SQLException;
-
-    protected abstract boolean isOrdered();
 
     public void doRows(Parse rows) {
         try {
