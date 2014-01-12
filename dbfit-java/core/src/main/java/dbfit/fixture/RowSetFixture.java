@@ -47,8 +47,9 @@ public abstract class RowSetFixture extends ColumnFixture {
         String normalisedName = NameNormaliser.normaliseName(name);
         for (int i = 0; i < dt.getColumns().size(); i++) {
             String colName = dt.getColumns().get(i).getName();
-            if (normalisedName.equals(NameNormaliser.normaliseName(colName)))
+            if (normalisedName.equals(NameNormaliser.normaliseName(colName))) {
                 return i;
+            }
         }
 
         throw new Exception("Unknown column " + normalisedName);
@@ -66,8 +67,9 @@ public abstract class RowSetFixture extends ColumnFixture {
                   columnBindings[i] = new SymbolAccessQueryBinding();
                   int idx = findColumn(name);
                   String columnName = dt.getColumns().get(idx).getName();
-                  if (!name.endsWith("?"))
+                  if (!name.endsWith("?")) {
                       keyColumns[i] = columnName;
+                  }
                   columnBindings[i].adapter = new CurrentDataRowTypeAdapter(
                                     columnName,
                                     getJavaClassForColumn(dt.getColumns().get(idx))
@@ -82,8 +84,7 @@ public abstract class RowSetFixture extends ColumnFixture {
 
     protected abstract boolean isOrdered();
 
-    public void doRows(Parse rows)
-    {
+    public void doRows(Parse rows) {
         try {
             dt = getDataTable();
             super.doRows(rows);
@@ -97,10 +98,11 @@ public abstract class RowSetFixture extends ColumnFixture {
 
     public void doRow(Parse row) {
         try {
-            if (isOrdered())
+            if (isOrdered()) {
                 currentRow = dt.findFirstUnprocessedRow();
-            else
+            } else {
                 currentRow = findMatchingRow(row);
+            }
             super.doRow(row);
             dt.markProcessed(currentRow);
         }
