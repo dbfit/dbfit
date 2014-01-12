@@ -45,5 +45,15 @@ public class MatchableDataTable {
     public List<DataColumn> getColumns() {
         return dt.getColumns();
     }
+
+    public void processDataRows(DataRowProcessor processor) {
+        Iterator<DataRow> unprocIter = unprocessedRows.iterator();
+
+        while (unprocIter.hasNext()) {
+            DataRow dr = unprocIter.next();
+            processor.process(dr);
+            unprocIter.remove();
+        }
+    }
 }
 

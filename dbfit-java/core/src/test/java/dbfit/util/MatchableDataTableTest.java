@@ -25,6 +25,8 @@ public class MatchableDataTableTest {
 
     @Mock private Map<String,Object> matchingProperties;
 
+    @Mock DataRowProcessor rowProcessor;
+
     private List<DataRow> rows;
     private MatchableDataTable mdt;
 
@@ -83,19 +85,23 @@ public class MatchableDataTableTest {
     }
 
     @Test
-    public void shouldBeAbleToRemoveUnprocessedViaIterator() {
-        Iterator iter = mdt.getUnprocessedRows().iterator();
-        iter.next();
-        iter.remove();
-
-        assertEquals(asList(r2, r3, r4), mdt.getUnprocessedRows());
-    }
-
-    @Test
     public void shouldDelegateGetColumnsToDataTable() {
         mdt.getColumns();
 
         verify(mockedDataTable).getColumns();
+    }
+
+    @Test
+    public void shouldProcessAllUnprocessedDataRows() {
+        mdt.markProcessed(r3);
+
+        mdt.processDataRows(rowProcessor);
+
+        for (DataRow row: asList(r1, r2, r4)) {
+            verify(rowProcessor).process(row);
+        }
+
+        verify(rowProcessor, times(3)).process(any(DataRow.class));
     }
 
 }
