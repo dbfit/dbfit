@@ -30,14 +30,14 @@ public class Query extends RowSetFixture {
 		this.isOrdered = isOrdered;
 	}
 
-	public DataTable getDataTable() throws SQLException {
+	public MatchableDataTable getDataTable() throws SQLException {
 		if (queryOrSymbol == null)
 			queryOrSymbol = args[0];
 		if (isSymbolGetter(queryOrSymbol))
-			return getFromSymbol();
+			return new MatchableDataTable(getFromSymbol());
 		Log.log("Query: '%s'", queryOrSymbol);
 		PreparedStatement st = dbEnvironment.createStatementWithBoundFixtureSymbols(FitNesseTestHost.getInstance(), queryOrSymbol);
-		return new DataTable(st.executeQuery());
+		return new MatchableDataTable(new DataTable(st.executeQuery()));
 	}
 
 	private DataTable getFromSymbol() throws SQLException {

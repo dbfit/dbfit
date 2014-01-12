@@ -12,8 +12,8 @@ import java.util.Map;
 public class CompareStoredQueries extends fit.Fixture {
     private String symbol1;
     private String symbol2;
-    private DataTable dt1;
-    private DataTable dt2;
+    private MatchableDataTable dt1;
+    private MatchableDataTable dt2;
     private String[] columnNames;
     private boolean[] keyProperties;
 
@@ -32,8 +32,8 @@ public class CompareStoredQueries extends fit.Fixture {
             symbol1 = args[0];
             symbol2 = args[1];
         }
-        dt1 = SymbolUtil.getDataTable(symbol1);
-        dt2 = SymbolUtil.getDataTable(symbol2);
+        dt1 = new MatchableDataTable(SymbolUtil.getDataTable(symbol1));
+        dt2 = new MatchableDataTable(SymbolUtil.getDataTable(symbol2));
     }
 
     public void doTable(Parse table) {
@@ -68,25 +68,34 @@ public class CompareStoredQueries extends fit.Fixture {
         }
     }
 
-    private Parse processDataTable(DataTable t1, DataTable t2, Parse lastScreenRow, String queryName) {
-
-        List<DataRow> unproc = t1.getUnprocessedRows();
-        for (DataRow dr : unproc) {
-            Map<String, Object> matchingMask = new HashMap<String, Object>();
-            for (int i = 0; i < keyProperties.length; i++) {
-                if (keyProperties[i])
-                    matchingMask.put(columnNames[i], dr.get(columnNames[i]));
-            }
-            try {
-                DataRow dr2 = t2.findMatching(matchingMask);
-                dr2.markProcessed();
-                lastScreenRow = addRow(lastScreenRow, dr, dr2);
-            } catch (NoMatchingRowFoundException nex) {
-                lastScreenRow = addRow(lastScreenRow, dr, true, " missing from " + queryName);
-            }
-            dr.markProcessed();
+    private Map<String, Object> buildMatchingMask(final DataRow dr) {
+        final Map<String, Object> matchingMask = new HashMap<String, Object>();
+        for (int i = 0; i < keyProperties.length; i++) {
+            if (keyProperties[i])
+                matchingMask.put(columnNames[i], dr.get(columnNames[i]));
         }
-        return lastScreenRow;
+
+        return matchingMask;
+    }
+
+    private Parse processDataTable(final MatchableDataTable t1, final MatchableDataTable t2, final Parse lastScreenRow, final String queryName) {
+        class DataTablesMatchProcessor implements DataRowProcessor {
+            Parse screenRow = lastScreenRow;
+
+            public void process(DataRow dr) {
+                try {
+                    DataRow dr2 = t2.findMatching(buildMatchingMask(dr));
+                    t2.markProcessed(dr2);
+                    screenRow = addRow(screenRow, dr, dr2);
+                } catch (NoMatchingRowFoundException nex) {
+                    screenRow = addRow(screenRow, dr, true, " missing from " + queryName);
+                }
+            }
+        }
+
+        DataTablesMatchProcessor processor = new DataTablesMatchProcessor();
+        t1.processDataRows(processor);
+        return processor.screenRow;
     }
 
     private Parse addRow(Parse lastRow, DataRow dr, DataRow dr2) {
