@@ -30,6 +30,11 @@ public class DerbyRegressionTest {
         helper.assertSuitePasses("DbFit.AcceptanceTests.JavaTests.DerbyTests.FlowMode");
     }
 
+    @Test
+    public void standaloneMode() throws Exception {
+        helper.assertSuitePasses("DbFit.AcceptanceTests.JavaTests.DerbyTests.StandaloneFixtures");
+    }
+
     @After
     public void tearDown() throws Exception {
         serverControl.shutdown();
