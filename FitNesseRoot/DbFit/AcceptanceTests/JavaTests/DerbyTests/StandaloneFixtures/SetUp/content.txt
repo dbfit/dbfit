@@ -1,0 +1,5 @@
+|import fixture|
+|dbfit.fixture|
+
+!|DatabaseEnvironment|derby|
+|Connect|jdbc:derby://localhost/dbfit;create=true|
