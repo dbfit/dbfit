@@ -18,7 +18,7 @@ public class DatabaseTest extends Fixture {
     // execution to it, but this one is now a fixture to allow things to be overridden
     public void interpretTables(Parse tables) {
         Options.reset();
-        SequenceFixture sf = new SequenceFixture ();
+        SequenceFixture sf = new SequenceFixture();
         sf.listener = listener;
         sf.counts = counts;
         sf.summary = summary;
