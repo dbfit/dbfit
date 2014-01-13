@@ -16,13 +16,19 @@ public class CompareStoredQueries extends fit.Fixture {
     private MatchableDataTable dt2;
     private String[] columnNames;
     private boolean[] keyProperties;
+    private boolean hideMatchingRows;
 
     public CompareStoredQueries() {
     }
 
     public CompareStoredQueries(DBEnvironment environment, String symbol1, String symbol2) {
+        this(environment, symbol1, symbol2, false);
+    }
+
+    public CompareStoredQueries(DBEnvironment environment, String symbol1, String symbol2, boolean hideMatchingRows) {
         this.symbol1 = symbol1;
         this.symbol2 = symbol2;
+        this.hideMatchingRows = hideMatchingRows;
     }
 
     private void initialiseDataTables() {
@@ -99,9 +105,8 @@ public class CompareStoredQueries extends fit.Fixture {
     }
 
     private Parse addRow(Parse lastRow, DataRow dr, DataRow dr2) {
+        boolean rowAllRight = true;
         Parse newRow = new Parse("tr", null, null, null);
-        lastRow.more = newRow;
-        lastRow = newRow;
         try {
             String lval = dr.getStringValue(columnNames[0]);
             String rval = dr2.getStringValue(columnNames[0]);
@@ -109,6 +114,7 @@ public class CompareStoredQueries extends fit.Fixture {
             newRow.parts = firstCell;
             if (!lval.equals(rval)) {
                 wrong(firstCell, rval);
+                rowAllRight = false;
             } else {
                 right(firstCell);
             }
@@ -121,6 +127,7 @@ public class CompareStoredQueries extends fit.Fixture {
                 firstCell = nextCell;
                 if (!lval.equals(rval)) {
                     wrong(firstCell, rval);
+                    rowAllRight = false;
                 } else {
                     right(firstCell);
                 }
@@ -128,13 +135,18 @@ public class CompareStoredQueries extends fit.Fixture {
         } catch (Exception e) {
             exception(newRow, e);
         }
+
+        if(!this.hideMatchingRows || !rowAllRight) {
+            lastRow.more = newRow;
+            lastRow = newRow;
+        }
+
         return lastRow;
     }
 
     private Parse addRow(Parse lastRow, DataRow dr, boolean markAsError, String desc) {
+        boolean rowAllRight = true;
         Parse newRow = new Parse("tr", null, null, null);
-        lastRow.more = newRow;
-        lastRow = newRow;
         try {
             Parse firstCell = new Parse("td",
                     dr.getStringValue(columnNames[0]), null, null);
@@ -142,6 +154,7 @@ public class CompareStoredQueries extends fit.Fixture {
             if (markAsError) {
                 firstCell.addToBody(Fixture.gray(desc));
                 wrong(firstCell);
+                rowAllRight = false;
             }
             for (int i = 1; i < columnNames.length; i++) {
                 Parse nextCell = new Parse("td",
@@ -152,6 +165,13 @@ public class CompareStoredQueries extends fit.Fixture {
         } catch (Exception e) {
             exception(newRow, e);
         }
+
+        if(!this.hideMatchingRows || !rowAllRight) {
+            lastRow.more = newRow;
+            lastRow = newRow;
+        }
+
         return lastRow;
     }
 }
+
