@@ -152,11 +152,11 @@ public class DatabaseTest extends Fixture {
     }
 
     public Fixture compareStoredQueries(String symbol1, String symbol2) {
-        return new dbfit.fixture.CompareStoredQueries(environment, symbol1, symbol2, false);
+        return new dbfit.fixture.CompareStoredQueries(environment, symbol1, symbol2);
     }
 
     public Fixture compareStoredQueriesHideMatchingRows(String symbol1, String symbol2) {
-        return new dbfit.fixture.CompareStoredQueries(environment, symbol1, symbol2, true);
+        return new dbfit.fixture.CompareStoredQueriesHideMatchingRows(environment, symbol1, symbol2);    	
     }
 
     public void setOption(String option, String value) {
