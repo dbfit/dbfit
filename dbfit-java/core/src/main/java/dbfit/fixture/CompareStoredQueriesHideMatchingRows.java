@@ -28,7 +28,7 @@ public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries  
                 } catch (NoMatchingRowFoundException nex) {
                     newRow = parseDataRowAsError(dr, " missing from " + queryName);
                 }
-                if(rememberWrongMatchings == counts.wrong) {
+                if(rememberWrongMatchings != counts.wrong) {
                     screenRow.more = newRow;
                     screenRow = newRow;        
                 }
