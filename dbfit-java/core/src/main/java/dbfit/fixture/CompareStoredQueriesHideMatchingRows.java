@@ -2,6 +2,7 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.util.*;
+import fit.Fixture;
 import fit.Parse;
 
 public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries  {
@@ -12,6 +13,13 @@ public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries  
 
     public CompareStoredQueriesHideMatchingRows(DBEnvironment environment, String symbol1, String symbol2) {
         super(environment, symbol1, symbol2);
+    }
+
+    public void doTable(Parse table) {
+        super.doTable(table);
+        if(counts.wrong == 0 && counts.exceptions == 0) {
+            table.parts.more = this.getSummary();
+        }
     }
 
     protected Parse processDataTable(final MatchableDataTable t1, final MatchableDataTable t2, final Parse lastScreenRow, final String queryName) {
@@ -38,5 +46,14 @@ public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries  
         DataTablesMatchProcessor processor = new DataTablesMatchProcessor();
         t1.processDataRows(processor);
         return processor.screenRow;
+    }
+
+    public Parse getSummary() {
+        Parse summary = new Parse("tr", null, null, null);
+        summary.addToTag(" class=\"pass\"");
+        Parse firstCell = new Parse("td", this.counts(), null, null);
+        firstCell.addToTag(" colspan=\"" + (columnNames.length + 1)+ "\"");
+        summary.parts = firstCell;
+        return summary;
     }
 }
