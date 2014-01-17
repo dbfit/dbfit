@@ -49,6 +49,7 @@ public class CompareStoredQueries extends fit.Fixture {
         for (DataRow dr : unproc) {
             Parse errorRow = parseDataRowAsError(dr, " missing from " + symbol1);
             lastRow.more = errorRow;
+            lastRow = errorRow;
         }
     }
 
