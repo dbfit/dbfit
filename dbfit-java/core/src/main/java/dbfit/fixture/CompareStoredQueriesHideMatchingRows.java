@@ -18,8 +18,7 @@ public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries  
     public void doTable(Parse table) {
         super.doTable(table);
         if(counts.wrong == 0 && counts.exceptions == 0) {
-            Parse lastRow = table.parts.more;
-            lastRow.more = this.getSummary();
+            table.parts.last().more = getSummary();
         }
     }
 
