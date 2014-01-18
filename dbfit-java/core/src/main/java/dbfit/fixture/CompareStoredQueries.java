@@ -94,7 +94,7 @@ public class CompareStoredQueries extends fit.Fixture {
                     newRow = parseDataRowAsError(dr, " missing from " + queryName);
                 }
                 screenRow.more = newRow;
-                screenRow = newRow;        
+                screenRow = newRow;
             }
         }
 

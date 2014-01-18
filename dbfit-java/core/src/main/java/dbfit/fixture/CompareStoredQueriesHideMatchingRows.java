@@ -5,7 +5,7 @@ import dbfit.util.*;
 import fit.Fixture;
 import fit.Parse;
 
-public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries  {
+public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries {
 
     public CompareStoredQueriesHideMatchingRows() {
         super();
@@ -17,7 +17,7 @@ public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries  
 
     public void doTable(Parse table) {
         super.doTable(table);
-        if(counts.wrong == 0 && counts.exceptions == 0) {
+        if (counts.wrong == 0 && counts.exceptions == 0) {
             table.parts.last().more = getSummary();
         }
     }
@@ -36,9 +36,9 @@ public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries  
                 } catch (NoMatchingRowFoundException nex) {
                     newRow = parseDataRowAsError(dr, " missing from " + queryName);
                 }
-                if(rememberWrongMatchings != counts.wrong) {
+                if (rememberWrongMatchings != counts.wrong) {
                     screenRow.more = newRow;
-                    screenRow = newRow;        
+                    screenRow = newRow;
                 }
             }
         }
@@ -52,7 +52,7 @@ public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries  
         Parse summary = new Parse("tr", null, null, null);
         summary.addToTag(" class=\"pass\"");
         Parse firstCell = new Parse("td", this.counts(), null, null);
-        firstCell.addToTag(" colspan=\"" + (columnNames.length + 1)+ "\"");
+        firstCell.addToTag(" colspan=\"" + (columnNames.length + 1) + "\"");
         summary.parts = firstCell;
         return summary;
     }
