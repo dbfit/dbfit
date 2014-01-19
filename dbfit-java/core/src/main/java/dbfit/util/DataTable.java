@@ -20,6 +20,11 @@ public class DataTable {
         }
     }
 
+    public DataTable(List<DataRow> rows, List<DataColumn> columns) {
+        this.rows = rows;
+        this.columns = columns;
+    }
+
     private void init(final ResultSet rs) throws SQLException {
         ResultSetMetaData rsmd = rs.getMetaData();
 
