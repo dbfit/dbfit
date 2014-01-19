@@ -1,6 +1,7 @@
 package dbfit.util;
 
-public interface MatcherListener<T1, T2> {
-    public void endRow(MatchResult<T1, T2> result);
+public interface MatcherListener {
+    public void endRow(MatchResult<MatchableDataRow, MatchableDataRow> result);
+    public void endCell(MatchResult<MatchableDataCell, MatchableDataCell> result);
 }
 

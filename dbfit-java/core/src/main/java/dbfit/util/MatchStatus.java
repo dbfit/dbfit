@@ -5,6 +5,7 @@ public enum MatchStatus {
     MISSING,
     SURPLUS,
     WRONG,
-    EXCEPTION
+    EXCEPTION,
+    UNVERIFIED
 }
 

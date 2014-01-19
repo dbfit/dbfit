@@ -21,6 +21,10 @@ public class RowStructure {
         return columnNames[index];
     }
 
+    public boolean isKeyColumn(int index) {
+        return keyProperties[index];
+    }
+
     public int size() {
         return columnNames.length;
     }
