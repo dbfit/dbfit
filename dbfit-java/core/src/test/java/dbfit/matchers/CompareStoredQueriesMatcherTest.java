@@ -11,6 +11,7 @@ import dbfit.util.RowStructure;
 import static dbfit.util.MatchStatus.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.LinkedList;
 import java.util.HashMap;
 import static java.util.Arrays.asList;
@@ -93,5 +94,24 @@ public class CompareStoredQueriesMatcherTest {
         assertEquals(4, rowMatches.size());
     }
 
+    private Map<String, Object> createMatchingMaskR2() {
+        MatchableDataTable mdt1 = createMdt(r1, r2);
+        CompareStoredQueriesMatcher matcher = createMatcher(mdt1);
+        return matcher.buildMatchingMask(r2);
+    }
+
+    @Test
+    public void testMatchingMaskR2() {
+        Map<String, Object> mask = createMatchingMaskR2();
+
+        assertEquals(1, mask.size());
+        assertEquals("2", mask.get("n"));
+    }
+
+    @Test
+    public void testDataRowStringValueR2() {
+        assertEquals("2", r2.getStringValue("n"));
+        assertEquals("4", r2.getStringValue("2n"));
+    }
 }
 
