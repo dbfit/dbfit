@@ -20,6 +20,13 @@ public class DataRow {
         }
     }
 
+    /**
+     * Plain non-normalising c-tor
+     */
+    public DataRow(Map<String, Object> rowValues) {
+        this.values = rowValues;
+    }
+
     private void addValue(final String name, final Object value) throws SQLException {
         values.put(normaliseName(name), normaliseValue(value));
     }
