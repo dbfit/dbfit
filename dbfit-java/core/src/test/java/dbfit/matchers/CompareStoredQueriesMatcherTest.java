@@ -4,6 +4,8 @@ import dbfit.util.DataTable;
 import dbfit.util.DataRow;
 import dbfit.util.DataColumn;
 import dbfit.util.MatchableDataTable;
+import dbfit.util.MatchableDataRow;
+import dbfit.util.MatchableDataCell;
 import dbfit.util.MatchResult;
 import dbfit.util.MatchStatus;
 import dbfit.util.MatcherListener;
@@ -19,6 +21,7 @@ import static java.util.Arrays.asList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 import org.mockito.runners.MockitoJUnitRunner;
@@ -75,23 +78,63 @@ public class CompareStoredQueriesMatcherTest {
     }
 
     @SuppressWarnings("unchecked")
+    private MatchResult runMatcher(ArgumentCaptor<MatchResult> captor,
+            MatchableDataTable mdt1, MatchableDataTable mdt2) {
+        CompareStoredQueriesMatcher matcher = createMatcher(mdt1);
+        return matcher.match(mdt2);
+    }
+
+    @SuppressWarnings("unchecked")
     @Test
     public void testMismatchWithRightWrongSurplusAndMissing() {
-        MatchableDataTable mdt1 = createMdt(r1, r2, r3);
-        MatchableDataTable mdt2 = createMdt(r1, b2, r4);
-        CompareStoredQueriesMatcher matcher = createMatcher(mdt1);
         ArgumentCaptor<MatchResult> captor = createRowCaptor();
 
-        MatchResult res = matcher.match(mdt2);
+        MatchResult res = runMatcher(captor,
+                createMdt(r1, r2, r3), createMdt(r1, b2, r4));
 
         assertFalse(res.isMatching());
         verify(listener, times(4)).endRow(captor.capture());
         List<MatchResult> rowMatches = captor.getAllValues();
+
         assertEquals(SUCCESS, rowMatches.get(0).getStatus());
         assertEquals(WRONG, rowMatches.get(1).getStatus());
         assertEquals(MISSING, rowMatches.get(2).getStatus());
         assertEquals(SURPLUS, rowMatches.get(3).getStatus());
-        assertEquals(4, rowMatches.size());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSingleWrongRow() {
+        ArgumentCaptor<MatchResult> captor = createRowCaptor();
+
+        MatchResult res = runMatcher(captor,
+                createMdt(r2), createMdt(b2));
+
+        verify(listener).endRow(captor.capture());
+        assertEquals(WRONG, captor.getValue().getStatus());
+        assertFalse(res.isMatching());
+    }
+
+    private void compareR2B2Cells(String column, boolean expected) {
+        CompareStoredQueriesMatcher matcher = createMatcher(createMdt(r2));
+        MatchableDataRow mdr1 = new MatchableDataRow(r2, "t1");
+        MatchableDataRow mdr2 = new MatchableDataRow(b2, "t2");
+
+        MatchableDataCell c1 = new MatchableDataCell(mdr1, column, "t1");
+        MatchableDataCell c2 = new MatchableDataCell(mdr2, column, "t2");
+
+        assertTrue(c1.getStringValue() + " vs " + c2.getStringValue(),
+                (expected == matcher.compare(c1, c2)));
+    }
+
+    @Test
+    public void testCompareOfDifferentCells() {
+        compareR2B2Cells("2n", false);
+    }
+
+    @Test
+    public void testCompareOfEqualCells() {
+        compareR2B2Cells("n", true);
     }
 
     private Map<String, Object> createMatchingMaskR2() {
@@ -113,5 +156,6 @@ public class CompareStoredQueriesMatcherTest {
         assertEquals("2", r2.getStringValue("n"));
         assertEquals("4", r2.getStringValue("2n"));
     }
+
 }
 
