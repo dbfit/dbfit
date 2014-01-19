@@ -115,6 +115,7 @@ public class CompareStoredQueriesMatcherTest {
         assertFalse(res.isMatching());
     }
 
+    @SuppressWarnings("unchecked")
     private void compareR2B2Cells(String column, boolean expected) {
         CompareStoredQueriesMatcher matcher = createMatcher(createMdt(r2));
         MatchableDataRow mdr1 = new MatchableDataRow(r2, "t1");
@@ -125,6 +126,30 @@ public class CompareStoredQueriesMatcherTest {
 
         assertTrue(c1.getStringValue() + " vs " + c2.getStringValue(),
                 (expected == matcher.compare(c1, c2)));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void matchR2B2Cells(String column, MatchStatus expected) {
+        ArgumentCaptor<MatchResult> captor = createRowCaptor();
+        CompareStoredQueriesMatcher matcher = createMatcher(createMdt(r2));
+        MatchableDataRow mdr1 = new MatchableDataRow(r2, "t1");
+        MatchableDataRow mdr2 = new MatchableDataRow(b2, "t2");
+        MatchResult rowResult = new MatchResult(mdr1, mdr2, UNVERIFIED);
+
+        matcher.matchCell(mdr1, mdr2, column, rowResult);
+
+        verify(listener).endCell(captor.capture());
+        assertEquals(expected, captor.getValue().getStatus());
+    }
+
+    @Test
+    public void testMatchOfDiferentCells() {
+        matchR2B2Cells("2n", WRONG);
+    }
+
+    @Test
+    public void testMatchOfEqualCells() {
+        matchR2B2Cells("n", SUCCESS);
     }
 
     @Test
