@@ -1,33 +1,29 @@
 package dbfit.environment;
 
-import fitnesse.junit.JUnitHelper;
-import org.junit.After;
-import org.junit.Before;
+import fitnesse.junit.FitNesseSuite;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import java.io.File;
-import java.io.PrintWriter;
+import static fitnesse.junit.FitNesseSuite.*;
 
-// Can't seem to convert this to use the FitNesseSuite runner
-// since setUp and tearDown didn't seem to work
 public class DerbyRegressionTest {
 
-    private JUnitHelper helper;
-
-    @Before
-    public void setUp() throws Exception {
-        helper = new JUnitHelper("../..", new File("../../tmp").getAbsolutePath());
-        helper.setPort(1234);
+    @RunWith(FitNesseSuite.class)
+    @Name("DbFit.AcceptanceTests.JavaTests.DerbyTests.FlowMode")
+    @FitnesseDir("../..")
+    @OutputDir("../../tmp")
+    @Port(1234)
+    public static class FlowModeTest {
+        @Test public void dummy(){}
     }
 
-    @Test
-    public void flowMode() throws Exception {
-        helper.assertSuitePasses("DbFit.AcceptanceTests.JavaTests.DerbyTests.FlowMode");
-    }
-
-    @Test
-    public void standaloneMode() throws Exception {
-        helper.assertSuitePasses("DbFit.AcceptanceTests.JavaTests.DerbyTests.StandaloneFixtures");
+    @RunWith(FitNesseSuite.class)
+    @Name("DbFit.AcceptanceTests.JavaTests.DerbyTests.StandaloneFixtures")
+    @FitnesseDir("../..")
+    @OutputDir("../../tmp")
+    @Port(1234)
+    public static class StandaloneFixturesTest {
+        @Test public void dummy(){}
     }
 
 }
