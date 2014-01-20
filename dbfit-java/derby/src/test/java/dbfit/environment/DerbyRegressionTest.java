@@ -1,7 +1,6 @@
 package dbfit.environment;
 
 import fitnesse.junit.JUnitHelper;
-import org.apache.derby.drda.NetworkServerControl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,15 +13,11 @@ import java.io.PrintWriter;
 public class DerbyRegressionTest {
 
     private JUnitHelper helper;
-    private NetworkServerControl serverControl;
 
     @Before
     public void setUp() throws Exception {
         helper = new JUnitHelper("../..", new File("../../tmp").getAbsolutePath());
         helper.setPort(1234);
-
-        serverControl = new NetworkServerControl();
-        serverControl.start(new PrintWriter(System.out, true));
     }
 
     @Test
@@ -35,8 +30,4 @@ public class DerbyRegressionTest {
         helper.assertSuitePasses("DbFit.AcceptanceTests.JavaTests.DerbyTests.StandaloneFixtures");
     }
 
-    @After
-    public void tearDown() throws Exception {
-        serverControl.shutdown();
-    }
 }
