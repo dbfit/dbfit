@@ -1,5 +1,5 @@
-!|dbfit.DerbyTest|
-!|Connect|localhost/dbfit;create=true|root|sa|
+!|dbfit.EmbeddedDerbyTest|
+!|Connect|memory:dbfit-db;create=true|root|sa|
 
 !|Query|VALUES 1|
 |1|
