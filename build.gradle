@@ -25,7 +25,9 @@ task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAl
     copy {
         from 'dbfit-java'
         include '**/*.jar'
-        exclude 'build/**/*.jar', 'teradata/**/*.jar', '**/ojdbc*.jar'
+        exclude 'build/**/*.jar'
+        exclude proprietaryLibs()
+        exclude experimentalItems()
         into 'dist/lib'
         eachFile {details ->
             details.path = flattenPath(details.path)
@@ -34,6 +36,21 @@ task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAl
     }
 }
 
+task copyExtraLibs(dependsOn: [copyLocal]) << {
+    copy {
+        from 'dbfit-java'
+        include proprietaryLibs()
+        into 'dist/lib'
+        eachFile {details ->
+            details.path = flattenPath(details.path)
+        }
+        includeEmptyDirs = false
+    }
+    copy {
+        from project(':dbfit-java:derby').configurations.derby
+        into 'dist/lib'
+    }
+}
 
 task wikiDocsDir << {
     mkdir('docs/Resources/')
@@ -104,7 +121,7 @@ task bundle(type: Zip, dependsOn: [copyLocal, wikiDocs, bundleFitsharp]) {
     destinationDir new File('zips')
 }
 
-task start(type: Exec, dependsOn: [copyLocal, wikiDocs, bundleFitsharp]) {
+task start(type: Exec, dependsOn: [copyLocal, copyExtraLibs, wikiDocs, bundleFitsharp]) {
     workingDir './dist'
     description = 'starts fitness with dbfit'
     executable onWindows() ? 'cmd.exe' : '/bin/sh'
@@ -115,5 +132,13 @@ task fastbuild(dependsOn: [':dbfit-java:core:check', ':dbfit-java:derby:check'])
 
 def onWindows() {
     System.properties['os.name'].toLowerCase().contains('windows')
+}
+
+def proprietaryLibs() {
+    ['**/ojdbc*.jar'] as Set
+}
+
+def experimentalItems() {
+    ['teradata/**/*.jar'] as Set
 }
 
