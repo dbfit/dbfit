@@ -82,10 +82,14 @@ project('db2') {
 
 project('derby') {
     description = 'DBFit derby engine'
+    configurations {
+        derby
+        testCompile.extendsFrom derby
+    }
     dependencies {
         compile project(':dbfit-java:core')
-        testCompile group: 'org.apache.derby', name: 'derby', version: '10.10.1.1'
-        testCompile group: 'org.apache.derby', name: 'derbyclient', version: '10.10.1.1'
+        derby group: 'org.apache.derby', name: 'derby', version: '10.10.1.1'
+        derby group: 'org.apache.derby', name: 'derbyclient', version: '10.10.1.1'
     }
 }
 
