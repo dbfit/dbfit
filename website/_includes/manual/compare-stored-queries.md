@@ -19,3 +19,10 @@
     |name                  |n?                |
 
     |execute|drop table testtbl|
+
+### Suppressing successfully matched rows
+
+When a large number of rows is being compared, match failures can be hard to see amongst the matched rows. It is possible to hide successfully matched rows by using `hide matching rows`.
+
+    !|Compare Stored Queries Hide Matching Rows|fromtable|fromdual|
+    |name                                      |n?                |

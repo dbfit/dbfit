@@ -18,7 +18,7 @@ public class DatabaseTest extends Fixture {
     // execution to it, but this one is now a fixture to allow things to be overridden
     public void interpretTables(Parse tables) {
         Options.reset();
-        SequenceFixture sf = new SequenceFixture ();
+        SequenceFixture sf = new SequenceFixture();
         sf.listener = listener;
         sf.counts = counts;
         sf.summary = summary;
@@ -153,6 +153,10 @@ public class DatabaseTest extends Fixture {
 
     public Fixture compareStoredQueries(String symbol1, String symbol2) {
         return new dbfit.fixture.CompareStoredQueries(environment, symbol1, symbol2);
+    }
+
+    public Fixture compareStoredQueriesHideMatchingRows(String symbol1, String symbol2) {
+        return new dbfit.fixture.CompareStoredQueriesHideMatchingRows(environment, symbol1, symbol2);    	
     }
 
     public void setOption(String option, String value) {
