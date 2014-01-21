@@ -84,7 +84,7 @@ project('derby') {
     description = 'DBFit derby engine'
     configurations {
         derby
-        testCompile.extendsFrom derby
+        testRuntime.extendsFrom derby
     }
     dependencies {
         compile project(':dbfit-java:core')
