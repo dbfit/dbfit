@@ -3,7 +3,7 @@ package dbfit.diff;
 import dbfit.util.MatchResult;
 import dbfit.util.MatchStatus;
 import dbfit.util.MatcherListener;
-import dbfit.util.RowStructure;
+import dbfit.util.DataCell;
 import static dbfit.util.MatchStatus.*;
 
 import org.junit.Test;
@@ -26,6 +26,7 @@ public class DataCellDiffTest {
     private ArgumentCaptor<MatchResult> captor =
         ArgumentCaptor.forClass(MatchResult.class);
 
+    @SuppressWarnings("unchecked")
     private void runDiff() {
         new DataCellDiff(c1, listener).diff(c2);
         verify(listener).endCell(captor.capture());
