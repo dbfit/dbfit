@@ -33,8 +33,8 @@ public class DataCellDiffTest {
 
     @Test
     public void diffOfDifferentCellsShouldEmitWrongEvent() {
-        when(c1.getStringValue()).thenReturn("1");
-        when(c2.getStringValue()).thenReturn("2");
+        when(c1.toString()).thenReturn("1");
+        when(c2.toString()).thenReturn("2");
 
         runDiff();
 
@@ -43,8 +43,8 @@ public class DataCellDiffTest {
 
     @Test
     public void diffOfEqualCellsShouldEmitSuccessEvent() {
-        when(c1.getStringValue()).thenReturn("3");
-        when(c2.getStringValue()).thenReturn("3");
+        when(c1.toString()).thenReturn("3");
+        when(c2.toString()).thenReturn("3");
 
         runDiff();
 
