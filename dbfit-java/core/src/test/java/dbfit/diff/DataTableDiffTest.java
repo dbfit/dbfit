@@ -1,4 +1,4 @@
-package dbfit.matchers;
+package dbfit.diffs;
 
 import dbfit.util.DataTable;
 import dbfit.util.DataRow;
@@ -30,7 +30,7 @@ import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CompareStoredQueriesMatcherTest {
+public class DataTableDiffTest {
 
     @Mock private DiffListener listener;
 
@@ -69,8 +69,8 @@ public class CompareStoredQueriesMatcherTest {
                 new DataTable(asList(rows), createColumns()));
     }
 
-    private CompareStoredQueriesMatcher createMatcher(MatchableDataTable t1) {
-        return new CompareStoredQueriesMatcher(t1, rowStructure, listener);
+    private DataTableDiff createDiff(MatchableDataTable t1) {
+        return new DataTableDiff(t1, rowStructure, listener);
     }
 
     private ArgumentCaptor<MatchResult> createRowCaptor() {
@@ -78,10 +78,10 @@ public class CompareStoredQueriesMatcherTest {
     }
 
     @SuppressWarnings("unchecked")
-    private MatchResult runMatcher(ArgumentCaptor<MatchResult> captor,
+    private MatchResult runDiff(ArgumentCaptor<MatchResult> captor,
             MatchableDataTable mdt1, MatchableDataTable mdt2) {
-        CompareStoredQueriesMatcher matcher = createMatcher(mdt1);
-        return matcher.match(mdt2);
+        DataTableDiff diff = createDiff(mdt1);
+        return diff.match(mdt2);
     }
 
     @SuppressWarnings("unchecked")
@@ -89,7 +89,7 @@ public class CompareStoredQueriesMatcherTest {
     public void testMismatchWithRightWrongSurplusAndMissing() {
         ArgumentCaptor<MatchResult> captor = createRowCaptor();
 
-        MatchResult res = runMatcher(captor,
+        MatchResult res = runDiff(captor,
                 createMdt(r1, r2, r3), createMdt(r1, b2, r4));
 
         assertFalse(res.isMatching());
@@ -107,7 +107,7 @@ public class CompareStoredQueriesMatcherTest {
     public void testSingleWrongRow() {
         ArgumentCaptor<MatchResult> captor = createRowCaptor();
 
-        MatchResult res = runMatcher(captor,
+        MatchResult res = runDiff(captor,
                 createMdt(r2), createMdt(b2));
 
         verify(listener).endRow(captor.capture());
@@ -117,7 +117,7 @@ public class CompareStoredQueriesMatcherTest {
 
     @SuppressWarnings("unchecked")
     private void compareR2B2Cells(String column, boolean expected) {
-        CompareStoredQueriesMatcher matcher = createMatcher(createMdt(r2));
+        DataTableDiff diff = createDiff(createMdt(r2));
         MatchableDataRow mdr1 = new MatchableDataRow(r2, "t1");
         MatchableDataRow mdr2 = new MatchableDataRow(b2, "t2");
 
@@ -125,18 +125,18 @@ public class CompareStoredQueriesMatcherTest {
         MatchableDataCell c2 = new MatchableDataCell(mdr2, column, "t2");
 
         assertTrue(c1.getStringValue() + " vs " + c2.getStringValue(),
-                (expected == matcher.compare(c1, c2)));
+                (expected == diff.compare(c1, c2)));
     }
 
     @SuppressWarnings("unchecked")
     private void matchR2B2Cells(String column, MatchStatus expected) {
         ArgumentCaptor<MatchResult> captor = createRowCaptor();
-        CompareStoredQueriesMatcher matcher = createMatcher(createMdt(r2));
+        DataTableDiff diff = createDiff(createMdt(r2));
         MatchableDataRow mdr1 = new MatchableDataRow(r2, "t1");
         MatchableDataRow mdr2 = new MatchableDataRow(b2, "t2");
         MatchResult rowResult = new MatchResult(mdr1, mdr2, UNVERIFIED);
 
-        matcher.matchCell(mdr1, mdr2, column, rowResult);
+        diff.matchCell(mdr1, mdr2, column, rowResult);
 
         verify(listener).endCell(captor.capture());
         assertEquals(expected, captor.getValue().getStatus());
@@ -164,8 +164,8 @@ public class CompareStoredQueriesMatcherTest {
 
     private Map<String, Object> createMatchingMaskR2() {
         MatchableDataTable mdt1 = createMdt(r1, r2);
-        CompareStoredQueriesMatcher matcher = createMatcher(mdt1);
-        return matcher.buildMatchingMask(r2);
+        DataTableDiff diff = createDiff(mdt1);
+        return diff.buildMatchingMask(r2);
     }
 
     @Test

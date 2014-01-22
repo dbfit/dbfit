@@ -1,4 +1,4 @@
-package dbfit.matchers;
+package dbfit.diff;
 
 import dbfit.util.MatchableDataTable;
 import dbfit.util.MatchableDataRow;
@@ -15,7 +15,7 @@ import static dbfit.util.MatchStatus.*;
 import java.util.Map;
 import java.util.HashMap;
 
-public class CompareStoredQueriesMatcher {
+public class DataTableDiff {
 
     private MatchableDataTable table1;
     private DiffListener listener;
@@ -48,7 +48,7 @@ public class CompareStoredQueriesMatcher {
         }
     }
 
-    public CompareStoredQueriesMatcher(MatchableDataTable table1,
+    public DataTableDiff(MatchableDataTable table1,
             RowStructure rowStructure, DiffListener listener) {
         this.table1 = table1;
         this.rowStructure = rowStructure;
