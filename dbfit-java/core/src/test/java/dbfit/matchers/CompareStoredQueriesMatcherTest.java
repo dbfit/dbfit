@@ -8,7 +8,7 @@ import dbfit.util.MatchableDataRow;
 import dbfit.util.MatchableDataCell;
 import dbfit.util.MatchResult;
 import dbfit.util.MatchStatus;
-import dbfit.util.MatcherListener;
+import dbfit.util.DiffListener;
 import dbfit.util.RowStructure;
 import static dbfit.util.MatchStatus.*;
 
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class CompareStoredQueriesMatcherTest {
 
-    @Mock private MatcherListener listener;
+    @Mock private DiffListener listener;
 
     private dbfit.util.RowStructure rowStructure = new RowStructure(
             new String[] { "n", "2n" }, /* names */

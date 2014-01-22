@@ -2,7 +2,7 @@ package dbfit.diff;
 
 import dbfit.util.MatchResult;
 import dbfit.util.MatchStatus;
-import dbfit.util.MatcherListener;
+import dbfit.util.DiffListener;
 import dbfit.util.DataCell;
 import static dbfit.util.MatchStatus.*;
 
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 
 public class DataCellDiffTest {
 
-    @Mock private MatcherListener listener;
+    @Mock private DiffListener listener;
     @Mock private DataCell c1;
     @Mock private DataCell c2;
 

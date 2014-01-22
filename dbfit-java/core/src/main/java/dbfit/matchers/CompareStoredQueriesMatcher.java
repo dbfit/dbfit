@@ -3,7 +3,7 @@ package dbfit.matchers;
 import dbfit.util.MatchableDataTable;
 import dbfit.util.MatchableDataRow;
 import dbfit.util.MatchableDataCell;
-import dbfit.util.MatcherListener;
+import dbfit.util.DiffListener;
 import dbfit.util.MatchResult;
 import dbfit.util.MatchStatus;
 import dbfit.util.RowStructure;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 public class CompareStoredQueriesMatcher {
 
     private MatchableDataTable table1;
-    private MatcherListener listener;
+    private DiffListener listener;
     private RowStructure rowStructure;
 
     class DataTablesMatchProcessor implements DataRowProcessor {
@@ -49,13 +49,13 @@ public class CompareStoredQueriesMatcher {
     }
 
     public CompareStoredQueriesMatcher(MatchableDataTable table1,
-            RowStructure rowStructure, MatcherListener listener) {
+            RowStructure rowStructure, DiffListener listener) {
         this.table1 = table1;
         this.rowStructure = rowStructure;
         this.listener = listener;
     }
 
-    public void setListener(MatcherListener listener) {
+    public void setListener(DiffListener listener) {
         this.listener = listener;
     }
 
