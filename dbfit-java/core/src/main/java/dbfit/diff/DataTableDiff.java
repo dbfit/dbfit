@@ -1,7 +1,6 @@
 package dbfit.diff;
 
 import dbfit.util.MatchableDataTable;
-import dbfit.util.MatchableDataRow;
 import dbfit.util.DiffListener;
 import dbfit.util.MatchResult;
 import dbfit.util.MatchStatus;
@@ -22,6 +21,13 @@ public class DataTableDiff {
     private DiffListener listener;
     private RowStructure rowStructure;
 
+    public DataTableDiff(MatchableDataTable table1,
+            RowStructure rowStructure, DiffListener listener) {
+        this.table1 = table1;
+        this.rowStructure = rowStructure;
+        this.listener = listener;
+    }
+
     class DataTablesMatchProcessor implements DataRowProcessor {
         private MatchableDataTable table2;
         public MatchResult<MatchableDataTable, MatchableDataTable> result;
@@ -32,28 +38,42 @@ public class DataTableDiff {
             this.result = result;
         }
 
+        private DiffListener createRowListener() {
+            return new DiffListener() {
+                @Override
+                public void endRow(MatchResult<DataRow, DataRow> rowResult) {
+                    switch (rowResult.getStatus()) {
+                    case WRONG:
+                    case SURPLUS:
+                    case MISSING:
+                    case EXCEPTION:
+                        result.setStatus(rowResult.getStatus());
+                        break;
+                    }
+                }
+
+                @Override
+                public void endCell(MatchResult<DataCell, DataCell> cellResult) {
+                    // ignore
+                }
+            };
+        }
+
         @Override
         public void process(DataRow row1) {
-            MatchResult<MatchableDataRow, MatchableDataRow> rowResult;
+            MatchResult<DataRow, DataRow> rowResult;
+            DataRowDiff rowDiff = createDataRowDiff();
+            rowDiff.addListener(createRowListener());
+
             try {
                 DataRow row2 = table2.findMatching(buildMatchingMask(row1));
+                rowDiff.diff(row1, row2);
                 table2.markProcessed(row2);
-                rowResult = addRow(row1, row2, table2);
             } catch (NoMatchingRowFoundException nex) {
-                rowResult = addRow(row1, null, table2);
-            }
-
-            if (!rowResult.isMatching()) {
-                result.setStatus(MatchStatus.WRONG);
+                rowDiff.diff(row1, null);
+                result.setStatus(WRONG);
             }
         }
-    }
-
-    public DataTableDiff(MatchableDataTable table1,
-            RowStructure rowStructure, DiffListener listener) {
-        this.table1 = table1;
-        this.rowStructure = rowStructure;
-        this.listener = listener;
     }
 
     public void setListener(DiffListener listener) {
@@ -64,69 +84,22 @@ public class DataTableDiff {
             MatchableDataTable table2) {
         MatchResult<MatchableDataTable, MatchableDataTable> tableResult =
                 MatchResult.create(table1, table2, SUCCESS);
+
         DataRowProcessor processor = new DataTablesMatchProcessor(table2, tableResult);
         table1.processDataRows(processor);
 
         for (DataRow dr: table2.getUnprocessedRows()) {
-            addRow(null, dr, table2);
+            createDataRowDiff().diff(null, dr);
             tableResult.setStatus(WRONG);
         }
 
         return tableResult;
     }
 
-    private DiffListener createCellListener(
-            final MatchResult<MatchableDataRow, MatchableDataRow> rowResult) {
-        return new DiffListener() {
-            @Override
-            public void endRow(MatchResult<MatchableDataRow, MatchableDataRow> result) {
-                // ignore
-            }
-
-            @Override
-            public void endCell(MatchResult<DataCell, DataCell> result) {
-                switch (result.getStatus()) {
-                case WRONG:
-                case SURPLUS:
-                case MISSING:
-                case EXCEPTION:
-                    rowResult.setStatus(result.getStatus());
-                    break;
-                }
-            }
-        };
-    }
-
-    private DataCellDiff createDataCellDiff(
-            final MatchResult<MatchableDataRow, MatchableDataRow> rowResult) {
-        DataCellDiff diff = new DataCellDiff();
+    private DataRowDiff createDataRowDiff() {
+        DataRowDiff diff = new DataRowDiff(rowStructure.getColumnNames());
         diff.addListener(listener);
-        diff.addListener(createCellListener(rowResult));
         return diff;
-    }
-
-    private MatchResult<MatchableDataRow, MatchableDataRow> addRow(
-            DataRow dr1, DataRow dr2, MatchableDataTable table2) {
-
-        MatchableDataRow mdr1 = buildMatchableDataRow(dr1, table1.getName());
-        MatchableDataRow mdr2 = buildMatchableDataRow(dr2, table2.getName());
-
-        MatchResult<MatchableDataRow, MatchableDataRow> rowResult =
-                MatchResult.create(mdr1, mdr2, MatchStatus.SUCCESS);
-
-        try {
-            for (String column: rowStructure.getColumnNames()) {
-                createDataCellDiff(rowResult).diff(
-                            createDataCell(dr1, column),
-                            createDataCell(dr2, column));
-            }
-        } catch (Exception e) {
-            rowResult.setException(e);
-        } finally {
-            listener.endRow(rowResult);
-        }
-
-        return rowResult;
     }
 
     public Map<String, Object> buildMatchingMask(final DataRow dr) {
@@ -143,10 +116,6 @@ public class DataTableDiff {
             String columnName = rowStructure.getColumnName(index);
             mask.put(columnName, dr.get(columnName));
         }
-    }
-
-    private MatchableDataRow buildMatchableDataRow(DataRow dr, String name) {
-        return (dr == null) ? null : new MatchableDataRow(dr, name);
     }
 
 }
