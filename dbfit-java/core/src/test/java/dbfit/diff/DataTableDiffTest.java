@@ -41,37 +41,7 @@ public class DataTableDiffTest {
     DataRow r3 = createRow(3, 6);
     DataRow r4 = createRow(4, 8);
     DataRow r5 = createRow(5, 10);
-
     DataRow b2 = createRow(2, 44);
-
-    private DataRow createRow(int... items) {
-        HashMap<String, Object> rowValues = new HashMap<String, Object>();
-        int i = 0;
-        for (Integer item: items) {
-            rowValues.put(rowStructure.getColumnName(i++), item.toString());
-        }
-        return new DataRow(rowValues);
-    }
-
-    private List<DataColumn> createColumns() {
-        List<DataColumn> columns = new LinkedList<DataColumn>();
-        for (String s: rowStructure.getColumnNames()) {
-            columns.add(new DataColumn(s, s.getClass().getName(), ""));
-        }
-        return columns;
-    }
-
-    private DataTable createDt(DataRow... rows) {
-        return new DataTable(asList(rows), createColumns());
-    }
-
-    private DataTableDiff createDiff(DataTable t1) {
-        return new DataTableDiff(t1, rowStructure, listener);
-    }
-
-    private ArgumentCaptor<MatchResult> createRowCaptor() {
-        return ArgumentCaptor.forClass(MatchResult.class);
-    }
 
     @SuppressWarnings("unchecked")
     private MatchResult runDiff(ArgumentCaptor<MatchResult> captor,
@@ -80,8 +50,8 @@ public class DataTableDiffTest {
         return diff.match(dt2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
+    @SuppressWarnings("unchecked")
     public void testMismatchWithRightWrongSurplusAndMissing() {
         ArgumentCaptor<MatchResult> captor = createRowCaptor();
 
@@ -98,8 +68,8 @@ public class DataTableDiffTest {
         assertEquals(SURPLUS, rowMatches.get(3).getStatus());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
+    @SuppressWarnings("unchecked")
     public void testSingleWrongRow() {
         ArgumentCaptor<MatchResult> captor = createRowCaptor();
 
@@ -131,5 +101,33 @@ public class DataTableDiffTest {
         assertEquals("4", r2.getStringValue("2n"));
     }
 
+    private DataRow createRow(int... items) {
+        HashMap<String, Object> rowValues = new HashMap<String, Object>();
+        int i = 0;
+        for (Integer item: items) {
+            rowValues.put(rowStructure.getColumnName(i++), item.toString());
+        }
+        return new DataRow(rowValues);
+    }
+
+    private List<DataColumn> createColumns() {
+        List<DataColumn> columns = new LinkedList<DataColumn>();
+        for (String s: rowStructure.getColumnNames()) {
+            columns.add(new DataColumn(s, s.getClass().getName(), ""));
+        }
+        return columns;
+    }
+
+    private DataTable createDt(DataRow... rows) {
+        return new DataTable(asList(rows), createColumns());
+    }
+
+    private DataTableDiff createDiff(DataTable t1) {
+        return new DataTableDiff(t1, rowStructure, listener);
+    }
+
+    private ArgumentCaptor<MatchResult> createRowCaptor() {
+        return ArgumentCaptor.forClass(MatchResult.class);
+    }
 }
 
