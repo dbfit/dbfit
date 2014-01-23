@@ -4,7 +4,6 @@ import dbfit.util.DataTable;
 import dbfit.util.DataRow;
 import dbfit.util.DataColumn;
 import dbfit.util.MatchableDataTable;
-import dbfit.util.MatchableDataRow;
 import dbfit.util.MatchResult;
 import dbfit.util.MatchStatus;
 import dbfit.util.DiffListener;
