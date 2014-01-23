@@ -3,7 +3,6 @@ package dbfit.diff;
 import dbfit.util.DataTable;
 import dbfit.util.DataRow;
 import dbfit.util.DataColumn;
-import dbfit.util.MatchableDataTable;
 import dbfit.util.MatchResult;
 import dbfit.util.MatchStatus;
 import dbfit.util.DiffListener;
@@ -62,12 +61,11 @@ public class DataTableDiffTest {
         return columns;
     }
 
-    private MatchableDataTable createMdt(DataRow... rows) {
-        return new MatchableDataTable(
-                new DataTable(asList(rows), createColumns()));
+    private DataTable createDt(DataRow... rows) {
+        return new DataTable(asList(rows), createColumns());
     }
 
-    private DataTableDiff createDiff(MatchableDataTable t1) {
+    private DataTableDiff createDiff(DataTable t1) {
         return new DataTableDiff(t1, rowStructure, listener);
     }
 
@@ -77,9 +75,9 @@ public class DataTableDiffTest {
 
     @SuppressWarnings("unchecked")
     private MatchResult runDiff(ArgumentCaptor<MatchResult> captor,
-            MatchableDataTable mdt1, MatchableDataTable mdt2) {
-        DataTableDiff diff = createDiff(mdt1);
-        return diff.match(mdt2);
+            DataTable dt1, DataTable dt2) {
+        DataTableDiff diff = createDiff(dt1);
+        return diff.match(dt2);
     }
 
     @SuppressWarnings("unchecked")
@@ -88,7 +86,7 @@ public class DataTableDiffTest {
         ArgumentCaptor<MatchResult> captor = createRowCaptor();
 
         MatchResult res = runDiff(captor,
-                createMdt(r1, r2, r3), createMdt(r1, b2, r4));
+                createDt(r1, r2, r3), createDt(r1, b2, r4));
 
         assertFalse(res.isMatching());
         verify(listener, times(4)).endRow(captor.capture());
@@ -106,7 +104,7 @@ public class DataTableDiffTest {
         ArgumentCaptor<MatchResult> captor = createRowCaptor();
 
         MatchResult res = runDiff(captor,
-                createMdt(r2), createMdt(b2));
+                createDt(r2), createDt(b2));
 
         verify(listener).endRow(captor.capture());
         assertEquals(WRONG, captor.getValue().getStatus());
@@ -114,8 +112,8 @@ public class DataTableDiffTest {
     }
 
     private Map<String, Object> createMatchingMaskR2() {
-        MatchableDataTable mdt1 = createMdt(r1, r2);
-        DataTableDiff diff = createDiff(mdt1);
+        DataTable dt1 = createDt(r1, r2);
+        DataTableDiff diff = createDiff(dt1);
         return diff.buildMatchingMask(r2);
     }
 

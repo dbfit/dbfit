@@ -1,6 +1,7 @@
 package dbfit.diff;
 
 import dbfit.util.MatchableDataTable;
+import dbfit.util.DataTable;
 import dbfit.util.DiffListener;
 import dbfit.util.MatchResult;
 import dbfit.util.MatchStatus;
@@ -12,16 +13,17 @@ import dbfit.util.NoMatchingRowFoundException;
 import static dbfit.util.MatchStatus.*;
 import static dbfit.util.DataCell.createDataCell;
 
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
 public class DataTableDiff {
 
-    private MatchableDataTable table1;
+    private DataTable table1;
     private DiffListener listener;
     private RowStructure rowStructure;
 
-    public DataTableDiff(MatchableDataTable table1,
+    public DataTableDiff(DataTable table1,
             RowStructure rowStructure, DiffListener listener) {
         this.table1 = table1;
         this.rowStructure = rowStructure;
@@ -29,12 +31,12 @@ public class DataTableDiff {
     }
 
     class DataTablesMatchProcessor implements DataRowProcessor {
-        private MatchableDataTable table2;
-        public MatchResult<MatchableDataTable, MatchableDataTable> result;
+        MatchableDataTable mdt2;
+        public MatchResult<DataTable, DataTable> result;
 
-        public DataTablesMatchProcessor(MatchableDataTable table2,
-                MatchResult<MatchableDataTable, MatchableDataTable> result) {
-            this.table2 = table2;
+        public DataTablesMatchProcessor(DataTable table2,
+                MatchResult<DataTable, DataTable> result) {
+            this.mdt2 = new MatchableDataTable(table2);
             this.result = result;
         }
 
@@ -66,13 +68,17 @@ public class DataTableDiff {
             rowDiff.addListener(createRowListener());
 
             try {
-                DataRow row2 = table2.findMatching(buildMatchingMask(row1));
+                DataRow row2 = mdt2.findMatching(buildMatchingMask(row1));
                 rowDiff.diff(row1, row2);
-                table2.markProcessed(row2);
+                mdt2.markProcessed(row2);
             } catch (NoMatchingRowFoundException nex) {
                 rowDiff.diff(row1, null);
                 result.setStatus(WRONG);
             }
+        }
+
+        public List<DataRow> getUnprocessedRows() {
+            return mdt2.getUnprocessedRows();
         }
     }
 
@@ -80,15 +86,16 @@ public class DataTableDiff {
         this.listener = listener;
     }
 
-    public MatchResult<MatchableDataTable, MatchableDataTable> match(
-            MatchableDataTable table2) {
-        MatchResult<MatchableDataTable, MatchableDataTable> tableResult =
+    public MatchResult<DataTable, DataTable> match(DataTable table2) {
+        MatchResult<DataTable, DataTable> tableResult =
                 MatchResult.create(table1, table2, SUCCESS);
 
-        DataRowProcessor processor = new DataTablesMatchProcessor(table2, tableResult);
-        table1.processDataRows(processor);
+        DataTablesMatchProcessor processor = new DataTablesMatchProcessor(
+                table2, tableResult);
 
-        for (DataRow dr: table2.getUnprocessedRows()) {
+        new MatchableDataTable(table1).processDataRows(processor);
+
+        for (DataRow dr: processor.getUnprocessedRows()) {
             createDataRowDiff().diff(null, dr);
             tableResult.setStatus(WRONG);
         }
