@@ -63,7 +63,7 @@ project('core') {
     description = 'DBFit core api and fixtures'
 
     dependencies {
-        compile "org.fitnesse:fitnesse:20130530"
+        compile "dummy:fitnesse-standalone:20140122@jar"
         compile "dummy:fitlibrary:20081102@jar"
         compile "org.reflections:reflections:0.9.9-RC1"
         compile "commons-codec:commons-codec:1.7"
