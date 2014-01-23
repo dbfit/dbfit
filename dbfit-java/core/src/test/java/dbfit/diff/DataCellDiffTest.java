@@ -28,14 +28,17 @@ public class DataCellDiffTest {
 
     @SuppressWarnings("unchecked")
     private void runDiff() {
-        new DataCellDiff(c1, listener).diff(c2);
+        DataCellDiff diff = new DataCellDiff();
+        diff.addListener(listener);
+
+        diff.diff(c1, c2);
+
         verify(listener).endCell(captor.capture());
     }
 
     @Test
     public void diffOfDifferentCellsShouldEmitWrongEvent() {
-        when(c1.toString()).thenReturn("1");
-        when(c2.toString()).thenReturn("2");
+        when(c1.equalTo(c2)).thenReturn(false);
 
         runDiff();
 
@@ -44,13 +47,29 @@ public class DataCellDiffTest {
 
     @Test
     public void diffOfEqualCellsShouldEmitSuccessEvent() {
-        when(c1.toString()).thenReturn("3");
-        when(c2.toString()).thenReturn("3");
+        when(c1.equalTo(c2)).thenReturn(true);
 
         runDiff();
 
         assertEquals(SUCCESS, captor.getValue().getStatus());
     }
 
-}
+    @Test
+    public void diffWithNullSecondShouldEmitMissingEvent() {
+        c2 = null;
 
+        runDiff();
+
+        assertEquals(MISSING, captor.getValue().getStatus());
+    }
+
+    @Test
+    public void diffWithNullFirstShouldEmitSurplusEvent() {
+        c1 = null;
+
+        runDiff();
+
+        assertEquals(SURPLUS, captor.getValue().getStatus());
+    }
+
+}
