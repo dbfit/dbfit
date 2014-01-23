@@ -1,30 +1,29 @@
 package dbfit.environment;
 
-import fitnesse.junit.JUnitHelper;
-import org.junit.Before;
+import fitnesse.junit.FitNesseSuite;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import java.io.File;
+import static fitnesse.junit.FitNesseSuite.*;
 
 @Ignore
 public class SqlServerRegressionTest {
-
-    private JUnitHelper helper;
-
-    @Before
-    public void setUp() {
-        helper = new JUnitHelper("../..", new File("../../tmp").getAbsolutePath());
-        helper.setPort(1234);
+    @RunWith(FitNesseSuite.class)
+    @Name("AcceptanceTests.JavaTests.SqlServerTests.FlowMode")
+    @FitnesseDir("../..")
+    @OutputDir("../../tmp")
+    @Port(1234)
+    public static class FlowModeTest {
+        @Test public void dummy(){}
     }
 
-    @Test
-    public void flowMode() throws Exception {
-        helper.assertSuitePasses("AcceptanceTests.JavaTests.SqlServerTests.FlowMode");
-    }
-
-    @Test
-    public void standaloneMode() throws Exception {
-        helper.assertSuitePasses("AcceptanceTests.JavaTests.SqlServerTests.StandaloneFixtures");
+    @RunWith(FitNesseSuite.class)
+    @Name("AcceptanceTests.JavaTests.SqlServerTests.StandaloneFixtures")
+    @FitnesseDir("../..")
+    @OutputDir("../../tmp")
+    @Port(1234)
+    public static class StandaloneFixturesTest {
+        @Test public void dummy(){}
     }
 }
