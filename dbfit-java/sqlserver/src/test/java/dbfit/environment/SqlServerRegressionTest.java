@@ -7,22 +7,23 @@ import org.junit.runner.RunWith;
 
 import static fitnesse.junit.FitNesseSuite.*;
 
-@Ignore
 public class SqlServerRegressionTest {
     @RunWith(FitNesseSuite.class)
-    @Name("AcceptanceTests.JavaTests.SqlServerTests.FlowMode")
+    @Name("DbFit.AcceptanceTests.JavaTests.SqlServerTests.FlowMode")
     @FitnesseDir("../..")
     @OutputDir("../../tmp")
     @Port(1234)
+    @Ignore
     public static class FlowModeTest {
         @Test public void dummy(){}
     }
 
     @RunWith(FitNesseSuite.class)
-    @Name("AcceptanceTests.JavaTests.SqlServerTests.StandaloneFixtures")
+    @Name("DbFit.AcceptanceTests.JavaTests.SqlServerTests.StandaloneFixtures")
     @FitnesseDir("../..")
     @OutputDir("../../tmp")
     @Port(1234)
+    @Ignore
     public static class StandaloneFixturesTest {
         @Test public void dummy(){}
     }
