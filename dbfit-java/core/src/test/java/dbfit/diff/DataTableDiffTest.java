@@ -1,11 +1,10 @@
-package dbfit.diffs;
+package dbfit.diff;
 
 import dbfit.util.DataTable;
 import dbfit.util.DataRow;
 import dbfit.util.DataColumn;
 import dbfit.util.MatchableDataTable;
 import dbfit.util.MatchableDataRow;
-import dbfit.util.MatchableDataCell;
 import dbfit.util.MatchResult;
 import dbfit.util.MatchStatus;
 import dbfit.util.DiffListener;
@@ -113,53 +112,6 @@ public class DataTableDiffTest {
         verify(listener).endRow(captor.capture());
         assertEquals(WRONG, captor.getValue().getStatus());
         assertFalse(res.isMatching());
-    }
-
-    @SuppressWarnings("unchecked")
-    private void compareR2B2Cells(String column, boolean expected) {
-        DataTableDiff diff = createDiff(createMdt(r2));
-        MatchableDataRow mdr1 = new MatchableDataRow(r2, "t1");
-        MatchableDataRow mdr2 = new MatchableDataRow(b2, "t2");
-
-        MatchableDataCell c1 = new MatchableDataCell(mdr1, column, "t1");
-        MatchableDataCell c2 = new MatchableDataCell(mdr2, column, "t2");
-
-        assertTrue(c1.getStringValue() + " vs " + c2.getStringValue(),
-                (expected == diff.compare(c1, c2)));
-    }
-
-    @SuppressWarnings("unchecked")
-    private void matchR2B2Cells(String column, MatchStatus expected) {
-        ArgumentCaptor<MatchResult> captor = createRowCaptor();
-        DataTableDiff diff = createDiff(createMdt(r2));
-        MatchableDataRow mdr1 = new MatchableDataRow(r2, "t1");
-        MatchableDataRow mdr2 = new MatchableDataRow(b2, "t2");
-        MatchResult rowResult = new MatchResult(mdr1, mdr2, UNVERIFIED);
-
-        diff.matchCell(mdr1, mdr2, column, rowResult);
-
-        verify(listener).endCell(captor.capture());
-        assertEquals(expected, captor.getValue().getStatus());
-    }
-
-    @Test
-    public void testMatchOfDiferentCells() {
-        matchR2B2Cells("2n", WRONG);
-    }
-
-    @Test
-    public void testMatchOfEqualCells() {
-        matchR2B2Cells("n", SUCCESS);
-    }
-
-    @Test
-    public void testCompareOfDifferentCells() {
-        compareR2B2Cells("2n", false);
-    }
-
-    @Test
-    public void testCompareOfEqualCells() {
-        compareR2B2Cells("n", true);
     }
 
     private Map<String, Object> createMatchingMaskR2() {
