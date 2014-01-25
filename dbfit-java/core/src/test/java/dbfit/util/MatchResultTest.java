@@ -22,4 +22,12 @@ public class MatchResultTest {
         assertEquals(DataCell.class, res.getType());
     }
 
+    @Test
+    public void setExceptionIsChangingStatusToException() {
+        MatchResult res = MatchResult.create(dataCell, dataCell, SUCCESS, DataCell.class);
+        res.setException(new Exception());
+
+        assertEquals(EXCEPTION, res.getStatus());
+    }
+
 }
