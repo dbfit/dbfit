@@ -69,6 +69,16 @@ public class DataRowDiffTest {
 
     @Test
     @SuppressWarnings("unchecked")
+    public void testRowsWithWrongCellsAndFinalOneSuccess() {
+        runDiff(createRow(2, 4), createRow(3, 4));
+
+        assertThat(cellResults.get(0).getStatus(), is(WRONG));
+        assertThat(cellResults.get(1).getStatus(), is(SUCCESS));
+        assertThat(rowResults.get(0).getStatus(), is(WRONG));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
     public void shouldIgnoreColumnsNotInList() {
         runDiff(createRow(2, 4), createRow(2, 44), "n");
 
