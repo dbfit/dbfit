@@ -2,66 +2,43 @@ package dbfit.diff;
 
 import dbfit.util.MatchableDataTable;
 import dbfit.util.DataTable;
+import dbfit.util.DataRow;
 import dbfit.util.DiffListener;
-import dbfit.util.NoOpDiffListenerAdapter;
+import dbfit.util.DiffResultsSummarizer;
 import dbfit.util.MatchResult;
-import dbfit.util.MatchStatus;
 import dbfit.util.RowStructure;
 import dbfit.util.DataRowProcessor;
-import dbfit.util.DataRow;
-import dbfit.util.DataCell;
 import dbfit.util.NoMatchingRowFoundException;
-import static dbfit.util.MatchStatus.*;
-import static dbfit.util.DataCell.createDataCell;
 
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-public class DataTableDiff {
+public class DataTableDiff extends DiffBase {
 
     private DataTable table1;
-    private DiffListener listener;
     private RowStructure rowStructure;
 
     public DataTableDiff(DataTable table1,
             RowStructure rowStructure, DiffListener listener) {
         this.table1 = table1;
         this.rowStructure = rowStructure;
-        this.listener = listener;
+        addListener(listener);
     }
 
     class DataTablesMatchProcessor implements DataRowProcessor {
         MatchableDataTable mdt2;
-        public MatchResult<DataTable, DataTable> result;
+        public DiffResultsSummarizer summer;
 
-        public DataTablesMatchProcessor(DataTable table2,
-                MatchResult<DataTable, DataTable> result) {
+        public DataTablesMatchProcessor(final DataTable table2,
+                final DiffResultsSummarizer summer) {
             this.mdt2 = new MatchableDataTable(table2);
-            this.result = result;
-        }
-
-        private DiffListener createRowListener() {
-            return new NoOpDiffListenerAdapter() {
-                @Override
-                public void endRow(MatchResult<DataRow, DataRow> rowResult) {
-                    switch (rowResult.getStatus()) {
-                    case WRONG:
-                    case SURPLUS:
-                    case MISSING:
-                    case EXCEPTION:
-                        result.setStatus(rowResult.getStatus());
-                        break;
-                    }
-                }
-            };
+            this.summer = summer;
         }
 
         @Override
         public void process(DataRow row1) {
-            MatchResult<DataRow, DataRow> rowResult;
-            DataRowDiff rowDiff = createDataRowDiff();
-            rowDiff.addListener(createRowListener());
+            DataRowDiff rowDiff = createChildDiff(summer);
 
             try {
                 DataRow row2 = mdt2.findMatching(buildMatchingMask(row1));
@@ -69,7 +46,6 @@ public class DataTableDiff {
                 mdt2.markProcessed(row2);
             } catch (NoMatchingRowFoundException nex) {
                 rowDiff.diff(row1, null);
-                result.setStatus(WRONG);
             }
         }
 
@@ -78,31 +54,20 @@ public class DataTableDiff {
         }
     }
 
-    public void setListener(DiffListener listener) {
-        this.listener = listener;
-    }
-
+    @SuppressWarnings("unchecked")
     public MatchResult<DataTable, DataTable> match(DataTable table2) {
-        MatchResult<DataTable, DataTable> tableResult =
-                MatchResult.create(table1, table2, SUCCESS, DataTable.class);
+        DiffResultsSummarizer summer = createSummer(table1, table2);
 
         DataTablesMatchProcessor processor = new DataTablesMatchProcessor(
-                table2, tableResult);
+                table2, summer);
 
         new MatchableDataTable(table1).processDataRows(processor);
 
         for (DataRow dr: processor.getUnprocessedRows()) {
-            createDataRowDiff().diff(null, dr);
-            tableResult.setStatus(WRONG);
+            createChildDiff(summer).diff(null, dr);
         }
 
-        return tableResult;
-    }
-
-    private DataRowDiff createDataRowDiff() {
-        DataRowDiff diff = new DataRowDiff(rowStructure.getColumnNames());
-        diff.addListener(listener);
-        return diff;
+        return summer.getResult();
     }
 
     public Map<String, Object> buildMatchingMask(final DataRow dr) {
@@ -119,6 +84,20 @@ public class DataTableDiff {
             String columnName = rowStructure.getColumnName(index);
             mask.put(columnName, dr.get(columnName));
         }
+    }
+
+    private DiffResultsSummarizer createSummer(final DataTable table1,
+                                               final DataTable table2) {
+        return new DiffResultsSummarizer(
+                MatchResult.create(table1, table2, DataTable.class),
+                DataRow.class);
+    }
+
+    private DataRowDiff createChildDiff(final DiffResultsSummarizer summer) {
+        DataRowDiff diff = new DataRowDiff(rowStructure.getColumnNames());
+        diff.addListeners(listeners);
+        diff.addListener(summer);
+        return diff;
     }
 
 }
