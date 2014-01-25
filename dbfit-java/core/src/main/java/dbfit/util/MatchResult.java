@@ -44,6 +44,10 @@ public class MatchResult<T1, T2> {
         }
     }
 
+    public Exception getException() {
+        return exception;
+    }
+
     public boolean isMatching() {
         return status == MatchStatus.SUCCESS;
     }
