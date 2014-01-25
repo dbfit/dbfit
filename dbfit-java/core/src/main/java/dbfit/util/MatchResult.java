@@ -5,20 +5,23 @@ public class MatchResult<T1, T2> {
     protected T2 object2;
     protected MatchStatus status;
     protected Exception exception = null;
+    protected Class type;
 
-    public MatchResult(T1 object1, T2 object2, MatchStatus status) {
+    public MatchResult(T1 object1, T2 object2, MatchStatus status, Class type) {
         this.object1 = object1;
         this.object2 = object2;
         this.status = status;
-    }
-
-    public static <T1, T2> MatchResult<T1, T2> create(T1 object1, T2 object2) {
-        return create(object1, object2, MatchStatus.UNVERIFIED);
+        this.type = type;
     }
 
     public static <T1, T2> MatchResult<T1, T2> create(T1 object1, T2 object2,
-            MatchStatus status) {
-        return new MatchResult<T1, T2>(object1, object2, status);
+            Class type) {
+        return create(object1, object2, MatchStatus.UNVERIFIED, type);
+    }
+
+    public static <T1, T2> MatchResult<T1, T2> create(T1 object1, T2 object2,
+            MatchStatus status, Class type) {
+        return new MatchResult<T1, T2>(object1, object2, status, type);
     }
 
     public MatchStatus getStatus() {
@@ -48,9 +51,16 @@ public class MatchResult<T1, T2> {
         return exception;
     }
 
+    public Class getType() {
+        return type;
+    }
+
+    public void setType(final Class type) {
+        this.type = type;
+    }
+
     public boolean isMatching() {
         return status == MatchStatus.SUCCESS;
     }
-
 }
 
