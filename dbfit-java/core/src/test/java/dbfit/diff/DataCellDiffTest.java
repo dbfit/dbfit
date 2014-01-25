@@ -4,9 +4,12 @@ import dbfit.util.MatchResult;
 import dbfit.util.MatchStatus;
 import dbfit.util.DiffListener;
 import dbfit.util.DataCell;
+import dbfit.util.DiffListenerAdapter;
+import dbfit.util.DiffHandler;
 import static dbfit.util.MatchStatus.*;
 
 import org.junit.Test;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 
@@ -16,10 +19,9 @@ import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-
 public class DataCellDiffTest {
 
-    @Mock private DiffListener listener;
+    @Mock private DiffHandler handler;
     @Mock private DataCell c1;
     @Mock private DataCell c2;
 
@@ -29,11 +31,11 @@ public class DataCellDiffTest {
     @SuppressWarnings("unchecked")
     private void runDiff() {
         DataCellDiff diff = new DataCellDiff();
-        diff.addListener(listener);
+        diff.addListener(new DiffListenerAdapter(handler));
 
         diff.diff(c1, c2);
 
-        verify(listener).endCell(captor.capture());
+        verify(handler).endCell(captor.capture());
     }
 
     @Test

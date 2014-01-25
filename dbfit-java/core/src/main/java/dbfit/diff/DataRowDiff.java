@@ -3,6 +3,7 @@ package dbfit.diff;
 import dbfit.util.DataRow;
 import dbfit.util.DataCell;
 import dbfit.util.DiffListener;
+import dbfit.util.NoOpDiffListenerAdapter;
 import dbfit.util.MatchStatus;
 import dbfit.util.MatchResult;
 import static dbfit.util.MatchStatus.*;
@@ -11,25 +12,16 @@ import static dbfit.util.DataCell.createDataCell;
 import java.util.List;
 import java.util.ArrayList;
 
-public class DataRowDiff {
-    private List<DiffListener> listeners = new ArrayList<DiffListener>();
+public class DataRowDiff extends DiffBase {
     private String[] columnNames;
 
     public DataRowDiff(final String[] columnNames) {
         this.columnNames = columnNames;
     }
 
-    public void addListener(final DiffListener listener) {
-        listeners.add(listener);
-    }
-
-    public void removeListener(final DiffListener listener) {
-        listeners.remove(listener);
-    }
-
     public void diff(final DataRow dr1, final DataRow dr2) {
         MatchResult<DataRow, DataRow> rowResult =
-                MatchResult.create(dr1, dr2, MatchStatus.SUCCESS);
+                MatchResult.create(dr1, dr2, MatchStatus.SUCCESS, DataRow.class);
         try {
             for (String column: columnNames) {
                 createDataCellDiff(rowResult).diff(
@@ -55,11 +47,7 @@ public class DataRowDiff {
 
     private DiffListener createCellListener(
             final MatchResult<DataRow, DataRow> rowResult) {
-        return new DiffListener() {
-            @Override
-            public void endRow(MatchResult<DataRow, DataRow> result) {
-                // ignore
-            }
+        return new NoOpDiffListenerAdapter() {
 
             @Override
             public void endCell(MatchResult<DataCell, DataCell> result) {
@@ -73,12 +61,6 @@ public class DataRowDiff {
                 }
             }
         };
-    }
-
-    private void notifyListeners(final MatchResult<DataRow, DataRow> result) {
-        for (DiffListener listener: listeners) {
-            listener.endRow(result);
-        }
     }
 
 }

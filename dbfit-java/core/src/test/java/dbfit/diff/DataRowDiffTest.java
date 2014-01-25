@@ -3,6 +3,8 @@ package dbfit.diff;
 import dbfit.util.MatchResult;
 import dbfit.util.MatchStatus;
 import dbfit.util.DiffListener;
+import dbfit.util.DiffHandler;
+import dbfit.util.DiffListenerAdapter;
 import dbfit.util.DataCell;
 import dbfit.util.DataRow;
 import static dbfit.util.MatchStatus.*;
@@ -24,7 +26,7 @@ import static org.mockito.Mockito.*;
 
 public class DataRowDiffTest {
 
-    @Mock private DiffListener listener;
+    @Mock private DiffHandler handler;
 
     private ArgumentCaptor<MatchResult> rowResultCaptor =
         ArgumentCaptor.forClass(MatchResult.class);
@@ -44,12 +46,12 @@ public class DataRowDiffTest {
     @SuppressWarnings("unchecked")
     private void runDiff(DataRow row1, DataRow row2, String... colNames) {
         DataRowDiff diff = new DataRowDiff(colNames);
-        diff.addListener(listener);
+        diff.addListener(new DiffListenerAdapter(handler));
 
         diff.diff(row1, row2);
 
-        verify(listener, times(colNames.length)).endCell(cellResultCaptor.capture());
-        verify(listener).endRow(rowResultCaptor.capture());
+        verify(handler, times(colNames.length)).endCell(cellResultCaptor.capture());
+        verify(handler).endRow(rowResultCaptor.capture());
 
         cellResults = cellResultCaptor.getAllValues();
         rowResults = rowResultCaptor.getAllValues();

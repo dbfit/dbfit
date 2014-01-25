@@ -3,6 +3,7 @@ package dbfit.diff;
 import dbfit.util.MatchableDataTable;
 import dbfit.util.DataTable;
 import dbfit.util.DiffListener;
+import dbfit.util.NoOpDiffListenerAdapter;
 import dbfit.util.MatchResult;
 import dbfit.util.MatchStatus;
 import dbfit.util.RowStructure;
@@ -41,7 +42,7 @@ public class DataTableDiff {
         }
 
         private DiffListener createRowListener() {
-            return new DiffListener() {
+            return new NoOpDiffListenerAdapter() {
                 @Override
                 public void endRow(MatchResult<DataRow, DataRow> rowResult) {
                     switch (rowResult.getStatus()) {
@@ -52,11 +53,6 @@ public class DataTableDiff {
                         result.setStatus(rowResult.getStatus());
                         break;
                     }
-                }
-
-                @Override
-                public void endCell(MatchResult<DataCell, DataCell> cellResult) {
-                    // ignore
                 }
             };
         }
@@ -88,7 +84,7 @@ public class DataTableDiff {
 
     public MatchResult<DataTable, DataTable> match(DataTable table2) {
         MatchResult<DataTable, DataTable> tableResult =
-                MatchResult.create(table1, table2, SUCCESS);
+                MatchResult.create(table1, table2, SUCCESS, DataTable.class);
 
         DataTablesMatchProcessor processor = new DataTablesMatchProcessor(
                 table2, tableResult);

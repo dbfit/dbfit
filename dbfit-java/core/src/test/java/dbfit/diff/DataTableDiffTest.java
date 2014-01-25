@@ -6,6 +6,8 @@ import dbfit.util.DataColumn;
 import dbfit.util.MatchResult;
 import dbfit.util.MatchStatus;
 import dbfit.util.DiffListener;
+import dbfit.util.DiffListenerAdapter;
+import dbfit.util.DiffHandler;
 import dbfit.util.RowStructure;
 import static dbfit.util.MatchStatus.*;
 
@@ -16,6 +18,7 @@ import java.util.HashMap;
 import static java.util.Arrays.asList;
 
 import org.junit.Test;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -29,7 +32,7 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class DataTableDiffTest {
 
-    @Mock private DiffListener listener;
+    @Mock private DiffHandler handler;
 
     private dbfit.util.RowStructure rowStructure = new RowStructure(
             new String[] { "n", "2n" }, /* names */
@@ -59,7 +62,7 @@ public class DataTableDiffTest {
                 createDt(r1, r2, r3), createDt(r1, b2, r4));
 
         assertFalse(res.isMatching());
-        verify(listener, times(4)).endRow(captor.capture());
+        verify(handler, times(4)).endRow(captor.capture());
         List<MatchResult> rowMatches = captor.getAllValues();
 
         assertEquals(SUCCESS, rowMatches.get(0).getStatus());
@@ -76,7 +79,7 @@ public class DataTableDiffTest {
         MatchResult res = runDiff(captor,
                 createDt(r2), createDt(b2));
 
-        verify(listener).endRow(captor.capture());
+        verify(handler).endRow(captor.capture());
         assertEquals(WRONG, captor.getValue().getStatus());
         assertFalse(res.isMatching());
     }
@@ -123,7 +126,8 @@ public class DataTableDiffTest {
     }
 
     private DataTableDiff createDiff(DataTable t1) {
-        return new DataTableDiff(t1, rowStructure, listener);
+        return new DataTableDiff(t1, rowStructure,
+                new DiffListenerAdapter(handler));
     }
 
     private ArgumentCaptor<MatchResult> createRowCaptor() {
