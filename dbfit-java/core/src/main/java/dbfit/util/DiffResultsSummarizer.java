@@ -10,21 +10,35 @@ public class DiffResultsSummarizer implements DiffListener {
     public DiffResultsSummarizer(final MatchResult initialResult, final Class childType) {
         this.childType = childType;
         this.result = initialResult;
-        result.setStatus(SUCCESS); // innocent until proven guilty
+        initStatus();
     }
 
-    private void onChildEvent(final MatchResult childResult) {
-        if (getStatus() == EXCEPTION) {
-            return; // keep first exception
+    protected void initStatus() {
+        if (result.getObject2() == null) {
+            result.setStatus(MISSING);
+        } else if (result.getObject1() == null) {
+            result.setStatus(SURPLUS);
+        } else {
+            result.setStatus(SUCCESS);
+        }
+    }
+
+    protected void onChildEvent(final MatchResult childResult) {
+        switch (getStatus()) {
+        case EXCEPTION:
+        case MISSING:
+        case SURPLUS:
+            return; // Cannot overwrite exceptions or missing
         }
 
         switch (childResult.getStatus()) {
         case EXCEPTION:
             result.setException(childResult.getException());
+            break;
         case WRONG:
         case SURPLUS:
         case MISSING:
-            result.setStatus(childResult.getStatus());
+            result.setStatus(WRONG);
             break;
         }
     }

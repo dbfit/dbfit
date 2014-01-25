@@ -21,7 +21,6 @@ import static org.mockito.Mockito.*;
 @RunWith(Parameterized.class)
 public class DiffResultsSummarizerTest {
 
-    private static final Class<?> PARENT_TYPE = DataRow.class;
     private static final Class<?> CHILD_TYPE = DataCell.class;
 
     private MatchResult result;
@@ -41,7 +40,9 @@ public class DiffResultsSummarizerTest {
 
     @Before
     public void prepare() {
-        result = createResult(PARENT_TYPE);
+        DataRow obj1 = (expectedStatus == SURPLUS) ? null : mock(DataRow.class);
+        DataRow obj2 = (expectedStatus == MISSING) ? null : mock(DataRow.class);
+        result = MatchResult.create(obj1, obj2, DataRow.class);
         summer = new DiffResultsSummarizer(result, CHILD_TYPE);
     }
 
@@ -54,6 +55,10 @@ public class DiffResultsSummarizerTest {
             {EXCEPTION, asList(EXCEPTION, WRONG, SUCCESS), "0"},
             {EXCEPTION, asList(SUCCESS, EXCEPTION, SUCCESS, EXCEPTION), "1"},
             {EXCEPTION, asList(WRONG, EXCEPTION), "1"},
+            {WRONG,     asList(SUCCESS, MISSING, SUCCESS), null},
+            {WRONG,     asList(SUCCESS, SURPLUS, SUCCESS), null},
+            {MISSING,   asList(SUCCESS, EXCEPTION, SUCCESS), null},
+            {SURPLUS,   asList(SUCCESS, WRONG), null},
         });
     }
 
@@ -62,7 +67,7 @@ public class DiffResultsSummarizerTest {
         int i = 0;
 
         for (MatchStatus childStatus: childrenEvents) {
-            summer.onEvent(createResult(childStatus, i++));
+            summer.onEvent(createChildResult(childStatus, i++));
         }
 
         assertThat(summer.getStatus(), is(expectedStatus));
@@ -72,7 +77,7 @@ public class DiffResultsSummarizerTest {
         }
     }
 
-    private static MatchResult createResult(MatchStatus status, int childNo) {
+    private static MatchResult createChildResult(MatchStatus status, int childNo) {
         MatchResult res = MatchResult.create(
                 Mockito.mock(CHILD_TYPE),
                 Mockito.mock(CHILD_TYPE), status, CHILD_TYPE);
@@ -82,10 +87,6 @@ public class DiffResultsSummarizerTest {
         }
 
         return res;
-    }
-
-    private static <T> MatchResult<T, T> createResult(final Class<T> cls) {
-        return MatchResult.create(Mockito.mock(cls), Mockito.mock(cls), cls);
     }
 
 }
