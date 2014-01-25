@@ -44,4 +44,5 @@ public class DiffBase {
             listener.onEvent(result);
         }
     }
+
 }
