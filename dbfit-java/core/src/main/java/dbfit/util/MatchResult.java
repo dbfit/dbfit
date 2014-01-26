@@ -9,6 +9,15 @@ public class MatchResult<T1, T2> {
     protected Exception exception = null;
     protected Class type;
 
+    public MatchResult(T1 object1, T2 object2, MatchStatus status, Class type,
+            Exception e) {
+        this.object1 = object1;
+        this.object2 = object2;
+        this.status = status;
+        this.type = type;
+        setException(e);
+    }
+
     public MatchResult(T1 object1, T2 object2, MatchStatus status, Class type) {
         this.object1 = object1;
         this.object2 = object2;
