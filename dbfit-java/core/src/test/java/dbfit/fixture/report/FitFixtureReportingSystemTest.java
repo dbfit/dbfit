@@ -1,5 +1,10 @@
 package dbfit.fixture.report;
 
+// Test setup utilities
+import static dbfit.util.DiffTestUtils.*;
+
+import static dbfit.util.MatchStatus.*;
+
 import fit.Fixture;
 import fit.Parse;
 
@@ -14,6 +19,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
+
+import org.apache.commons.lang3.ObjectUtils;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FitFixtureReportingSystemTest {
@@ -33,19 +40,19 @@ public class FitFixtureReportingSystemTest {
     }
 
     @Test
-    public void testCellRight() {
-        reportingSystem.cellRight("val-1");
+    public void shouldCallFixtureRightOnCellRight() {
+        reportingSystem.addCell(createCellResult("*cell-demo-1*", SUCCESS));
 
         verify(fixture).right(captor.capture());
-        assertThat(captor.getValue().body, hasToString("val-1"));
+        assertThat(captor.getValue().body, hasToString("*cell-demo-1*"));
     }
 
     @Test
-    public void testCellWrong() {
-        reportingSystem.cellRight("val-1");
+    public void shouldAddCellWithClassRightToOutput() {
+        reportingSystem.addCell(createCellResult("*cell-demo-1*", SUCCESS));
+        reportingSystem.endRow(createNullRowResult(SUCCESS)); // finalize the row
 
-        verify(fixture).right(captor.capture());
-        assertThat(captor.getValue().body, hasToString("val-1"));
+        assertThat(table.body, hasToString("*cell-demo-1*"));
     }
 
     /*------ Setup helpers ----- */

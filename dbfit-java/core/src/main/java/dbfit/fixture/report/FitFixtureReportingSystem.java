@@ -1,5 +1,8 @@
 package dbfit.fixture.report;
 
+import dbfit.util.MatchResult;
+import static dbfit.util.MatchStatus.*;
+
 import fit.Fixture;
 import fit.Parse;
 
@@ -8,36 +11,59 @@ public class FitFixtureReportingSystem implements ReportingSystem {
     protected final Fixture fixture;
     protected final Parse table;
     protected Parse lastRow;
-    protected Parse newRow;
+    protected Parse newRowTail;
 
     public FitFixtureReportingSystem(final Fixture fixture, final Parse table) {
         this.fixture = fixture;
         this.table = table;
 
-        newRow = new Parse("tr", null, null, null);
+        newRowTail = new Parse("tr", null, null, null);
         lastRow = table.parts.last();
     }
 
-    @Override
-    public void cellRight(final String value) {
-        Parse cell = new Parse("td", value, null, null);
-        fixture.right(cell);
+    public Parse getOutputTable() {
+        return table;
+    }
+
+    protected void addCell(final Parse cell) {
+        if (null == newRowTail.parts) {
+            newRowTail.parts = cell;
+        } else {
+            newRowTail.more = cell;
+        }
+
+        newRowTail = cell;
     }
 
     @Override
-    public void cellWrong(final String actual, final String expected) {
+    public void addCell(final MatchResult res) {
+        Parse cell = new Parse("td", res.getStringValue2(), null, null);
+
+        switch (res.getStatus()) {
+        case SUCCESS:
+            fixture.right(cell);
+            break;
+        /*
+        case WRONG:
+        case EXCEPTION:
+            fixture.exception(cell, res.getException());
+            break;
+        case SURPLUS:
+            fixture.wrong(cell);
+            break;
+        case MISSING:
+            cell.value = res.getStringValue1();
+            fixture.wrong(cell);
+            break;
+        */
+        default:
+            throw new UnsupportedOperationException("Not implemented yet");
+        }
+
+        addCell(cell);
     }
 
     @Override
-    public void cellMissing(final String expected) {
-    }
-
-    @Override
-    public void cellSurplus(final String actual) {
-    }
-
-    @Override
-    public void cellException(final String actual, final String expected,
-            final Exception e) {
+    public void endRow(final MatchResult res) {
     }
 }

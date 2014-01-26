@@ -170,13 +170,7 @@ public class CompareStoredQueries extends fit.Fixture {
 
         @Override
         public void endCell(MatchResult<DataCell, DataCell> result) {
-            switch (result.getStatus()) {
-            case SUCCESS:
-                reportingSystem.cellRight(result.getStringValue1());
-                break;
-            default:
-                throw new UnsupportedOperationException("Not implemented yet");
-            }
+            reportingSystem.addCell(result);
         }
     }
 }
