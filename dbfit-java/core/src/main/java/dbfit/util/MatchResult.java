@@ -1,5 +1,7 @@
 package dbfit.util;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 public class MatchResult<T1, T2> {
     protected T1 object1;
     protected T2 object2;
@@ -38,6 +40,14 @@ public class MatchResult<T1, T2> {
 
     public T2 getObject2() {
         return object2;
+    }
+
+    public String getStringValue1() {
+        return ObjectUtils.toString(object1, null);
+    }
+
+    public String getStringValue2() {
+        return ObjectUtils.toString(object2, null);
     }
 
     public void setException(Exception exception) {
