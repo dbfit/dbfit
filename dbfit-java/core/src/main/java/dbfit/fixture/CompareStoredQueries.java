@@ -2,6 +2,8 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.util.*;
+import dbfit.fixture.report.ReportingSystem;
+
 import fit.Fixture;
 import fit.Parse;
 
@@ -152,6 +154,30 @@ public class CompareStoredQueries extends fit.Fixture {
             exception(newRow, e);
         }
         return newRow;
+    }
+
+    public static class FitFixtureReporter extends NoOpDiffListenerAdapter {
+        private ReportingSystem reportingSystem;
+
+        public FitFixtureReporter(final ReportingSystem reportingSystem) {
+            this.reportingSystem = reportingSystem;
+        }
+
+        @Override
+        public void endRow(MatchResult<DataRow, DataRow> result) {
+            throw new UnsupportedOperationException("Not implemented yet");
+        }
+
+        @Override
+        public void endCell(MatchResult<DataCell, DataCell> result) {
+            switch (result.getStatus()) {
+            case SUCCESS:
+                reportingSystem.cellRight(result.getStringValue1());
+                break;
+            default:
+                throw new UnsupportedOperationException("Not implemented yet");
+            }
+        }
     }
 }
 
