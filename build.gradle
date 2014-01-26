@@ -88,7 +88,7 @@ task wikiDocs(dependsOn: [wikiDocsUpdateList]) << {
         into 'docs/Resources/FitNesseRoot'
     }
 
-    ant.jar(destfile: 'dist/lib/dbfit-docs.jar', basedir: 'docs', level: 9)
+    ant.jar(destfile: 'dist/lib/dbfit-docs-' + dbfitVersion + '.jar', basedir: 'docs', level: 9)
 }
 
 def fitnesseJar() {
