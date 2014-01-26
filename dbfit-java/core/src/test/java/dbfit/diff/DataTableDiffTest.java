@@ -49,8 +49,8 @@ public class DataTableDiffTest {
     @SuppressWarnings("unchecked")
     private MatchResult runDiff(ArgumentCaptor<MatchResult> captor,
             DataTable dt1, DataTable dt2) {
-        DataTableDiff diff = createDiff(dt1);
-        return diff.match(dt2);
+        DataTableDiff diff = createDiff();
+        return diff.diff(dt1, dt2);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class DataTableDiffTest {
 
     private Map<String, Object> createMatchingMaskR2() {
         DataTable dt1 = createDt(r1, r2);
-        DataTableDiff diff = createDiff(dt1);
+        DataTableDiff diff = createDiff();
         return diff.buildMatchingMask(r2);
     }
 
@@ -125,9 +125,8 @@ public class DataTableDiffTest {
         return new DataTable(asList(rows), createColumns());
     }
 
-    private DataTableDiff createDiff(DataTable t1) {
-        return new DataTableDiff(t1, rowStructure,
-                new DiffListenerAdapter(handler));
+    private DataTableDiff createDiff() {
+        return new DataTableDiff(rowStructure, new DiffListenerAdapter(handler));
     }
 
     private ArgumentCaptor<MatchResult> createRowCaptor() {

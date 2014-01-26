@@ -19,11 +19,21 @@ public class DataTableDiff extends DiffBase {
     private DataTable table1;
     private RowStructure rowStructure;
 
-    public DataTableDiff(DataTable table1,
-            RowStructure rowStructure, DiffListener listener) {
+    public DataTableDiff(DataTable table1, RowStructure rowStructure,
+                                           DiffListener listener) {
         this.table1 = table1;
         this.rowStructure = rowStructure;
-        addListener(listener);
+        if (null != listener) {
+            addListener(listener);
+        }
+    }
+
+    public DataTableDiff(RowStructure rowStructure, DiffListener listener) {
+        this(null, rowStructure, listener);
+    }
+
+    public DataTableDiff(RowStructure rowStructure) {
+        this(null, rowStructure, null);
     }
 
     class DataTablesMatchProcessor implements DataRowProcessor {
@@ -68,6 +78,12 @@ public class DataTableDiff extends DiffBase {
         }
 
         return summer.getResult();
+    }
+
+    public MatchResult<DataTable, DataTable> diff(final DataTable table1,
+                                                  final DataTable table2) {
+        this.table1 = table1;
+        return match(table2);
     }
 
     public Map<String, Object> buildMatchingMask(final DataRow dr) {
