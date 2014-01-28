@@ -90,7 +90,19 @@ public class FitFixtureReportingSystemTest {
         reportingSystem.endRow(createNullRowResult(MISSING));
 
         assertThat(table, new NumRowsWithDescription(1, "missing", "fail"));
-        //, withCells("*m-1*", "*m-2*"));
+    }
+
+    @Test
+    public void shouldReportSurplusRows() {
+        reportingSystem = new FitFixtureReportingSystem(new Fixture(), table);
+
+        reportingSystem.addCell(createCellResult("*M-1*", null, MISSING));
+        reportingSystem.endRow(createNullRowResult(MISSING));
+        reportingSystem.addCell(createCellResult(null, "*S-1*", SURPLUS));
+        reportingSystem.endRow(createNullRowResult(SURPLUS));
+
+        assertThat(table, new NumRowsWithDescription(1, "surplus", "fail"));
+        assertThat(table, new NumberOfCellsWith(1, "*S-1*", "fail"));
     }
 
     /*------ Custom matchers ----- */

@@ -67,6 +67,10 @@ public class FitFixtureReportingSystem implements ReportingSystem {
             descr = ObjectUtils.toString(descr, "missing");
             fixture.wrong(newRow);
             break;
+        case SURPLUS:
+            descr = ObjectUtils.toString(descr, "surplus");
+            fixture.wrong(newRow);
+            break;
         }
 
         if (!isEmpty(descr)) {
@@ -95,13 +99,13 @@ public class FitFixtureReportingSystem implements ReportingSystem {
         case MISSING:
             fixture.wrong(cell);
             break;
+        case SURPLUS:
+            cell.body = res.getStringValue2();
+            fixture.wrong(cell);
+            break;
         /*
         case EXCEPTION:
             fixture.exception(cell, res.getException());
-            break;
-        case SURPLUS:
-            cell.value = res.getStringValue2();
-            fixture.wrong(cell);
             break;
         */
         default:
