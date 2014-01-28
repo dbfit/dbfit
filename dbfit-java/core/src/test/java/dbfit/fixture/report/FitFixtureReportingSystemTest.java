@@ -108,13 +108,13 @@ public class FitFixtureReportingSystemTest {
     /*------ Custom matchers ----- */
 
     public static class NumRowsWithDescription extends TypeSafeMatcher<Parse> {
-        protected int expectedMissing;
+        protected int expectedCount;
         protected String expectedDescription;
         protected int actualCount;
         private String tagClass;
 
         public NumRowsWithDescription(int n, String descr, String tagClass) {
-            this.expectedMissing = n;
+            this.expectedCount = n;
             this.expectedDescription = descr;
             this.tagClass = tagClass;
         }
@@ -129,20 +129,21 @@ public class FitFixtureReportingSystemTest {
         public boolean matchesSafely(Parse table) {
             int numMatches = 0;
 
-            for (Parse row = table.parts; row != null; row = row.more ) {
+            for (Parse row = table.parts; row != null; row = row.more) {
                 if (rowMatches(row)) {
                     ++numMatches;
                 }
             }
 
             actualCount = numMatches;
-            return (expectedMissing == numMatches);
+            return (expectedCount == numMatches);
         }
 
         @Override
         public void describeTo(final Description description) {
             description.appendText(String.format(
-                    "should contain %d missing rows' ", expectedMissing));
+                    "should contain %d '%s' rows with description '%s' ",
+                    expectedCount, tagClass, expectedDescription));
         }
 
         @Override
