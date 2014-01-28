@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 ext.dbfitVersion = '2.2.0'
 
 task cleanFitnesseroot(type:Exec) {
@@ -18,8 +20,16 @@ task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAl
     }
     copy {
         from 'bin'
-        include 'startFitnesse.*', 'encrypt.*'
+        include 'encrypt.*'
         into 'dist'
+    }
+    copy {
+        from 'templates'
+        include 'startFitnesse.*'
+        into 'dist'
+        rename '(.+)\\.tmpl$', '$1'
+        filter(ReplaceTokens,
+            tokens: ['dbfitVersion': dbfitVersion, 'fitNesseVersion': project(':dbfit-java').fitNesseVersion])
     }
     file('dist/plugins.properties') << 'Theme=bootstrap'
     copy {
