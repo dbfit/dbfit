@@ -6,6 +6,9 @@ import static dbfit.util.MatchStatus.*;
 import fit.Fixture;
 import fit.Parse;
 
+import org.apache.commons.lang3.ObjectUtils;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 public class FitFixtureReportingSystem implements ReportingSystem {
 
     protected final Fixture fixture;
@@ -56,8 +59,26 @@ public class FitFixtureReportingSystem implements ReportingSystem {
     }
 
     @Override
-    public void endRow(final MatchResult res) {
+    public void endRow(final MatchResult res, final String description) {
+        String descr = description;
+
+        switch (res.getStatus()) {
+        case MISSING:
+            descr = ObjectUtils.toString(descr, "missing");
+            fixture.wrong(newRow);
+            break;
+        }
+
+        if (!isEmpty(descr)) {
+            newRow.parts.addToBody(Fixture.gray(" " + descr));
+        }
+
         closeNewRow();
+    }
+
+    @Override
+    public void endRow(final MatchResult res) {
+        endRow(res, null);
     }
 
     @Override
@@ -71,15 +92,15 @@ public class FitFixtureReportingSystem implements ReportingSystem {
         case WRONG:
             fixture.wrong(cell, res.getStringValue2());
             break;
+        case MISSING:
+            fixture.wrong(cell);
+            break;
         /*
         case EXCEPTION:
             fixture.exception(cell, res.getException());
             break;
         case SURPLUS:
             cell.value = res.getStringValue2();
-            fixture.wrong(cell);
-            break;
-        case MISSING:
             fixture.wrong(cell);
             break;
         */
