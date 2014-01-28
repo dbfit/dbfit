@@ -105,6 +105,18 @@ public class FitFixtureReportingSystemTest {
         assertThat(table, new NumberOfCellsWith(1, "*S-1*", "fail"));
     }
 
+    @Test
+    public void shouldReportExceptionCells() {
+        reportingSystem = new FitFixtureReportingSystem(new Fixture(), table);
+
+        reportingSystem.addCell(createCellException("*E-1*", "*E-1*",
+                    new Exception("Cruel World!")));
+        reportingSystem.endRow(createNullRowResult(EXCEPTION));
+
+        assertThat(table, new NumberOfCellsWith(1, "*E-1*", "error"));
+        assertThat(table, new NumRowsWithDescription(1, "Cruel World!", "stacktrace"));
+    }
+
     /*------ Custom matchers ----- */
 
     public static class NumRowsWithDescription extends TypeSafeMatcher<Parse> {

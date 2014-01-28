@@ -103,10 +103,11 @@ public class FitFixtureReportingSystem implements ReportingSystem {
             cell.body = res.getStringValue2();
             fixture.wrong(cell);
             break;
-        /*
         case EXCEPTION:
             fixture.exception(cell, res.getException());
             break;
+        /*
+            // TODO: ignored
         */
         default:
             throw new UnsupportedOperationException("Not implemented yet");
