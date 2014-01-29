@@ -32,7 +32,7 @@ public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries {
                     t2.markProcessed(dr2);
                     newRow = parseDataRows(dr, dr2);
                 } catch (NoMatchingRowFoundException nex) {
-                    newRow = parseDataRowAsError(dr, " missing from " + queryName);
+                    newRow = parseDataRowAsError(dr, " missing from " + queryName, false);
                 }
                 if (rememberWrongMatchings != counts.wrong) {
                     screenRow.more = newRow;
