@@ -27,8 +27,11 @@ import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
 
 import org.apache.commons.lang3.ObjectUtils;
+
 import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FitFixtureReportingSystemTest {
@@ -114,7 +117,13 @@ public class FitFixtureReportingSystemTest {
         reportingSystem.endRow(createNullRowResult(EXCEPTION));
 
         assertThat(table, new NumberOfCellsWith(1, "*E-1*", "error"));
-        assertThat(table, new NumRowsWithDescription(1, "Cruel World!", "stacktrace"));
+        assertThat(table, new ParseThat()
+                       .withRecursiveChildren()
+                       .withRecursiveSiblings()
+                       .withTagThat(containsString("<td"))
+                       .which(new ParseThat().withBodyThat(allOf(
+                                   containsString("Cruel World!"),
+                                   containsString("stacktrace")))));
     }
 
     /*------ Custom matchers ----- */
@@ -182,12 +191,19 @@ public class FitFixtureReportingSystemTest {
         }
 
         private boolean valuesMatch(String body, String tag) {
+            body = ObjectUtils.toString(body, "");
+            tag = ObjectUtils.toString(tag, "");
             return body.contains(text) && tag.contains(tagClass);
         }
 
         private boolean cellMatches(Parse cell) {
-            return valuesMatch(ObjectUtils.toString(cell.body, ""),
-                               ObjectUtils.toString(cell.tag, ""));
+            if (cell == null) {
+                return false;
+            } else {
+                return valuesMatch(cell.body, cell.tag)
+                            || cellMatches(cell.parts)
+                            || cellMatches(cell.more);
+            }
         }
 
         @Override
@@ -211,6 +227,111 @@ public class FitFixtureReportingSystemTest {
             description.appendText(String.format(
                     "should contain %d cells with body '%s' and tag class '%s' ",
                     expectedCount, text, tagClass));
+        }
+
+        @Override
+        public void describeMismatchSafely(Parse item, Description mismatchDescription) {
+            StringWriter sw = new StringWriter();
+            item.print(new PrintWriter(sw));
+            mismatchDescription
+                .appendText("was actualCount=" + actualCount + "\n:\"")
+                .appendText(sw.toString()).appendText("\"");
+        }
+    }
+
+    public static class ParseThat extends TypeSafeMatcher<Parse> {
+        protected Matcher bodyMatcher = anything("any body");
+        protected Matcher tagMatcher = anything("any tag");
+        protected Matcher partsMatcher = anything("any parts");
+        protected Matcher siblingsMatcher = anything("any siblings");
+
+        protected List<Matcher> matchers = new ArrayList<Matcher>();
+
+        protected boolean recursiveChildren = false;
+        protected boolean recursiveSiblings = false;
+
+        private int expectedCount = 1;
+        private int actualCount = 0;
+
+        public ParseThat which(Matcher matcher) {
+            matchers.add(matcher);
+            return this;
+        }
+
+        public ParseThat withRecursiveChildren() {
+            recursiveChildren = true;
+            return this;
+        }
+
+        public ParseThat withRecursiveSiblings() {
+            recursiveSiblings = true;
+            return this;
+        }
+
+        public ParseThat withExpectedCount(int expectedCount) {
+            this.expectedCount = expectedCount;
+            return this;
+        }
+
+        public ParseThat withBodyThat(Matcher bodyMatcher) {
+            this.bodyMatcher = bodyMatcher;
+            return this;
+        }
+
+        public ParseThat withTagThat(Matcher tagMatcher) {
+            this.tagMatcher = tagMatcher;
+            return this;
+        }
+
+        public ParseThat withPartsThat(Matcher partsMatcher) {
+            this.partsMatcher = partsMatcher;
+            return this;
+        }
+
+        protected boolean satisfiesAdditionalMatchers(Parse parse) {
+            for (Matcher matcher: matchers) {
+                if (!matcher.matches(parse)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        protected void countMatches(final Parse parse) {
+            if (parse == null) {
+                return;
+            }
+
+            if (bodyMatcher.matches(parse.body) &&
+                    tagMatcher.matches(parse.tag) &&
+                    satisfiesAdditionalMatchers(parse)) {
+                actualCount++;
+            }
+
+            if (recursiveChildren) {
+                countMatches(parse.parts);
+            }
+
+            if (recursiveSiblings) {
+                countMatches(parse.more);
+            }
+        }
+
+        @Override
+        public boolean matchesSafely(Parse parse) {
+            countMatches(parse);
+            return (actualCount == expectedCount);
+        }
+
+        @Override
+        public void describeTo(final Description description) {
+            description
+                .appendText(String.format("should contain %d cells", expectedCount))
+                .appendText(" where body is ");
+            bodyMatcher.describeTo(description);
+            description.appendText("; tag is ");
+            tagMatcher.describeTo(description);
         }
 
         @Override
