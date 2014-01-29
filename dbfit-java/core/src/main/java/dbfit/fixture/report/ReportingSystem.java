@@ -6,4 +6,5 @@ public interface ReportingSystem {
     public void addCell(MatchResult res);
     public void endRow(MatchResult res);
     public void endRow(MatchResult res, String description);
+    public void addException(Throwable ex);
 }

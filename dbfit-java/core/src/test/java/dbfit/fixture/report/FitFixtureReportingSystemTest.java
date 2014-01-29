@@ -126,6 +126,37 @@ public class FitFixtureReportingSystemTest {
                                    containsString("stacktrace")))));
     }
 
+    @Test
+    public void testAddExceptionOnStart() {
+        reportingSystem = new FitFixtureReportingSystem(new Fixture(), table);
+
+        reportingSystem.addException(new Exception("Cruel World!"));
+
+        assertThat(table, new ParseThat()
+                       .withRecursiveChildren()
+                       .withRecursiveSiblings()
+                       .withTagThat(containsString("<td"))
+                       .which(new ParseThat().withBodyThat(allOf(
+                                   containsString("Cruel World!"),
+                                   containsString("stacktrace")))));
+    }
+
+    @Test
+    public void testAddExceptionWhileInTheMiddleOfRow() {
+        reportingSystem = new FitFixtureReportingSystem(new Fixture(), table);
+        reportingSystem.addCell(createCellResult("*S-1*", SUCCESS));
+
+        reportingSystem.addException(new Exception("Cruel World!"));
+
+        assertThat(table, new ParseThat()
+                       .withRecursiveChildren()
+                       .withRecursiveSiblings()
+                       .withTagThat(containsString("<td"))
+                       .which(new ParseThat().withBodyThat(allOf(
+                                   containsString("Cruel World!"),
+                                   containsString("stacktrace")))));
+    }
+
     /*------ Custom matchers ----- */
 
     public static class NumRowsWithDescription extends TypeSafeMatcher<Parse> {

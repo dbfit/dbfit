@@ -116,6 +116,14 @@ public class FitFixtureReportingSystem implements ReportingSystem {
         addCell(cell);
     }
 
+    @Override
+    public void addException(final Throwable ex) {
+        Parse cell = new Parse("td", "", null, null);
+        fixture.exception(cell, ex);
+        addCell(cell);
+        closeNewRow();
+    }
+
     public Parse getTable() {
         return table;
     }
