@@ -22,6 +22,7 @@ allprojects {
 
     tasks.withType(Compile) {
         options.compilerArgs << "-Xlint:unchecked"
+        options.compilerArgs << "-Xlint:deprecation"
     }
 }
 
