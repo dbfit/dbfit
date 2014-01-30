@@ -12,7 +12,6 @@ public class DerbyRegressionTest {
     @Name("DbFit.AcceptanceTests.JavaTests.DerbyTests.FlowMode")
     @FitnesseDir("../..")
     @OutputDir("../../tmp")
-    @Port(1234)
     public static class FlowModeTest {
         @Test public void dummy(){}
     }
@@ -21,7 +20,6 @@ public class DerbyRegressionTest {
     @Name("DbFit.AcceptanceTests.JavaTests.DerbyTests.StandaloneFixtures")
     @FitnesseDir("../..")
     @OutputDir("../../tmp")
-    @Port(1234)
     public static class StandaloneFixturesTest {
         @Test public void dummy(){}
     }

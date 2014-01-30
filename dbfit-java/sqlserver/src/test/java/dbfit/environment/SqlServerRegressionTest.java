@@ -12,7 +12,6 @@ public class SqlServerRegressionTest {
     @Name("DbFit.AcceptanceTests.JavaTests.SqlServerTests.FlowMode")
     @FitnesseDir("../..")
     @OutputDir("../../tmp")
-    @Port(1234)
     @Ignore
     public static class FlowModeTest {
         @Test public void dummy(){}
@@ -22,7 +21,6 @@ public class SqlServerRegressionTest {
     @Name("DbFit.AcceptanceTests.JavaTests.SqlServerTests.StandaloneFixtures")
     @FitnesseDir("../..")
     @OutputDir("../../tmp")
-    @Port(1234)
     @Ignore
     public static class StandaloneFixturesTest {
         @Test public void dummy(){}

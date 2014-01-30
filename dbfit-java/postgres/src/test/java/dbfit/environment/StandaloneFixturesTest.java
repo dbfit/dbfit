@@ -10,7 +10,6 @@ import static fitnesse.junit.FitNesseSuite.*;
 @Name("DbFit.AcceptanceTests.JavaTests.PostgresTests.StandaloneFixtures")
 @FitnesseDir("../..")
 @OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "fitnesse")
-@Port(1234)
 public class StandaloneFixturesTest {
     @Test public void dummy(){}
 }
