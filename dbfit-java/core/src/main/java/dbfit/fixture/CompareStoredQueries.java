@@ -5,6 +5,7 @@ import dbfit.diff.DataTableDiff;
 import dbfit.fixture.report.ReportingSystem;
 import dbfit.fixture.report.FitFixtureReportingSystem;
 import dbfit.util.*;
+import static dbfit.util.RowStructureLoader.loadRowStructure;
 import static dbfit.util.DataCell.createDataCell;
 import static dbfit.util.MatchStatus.*;
 
@@ -52,28 +53,6 @@ public class CompareStoredQueries extends fit.Fixture {
                 loadRowStructure(lastRow), getReporter(table));
 
         diff.diff(dt1, dt2);
-    }
-
-    private RowStructure loadRowStructure(Parse headerRow) {
-        String[] columnNames;
-        boolean[] keyProperties;
-
-        Parse headerCell = headerRow.parts;
-        int colNum = headerRow.parts.size();
-        columnNames = new String[colNum];
-        keyProperties = new boolean[colNum];
-        for (int i = 0; i < colNum; i++) {
-            String currentName = headerCell.text();
-            if (currentName == null) throw new UnsupportedOperationException("Column " + i + " does not have a name");
-            currentName = currentName.trim();
-            if (currentName.length() == 0)
-                throw new UnsupportedOperationException("Column " + i + " does not have a name");
-            columnNames[i] = NameNormaliser.normaliseName(currentName);
-            keyProperties[i] = !currentName.endsWith("?");
-            headerCell = headerCell.more;
-        }
-
-        return new RowStructure(columnNames, keyProperties);
     }
 
     protected FitFixtureReporter getReporter(final Parse table) {
