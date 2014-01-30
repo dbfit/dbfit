@@ -22,6 +22,7 @@ public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries {
         super(environment, symbol1, symbol2);
     }
 
+    @Override
     public void doTable(Parse table) {
         super.doTable(table);
         addSummary(table);

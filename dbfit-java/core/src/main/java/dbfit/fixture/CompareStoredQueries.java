@@ -40,6 +40,7 @@ public class CompareStoredQueries extends fit.Fixture {
         dt2 = SymbolUtil.getDataTable(symbol2);
     }
 
+    @Override
     public void doTable(Parse table) {
         initialiseDataTables();
         Parse lastRow = table.parts.more;
