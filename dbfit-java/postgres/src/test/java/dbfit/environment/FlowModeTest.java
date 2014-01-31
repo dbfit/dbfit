@@ -10,7 +10,6 @@ import static fitnesse.junit.FitNesseSuite.*;
 @Name("DbFit.AcceptanceTests.JavaTests.PostgresTests.FlowMode")
 @FitnesseDir("../..")
 @OutputDir("../../tmp")
-@Port(1234)
 public class FlowModeTest {
     @Test public void dummy(){}
 }
