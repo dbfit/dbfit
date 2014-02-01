@@ -2,35 +2,22 @@ package dbfit.test.matchers;
 
 import fit.Parse;
 
-import org.hamcrest.TypeSafeMatcher;
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Factory;
 import static org.hamcrest.Matchers.anything;
 
-import java.io.StringWriter;
-import java.io.PrintWriter;
-
-public class IsParseThat extends TypeSafeMatcher<Parse> {
-    protected Matcher matcher;
+public class IsParseThat extends TraversingParseMatcher {
     protected boolean recursiveChildren = false;
     protected boolean recursiveSiblings = false;
 
-    private int expectedCount = 1;
-    private int actualCount = 0;
-
     public IsParseThat() {
-        this(anything());
+        super();
     }
 
     public IsParseThat(Matcher matcher) {
-        this.matcher = matcher;
+        super(matcher);
     }
 
-    public IsParseThat which(Matcher matcher) {
-        this.matcher = matcher;
-        return this;
-    }
 
     public IsParseThat withRecursiveChildren() {
         recursiveChildren = true;
@@ -42,50 +29,21 @@ public class IsParseThat extends TypeSafeMatcher<Parse> {
         return this;
     }
 
-    public IsParseThat withExpectedCount(int expectedCount) {
-        this.expectedCount = expectedCount;
-        return this;
-    }
-
-    protected void countMatches(final Parse parse) {
+    @Override
+    protected void visitElements(Parse parse) {
         if (parse == null) {
             return;
         }
 
-        if (matcher.matches(parse)) {
-            actualCount++;
-        }
+        matchElement(parse);
 
         if (recursiveChildren) {
-            countMatches(parse.parts);
+            visitElements(parse.parts);
         }
 
         if (recursiveSiblings) {
-            countMatches(parse.more);
+            visitElements(parse.more);
         }
-    }
-
-    @Override
-    public boolean matchesSafely(Parse parse) {
-        countMatches(parse);
-        return (actualCount == expectedCount);
-    }
-
-    @Override
-    public void describeTo(final Description description) {
-        description
-            .appendText(String.format("should contain %d cells", expectedCount))
-            .appendText(" where:\n");
-        description.appendDescriptionOf(matcher);
-    }
-
-    @Override
-    public void describeMismatchSafely(Parse item, Description mismatchDescription) {
-        StringWriter sw = new StringWriter();
-        item.print(new PrintWriter(sw));
-        mismatchDescription
-            .appendText("was actualCount=" + actualCount + "\n:\"")
-            .appendText(sw.toString()).appendText("\"");
     }
 
     @Factory
