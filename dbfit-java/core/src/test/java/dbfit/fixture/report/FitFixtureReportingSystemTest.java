@@ -5,7 +5,10 @@ import dbfit.test.matchers.*;
 import static dbfit.test.matchers.IsParseWithTag.*;
 import static dbfit.test.matchers.IsParseWithBody.*;
 import static dbfit.test.matchers.IsParseThat.*;
+import static dbfit.test.matchers.IsParseWithDescription.*;
 import static dbfit.test.matchers.NumRowsWithDescription.*;
+import static dbfit.test.matchers.NumParsePartsThat.*;
+import static dbfit.test.matchers.NumCellsThat.*;
 import static dbfit.util.DiffTestUtils.*;
 
 import static dbfit.util.MatchStatus.*;
@@ -73,7 +76,7 @@ public class FitFixtureReportingSystemTest {
 
         reportingSystem.addCell(createCellResult("*cell-demo-1*", SUCCESS));
 
-        assertThat(table, new NumberOfCellsWith(1, "*cell-demo-1*", "pass"));
+        assertThat(table, numCellsWith(1, "*cell-demo-1*", "pass"));
     }
 
     @Test
@@ -82,7 +85,7 @@ public class FitFixtureReportingSystemTest {
 
         reportingSystem.addCell(createCellResult("*GOOD-1*", "*BAD-2*", WRONG));
 
-        assertThat(table, new NumberOfCellsWith(1, "*GOOD-1*", "fail"));
+        assertThat(table, numCellsWith(1, "*GOOD-1*", "fail"));
     }
 
     @Test
@@ -109,8 +112,17 @@ public class FitFixtureReportingSystemTest {
         reportingSystem.addCell(createCellResult(null, "*S-1*", SURPLUS));
         reportingSystem.endRow(createNullRowResult(SURPLUS));
 
-        assertThat(table, numRowsWithDescription(1, "surplus", "fail"));
-        assertThat(table, new NumberOfCellsWith(1, "*S-1*", "fail"));
+        assertThat(table, numPartsThat(1, allOf(
+                hasTagThat(allOf(
+                        containsString("<tr"),
+                        containsString("fail"))),
+                hasDescriptionThat(containsString("surplus")),
+                numPartsThat(1, allOf(
+                        hasTagThat(allOf(
+                                containsString("<td"),
+                                containsString("fail"))),
+                        hasBodyThat(containsString("*S-1*")))))));
+
     }
 
     @Test
@@ -121,7 +133,7 @@ public class FitFixtureReportingSystemTest {
                     new Exception("Cruel World!")));
         reportingSystem.endRow(createNullRowResult(EXCEPTION));
 
-        assertThat(table, new NumberOfCellsWith(1, "*E-1*", "error"));
+        assertThat(table, numCellsWith(1, "*E-1*", "error"));
         assertThat(table, isParseThat()
                        .withRecursiveChildren()
                        .withRecursiveSiblings()
@@ -162,70 +174,6 @@ public class FitFixtureReportingSystemTest {
                                hasBodyThat(allOf(
                                        containsString("Cruel World!"),
                                        containsString("stacktrace"))))));
-    }
-
-    /*------ Custom matchers ----- */
-
-    public static class NumberOfCellsWith extends TypeSafeMatcher<Parse> {
-        private String text;
-        private String tagClass;
-        private int expectedCount;
-
-        private int actualCount = 0;
-
-        public NumberOfCellsWith(int n, String text, String tagClass) {
-            this.text = text;
-            this.tagClass = tagClass;
-            this.expectedCount = n;
-        }
-
-        private boolean valuesMatch(String body, String tag) {
-            body = ObjectUtils.toString(body, "");
-            tag = ObjectUtils.toString(tag, "");
-            return body.contains(text) && tag.contains(tagClass);
-        }
-
-        private boolean cellMatches(Parse cell) {
-            if (cell == null) {
-                return false;
-            } else {
-                return valuesMatch(cell.body, cell.tag)
-                            || cellMatches(cell.parts)
-                            || cellMatches(cell.more);
-            }
-        }
-
-        @Override
-        public boolean matchesSafely(Parse table) {
-            int numMatches = 0;
-
-            for (Parse row = table.parts; row != null; row = row.more ) {
-                for (Parse cell = row.parts; cell != null; cell = cell.more) {
-                    if (cellMatches(cell)) {
-                        ++numMatches;
-                    }
-                }
-            }
-
-            actualCount = numMatches;
-            return (numMatches == expectedCount);
-        }
-
-        @Override
-        public void describeTo(final Description description) {
-            description.appendText(String.format(
-                    "should contain %d cells with body '%s' and tag class '%s' ",
-                    expectedCount, text, tagClass));
-        }
-
-        @Override
-        public void describeMismatchSafely(Parse item, Description mismatchDescription) {
-            StringWriter sw = new StringWriter();
-            item.print(new PrintWriter(sw));
-            mismatchDescription
-                .appendText("was actualCount=" + actualCount + "\n:\"")
-                .appendText(sw.toString()).appendText("\"");
-        }
     }
 
     /*------ Setup helpers ----- */
