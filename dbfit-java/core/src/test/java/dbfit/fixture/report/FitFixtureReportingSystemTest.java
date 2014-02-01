@@ -22,10 +22,6 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.assertThat;
 
-import org.hamcrest.TypeSafeMatcher;
-import org.hamcrest.Matcher;
-import org.hamcrest.Description;
-import org.hamcrest.Factory;
 import static org.hamcrest.Matchers.*;
 
 import org.mockito.runners.MockitoJUnitRunner;
@@ -33,13 +29,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
-
-import org.apache.commons.lang3.ObjectUtils;
-
-import java.io.StringWriter;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FitFixtureReportingSystemTest {
@@ -122,7 +111,6 @@ public class FitFixtureReportingSystemTest {
                                 containsString("<td"),
                                 containsString("fail"))),
                         hasBodyThat(containsString("*S-1*")))))));
-
     }
 
     @Test
