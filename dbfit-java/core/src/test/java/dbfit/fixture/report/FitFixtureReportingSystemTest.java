@@ -5,6 +5,7 @@ import dbfit.test.matchers.*;
 import static dbfit.test.matchers.IsParseWithTag.*;
 import static dbfit.test.matchers.IsParseWithBody.*;
 import static dbfit.test.matchers.IsParseThat.*;
+import static dbfit.test.matchers.NumRowsWithDescription.*;
 import static dbfit.util.DiffTestUtils.*;
 
 import static dbfit.util.MatchStatus.*;
@@ -96,7 +97,7 @@ public class FitFixtureReportingSystemTest {
         reportingSystem.addCell(createCellResult("*M-2*", null, MISSING));
         reportingSystem.endRow(createNullRowResult(MISSING));
 
-        assertThat(table, new NumRowsWithDescription(1, "missing", "fail"));
+        assertThat(table, numRowsWithDescription(1, "missing", "fail"));
     }
 
     @Test
@@ -108,7 +109,7 @@ public class FitFixtureReportingSystemTest {
         reportingSystem.addCell(createCellResult(null, "*S-1*", SURPLUS));
         reportingSystem.endRow(createNullRowResult(SURPLUS));
 
-        assertThat(table, new NumRowsWithDescription(1, "surplus", "fail"));
+        assertThat(table, numRowsWithDescription(1, "surplus", "fail"));
         assertThat(table, new NumberOfCellsWith(1, "*S-1*", "fail"));
     }
 
@@ -164,55 +165,6 @@ public class FitFixtureReportingSystemTest {
     }
 
     /*------ Custom matchers ----- */
-
-    public static class NumRowsWithDescription extends TypeSafeMatcher<Parse> {
-        protected int expectedCount;
-        protected String expectedDescription;
-        protected int actualCount;
-        private String tagClass;
-
-        public NumRowsWithDescription(int n, String descr, String tagClass) {
-            this.expectedCount = n;
-            this.expectedDescription = descr;
-            this.tagClass = tagClass;
-        }
-
-        private boolean rowMatches(Parse row) {
-            String tag = row.tag;
-            String descr = row.parts.leaf().body;
-            return tag.contains(tagClass) && descr.contains(expectedDescription);
-        }
-
-        @Override
-        public boolean matchesSafely(Parse table) {
-            int numMatches = 0;
-
-            for (Parse row = table.parts; row != null; row = row.more) {
-                if (rowMatches(row)) {
-                    ++numMatches;
-                }
-            }
-
-            actualCount = numMatches;
-            return (expectedCount == numMatches);
-        }
-
-        @Override
-        public void describeTo(final Description description) {
-            description.appendText(String.format(
-                    "should contain %d '%s' rows with description '%s' ",
-                    expectedCount, tagClass, expectedDescription));
-        }
-
-        @Override
-        public void describeMismatchSafely(Parse item, Description mismatchDescription) {
-            StringWriter sw = new StringWriter();
-            item.print(new PrintWriter(sw));
-            mismatchDescription
-                .appendText("was actualCount=" + actualCount + "\n:\"")
-                .appendText(sw.toString()).appendText("\"");
-        }
-    }
 
     public static class NumberOfCellsWith extends TypeSafeMatcher<Parse> {
         private String text;
