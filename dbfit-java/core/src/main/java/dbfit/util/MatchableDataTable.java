@@ -6,20 +6,14 @@ import java.util.*;
  * Support for data row matching and tracking processed/unprocessed rows
  * of DataTable.
  */
-public class MatchableDataTable implements MatchableObject<DataTable> {
+public class MatchableDataTable {
 
     private final DataTable dt;
     private final LinkedList<DataRow> unprocessedRows;
-    private String name;
-
-    public MatchableDataTable(final DataTable dt, String name) {
-        this.dt = dt;
-        this.name = name;
-        unprocessedRows = new LinkedList<DataRow>(dt.getRows());
-    }
 
     public MatchableDataTable(final DataTable dt) {
-        this(dt, "");
+        this.dt = dt;
+        unprocessedRows = new LinkedList<DataRow>(dt.getRows());
     }
 
     public DataRow findMatching(final Map<String,Object> keyProperties) throws NoMatchingRowFoundException {
@@ -59,25 +53,6 @@ public class MatchableDataTable implements MatchableObject<DataTable> {
             processor.process(unprocIter.next());
             unprocIter.remove();
         }
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public DataTable getValue() {
-        return dt;
-    }
-
-    @Override
-    public String getStringValue() {
-        return dt.toString();
     }
 }
 
