@@ -1,16 +1,13 @@
 package dbfit.diff;
 
 import dbfit.util.MatchResult;
-import dbfit.util.DiffListener;
 import dbfit.util.DataCell;
 import dbfit.util.DiffListenerAdapter;
 import dbfit.util.DiffHandler;
 import static dbfit.util.MatchStatus.*;
 
 import org.junit.Test;
-import org.junit.Before;
 import org.junit.runner.RunWith;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -29,6 +26,10 @@ public class DataCellDiffTest {
     private ArgumentCaptor<MatchResult> captor =
         ArgumentCaptor.forClass(MatchResult.class);
 
+    private MatchResult getResult() {
+        return captor.getValue();
+    }
+
     @SuppressWarnings("unchecked")
     private void runDiff() {
         DataCellDiff diff = new DataCellDiff();
@@ -45,7 +46,7 @@ public class DataCellDiffTest {
 
         runDiff();
 
-        assertEquals(WRONG, captor.getValue().getStatus());
+        assertThat(getResult().getStatus(), is(WRONG));
     }
 
     @Test
@@ -54,7 +55,7 @@ public class DataCellDiffTest {
 
         runDiff();
 
-        assertEquals(SUCCESS, captor.getValue().getStatus());
+        assertThat(getResult().getStatus(), is(SUCCESS));
     }
 
     @Test
@@ -63,7 +64,7 @@ public class DataCellDiffTest {
 
         runDiff();
 
-        assertEquals(MISSING, captor.getValue().getStatus());
+        assertThat(getResult().getStatus(), is(MISSING));
     }
 
     @Test
@@ -72,7 +73,7 @@ public class DataCellDiffTest {
 
         runDiff();
 
-        assertEquals(SURPLUS, captor.getValue().getStatus());
+        assertThat(getResult().getStatus(), is(SURPLUS));
     }
 
     @Test
@@ -82,8 +83,8 @@ public class DataCellDiffTest {
 
         runDiff();
 
-        assertEquals(EXCEPTION, captor.getValue().getStatus());
-        assertThat(captor.getValue().getException(),
+        assertThat(getResult().getStatus(), is(EXCEPTION));
+        assertThat(getResult().getException(),
                 instanceOf(IllegalArgumentException.class));
     }
 
@@ -94,7 +95,7 @@ public class DataCellDiffTest {
 
         runDiff();
 
-        assertEquals(EXCEPTION, captor.getValue().getStatus());
+        assertThat(getResult().getStatus(), is(EXCEPTION));
         assertThat(captor.getValue().getException(), is(ex));
     }
 
