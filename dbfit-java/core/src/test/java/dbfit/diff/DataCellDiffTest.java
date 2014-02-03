@@ -1,7 +1,6 @@
 package dbfit.diff;
 
 import dbfit.util.MatchResult;
-import dbfit.util.MatchStatus;
 import dbfit.util.DiffListener;
 import dbfit.util.DataCell;
 import dbfit.util.DiffListenerAdapter;
@@ -12,6 +11,8 @@ import org.junit.Test;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
@@ -72,6 +73,29 @@ public class DataCellDiffTest {
         runDiff();
 
         assertEquals(SURPLUS, captor.getValue().getStatus());
+    }
+
+    @Test
+    public void diffWithBothNullsShouldEmitExceptionEvent() {
+        c1 = null;
+        c2 = null;
+
+        runDiff();
+
+        assertEquals(EXCEPTION, captor.getValue().getStatus());
+        assertThat(captor.getValue().getException(),
+                instanceOf(IllegalArgumentException.class));
+    }
+
+    @Test
+    public void exceptionOnComparisonShouldBeEmittedAsExceptionEvent() {
+        Exception ex = new RuntimeException("Cruel World!");
+        when(c1.equalTo(c2)).thenThrow(ex);
+
+        runDiff();
+
+        assertEquals(EXCEPTION, captor.getValue().getStatus());
+        assertThat(captor.getValue().getException(), is(ex));
     }
 
 }
