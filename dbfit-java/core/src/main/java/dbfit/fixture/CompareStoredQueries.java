@@ -32,11 +32,14 @@ public class CompareStoredQueries extends fit.Fixture {
 
     private void initialiseDataTables() {
         if (symbol1 == null || symbol2 == null) {
-            if (args.length < 2)
+            if (args.length < 2) {
                 throw new UnsupportedOperationException("No symbols specified to CompareStoreQueries constructor or argument list");
+            }
+
             symbol1 = args[0];
             symbol2 = args[1];
         }
+
         dt1 = SymbolUtil.getDataTable(symbol1);
         dt2 = SymbolUtil.getDataTable(symbol2);
     }
