@@ -2,16 +2,9 @@ package dbfit.diff;
 
 import dbfit.util.DataRow;
 import dbfit.util.DataCell;
-import dbfit.util.DiffListener;
-import dbfit.util.NoOpDiffListenerAdapter;
-import dbfit.util.MatchStatus;
 import dbfit.util.MatchResult;
 import dbfit.util.DiffResultsSummarizer;
-import static dbfit.util.MatchStatus.*;
 import static dbfit.util.DataCell.createDataCell;
-
-import java.util.List;
-import java.util.ArrayList;
 
 public class DataRowDiff extends DiffBase {
     private String[] columnNames;
@@ -38,8 +31,7 @@ public class DataRowDiff extends DiffBase {
 
     private DiffResultsSummarizer createSummer(final DataRow dr1, final DataRow dr2) {
         return new DiffResultsSummarizer(
-                MatchResult.create(dr1, dr2, DataRow.class),
-                DataCell.class);
+                MatchResult.create(dr1, dr2, DataRow.class), DataCell.class);
     }
 
     private DataCellDiff createChildDiff(final DiffResultsSummarizer summer) {

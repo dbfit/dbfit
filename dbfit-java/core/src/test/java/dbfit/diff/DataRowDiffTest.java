@@ -1,11 +1,8 @@
 package dbfit.diff;
 
 import dbfit.util.MatchResult;
-import dbfit.util.MatchStatus;
-import dbfit.util.DiffListener;
 import dbfit.util.DiffHandler;
 import dbfit.util.DiffListenerAdapter;
-import dbfit.util.DataCell;
 import dbfit.util.DataRow;
 import static dbfit.util.MatchStatus.*;
 
@@ -23,7 +20,6 @@ import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-
 public class DataRowDiffTest {
 
     @Mock private DiffHandler handler;
@@ -124,5 +120,4 @@ public class DataRowDiffTest {
         }
         return new DataRow(rowValues);
     }
-
 }
