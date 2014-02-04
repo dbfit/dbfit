@@ -3,7 +3,6 @@ package dbfit.diff;
 import dbfit.util.MatchableDataTable;
 import dbfit.util.DataTable;
 import dbfit.util.DataRow;
-import dbfit.util.DiffListener;
 import dbfit.util.DiffResultsSummarizer;
 import dbfit.util.MatchResult;
 import dbfit.util.RowStructure;
@@ -16,31 +15,18 @@ import java.util.HashMap;
 
 public class DataTableDiff extends DiffBase {
 
-    private DataTable table1;
     private RowStructure rowStructure;
 
-    public DataTableDiff(DataTable table1, RowStructure rowStructure,
-                                           DiffListener listener) {
-        this.table1 = table1;
-        this.rowStructure = rowStructure;
-        if (null != listener) {
-            addListener(listener);
-        }
-    }
-
-    public DataTableDiff(RowStructure rowStructure, DiffListener listener) {
-        this(null, rowStructure, listener);
-    }
-
     public DataTableDiff(RowStructure rowStructure) {
-        this(null, rowStructure, null);
+        this.rowStructure = rowStructure;
     }
 
     class DataTablesMatchProcessor implements DataRowProcessor {
         MatchableDataTable mdt2;
         public DiffResultsSummarizer summer;
 
-        public DataTablesMatchProcessor(final DataTable table2,
+        public DataTablesMatchProcessor(
+                final DataTable table2,
                 final DiffResultsSummarizer summer) {
             this.mdt2 = new MatchableDataTable(table2);
             this.summer = summer;
@@ -65,7 +51,8 @@ public class DataTableDiff extends DiffBase {
     }
 
     @SuppressWarnings("unchecked")
-    public MatchResult<DataTable, DataTable> match(DataTable table2) {
+    public MatchResult<DataTable, DataTable> diff(final DataTable table1,
+                                                  final DataTable table2) {
         DiffResultsSummarizer summer = createSummer(table1, table2);
 
         DataTablesMatchProcessor processor = new DataTablesMatchProcessor(
@@ -78,12 +65,6 @@ public class DataTableDiff extends DiffBase {
         }
 
         return summer.getResult();
-    }
-
-    public MatchResult<DataTable, DataTable> diff(final DataTable table1,
-                                                  final DataTable table2) {
-        this.table1 = table1;
-        return match(table2);
     }
 
     public Map<String, Object> buildMatchingMask(final DataRow dr) {

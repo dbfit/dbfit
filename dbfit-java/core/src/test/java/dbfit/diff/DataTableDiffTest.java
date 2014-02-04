@@ -126,7 +126,9 @@ public class DataTableDiffTest {
     }
 
     private DataTableDiff createDiff() {
-        return new DataTableDiff(rowStructure, new DiffListenerAdapter(handler));
+        DataTableDiff diff = new DataTableDiff(rowStructure);
+        diff.addListener(new DiffListenerAdapter(handler));
+        return diff;
     }
 
     private ArgumentCaptor<MatchResult> createRowCaptor() {

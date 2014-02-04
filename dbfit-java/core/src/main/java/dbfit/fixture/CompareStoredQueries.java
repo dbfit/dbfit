@@ -52,8 +52,8 @@ public class CompareStoredQueries extends fit.Fixture {
             throw new Error("Query structure missing from second row");
         }
 
-        DataTableDiff diff = new DataTableDiff(
-                loadRowStructure(lastRow), getReporter(table));
+        DataTableDiff diff = new DataTableDiff(loadRowStructure(lastRow));
+        diff.addListener(getReporter(table));
 
         diff.diff(dt1, dt2);
     }
