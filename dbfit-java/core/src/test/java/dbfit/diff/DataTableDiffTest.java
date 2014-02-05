@@ -1,6 +1,5 @@
 package dbfit.diff;
 
-import dbfit.util.DiffTestUtils;
 import static dbfit.util.DiffTestUtils.*;
 
 import dbfit.util.DataTable;
@@ -77,12 +76,6 @@ public class DataTableDiffTest {
         verify(handler).endRow(captor.capture());
         assertEquals(WRONG, captor.getValue().getStatus());
         assertFalse(result.isMatching());
-    }
-
-    @Test
-    public void testDataRowStringValueR2() {
-        assertEquals("2", r2.getStringValue("n"));
-        assertEquals("4", r2.getStringValue("2n"));
     }
 
     private DataRow createRow(int... items) {
