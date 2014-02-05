@@ -11,8 +11,6 @@ import dbfit.util.NoMatchingRowFoundException;
 import dbfit.util.MatchingMaskBuilder;
 
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 public class DataTableDiff extends DiffBase {
 
