@@ -1,19 +1,15 @@
 package dbfit.diff;
 
+import dbfit.util.DiffTestUtils;
+import static dbfit.util.DiffTestUtils.*;
+
 import dbfit.util.DataTable;
 import dbfit.util.DataRow;
-import dbfit.util.DataColumn;
 import dbfit.util.MatchResult;
-import dbfit.util.MatchStatus;
 import dbfit.util.DiffListenerAdapter;
 import dbfit.util.DiffHandler;
 import dbfit.util.RowStructure;
 import static dbfit.util.MatchStatus.*;
-
-import java.util.List;
-import java.util.LinkedList;
-import java.util.HashMap;
-import static java.util.Arrays.asList;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -25,6 +21,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
+
+import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DataTableDiffTest {
@@ -52,9 +50,8 @@ public class DataTableDiffTest {
     }
 
     @SuppressWarnings("unchecked")
-    private MatchResult runDiff(DataTable dt1, DataTable dt2) {
+    private void runDiff(DataTable dt1, DataTable dt2) {
         result = diff.diff(dt1, dt2);
-        return result;
     }
 
     @Test
@@ -89,24 +86,11 @@ public class DataTableDiffTest {
     }
 
     private DataRow createRow(int... items) {
-        HashMap<String, Object> rowValues = new HashMap<String, Object>();
-        int i = 0;
-        for (Integer item: items) {
-            rowValues.put(rowStructure.getColumnName(i++), item.toString());
-        }
-        return new DataRow(rowValues);
-    }
-
-    private List<DataColumn> createColumns() {
-        List<DataColumn> columns = new LinkedList<DataColumn>();
-        for (String s: rowStructure.getColumnNames()) {
-            columns.add(new DataColumn(s, s.getClass().getName(), ""));
-        }
-        return columns;
+        return createDataRowBuilder(rowStructure).createRow(items);
     }
 
     private DataTable createDt(DataRow... rows) {
-        return new DataTable(asList(rows), createColumns());
+        return createDataTable(rowStructure, rows);
     }
 
     private DataTableDiff createDiff() {

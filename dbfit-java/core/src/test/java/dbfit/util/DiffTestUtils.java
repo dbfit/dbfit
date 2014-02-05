@@ -1,5 +1,6 @@
 package dbfit.util;
 
+import dbfit.util.DataColumn;
 import dbfit.util.DataCell;
 import dbfit.util.DataRow;
 import dbfit.util.MatchResult;
@@ -10,9 +11,20 @@ import static dbfit.util.MatchStatus.*;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.*;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.LinkedList;
+import static java.util.Arrays.asList;
+
 public class DiffTestUtils {
 
-    /*------ MatchResult Setup helpers ----- */
+    public static List<DataColumn> createColumns(RowStructure rowStructure) {
+        List<DataColumn> columns = new LinkedList<DataColumn>();
+        for (String s: rowStructure.getColumnNames()) {
+            columns.add(new DataColumn(s, s.getClass().getName(), ""));
+        }
+        return columns;
+    }
 
     public static MatchResult createCellResultSuccess(String val) {
         return createCellResult(val, val, SUCCESS, null);
@@ -81,4 +93,61 @@ public class DiffTestUtils {
             @Override public String toString() { return stringValue; }
         };
     }
+
+    public static DataRowBuilder createDataRowBuilder() {
+        return new DefaultDataRowBuilder();
+    }
+
+    public static DataRowBuilder createDataRowBuilder(String... columns) {
+        return new NamedDataRowBuilder(columns);
+    }
+
+    public static DataRowBuilder createDataRowBuilder(RowStructure rowStr) {
+        return createDataRowBuilder(rowStr.getColumnNames());
+    }
+
+    public static interface DataRowBuilder {
+        public DataRow createRow(int... items);
+    }
+
+    public static DataTable createDataTable(RowStructure rs, DataRow... rows) {
+        return new DataTable(asList(rows), createColumns(rs));
+    }
+
+    public static abstract class AbstractDataRowBuilder implements DataRowBuilder {
+        protected abstract String getColumnName(int index);
+
+        @Override
+        public DataRow createRow(int... items) {
+            HashMap<String, Object> rowValues = new HashMap<String, Object>();
+            int i = 0;
+
+            for (Integer item: items) {
+                rowValues.put(getColumnName(i++), item.toString());
+            }
+
+            return new DataRow(rowValues);
+        }
+    }
+
+    public static class DefaultDataRowBuilder extends AbstractDataRowBuilder {
+        private String prefix = "c";
+
+        @Override protected String getColumnName(int index) {
+            return prefix + index;
+        }
+    }
+
+    public static class NamedDataRowBuilder extends AbstractDataRowBuilder {
+        private String[] columns;
+
+        public NamedDataRowBuilder(final String... columnNames) {
+            this.columns = columnNames;
+        }
+
+        @Override protected String getColumnName(int index) {
+            return columns[index];
+        }
+    }
+
 }
