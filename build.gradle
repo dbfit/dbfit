@@ -31,7 +31,10 @@ task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAl
         filter(ReplaceTokens,
             tokens: ['dbfitVersion': dbfitVersion, 'fitNesseVersion': project(':dbfit-java').fitNesseVersion])
     }
-    file('dist/plugins.properties') << 'Theme=bootstrap'
+    copy {
+        from 'files'
+        into 'dist'
+    }
     copy {
         from 'dbfit-java'
         include '**/*.jar'
