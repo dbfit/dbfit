@@ -8,6 +8,7 @@ import dbfit.util.MatchResult;
 import dbfit.util.RowStructure;
 import dbfit.util.DataRowProcessor;
 import dbfit.util.NoMatchingRowFoundException;
+import dbfit.util.MatchingMaskBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ public class DataTableDiff extends DiffBase {
     class DataTablesMatchProcessor implements DataRowProcessor {
         MatchableDataTable mdt2;
         public DiffResultsSummarizer summer;
+        private MatchingMaskBuilder mmb = new MatchingMaskBuilder(rowStructure);
 
         public DataTablesMatchProcessor(
                 final DataTable table2,
@@ -37,7 +39,7 @@ public class DataTableDiff extends DiffBase {
             DataRowDiff rowDiff = createChildDiff(summer);
 
             try {
-                DataRow row2 = mdt2.findMatching(buildMatchingMask(row1));
+                DataRow row2 = mdt2.findMatching(mmb.buildMatchingMask(row1));
                 rowDiff.diff(row1, row2);
                 mdt2.markProcessed(row2);
             } catch (NoMatchingRowFoundException nex) {
@@ -65,22 +67,6 @@ public class DataTableDiff extends DiffBase {
         }
 
         return summer.getResult();
-    }
-
-    public Map<String, Object> buildMatchingMask(final DataRow dr) {
-        final Map<String, Object> matchingMask = new HashMap<String, Object>();
-        for (int i = 0; i < rowStructure.size(); i++) {
-            addToMask(i, matchingMask, dr);
-        }
-
-        return matchingMask;
-    }
-
-    private void addToMask(int index, final Map<String, Object> mask, DataRow dr) {
-        if (rowStructure.isKeyColumn(index)) {
-            String columnName = rowStructure.getColumnName(index);
-            mask.put(columnName, dr.get(columnName));
-        }
     }
 
     private DiffResultsSummarizer createSummer(final DataTable table1,

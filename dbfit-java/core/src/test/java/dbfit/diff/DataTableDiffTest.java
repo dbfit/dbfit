@@ -5,14 +5,12 @@ import dbfit.util.DataRow;
 import dbfit.util.DataColumn;
 import dbfit.util.MatchResult;
 import dbfit.util.MatchStatus;
-import dbfit.util.DiffListener;
 import dbfit.util.DiffListenerAdapter;
 import dbfit.util.DiffHandler;
 import dbfit.util.RowStructure;
 import static dbfit.util.MatchStatus.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.LinkedList;
 import java.util.HashMap;
 import static java.util.Arrays.asList;
@@ -21,7 +19,6 @@ import org.junit.Test;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 import org.mockito.runners.MockitoJUnitRunner;
@@ -82,20 +79,6 @@ public class DataTableDiffTest {
         verify(handler).endRow(captor.capture());
         assertEquals(WRONG, captor.getValue().getStatus());
         assertFalse(res.isMatching());
-    }
-
-    private Map<String, Object> createMatchingMaskR2() {
-        DataTable dt1 = createDt(r1, r2);
-        DataTableDiff diff = createDiff();
-        return diff.buildMatchingMask(r2);
-    }
-
-    @Test
-    public void testMatchingMaskR2() {
-        Map<String, Object> mask = createMatchingMaskR2();
-
-        assertEquals(1, mask.size());
-        assertEquals("2", mask.get("n"));
     }
 
     @Test
