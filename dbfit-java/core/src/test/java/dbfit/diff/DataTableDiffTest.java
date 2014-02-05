@@ -30,11 +30,13 @@ import static org.mockito.Mockito.*;
 public class DataTableDiffTest {
 
     @Mock private DiffHandler handler;
-
     private dbfit.util.RowStructure rowStructure = new RowStructure(
             new String[] { "n", "2n" }, /* names */
             new boolean[] { true, false } /* keys */
         );
+    private ArgumentCaptor<MatchResult> captor;
+    private DataTableDiff diff;
+    private MatchResult result;
 
     DataRow r1 = createRow(1, 2);
     DataRow r2 = createRow(2, 4);
@@ -43,22 +45,24 @@ public class DataTableDiffTest {
     DataRow r5 = createRow(5, 10);
     DataRow b2 = createRow(2, 44);
 
+    @Before
+    public void prepare() {
+        captor = ArgumentCaptor.forClass(MatchResult.class);
+        diff = createDiff();
+    }
+
     @SuppressWarnings("unchecked")
-    private MatchResult runDiff(ArgumentCaptor<MatchResult> captor,
-            DataTable dt1, DataTable dt2) {
-        DataTableDiff diff = createDiff();
-        return diff.diff(dt1, dt2);
+    private MatchResult runDiff(DataTable dt1, DataTable dt2) {
+        result = diff.diff(dt1, dt2);
+        return result;
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testMismatchWithRightWrongSurplusAndMissing() {
-        ArgumentCaptor<MatchResult> captor = createRowCaptor();
+        runDiff(createDt(r1, r2, r3), createDt(r1, b2, r4));
 
-        MatchResult res = runDiff(captor,
-                createDt(r1, r2, r3), createDt(r1, b2, r4));
-
-        assertFalse(res.isMatching());
+        assertFalse(result.isMatching());
         verify(handler, times(4)).endRow(captor.capture());
         List<MatchResult> rowMatches = captor.getAllValues();
 
@@ -71,14 +75,11 @@ public class DataTableDiffTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testSingleWrongRow() {
-        ArgumentCaptor<MatchResult> captor = createRowCaptor();
-
-        MatchResult res = runDiff(captor,
-                createDt(r2), createDt(b2));
+        runDiff(createDt(r2), createDt(b2));
 
         verify(handler).endRow(captor.capture());
         assertEquals(WRONG, captor.getValue().getStatus());
-        assertFalse(res.isMatching());
+        assertFalse(result.isMatching());
     }
 
     @Test
@@ -114,8 +115,4 @@ public class DataTableDiffTest {
         return diff;
     }
 
-    private ArgumentCaptor<MatchResult> createRowCaptor() {
-        return ArgumentCaptor.forClass(MatchResult.class);
-    }
 }
-
