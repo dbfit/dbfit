@@ -45,4 +45,19 @@ public class DiffBase {
         }
     }
 
+    protected abstract class DiffRunner {
+        abstract public MatchResult getResult();
+        abstract protected void uncheckedDiff();
+
+        public void runDiff() {
+            try {
+                uncheckedDiff();
+            } catch (Exception ex) {
+                getResult().setException(ex);
+            } finally {
+                notifyListeners(getResult());
+            }
+        }
+    }
+
 }

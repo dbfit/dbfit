@@ -55,24 +55,9 @@ public class DataTableDiff extends DiffBase {
     @SuppressWarnings("unchecked")
     public MatchResult<DataTable, DataTable> diff(final DataTable table1,
                                                   final DataTable table2) {
-        DiffResultsSummarizer summer = createSummer(table1, table2);
-
-        try {
-            DataTablesMatchProcessor processor = new DataTablesMatchProcessor(
-                    table2, summer);
-
-            new MatchableDataTable(table1).processDataRows(processor);
-
-            for (DataRow dr: processor.getUnprocessedRows()) {
-                createChildDiff(summer).diff(null, dr);
-            }
-        } catch (Exception e) {
-            summer.getResult().setException(e);
-        } finally {
-            notifyListeners(summer.getResult());
-        }
-
-        return summer.getResult();
+        DataTableDiffRunner runner = new DataTableDiffRunner(table1, table2);
+        runner.runDiff();
+        return runner.getResult();
     }
 
     private DiffResultsSummarizer createSummer(final DataTable table1,
@@ -87,6 +72,34 @@ public class DataTableDiff extends DiffBase {
         diff.addListeners(listeners);
         diff.addListener(summer);
         return diff;
+    }
+
+    class DataTableDiffRunner extends DiffRunner {
+        private final DataTable table1;
+        private final DataTable table2;
+        private final DiffResultsSummarizer summer;
+
+        public DataTableDiffRunner(final DataTable table1, final DataTable table2) {
+            this.table1 = table1;
+            this.table2 = table2;
+            this.summer = createSummer(table1, table2);
+        }
+
+        @Override public MatchResult getResult() {
+            return summer.getResult();
+        }
+
+        @Override
+        protected void uncheckedDiff() {
+            DataTablesMatchProcessor processor = new DataTablesMatchProcessor(
+                    table2, summer);
+
+            new MatchableDataTable(table1).processDataRows(processor);
+
+            for (DataRow dr: processor.getUnprocessedRows()) {
+                createChildDiff(summer).diff(null, dr);
+            }
+        }
     }
 
 }

@@ -14,19 +14,7 @@ public class DataRowDiff extends DiffBase {
     }
 
     public void diff(final DataRow dr1, final DataRow dr2) {
-        DiffResultsSummarizer summer = createSummer(dr1, dr2);
-
-        try {
-            for (String column: columnNames) {
-                createChildDiff(summer).diff(
-                            createDataCell(dr1, column),
-                            createDataCell(dr2, column));
-            }
-        } catch (Exception e) {
-            summer.getResult().setException(e);
-        } finally {
-            notifyListeners(summer.getResult());
-        }
+        new DataRowDiffRunner(dr1, dr2).runDiff();
     }
 
     private DiffResultsSummarizer createSummer(final DataRow dr1, final DataRow dr2) {
@@ -39,5 +27,30 @@ public class DataRowDiff extends DiffBase {
         diff.addListeners(listeners);
         diff.addListener(summer);
         return diff;
+    }
+
+    class DataRowDiffRunner extends DiffRunner {
+        private final DataRow dr1;
+        private final DataRow dr2;
+        private final DiffResultsSummarizer summer;
+
+        public DataRowDiffRunner(final DataRow dr1, final DataRow dr2) {
+            this.dr1 = dr1;
+            this.dr2 = dr2;
+            this.summer = createSummer(dr1, dr2);
+        }
+
+        @Override public MatchResult getResult() {
+            return summer.getResult();
+        }
+
+        @Override
+        protected void uncheckedDiff() {
+            for (String column: columnNames) {
+                createChildDiff(summer).diff(
+                            createDataCell(dr1, column),
+                            createDataCell(dr2, column));
+            }
+        }
     }
 }
