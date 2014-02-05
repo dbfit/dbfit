@@ -33,7 +33,6 @@ public class DataTableDiffTest {
         );
     private ArgumentCaptor<MatchResult> captor;
     private DataTableDiff diff;
-    private MatchResult result;
 
     DataRow r1 = createRow(1, 2);
     DataRow r2 = createRow(2, 4);
@@ -50,7 +49,7 @@ public class DataTableDiffTest {
 
     @SuppressWarnings("unchecked")
     private void runDiff(DataTable dt1, DataTable dt2) {
-        result = diff.diff(dt1, dt2);
+        diff.diff(dt1, dt2);
     }
 
     @Test
@@ -58,7 +57,6 @@ public class DataTableDiffTest {
     public void testMismatchWithRightWrongSurplusAndMissing() {
         runDiff(createDt(r1, r2, r3), createDt(r1, b2, r4));
 
-        assertFalse(result.isMatching());
         verify(handler, times(4)).endRow(captor.capture());
         List<MatchResult> rowMatches = captor.getAllValues();
 
@@ -70,11 +68,20 @@ public class DataTableDiffTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void shouldEmitSummaryTableEvent() {
+    public void shouldEmitSummaryTableEventOnMismatchingDiff() {
         runDiff(createDt(r1, r2, r3), createDt(r1, b2, r4));
 
         verify(handler, times(1)).endTable(captor.capture());
         assertThat(captor.getValue().getStatus(), is(WRONG));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldEmitSummaryTableEventOnMatchingDiff() {
+        runDiff(createDt(r1, r2, r3), createDt(r3, r1, r2));
+
+        verify(handler, times(1)).endTable(captor.capture());
+        assertThat(captor.getValue().getStatus(), is(SUCCESS));
     }
 
     @Test
@@ -84,7 +91,6 @@ public class DataTableDiffTest {
 
         verify(handler).endRow(captor.capture());
         assertEquals(WRONG, captor.getValue().getStatus());
-        assertFalse(result.isMatching());
     }
 
     private DataRow createRow(int... items) {

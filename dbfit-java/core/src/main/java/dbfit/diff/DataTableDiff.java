@@ -52,12 +52,8 @@ public class DataTableDiff extends DiffBase {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public MatchResult<DataTable, DataTable> diff(final DataTable table1,
-                                                  final DataTable table2) {
-        DataTableDiffRunner runner = new DataTableDiffRunner(table1, table2);
-        runner.runDiff();
-        return runner.getResult();
+    public void diff(final DataTable table1, final DataTable table2) {
+        new DataTableDiffRunner(table1, table2).runDiff();
     }
 
     private DiffResultsSummarizer createSummer(final DataTable table1,
