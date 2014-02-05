@@ -57,13 +57,19 @@ public class DataTableDiff extends DiffBase {
                                                   final DataTable table2) {
         DiffResultsSummarizer summer = createSummer(table1, table2);
 
-        DataTablesMatchProcessor processor = new DataTablesMatchProcessor(
-                table2, summer);
+        try {
+            DataTablesMatchProcessor processor = new DataTablesMatchProcessor(
+                    table2, summer);
 
-        new MatchableDataTable(table1).processDataRows(processor);
+            new MatchableDataTable(table1).processDataRows(processor);
 
-        for (DataRow dr: processor.getUnprocessedRows()) {
-            createChildDiff(summer).diff(null, dr);
+            for (DataRow dr: processor.getUnprocessedRows()) {
+                createChildDiff(summer).diff(null, dr);
+            }
+        } catch (Exception e) {
+            summer.getResult().setException(e);
+        } finally {
+            notifyListeners(summer.getResult());
         }
 
         return summer.getResult();

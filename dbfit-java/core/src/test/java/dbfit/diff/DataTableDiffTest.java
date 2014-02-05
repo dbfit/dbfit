@@ -13,8 +13,8 @@ import static dbfit.util.MatchStatus.*;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
@@ -66,6 +66,15 @@ public class DataTableDiffTest {
         assertEquals(WRONG, rowMatches.get(1).getStatus());
         assertEquals(MISSING, rowMatches.get(2).getStatus());
         assertEquals(SURPLUS, rowMatches.get(3).getStatus());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldEmitSummaryTableEvent() {
+        runDiff(createDt(r1, r2, r3), createDt(r1, b2, r4));
+
+        verify(handler, times(1)).endTable(captor.capture());
+        assertThat(captor.getValue().getStatus(), is(WRONG));
     }
 
     @Test
