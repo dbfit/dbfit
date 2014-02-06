@@ -26,9 +26,9 @@ public abstract class CompositeDiff<P, C> extends DiffBase<P, P> {
             this.summer = createSummerizer();
         }
 
-        protected abstract DiffBase<C, C> newChildDiff();
+        protected abstract Diff<C, C> newChildDiff();
 
-        protected DiffBase<C, C> initChildDiff(final DiffBase<C, C> childDiff) {
+        protected Diff<C, C> initChildDiff(final Diff<C, C> childDiff) {
             childDiff.addListeners(listeners);
             childDiff.addListener(summer);
             return childDiff;
@@ -39,7 +39,7 @@ public abstract class CompositeDiff<P, C> extends DiffBase<P, P> {
                     MatchResult.create(o1, o2, getType()), getChildType());
         }
 
-        protected DiffBase<C, C> createChildDiff() {
+        protected Diff<C, C> createChildDiff() {
             return initChildDiff(newChildDiff());
         }
 

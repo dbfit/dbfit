@@ -1,5 +1,6 @@
 package dbfit.diff;
 
+import dbfit.api.Diff;
 import dbfit.util.MatchableDataTable;
 import dbfit.util.DataTable;
 import dbfit.util.DataRow;
@@ -57,7 +58,7 @@ public class DataTableDiff extends CompositeDiff<DataTable, DataRow> {
 
         @Override
         public void process(DataRow row1) {
-            DiffBase<DataRow, DataRow> rowDiff = createChildDiff();
+            Diff<DataRow, DataRow> rowDiff = createChildDiff();
 
             try {
                 DataRow row2 = mdt2.findMatching(mmb.buildMatchingMask(row1));
