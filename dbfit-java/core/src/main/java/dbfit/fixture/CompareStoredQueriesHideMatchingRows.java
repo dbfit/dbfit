@@ -58,13 +58,18 @@ public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries {
 
             @Override
             public void endRow(MatchResult<DataRow, DataRow> result) {
-                if (result.getStatus() != SUCCESS) {
-                    for (MatchResult cellRes: lastRow) {
+                for (MatchResult cellRes: lastRow) {
+                    if (result.getStatus() != SUCCESS) {
                         reportingSystem.addCell(cellRes);
+                    } else {
+                        reportingSystem.incRight();
                     }
+                }
 
+                if (result.getStatus() != SUCCESS) {
                     reportingSystem.endRow(result);
                 }
+
                 lastRow.clear();
             }
 
