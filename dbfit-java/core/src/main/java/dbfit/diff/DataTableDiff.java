@@ -12,7 +12,7 @@ import dbfit.util.MatchingMaskBuilder;
 
 import java.util.List;
 
-public class DataTableDiff extends DiffBase {
+public class DataTableDiff extends DiffBase<DataTable, DataTable> {
 
     private RowStructure rowStructure;
 
@@ -50,6 +50,7 @@ public class DataTableDiff extends DiffBase {
         }
     }
 
+    @Override
     public void diff(final DataTable table1, final DataTable table2) {
         new DataTableDiffRunner(table1, table2).runDiff();
     }

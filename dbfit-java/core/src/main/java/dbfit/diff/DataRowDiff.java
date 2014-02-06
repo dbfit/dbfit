@@ -6,13 +6,14 @@ import dbfit.util.MatchResult;
 import dbfit.util.DiffResultsSummarizer;
 import static dbfit.util.DataCell.createDataCell;
 
-public class DataRowDiff extends DiffBase {
+public class DataRowDiff extends DiffBase<DataRow, DataRow> {
     private String[] columnNames;
 
     public DataRowDiff(final String[] columnNames) {
         this.columnNames = columnNames;
     }
 
+    @Override
     public void diff(final DataRow dr1, final DataRow dr2) {
         new DataRowDiffRunner(dr1, dr2).runDiff();
     }
