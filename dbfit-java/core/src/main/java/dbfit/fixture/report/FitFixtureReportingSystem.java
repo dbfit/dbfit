@@ -124,6 +124,11 @@ public class FitFixtureReportingSystem implements ReportingSystem {
         closeNewRow();
     }
 
+    @Override
+    public void incRight() {
+        ++fixture.counts.right;
+    }
+
     public Parse getTable() {
         return table;
     }
