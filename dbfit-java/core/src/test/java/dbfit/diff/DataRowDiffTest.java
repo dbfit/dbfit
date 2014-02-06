@@ -1,9 +1,11 @@
 package dbfit.diff;
 
 import dbfit.util.MatchResult;
+import dbfit.util.DiffListener;
 import dbfit.util.DiffHandler;
 import dbfit.util.DiffListenerAdapter;
 import dbfit.util.DataRow;
+import dbfit.util.DataCell;
 import static dbfit.util.MatchStatus.*;
 
 import java.util.HashMap;
@@ -30,13 +32,21 @@ public class DataRowDiffTest {
     private ArgumentCaptor<MatchResult> cellResultCaptor =
         ArgumentCaptor.forClass(MatchResult.class);
 
+    private ArgumentCaptor<MatchResult> resultCaptor =
+        ArgumentCaptor.forClass(MatchResult.class);
+
     private List<MatchResult> cellResults;
     private List<MatchResult> rowResults;
+    private List<MatchResult> allResults;
 
     private String[] columns = new String[] { "n", "2n" };
 
     private void runDiff(DataRow row1, DataRow row2) {
         runDiff(row1, row2, columns);
+    }
+
+    private void runUnadaptedDiff(DataRow row1, DataRow row2) {
+        runUnadaptedDiff(row1, row2, columns);
     }
 
     @SuppressWarnings("unchecked")
@@ -51,6 +61,40 @@ public class DataRowDiffTest {
 
         cellResults = cellResultCaptor.getAllValues();
         rowResults = rowResultCaptor.getAllValues();
+    }
+
+    private void runUnadaptedDiff(DataRow row1, DataRow row2, String... colNames) {
+        DataRowDiff diff = new DataRowDiff(colNames);
+        DiffListener listener = mock(DiffListener.class);
+        diff.addListener(listener);
+
+        diff.diff(row1, row2);
+
+        verify(listener, times(1 + colNames.length)).onEvent(resultCaptor.capture());
+        allResults = resultCaptor.getAllValues();
+    }
+
+    @Test
+    public void numEventsShouldBeOnePerChildPlusSelf() {
+        runUnadaptedDiff(createRow(2, 4), createRow(2, 4));
+        assertEquals(3, allResults.size());
+    }
+
+    @Test
+    public void shouldEmitChildrenDiffEventsOfTypeDataCell() {
+        Class expectedType = DataCell.class;
+        runUnadaptedDiff(createRow(2, 4), createRow(2, 4));
+
+        assertThat(allResults.get(0).getType(), equalTo(expectedType));
+        assertThat(allResults.get(1).getType(), equalTo(expectedType));
+    }
+
+    @Test
+    public void shouldEmitDiffEventOfTypeDataRow() {
+        Class expectedType = DataRow.class;
+        runUnadaptedDiff(createRow(2, 4), createRow(2, 4));
+
+        assertThat(allResults.get(2).getType(), equalTo(expectedType));
     }
 
     @Test
