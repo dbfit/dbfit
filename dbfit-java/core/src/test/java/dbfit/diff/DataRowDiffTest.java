@@ -8,8 +8,7 @@ import dbfit.util.DataRow;
 import dbfit.util.DataCell;
 import static dbfit.util.MatchStatus.*;
 
-import java.util.HashMap;
-import java.util.List;
+import static dbfit.util.DiffTestUtils.createDataRowBuilder;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +19,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
+
+import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DataRowDiffTest {
@@ -157,11 +158,6 @@ public class DataRowDiffTest {
     }
 
     private DataRow createRow(int... items) {
-        HashMap<String, Object> rowValues = new HashMap<String, Object>();
-        int i = 0;
-        for (Integer item: items) {
-            rowValues.put(columns[i++], item.toString());
-        }
-        return new DataRow(rowValues);
+        return createDataRowBuilder(columns).createRow(items);
     }
 }
