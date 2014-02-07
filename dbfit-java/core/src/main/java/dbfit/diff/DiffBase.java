@@ -6,7 +6,6 @@ import dbfit.util.DiffListener;
 
 import java.util.Collection;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public abstract class DiffBase<T1, T2> implements Diff<T1, T2> {
 
@@ -16,8 +15,8 @@ public abstract class DiffBase<T1, T2> implements Diff<T1, T2> {
         this.listeners = listeners;
     }
 
-    public DiffBase(final DiffListener... listeners) {
-        this(new ArrayList<DiffListener>(Arrays.asList(listeners)));
+    public DiffBase() {
+        this(new ArrayList<DiffListener>());
     }
 
     protected abstract DiffRunner getDiffRunner(T1 object1, T2 object2);
@@ -33,23 +32,8 @@ public abstract class DiffBase<T1, T2> implements Diff<T1, T2> {
     }
 
     @Override
-    public void removeListener(final DiffListener listener) {
-        listeners.remove(listener);
-    }
-
-    @Override
     public void addListeners(final Collection<DiffListener> newListeneres) {
         listeners.addAll(newListeneres);
-    }
-
-    @Override
-    public void removeListeners(final Collection<DiffListener> removed) {
-        listeners.removeAll(removed);
-    }
-
-    @Override
-    public void clearListeners() {
-        listeners.clear();
     }
 
     protected void notifyListeners(final MatchResult result) {
