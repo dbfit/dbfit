@@ -4,7 +4,7 @@ public class NoOpDiffListenerAdapter extends DiffListenerAdapter
                                      implements DiffHandler {
 
     public NoOpDiffListenerAdapter() {
-        init(this);
+        setDiffHandler(this);
     }
 
     @Override

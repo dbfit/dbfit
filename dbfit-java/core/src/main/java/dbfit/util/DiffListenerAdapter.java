@@ -11,10 +11,10 @@ public class DiffListenerAdapter implements DiffListener {
     protected DiffListenerAdapter() {}
 
     public DiffListenerAdapter(final DiffHandler delegate) {
-        init(delegate);
+        setDiffHandler(delegate);
     }
 
-    protected void init(final DiffHandler delegate) {
+    protected void setDiffHandler(final DiffHandler delegate) {
         this.delegate = delegate;
     }
 
