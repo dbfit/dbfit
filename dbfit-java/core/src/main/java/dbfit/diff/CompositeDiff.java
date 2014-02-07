@@ -2,12 +2,25 @@ package dbfit.diff;
 
 import dbfit.api.Diff;
 import dbfit.util.MatchResult;
+import dbfit.util.DiffListener;
 import dbfit.util.DiffResultsSummarizer;
+
+import java.util.Collection;
 
 public abstract class CompositeDiff<P, C> extends DiffBase<P, P> {
 
+    protected Diff<C, C> childDiff;
+
     protected abstract Class getType();
     protected abstract Class getChildType();
+
+    public CompositeDiff(final Diff<C, C> childDiff) {
+        this.childDiff = childDiff;
+    }
+
+    protected Diff<C, C> getChildDiff() {
+        return childDiff;
+    }
 
     abstract class CompositeDiffRunner extends DiffRunner {
         protected final P o1;
@@ -20,21 +33,16 @@ public abstract class CompositeDiff<P, C> extends DiffBase<P, P> {
             this.summer = createSummerizer();
         }
 
-        protected abstract Diff<C, C> newChildDiff();
-
-        protected Diff<C, C> initChildDiff(final Diff<C, C> childDiff) {
-            childDiff.addListeners(listeners);
-            childDiff.addListener(summer);
-            return childDiff;
+        @Override
+        public void beforeDiff() {
+            getChildDiff().addListeners(listeners);
+            getChildDiff().addListener(summer);
         }
 
-        protected DiffResultsSummarizer createSummerizer() {
-            return new DiffResultsSummarizer(
-                    MatchResult.create(o1, o2, getType()), getChildType());
-        }
-
-        protected Diff<C, C> createChildDiff() {
-            return initChildDiff(newChildDiff());
+        @Override
+        public void afterDiff() {
+            getChildDiff().removeListener(summer);
+            getChildDiff().removeListeners(listeners);
         }
 
         @Override
@@ -42,5 +50,9 @@ public abstract class CompositeDiff<P, C> extends DiffBase<P, P> {
             return summer.getResult();
         }
 
+        protected DiffResultsSummarizer createSummerizer() {
+            return new DiffResultsSummarizer(
+                    MatchResult.create(o1, o2, getType()), getChildType());
+        }
     }
 }

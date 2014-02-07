@@ -14,6 +14,11 @@ public class DataTableDiff extends CompositeDiff<DataTable, DataRow> {
     private RowStructure rowStructure;
 
     public DataTableDiff(RowStructure rowStructure) {
+        this(rowStructure, new DataRowDiff(rowStructure.getColumnNames()));
+    }
+
+    public DataTableDiff(RowStructure rowStructure, DataRowDiff rowDiff) {
+        super(rowDiff);
         this.rowStructure = rowStructure;
     }
 
@@ -43,22 +48,17 @@ public class DataTableDiff extends CompositeDiff<DataTable, DataRow> {
         }
 
         @Override
-        protected DataRowDiff newChildDiff() {
-            return new DataRowDiff(rowStructure.getColumnNames());
-        }
-
-        @Override
         protected void uncheckedDiff() {
             new MatchableDataTable(o1).processDataRows(this);
 
             for (DataRow dr: mdt2.getUnprocessedRows()) {
-                createChildDiff().diff(null, dr);
+                getChildDiff().diff(null, dr);
             }
         }
 
         @Override
         public void process(DataRow row1) {
-            Diff<DataRow, DataRow> rowDiff = createChildDiff();
+            Diff<DataRow, DataRow> rowDiff = getChildDiff();
 
             try {
                 DataRow row2 = mdt2.findMatching(mmb.buildMatchingMask(row1));

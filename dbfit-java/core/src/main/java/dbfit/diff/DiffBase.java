@@ -58,13 +58,18 @@ public abstract class DiffBase<T1, T2> implements Diff<T1, T2> {
 
         public void runDiff() {
             try {
+                beforeDiff();
                 uncheckedDiff();
             } catch (Exception ex) {
                 getResult().setException(ex);
             } finally {
+                afterDiff();
                 notifyListeners(getResult());
             }
         }
+
+        protected void beforeDiff() {}
+        protected void afterDiff() {}
     }
 
 }

@@ -8,6 +8,11 @@ public class DataRowDiff extends CompositeDiff<DataRow, DataCell> {
     private String[] columnNames;
 
     public DataRowDiff(final String[] columnNames) {
+        this(columnNames, new DataCellDiff());
+    }
+
+    public DataRowDiff(final String[] columnNames, final DataCellDiff cellDiff) {
+        super(cellDiff);
         this.columnNames = columnNames;
     }
 
@@ -32,14 +37,9 @@ public class DataRowDiff extends CompositeDiff<DataRow, DataCell> {
         }
 
         @Override
-        protected DataCellDiff newChildDiff() {
-            return new DataCellDiff();
-        }
-
-        @Override
         protected void uncheckedDiff() {
             for (String column: columnNames) {
-                createChildDiff().diff(
+                getChildDiff().diff(
                             createDataCell(o1, column),
                             createDataCell(o2, column));
             }
