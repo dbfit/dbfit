@@ -70,10 +70,6 @@ public class CompareStoredQueries extends fit.Fixture {
             this.reportingSystem = reportingSystem;
         }
 
-        public ReportingSystem getReportingSystem() {
-            return reportingSystem;
-        }
-
         @Override
         public void endRow(MatchResult<DataRow, DataRow> result) {
             reportingSystem.endRow(result);
