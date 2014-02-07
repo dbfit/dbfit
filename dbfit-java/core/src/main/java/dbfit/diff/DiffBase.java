@@ -47,11 +47,6 @@ public abstract class DiffBase<T1, T2> implements Diff<T1, T2> {
         listeners.removeAll(removed);
     }
 
-    @Override
-    public void clearListeners() {
-        listeners.clear();
-    }
-
     protected void notifyListeners(final MatchResult result) {
         for (DiffListener listener: listeners) {
             listener.onEvent(result);
