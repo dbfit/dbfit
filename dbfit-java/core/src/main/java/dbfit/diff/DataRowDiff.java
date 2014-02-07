@@ -22,7 +22,7 @@ public class DataRowDiff extends CompositeDiff<DataRow, DataCell> {
     }
 
     @Override
-    DiffRunner getDiffRunner(final DataRow dr1, final DataRow dr2) {
+    protected DiffRunner getDiffRunner(final DataRow dr1, final DataRow dr2) {
         return new DataRowDiffRunner(dr1, dr2);
     }
 

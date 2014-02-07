@@ -7,8 +7,8 @@ import static dbfit.util.MatchStatus.*;
 public class DataCellDiff extends DiffBase<DataCell, DataCell> {
 
     @Override
-    public void diff(final DataCell cell1, final DataCell cell2) {
-        new DataCellDiffRunner(cell1, cell2).runDiff();
+    protected DiffRunner getDiffRunner(final DataCell cell1, final DataCell cell2) {
+        return new DataCellDiffRunner(cell1, cell2);
     }
 
     class DataCellDiffRunner extends DiffRunner {

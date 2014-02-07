@@ -28,7 +28,7 @@ public class DataTableDiff extends CompositeDiff<DataTable, DataRow> {
     }
 
     @Override
-    DiffRunner getDiffRunner(final DataTable dr1, final DataTable dr2) {
+    protected DiffRunner getDiffRunner(final DataTable dr1, final DataTable dr2) {
         return new DataTableDiffRunner(dr1, dr2);
     }
 

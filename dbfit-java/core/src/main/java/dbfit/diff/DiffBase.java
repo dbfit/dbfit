@@ -20,8 +20,12 @@ public abstract class DiffBase<T1, T2> implements Diff<T1, T2> {
         this(new ArrayList<DiffListener>(Arrays.asList(listeners)));
     }
 
+    protected abstract DiffRunner getDiffRunner(T1 object1, T2 object2);
+
     @Override
-    abstract public void diff(T1 object1, T2 object2);
+    public void diff(final T1 object1, final T2 object2) {
+        getDiffRunner(object1, object2).runDiff();
+    }
 
     @Override
     public void addListener(final DiffListener listener) {

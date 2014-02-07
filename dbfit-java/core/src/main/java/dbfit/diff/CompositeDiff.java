@@ -6,14 +6,8 @@ import dbfit.util.DiffResultsSummarizer;
 
 public abstract class CompositeDiff<P, C> extends DiffBase<P, P> {
 
-    @Override
-    public void diff(final P object1, final P object2) {
-        getDiffRunner(object1, object2).runDiff();
-    }
-
     protected abstract Class getType();
     protected abstract Class getChildType();
-    abstract DiffRunner getDiffRunner(P object1, P object2);
 
     abstract class CompositeDiffRunner extends DiffRunner {
         protected final P o1;

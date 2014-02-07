@@ -22,7 +22,9 @@ public class DiffBaseTest {
     @Before
     public void prepare() {
         diffBase = new DiffBase(listener1) {
-            @Override public void diff(Object o1, Object o2) {}
+            @Override public DiffBase.DiffRunner getDiffRunner(Object o1, Object o2) {
+                return null;
+            }
         };
         diffBase.addListener(listener2);
     }
