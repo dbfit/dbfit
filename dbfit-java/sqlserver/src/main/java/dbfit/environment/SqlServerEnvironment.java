@@ -221,5 +221,31 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
                         + " where p.object_id = OBJECT_ID(?) order by parameter_id ");
 
     }
+
+    public String buildInsertCommand(String tableName,
+            DbParameterAccessor[] accessors) {
+        StringBuilder sb = new StringBuilder("insert into ");
+        sb.append(tableName).append("(");
+        String comma = "";
+
+        StringBuilder values = new StringBuilder();
+
+        for (DbParameterAccessor accessor : accessors) {
+            if (accessor.hasDirection(Direction.INPUT)) {
+                sb.append(comma);
+                values.append(comma);
+                //This will allow column names that have spaces or are keywords.
+                sb.append("[" + accessor.getName() + "]");
+                //sb.append(accessor.getName());
+                // values.append(":").append(accessor.getName());
+                values.append("?");
+                comma = ",";
+            }
+        }
+        sb.append(") values (");
+        sb.append(values);
+        sb.append(")");
+        return sb.toString();
+    }
 }
 
