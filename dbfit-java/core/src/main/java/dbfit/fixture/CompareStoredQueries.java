@@ -4,17 +4,18 @@ import dbfit.api.DBEnvironment;
 import dbfit.diff.DataTableDiff;
 import dbfit.fixture.report.ReportingSystem;
 import dbfit.fixture.report.FitFixtureReportingSystem;
-import dbfit.util.*;
+import dbfit.util.DataTable;
+import dbfit.util.DataRow;
+import dbfit.util.DataCell;
+import dbfit.util.MatchResult;
+import dbfit.util.NoOpDiffListenerAdapter;
+import dbfit.util.SymbolUtil;
 import static dbfit.util.RowStructureLoader.loadRowStructure;
 import static dbfit.util.DataCell.createDataCell;
 import static dbfit.util.MatchStatus.*;
 
 import fit.Fixture;
 import fit.Parse;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class CompareStoredQueries extends fit.Fixture {
     private String symbol1;

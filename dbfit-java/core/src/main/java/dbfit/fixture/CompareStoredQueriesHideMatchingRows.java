@@ -1,12 +1,12 @@
 package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
-import dbfit.fixture.report.ReportingSystem;
 import dbfit.fixture.report.FitFixtureReportingSystem;
-import dbfit.util.*;
+import dbfit.util.DataRow;
+import dbfit.util.DataCell;
+import dbfit.util.MatchResult;
 import static dbfit.util.MatchStatus.*;
 
-import fit.Fixture;
 import fit.Parse;
 
 import java.util.List;
