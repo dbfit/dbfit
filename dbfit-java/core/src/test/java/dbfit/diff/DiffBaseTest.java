@@ -21,11 +21,12 @@ public class DiffBaseTest {
 
     @Before
     public void prepare() {
-        diffBase = new DiffBase(listener1) {
+        diffBase = new DiffBase() {
             @Override public DiffBase.DiffRunner getDiffRunner(Object o1, Object o2) {
                 return null;
             }
         };
+        diffBase.addListener(listener1);
         diffBase.addListener(listener2);
     }
 
