@@ -12,4 +12,10 @@ public interface Diff<T1, T2> {
 
     public void addListeners(Collection<DiffListener> newListeneres);
 
+    public void removeListener(DiffListener listener);
+
+    public void removeListeners(Collection<DiffListener> removed);
+
+    public void clearListeners();
+
 }

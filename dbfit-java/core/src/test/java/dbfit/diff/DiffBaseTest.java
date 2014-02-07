@@ -21,12 +21,11 @@ public class DiffBaseTest {
 
     @Before
     public void prepare() {
-        diffBase = new DiffBase() {
+        diffBase = new DiffBase(listener1) {
             @Override public DiffBase.DiffRunner getDiffRunner(Object o1, Object o2) {
                 return null;
             }
         };
-        diffBase.addListener(listener1);
         diffBase.addListener(listener2);
     }
 
@@ -37,4 +36,13 @@ public class DiffBaseTest {
         verify(listener2).onEvent(matchResult);
     }
 
+    @Test
+    public void shouldNotNotifyUnregisteredListeners() {
+        diffBase.removeListener(listener1);
+
+        diffBase.notifyListeners(matchResult);
+
+        verifyZeroInteractions(listener1);
+        verify(listener2).onEvent(matchResult);
+    }
 }
