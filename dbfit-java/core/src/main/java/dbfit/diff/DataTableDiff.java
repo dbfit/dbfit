@@ -1,13 +1,11 @@
 package dbfit.diff;
 
-import dbfit.api.Diff;
 import dbfit.util.MatchableDataTable;
 import dbfit.util.DataTable;
 import dbfit.util.DataRow;
 import dbfit.util.MatchResult;
 import dbfit.util.RowStructure;
 import dbfit.util.DataRowProcessor;
-import dbfit.util.NoMatchingRowFoundException;
 import dbfit.util.MatchingMaskBuilder;
 
 public class DataTableDiff extends CompositeDiff<DataTable, DataRow> {
@@ -58,18 +56,10 @@ public class DataTableDiff extends CompositeDiff<DataTable, DataRow> {
         }
 
         @Override
-        public void process(DataRow row1) {
-            Diff<DataRow, DataRow> rowDiff = getChildDiff();
-
-            try {
-                DataRow row2 = mdt2.findMatching(mmb.buildMatchingMask(row1));
-                rowDiff.diff(row1, row2);
-                mdt2.markProcessed(row2);
-            } catch (NoMatchingRowFoundException nex) {
-                rowDiff.diff(row1, null);
-            }
+        public void process(final DataRow row1) {
+            DataRow row2 = mdt2.findMatchingNothrow(mmb.buildMatchingMask(row1));
+            getChildDiff().diff(row1, row2);
+            mdt2.markProcessed(row2);
         }
-
     }
-
 }
