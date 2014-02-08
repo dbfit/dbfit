@@ -12,20 +12,24 @@ import static dbfit.util.DiffTestUtils.createDataRowBuilder;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.hamcrest.CoreMatchers.*;
+import org.hamcrest.Matcher;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
 import org.mockito.ArgumentCaptor;
+import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
+import java.util.ArrayList;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DataRowDiffTest {
 
     @Mock private DiffHandler handler;
+    @Mock private DataCellDiff childDiff;
 
     private ArgumentCaptor<MatchResult> rowResultCaptor =
         ArgumentCaptor.forClass(MatchResult.class);
@@ -35,6 +39,9 @@ public class DataRowDiffTest {
 
     private ArgumentCaptor<MatchResult> resultCaptor =
         ArgumentCaptor.forClass(MatchResult.class);
+
+    private ArgumentCaptor<DataCell> arg1Captor = forClass(DataCell.class);
+    private ArgumentCaptor<DataCell> arg2Captor = forClass(DataCell.class);
 
     private List<MatchResult> cellResults;
     private List<MatchResult> rowResults;
@@ -73,6 +80,23 @@ public class DataRowDiffTest {
 
         verify(listener, times(1 + colNames.length)).onEvent(resultCaptor.capture());
         allResults = resultCaptor.getAllValues();
+    }
+
+    private void runWithMockedChildDiff(DataRow row1, DataRow row2) {
+        DataRowDiff diff = new DataRowDiff(columns, childDiff);
+
+        diff.diff(row1, row2);
+
+        verify(childDiff, times(columns.length)).diff(
+                arg1Captor.capture(), arg2Captor.capture());
+    }
+
+    @Test
+    public void shouldInvokeDiffPerEachChildCell() {
+        runWithMockedChildDiff(createRow(2, 4), createRow(3, 5));
+
+        assertThat(arg1Captor.getAllValues(), hasItems(2, 4));
+        assertThat(arg2Captor.getAllValues(), hasItems(3, 5));
     }
 
     @Test
@@ -159,5 +183,14 @@ public class DataRowDiffTest {
 
     private DataRow createRow(int... items) {
         return createDataRowBuilder(columns).createRow(items);
+    }
+
+    public static <E> Matcher<Iterable<? extends E>> hasItems(int... values) {
+        List<Matcher<? super E>> matchers = new ArrayList<>();
+        for (int item : values) {
+            matchers.add(hasToString(String.valueOf(item)));
+        }
+
+        return contains(matchers);
     }
 }
