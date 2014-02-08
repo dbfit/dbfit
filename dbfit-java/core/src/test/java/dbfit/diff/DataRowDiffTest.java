@@ -73,7 +73,6 @@ public class DataRowDiffTest {
     @Test
     public void onExceptionShouldEmitExceptionEvent() {
         DataRowDiff diff = new DataRowDiff(columns, childDiff);
-        diff.addListener(listener);
         Exception ex = new RuntimeException("Cruel World!");
 
         doThrow(ex).when(childDiff).diff(anyDataCell(), anyDataCell());
