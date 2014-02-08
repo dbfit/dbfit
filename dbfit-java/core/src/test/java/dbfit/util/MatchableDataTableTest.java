@@ -57,6 +57,13 @@ public class MatchableDataTableTest {
     }
 
     @Test
+    public void markWithNullShouldMakeNoChange() {
+        final int ORIGINAL_SIZE = mdt.getUnprocessedRows().size();
+        mdt.markProcessed(null);
+        assertEquals(ORIGINAL_SIZE, mdt.getUnprocessedRows().size());
+    }
+
+    @Test
     public void findFirstUnprocessedRowShouldBeR1() throws NoMatchingRowFoundException {
         DataRow firstUnprocessed = mdt.findFirstUnprocessedRow();
         assertEquals(r1, firstUnprocessed);
