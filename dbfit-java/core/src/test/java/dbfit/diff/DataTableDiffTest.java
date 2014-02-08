@@ -1,6 +1,7 @@
 package dbfit.diff;
 
 import static dbfit.util.DiffTestUtils.*;
+import static dbfit.test.matchers.HasMatchStatus.*;
 
 import dbfit.util.DataTable;
 import dbfit.util.DataRow;
@@ -8,30 +9,35 @@ import dbfit.util.MatchResult;
 import dbfit.util.DiffListenerAdapter;
 import dbfit.util.DiffHandler;
 import dbfit.util.RowStructure;
+import dbfit.util.MatchStatus;
 import static dbfit.util.MatchStatus.*;
 
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
+import org.mockito.Captor;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
 
-import java.util.List;
+import static java.util.Arrays.asList;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DataTableDiffTest {
 
-    @Mock private DiffHandler handler;
-    private dbfit.util.RowStructure rowStructure = new RowStructure(
+    private RowStructure rowStructure = new RowStructure(
             new String[] { "n", "2n" }, /* names */
             new boolean[] { true, false } /* keys */
         );
-    private ArgumentCaptor<MatchResult> captor;
+
+    @Mock private DiffHandler handler;
+    @Captor ArgumentCaptor<MatchResult<DataRow, DataRow>> rowResultCaptor;
+    @Captor ArgumentCaptor<MatchResult<DataTable, DataTable>> tabResultCaptor;
+
     private DataTableDiff diff;
 
     DataRow r1 = createRow(1, 2);
@@ -43,54 +49,45 @@ public class DataTableDiffTest {
 
     @Before
     public void prepare() {
-        captor = ArgumentCaptor.forClass(MatchResult.class);
-        diff = createDiff();
-    }
-
-    @SuppressWarnings("unchecked")
-    private void runDiff(DataTable dt1, DataTable dt2) {
-        diff.diff(dt1, dt2);
+        diff = new DataTableDiff(rowStructure);
+        diff.addListener(new DiffListenerAdapter(handler));
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void testMismatchWithRightWrongSurplusAndMissing() {
-        runDiff(createDt(r1, r2, r3), createDt(r1, b2, r4));
-
-        verify(handler, times(4)).endRow(captor.capture());
-        List<MatchResult> rowMatches = captor.getAllValues();
-
-        assertEquals(SUCCESS, rowMatches.get(0).getStatus());
-        assertEquals(WRONG, rowMatches.get(1).getStatus());
-        assertEquals(MISSING, rowMatches.get(2).getStatus());
-        assertEquals(SURPLUS, rowMatches.get(3).getStatus());
+        diff.diff(createDt(r1, r2, r3), createDt(r1, b2, r4));
+        verifyRowStatuses(SUCCESS, WRONG, MISSING, SURPLUS);
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void shouldEmitSummaryTableEventOnMismatchingDiff() {
-        runDiff(createDt(r1, r2, r3), createDt(r1, b2, r4));
-
-        verify(handler, times(1)).endTable(captor.capture());
-        assertThat(captor.getValue().getStatus(), is(WRONG));
+        diff.diff(createDt(r1, r2, r3), createDt(r1, b2, r4));
+        verifyTabStatus(WRONG);
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void shouldEmitSummaryTableEventOnMatchingDiff() {
-        runDiff(createDt(r1, r2, r3), createDt(r3, r1, r2));
-
-        verify(handler, times(1)).endTable(captor.capture());
-        assertThat(captor.getValue().getStatus(), is(SUCCESS));
+        diff.diff(createDt(r1, r2, r3), createDt(r3, r1, r2));
+        verifyTabStatus(SUCCESS);
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void testSingleWrongRow() {
-        runDiff(createDt(r2), createDt(b2));
+        diff.diff(createDt(r2), createDt(b2));
+        verifyRowStatuses(WRONG);
+    }
 
-        verify(handler).endRow(captor.capture());
-        assertEquals(WRONG, captor.getValue().getStatus());
+    private void verifyRowStatuses(MatchStatus... expectedStatuses) {
+        verify(handler, times(expectedStatuses.length)).endRow(
+                rowResultCaptor.capture());
+
+        assertThat(statusesOf(rowResultCaptor.getAllValues()),
+                equalTo(asList(expectedStatuses)));
+    }
+
+    private void verifyTabStatus(MatchStatus expectedStatus) {
+        verify(handler).endTable(tabResultCaptor.capture());
+        assertThat(tabResultCaptor.getValue(), hasMatchStatus(expectedStatus));
     }
 
     private DataRow createRow(Integer... items) {
@@ -100,11 +97,4 @@ public class DataTableDiffTest {
     private DataTable createDt(DataRow... rows) {
         return createDataTable(rowStructure, rows);
     }
-
-    private DataTableDiff createDiff() {
-        DataTableDiff diff = new DataTableDiff(rowStructure);
-        diff.addListener(new DiffListenerAdapter(handler));
-        return diff;
-    }
-
 }
