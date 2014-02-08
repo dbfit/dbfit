@@ -94,6 +94,22 @@ public class DataRowDiffTest {
     }
 
     @Test
+    public void onExceptionShouldEmitExceptionEvent() {
+        DataRowDiff diff = new DataRowDiff(columns, childDiff);
+        DiffListener listener = mock(DiffListener.class);
+        diff.addListener(listener);
+
+        doThrow(new RuntimeException("Cruel!")).when(childDiff).diff(
+                org.mockito.Matchers.any(DataCell.class),
+                org.mockito.Matchers.any(DataCell.class));
+
+        diff.diff(createRow(2, 4), createRow(5, 6));
+
+        verify(listener).onEvent(resultCaptor.capture());
+        assertThat(resultCaptor.getValue().getStatus(), is(EXCEPTION));
+    }
+
+    @Test
     public void numEventsShouldBeOnePerChildPlusSelf() {
         runUnadaptedDiff(createRow(2, 4), createRow(2, 4));
         assertEquals(3, allResults.size());
