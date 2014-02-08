@@ -35,8 +35,11 @@ public class DataTableDiffTest {
         );
 
     @Mock private DiffHandler handler;
+    @Mock DataRowDiff childDiff;
     @Captor ArgumentCaptor<MatchResult<DataRow, DataRow>> rowResultCaptor;
     @Captor ArgumentCaptor<MatchResult<DataTable, DataTable>> tabResultCaptor;
+    @Captor ArgumentCaptor<DataRow> arg1Captor;
+    @Captor ArgumentCaptor<DataRow> arg2Captor;
 
     private DataTableDiff diff;
 
@@ -51,6 +54,19 @@ public class DataTableDiffTest {
     public void prepare() {
         diff = new DataTableDiff(rowStructure);
         diff.addListener(new DiffListenerAdapter(handler));
+    }
+
+    @Test
+    public void shouldInvokeDiffPerEachChildRow() {
+        diff = new DataTableDiff(rowStructure, childDiff);
+
+        diff.diff(createDt(r1, r2, r3), createDt(r1, b2, r4));
+
+        verify(childDiff, times(4)).diff(
+                arg1Captor.capture(), arg2Captor.capture());
+
+        assertThat(arg1Captor.getAllValues(), contains(r1, r2, r3, null));
+        assertThat(arg2Captor.getAllValues(), contains(r1, b2, null, r4));
     }
 
     @Test
