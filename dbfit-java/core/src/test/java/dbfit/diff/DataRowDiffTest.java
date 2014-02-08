@@ -31,15 +31,9 @@ public class DataRowDiffTest {
     @Mock private DiffHandler handler;
     @Mock private DataCellDiff childDiff;
 
-    private ArgumentCaptor<MatchResult> rowResultCaptor =
-        ArgumentCaptor.forClass(MatchResult.class);
-
-    private ArgumentCaptor<MatchResult> cellResultCaptor =
-        ArgumentCaptor.forClass(MatchResult.class);
-
-    private ArgumentCaptor<MatchResult> resultCaptor =
-        ArgumentCaptor.forClass(MatchResult.class);
-
+    private ArgumentCaptor<MatchResult> rowResultCaptor = forClass(MatchResult.class);
+    private ArgumentCaptor<MatchResult> cellResultCaptor = forClass(MatchResult.class);
+    private ArgumentCaptor<MatchResult> resultCaptor = forClass(MatchResult.class);
     private ArgumentCaptor<DataCell> arg1Captor = forClass(DataCell.class);
     private ArgumentCaptor<DataCell> arg2Captor = forClass(DataCell.class);
 
