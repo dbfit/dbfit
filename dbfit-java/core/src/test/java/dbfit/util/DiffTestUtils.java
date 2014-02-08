@@ -160,4 +160,14 @@ public class DiffTestUtils {
         }
     }
 
+    public static List<MatchStatus> statusesOf(List<? extends MatchResult> results) {
+        List<MatchStatus> statuses = new LinkedList<>();
+
+        for (MatchResult res : results) {
+            statuses.add(res.getStatus());
+        }
+
+        return statuses;
+    }
+
 }
