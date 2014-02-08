@@ -58,5 +58,9 @@ public class DataRow {
         return values.get(normaliseName(key));
     }
 
+    @Override
+    public String toString() {
+        return String.valueOf(values);
+    }
 }
 
