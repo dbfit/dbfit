@@ -36,6 +36,7 @@ public class DataTableDiffTest {
 
     @Mock private DiffHandler handler;
     @Mock DataRowDiff childDiff;
+    @Mock MatchResult<DataTable, DataTable> mockRequest;
     @Captor ArgumentCaptor<MatchResult<DataRow, DataRow>> rowResultCaptor;
     @Captor ArgumentCaptor<MatchResult<DataTable, DataTable>> tabResultCaptor;
     @Captor ArgumentCaptor<DataRow> arg1Captor;
@@ -54,6 +55,8 @@ public class DataTableDiffTest {
     public void prepare() {
         diff = new DataTableDiff(rowStructure);
         diff.addListener(new DiffListenerAdapter(handler));
+        when(mockRequest.getObject1()).thenReturn(createDt(r1));
+        when(mockRequest.getObject2()).thenReturn(createDt(r1));
     }
 
     @Test
@@ -67,6 +70,17 @@ public class DataTableDiffTest {
 
         assertThat(arg1Captor.getAllValues(), contains(r1, r2, r3, null));
         assertThat(arg2Captor.getAllValues(), contains(r1, b2, null, r4));
+    }
+
+    @Test
+    public void shouldEmitExceptionsAsEvents() {
+        diff = new DataTableDiff(rowStructure, childDiff);
+        Exception ex = new RuntimeException("Cruel World!");
+        doThrow(ex).when(childDiff).diff(anyDataRow(), anyDataRow());
+
+        diff.diff(mockRequest);
+
+        verify(mockRequest).setException(ex);
     }
 
     @Test
@@ -112,5 +126,9 @@ public class DataTableDiffTest {
 
     private DataTable createDt(DataRow... rows) {
         return createDataTable(rowStructure, rows);
+    }
+
+    private DataRow anyDataRow() {
+        return org.mockito.Matchers.any(DataRow.class);
     }
 }
