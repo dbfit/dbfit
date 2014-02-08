@@ -17,29 +17,19 @@ public class DataCellDiff extends DiffBase<DataCell, DataCell> {
     }
 
     class DataCellDiffRunner extends DiffRunner {
-        private final DataCell cell1;
-        private final DataCell cell2;
-        private final MatchResult result;
-
         public DataCellDiffRunner(MatchResult<DataCell, DataCell> request) {
-            this.result = request;
-            this.cell1 = request.getObject1();
-            this.cell2 = request.getObject2();
-        }
-
-        @Override public MatchResult getResult() {
-            return result;
+            super(request);
         }
 
         @Override
         protected void uncheckedDiff() {
-            if ( (cell1 == null) && (cell2 == null) ) {
+            if ((obj1 == null) && (obj2 == null)) {
                 throw new IllegalArgumentException("Can't diff two null cells");
-            } else if (cell1 == null) {
+            } else if (obj1 == null) {
                 result.setStatus(SURPLUS);
-            } else if (cell2 == null) {
+            } else if (obj2 == null) {
                 result.setStatus(MISSING);
-            } else if (!cell1.equalTo(cell2)) {
+            } else if (!obj1.equalTo(obj2)) {
                 result.setStatus(WRONG);
             } else {
                 result.setStatus(SUCCESS);

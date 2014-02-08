@@ -41,8 +41,8 @@ public class DataRowDiff extends CompositeDiff<DataRow, DataCell> {
         protected void uncheckedDiff() {
             for (String column: columnNames) {
                 getChildDiff().diff(
-                            createDataCell(o1, column),
-                            createDataCell(o2, column));
+                            createDataCell(obj1, column),
+                            createDataCell(obj2, column));
             }
         }
     }

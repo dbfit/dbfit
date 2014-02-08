@@ -2,10 +2,7 @@ package dbfit.diff;
 
 import dbfit.api.Diff;
 import dbfit.util.MatchResult;
-import dbfit.util.DiffListener;
 import dbfit.util.DiffResultsSummarizer;
-
-import java.util.Collection;
 
 public abstract class CompositeDiff<P, C> extends DiffBase<P, P> {
 
@@ -22,13 +19,10 @@ public abstract class CompositeDiff<P, C> extends DiffBase<P, P> {
     }
 
     abstract class CompositeDiffRunner extends DiffRunner {
-        protected final P o1;
-        protected final P o2;
         protected final DiffResultsSummarizer summer;
 
         public CompositeDiffRunner(MatchResult<P, P> request) {
-            this.o1 = request.getObject1();
-            this.o2 = request.getObject2();
+            super(request);
             this.summer = new DiffResultsSummarizer(request, getChildType());
         }
 
@@ -42,11 +36,6 @@ public abstract class CompositeDiff<P, C> extends DiffBase<P, P> {
         public void afterDiff() {
             getChildDiff().removeListener(summer);
             getChildDiff().removeListeners(listeners);
-        }
-
-        @Override
-        public MatchResult getResult() {
-            return summer.getResult();
         }
     }
 }

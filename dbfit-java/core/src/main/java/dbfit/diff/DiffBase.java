@@ -59,8 +59,17 @@ public abstract class DiffBase<T1, T2> implements Diff<T1, T2> {
     }
 
     protected abstract class DiffRunner {
-        abstract public MatchResult getResult();
+        protected final T1 obj1;
+        protected final T2 obj2;
+        protected final MatchResult<T1, T2> result;
+
         abstract protected void uncheckedDiff();
+
+        public DiffRunner(final MatchResult<T1, T2> result) {
+            this.result = result;
+            this.obj1 = result.getObject1();
+            this.obj2 = result.getObject2();
+        }
 
         public void runDiff() {
             try {
@@ -72,6 +81,10 @@ public abstract class DiffBase<T1, T2> implements Diff<T1, T2> {
                 afterDiff();
                 notifyListeners(getResult());
             }
+        }
+
+        public final MatchResult getResult() {
+            return result;
         }
 
         protected void beforeDiff() {}

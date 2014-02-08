@@ -45,12 +45,12 @@ public class DataTableDiff extends CompositeDiff<DataTable, DataRow> {
 
         public DataTableDiffRunner(MatchResult<DataTable, DataTable> request) {
             super(request);
-            this.mdt2 = new MatchableDataTable(o2);
+            this.mdt2 = new MatchableDataTable(obj2);
         }
 
         @Override
         protected void uncheckedDiff() {
-            new MatchableDataTable(o1).processDataRows(this);
+            new MatchableDataTable(obj1).processDataRows(this);
 
             for (DataRow dr: mdt2.getUnprocessedRows()) {
                 getChildDiff().diff(null, dr);
