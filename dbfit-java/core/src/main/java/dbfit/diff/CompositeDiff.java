@@ -11,7 +11,6 @@ public abstract class CompositeDiff<P, C> extends DiffBase<P, P> {
 
     protected Diff<C, C> childDiff;
 
-    protected abstract Class getType();
     protected abstract Class getChildType();
 
     public CompositeDiff(final Diff<C, C> childDiff) {
@@ -27,10 +26,10 @@ public abstract class CompositeDiff<P, C> extends DiffBase<P, P> {
         protected final P o2;
         protected final DiffResultsSummarizer summer;
 
-        public CompositeDiffRunner(final P o1, final P o2) {
-            this.o1 = o1;
-            this.o2 = o2;
-            this.summer = createSummerizer();
+        public CompositeDiffRunner(MatchResult<P, P> request) {
+            this.o1 = request.getObject1();
+            this.o2 = request.getObject2();
+            this.summer = new DiffResultsSummarizer(request, getChildType());
         }
 
         @Override
@@ -48,11 +47,6 @@ public abstract class CompositeDiff<P, C> extends DiffBase<P, P> {
         @Override
         public MatchResult getResult() {
             return summer.getResult();
-        }
-
-        protected DiffResultsSummarizer createSummerizer() {
-            return new DiffResultsSummarizer(
-                    MatchResult.create(o1, o2, getType()), getChildType());
         }
     }
 }

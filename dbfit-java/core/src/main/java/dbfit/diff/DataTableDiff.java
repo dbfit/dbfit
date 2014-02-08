@@ -4,6 +4,7 @@ import dbfit.api.Diff;
 import dbfit.util.MatchableDataTable;
 import dbfit.util.DataTable;
 import dbfit.util.DataRow;
+import dbfit.util.MatchResult;
 import dbfit.util.RowStructure;
 import dbfit.util.DataRowProcessor;
 import dbfit.util.NoMatchingRowFoundException;
@@ -33,8 +34,8 @@ public class DataTableDiff extends CompositeDiff<DataTable, DataRow> {
     }
 
     @Override
-    protected DiffRunner getDiffRunner(final DataTable dr1, final DataTable dr2) {
-        return new DataTableDiffRunner(dr1, dr2);
+    protected DiffRunner getDiffRunner(MatchResult<DataTable, DataTable> request) {
+        return new DataTableDiffRunner(request);
     }
 
     class DataTableDiffRunner extends CompositeDiffRunner implements DataRowProcessor {
@@ -42,9 +43,9 @@ public class DataTableDiff extends CompositeDiff<DataTable, DataRow> {
         private MatchingMaskBuilder mmb = new MatchingMaskBuilder(rowStructure);
         private MatchableDataTable mdt2;
 
-        public DataTableDiffRunner(final DataTable table1, final DataTable table2) {
-            super(table1, table2);
-            this.mdt2 = new MatchableDataTable(table2);
+        public DataTableDiffRunner(MatchResult<DataTable, DataTable> request) {
+            super(request);
+            this.mdt2 = new MatchableDataTable(o2);
         }
 
         @Override

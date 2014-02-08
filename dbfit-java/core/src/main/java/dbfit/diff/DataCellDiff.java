@@ -7,8 +7,13 @@ import static dbfit.util.MatchStatus.*;
 public class DataCellDiff extends DiffBase<DataCell, DataCell> {
 
     @Override
-    protected DiffRunner getDiffRunner(final DataCell cell1, final DataCell cell2) {
-        return new DataCellDiffRunner(cell1, cell2);
+    protected Class getType() {
+        return DataCell.class;
+    }
+
+    @Override
+    protected DiffRunner getDiffRunner(MatchResult<DataCell, DataCell> request) {
+        return new DataCellDiffRunner(request);
     }
 
     class DataCellDiffRunner extends DiffRunner {
@@ -16,10 +21,10 @@ public class DataCellDiff extends DiffBase<DataCell, DataCell> {
         private final DataCell cell2;
         private final MatchResult result;
 
-        public DataCellDiffRunner(final DataCell cell1, final DataCell cell2) {
-            this.cell1 = cell1;
-            this.cell2 = cell2;
-            this.result = MatchResult.create(cell1, cell2, DataCell.class);
+        public DataCellDiffRunner(MatchResult<DataCell, DataCell> request) {
+            this.result = request;
+            this.cell1 = request.getObject1();
+            this.cell2 = request.getObject2();
         }
 
         @Override public MatchResult getResult() {

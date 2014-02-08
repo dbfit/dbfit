@@ -31,6 +31,7 @@ public class DataRowDiffTest {
 
     @Mock private DiffHandler handler;
     @Mock private DataCellDiff childDiff;
+    @Mock private MatchResult<DataRow, DataRow> mockResult;
 
     private ArgumentCaptor<MatchResult> rowResultCaptor = forClass(MatchResult.class);
     private ArgumentCaptor<MatchResult> cellResultCaptor = forClass(MatchResult.class);
@@ -99,15 +100,15 @@ public class DataRowDiffTest {
         DataRowDiff diff = new DataRowDiff(columns, childDiff);
         DiffListener listener = mock(DiffListener.class);
         diff.addListener(listener);
+        Exception ex = new RuntimeException("Cruel World!");
 
-        doThrow(new RuntimeException("Cruel!")).when(childDiff).diff(
+        doThrow(ex).when(childDiff).diff(
                 org.mockito.Matchers.any(DataCell.class),
                 org.mockito.Matchers.any(DataCell.class));
 
-        diff.diff(createRow(2, 4), createRow(5, 6));
+        diff.diff(mockResult);
 
-        verify(listener).onEvent(resultCaptor.capture());
-        assertThat(resultCaptor.getValue().getStatus(), is(EXCEPTION));
+        verify(mockResult).setException(ex);
     }
 
     @Test

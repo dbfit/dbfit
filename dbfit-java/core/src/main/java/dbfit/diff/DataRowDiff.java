@@ -2,6 +2,7 @@ package dbfit.diff;
 
 import dbfit.util.DataRow;
 import dbfit.util.DataCell;
+import dbfit.util.MatchResult;
 import static dbfit.util.DataCell.createDataCell;
 
 public class DataRowDiff extends CompositeDiff<DataRow, DataCell> {
@@ -27,13 +28,13 @@ public class DataRowDiff extends CompositeDiff<DataRow, DataCell> {
     }
 
     @Override
-    protected DiffRunner getDiffRunner(final DataRow dr1, final DataRow dr2) {
-        return new DataRowDiffRunner(dr1, dr2);
+    protected DiffRunner getDiffRunner(MatchResult<DataRow, DataRow> request) {
+        return new DataRowDiffRunner(request);
     }
 
     class DataRowDiffRunner extends CompositeDiffRunner {
-        public DataRowDiffRunner(final DataRow dr1, final DataRow dr2) {
-            super(dr1, dr2);
+        public DataRowDiffRunner(MatchResult<DataRow, DataRow> request) {
+            super(request);
         }
 
         @Override

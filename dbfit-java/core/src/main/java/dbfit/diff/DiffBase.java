@@ -11,6 +11,10 @@ public abstract class DiffBase<T1, T2> implements Diff<T1, T2> {
 
     protected Collection<DiffListener> listeners;
 
+    protected abstract Class getType();
+
+    protected abstract DiffRunner getDiffRunner(MatchResult<T1, T2> request);
+
     public DiffBase(final Collection<DiffListener> listeners) {
         this.listeners = listeners;
     }
@@ -19,11 +23,13 @@ public abstract class DiffBase<T1, T2> implements Diff<T1, T2> {
         this(new ArrayList<DiffListener>());
     }
 
-    protected abstract DiffRunner getDiffRunner(T1 object1, T2 object2);
-
     @Override
     public void diff(final T1 object1, final T2 object2) {
-        getDiffRunner(object1, object2).runDiff();
+        diff(MatchResult.create(object1, object2, getType()));
+    }
+
+    public void diff(final MatchResult<T1, T2> request) {
+        getDiffRunner(request).runDiff();
     }
 
     @Override

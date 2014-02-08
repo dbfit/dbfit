@@ -17,12 +17,18 @@ public class DiffBaseTest {
     @Mock private DiffListener listener1;
     @Mock private DiffListener listener2;
     @Mock private MatchResult matchResult;
-    private DiffBase diffBase;
+    private DiffBase<Object, Object> diffBase;
 
     @Before
     public void prepare() {
-        diffBase = new DiffBase() {
-            @Override public DiffBase.DiffRunner getDiffRunner(Object o1, Object o2) {
+        diffBase = new DiffBase<Object, Object>() {
+            @Override
+            protected Class getType() {
+                return Object.class;
+            }
+
+            @Override
+            protected DiffBase<Object, Object>.DiffRunner getDiffRunner(MatchResult<Object, Object> request) {
                 return null;
             }
         };
