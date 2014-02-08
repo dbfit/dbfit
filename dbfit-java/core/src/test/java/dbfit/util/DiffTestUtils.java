@@ -108,6 +108,7 @@ public class DiffTestUtils {
 
     public static interface DataRowBuilder {
         public DataRow createRow(Integer... items);
+        public DataRow createRow(List items);
     }
 
     public static DataTable createDataTable(RowStructure rs, DataRow... rows) {
@@ -119,6 +120,15 @@ public class DiffTestUtils {
 
         @Override
         public DataRow createRow(Integer... items) {
+            return createRow(asList(items));
+        }
+
+        @Override
+        public DataRow createRow(List items) {
+            if (items == null) {
+                return null;
+            }
+
             HashMap<String, Object> rowValues = new HashMap<String, Object>();
             int i = 0;
 
