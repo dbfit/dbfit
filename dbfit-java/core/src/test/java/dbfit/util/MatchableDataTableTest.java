@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
@@ -89,6 +90,12 @@ public class MatchableDataTableTest {
         mdt.markProcessed(r3);
 
         DataRow matchingRow = mdt.findMatching(matchingProperties);
+    }
+
+    @Test
+    public void findMatchingNoThrowShouldReturnNullOnMiss() {
+        mdt.markProcessed(r3);
+        assertNull(mdt.findMatchingNothrow(matchingProperties));
     }
 
     @Test

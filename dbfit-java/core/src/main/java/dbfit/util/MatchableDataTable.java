@@ -16,14 +16,24 @@ public class MatchableDataTable {
         unprocessedRows = new LinkedList<DataRow>(dt.getRows());
     }
 
-    public DataRow findMatching(final Map<String,Object> keyProperties) throws NoMatchingRowFoundException {
+    public DataRow findMatching(final Map<String, Object> keyProperties) throws NoMatchingRowFoundException {
+        DataRow row = findMatchingNothrow(keyProperties);
+
+        if (row == null) {
+            throw new NoMatchingRowFoundException();
+        }
+
+        return row;
+    }
+
+    public DataRow findMatchingNothrow(final Map<String, Object> keyProperties) {
         for (DataRow dr: getUnprocessedRows()) {
             if (dr.matches(keyProperties)) {
                 return dr;
             }
         }
 
-        throw new NoMatchingRowFoundException();
+        return null;
     }
 
     public DataRow findFirstUnprocessedRow() throws NoMatchingRowFoundException {
