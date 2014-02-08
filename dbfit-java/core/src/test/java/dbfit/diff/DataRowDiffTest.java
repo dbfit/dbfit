@@ -2,8 +2,6 @@ package dbfit.diff;
 
 import dbfit.util.MatchResult;
 import dbfit.util.DiffListener;
-import dbfit.util.DiffHandler;
-import dbfit.util.DiffListenerAdapter;
 import dbfit.util.DataRow;
 import dbfit.util.DataCell;
 import dbfit.util.MatchStatus;
@@ -19,8 +17,8 @@ import static org.junit.Assert.*;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
+import org.mockito.Captor;
 import org.mockito.ArgumentCaptor;
-import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -29,47 +27,24 @@ import java.util.ArrayList;
 @RunWith(MockitoJUnitRunner.class)
 public class DataRowDiffTest {
 
-    @Mock private DiffHandler handler;
-    @Mock private DataCellDiff childDiff;
-    @Mock private MatchResult<DataRow, DataRow> mockResult;
+    @Mock DataCellDiff childDiff;
+    @Mock MatchResult<DataRow, DataRow> mockResult;
+    @Mock DiffListener listener;
 
-    private ArgumentCaptor<MatchResult> rowResultCaptor = forClass(MatchResult.class);
-    private ArgumentCaptor<MatchResult> cellResultCaptor = forClass(MatchResult.class);
-    private ArgumentCaptor<MatchResult> resultCaptor = forClass(MatchResult.class);
-    private ArgumentCaptor<DataCell> arg1Captor = forClass(DataCell.class);
-    private ArgumentCaptor<DataCell> arg2Captor = forClass(DataCell.class);
+    @Captor ArgumentCaptor<MatchResult> resultCaptor;
+    @Captor ArgumentCaptor<DataCell> arg1Captor;
+    @Captor ArgumentCaptor<DataCell> arg2Captor;
 
-    private List<MatchResult> cellResults;
-    private List<MatchResult> rowResults;
     private List<MatchResult> allResults;
 
     private String[] columns = new String[] { "n", "2n" };
-
-    private void runDiff(DataRow row1, DataRow row2) {
-        runDiff(row1, row2, columns);
-    }
 
     private void runUnadaptedDiff(DataRow row1, DataRow row2) {
         runUnadaptedDiff(row1, row2, columns);
     }
 
-    @SuppressWarnings("unchecked")
-    private void runDiff(DataRow row1, DataRow row2, String... colNames) {
-        DataRowDiff diff = new DataRowDiff(colNames);
-        diff.addListener(new DiffListenerAdapter(handler));
-
-        diff.diff(row1, row2);
-
-        verify(handler, times(colNames.length)).endCell(cellResultCaptor.capture());
-        verify(handler).endRow(rowResultCaptor.capture());
-
-        cellResults = cellResultCaptor.getAllValues();
-        rowResults = rowResultCaptor.getAllValues();
-    }
-
     private void runUnadaptedDiff(DataRow row1, DataRow row2, String... colNames) {
         DataRowDiff diff = new DataRowDiff(colNames);
-        DiffListener listener = mock(DiffListener.class);
         diff.addListener(listener);
 
         diff.diff(row1, row2);
@@ -98,13 +73,10 @@ public class DataRowDiffTest {
     @Test
     public void onExceptionShouldEmitExceptionEvent() {
         DataRowDiff diff = new DataRowDiff(columns, childDiff);
-        DiffListener listener = mock(DiffListener.class);
         diff.addListener(listener);
         Exception ex = new RuntimeException("Cruel World!");
 
-        doThrow(ex).when(childDiff).diff(
-                org.mockito.Matchers.any(DataCell.class),
-                org.mockito.Matchers.any(DataCell.class));
+        doThrow(ex).when(childDiff).diff(anyDataCell(), anyDataCell());
 
         diff.diff(mockResult);
 
@@ -134,62 +106,6 @@ public class DataRowDiffTest {
         assertThat(allResults.get(2).getType(), equalTo(expectedType));
     }
 
-    @Test
-    @SuppressWarnings("unchecked")
-    public void testRowsWithMatchingAndMismatchingCells() {
-        runDiff(createRow(2, 4), createRow(2, 44));
-
-        verifyResults(SUCCESS, WRONG, WRONG);
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void testRowsWithWrongCellsAndFinalOneSuccess() {
-        runDiff(createRow(2, 4), createRow(3, 4));
-
-        verifyResults(WRONG, SUCCESS, WRONG);
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void shouldIgnoreColumnsNotInList() {
-        runDiff(createRow(2, 4), createRow(2, 44), "n");
-
-        assertThat(cellResults.get(0).getStatus(), is(SUCCESS));
-        assertThat(rowResults.get(0).getStatus(), is(SUCCESS));
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void testMatchingRows() {
-        runDiff(createRow(2, 4), createRow(2, 4));
-
-        verifyResults(SUCCESS, SUCCESS, SUCCESS);
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void testMissingRow() {
-        runDiff(createRow(2, 4), null);
-
-        verifyResults(MISSING, MISSING, MISSING);
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void testSurplusRow() {
-        runDiff(null, createRow(2, 44));
-
-        verifyResults(SURPLUS, SURPLUS, SURPLUS);
-    }
-
-    private void verifyResults(MatchStatus statusCell1, MatchStatus statusCell2,
-            MatchStatus rowStatus) {
-        assertThat(cellResults.get(0).getStatus(), is(statusCell1));
-        assertThat(cellResults.get(1).getStatus(), is(statusCell2));
-        assertThat(rowResults.get(0).getStatus(), is(rowStatus));
-    }
-
     private DataRow createRow(Integer... items) {
         return createDataRowBuilder(columns).createRow(items);
     }
@@ -201,5 +117,9 @@ public class DataRowDiffTest {
         }
 
         return contains(matchers);
+    }
+
+    private DataCell anyDataCell() {
+        return org.mockito.Matchers.any(DataCell.class);
     }
 }
