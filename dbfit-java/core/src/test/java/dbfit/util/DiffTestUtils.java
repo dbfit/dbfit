@@ -107,7 +107,7 @@ public class DiffTestUtils {
     }
 
     public static interface DataRowBuilder {
-        public DataRow createRow(int... items);
+        public DataRow createRow(Integer... items);
     }
 
     public static DataTable createDataTable(RowStructure rs, DataRow... rows) {
@@ -118,12 +118,12 @@ public class DiffTestUtils {
         protected abstract String getColumnName(int index);
 
         @Override
-        public DataRow createRow(int... items) {
+        public DataRow createRow(Integer... items) {
             HashMap<String, Object> rowValues = new HashMap<String, Object>();
             int i = 0;
 
-            for (Integer item: items) {
-                rowValues.put(getColumnName(i++), item.toString());
+            for (Object item : items) {
+                rowValues.put(getColumnName(i++), String.valueOf(item));
             }
 
             return new DataRow(rowValues);

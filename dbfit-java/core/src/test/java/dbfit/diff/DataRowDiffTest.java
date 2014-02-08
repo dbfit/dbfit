@@ -190,13 +190,13 @@ public class DataRowDiffTest {
         assertThat(rowResults.get(0).getStatus(), is(rowStatus));
     }
 
-    private DataRow createRow(int... items) {
+    private DataRow createRow(Integer... items) {
         return createDataRowBuilder(columns).createRow(items);
     }
 
-    public static <E> Matcher<Iterable<? extends E>> hasItems(int... values) {
+    public static <E> Matcher<Iterable<? extends E>> hasItems(Object... values) {
         List<Matcher<? super E>> matchers = new ArrayList<>();
-        for (int item : values) {
+        for (Object item : values) {
             matchers.add(hasToString(String.valueOf(item)));
         }
 

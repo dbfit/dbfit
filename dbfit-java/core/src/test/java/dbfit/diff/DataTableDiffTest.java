@@ -93,7 +93,7 @@ public class DataTableDiffTest {
         assertEquals(WRONG, captor.getValue().getStatus());
     }
 
-    private DataRow createRow(int... items) {
+    private DataRow createRow(Integer... items) {
         return createDataRowBuilder(rowStructure).createRow(items);
     }
 
