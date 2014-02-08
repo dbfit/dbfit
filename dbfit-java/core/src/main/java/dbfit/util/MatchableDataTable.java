@@ -17,13 +17,7 @@ public class MatchableDataTable {
     }
 
     public DataRow findMatching(final Map<String, Object> keyProperties) throws NoMatchingRowFoundException {
-        DataRow row = findMatchingNothrow(keyProperties);
-
-        if (row == null) {
-            throw new NoMatchingRowFoundException();
-        }
-
-        return row;
+        return verified(findMatchingNothrow(keyProperties));
     }
 
     public DataRow findMatchingNothrow(final Map<String, Object> keyProperties) {
@@ -63,6 +57,14 @@ public class MatchableDataTable {
             processor.process(unprocIter.next());
             unprocIter.remove();
         }
+    }
+
+    private DataRow verified(final DataRow row) throws NoMatchingRowFoundException {
+        if (row == null) {
+            throw new NoMatchingRowFoundException();
+        }
+
+        return row;
     }
 }
 
