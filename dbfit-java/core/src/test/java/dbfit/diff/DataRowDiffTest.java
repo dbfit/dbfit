@@ -6,6 +6,7 @@ import dbfit.util.DiffHandler;
 import dbfit.util.DiffListenerAdapter;
 import dbfit.util.DataRow;
 import dbfit.util.DataCell;
+import dbfit.util.MatchStatus;
 import static dbfit.util.MatchStatus.*;
 
 import static dbfit.util.DiffTestUtils.createDataRowBuilder;
@@ -137,9 +138,7 @@ public class DataRowDiffTest {
     public void testRowsWithMatchingAndMismatchingCells() {
         runDiff(createRow(2, 4), createRow(2, 44));
 
-        assertThat(cellResults.get(0).getStatus(), is(SUCCESS));
-        assertThat(cellResults.get(1).getStatus(), is(WRONG));
-        assertThat(rowResults.get(0).getStatus(), is(WRONG));
+        verifyResults(SUCCESS, WRONG, WRONG);
     }
 
     @Test
@@ -147,9 +146,7 @@ public class DataRowDiffTest {
     public void testRowsWithWrongCellsAndFinalOneSuccess() {
         runDiff(createRow(2, 4), createRow(3, 4));
 
-        assertThat(cellResults.get(0).getStatus(), is(WRONG));
-        assertThat(cellResults.get(1).getStatus(), is(SUCCESS));
-        assertThat(rowResults.get(0).getStatus(), is(WRONG));
+        verifyResults(WRONG, SUCCESS, WRONG);
     }
 
     @Test
@@ -166,9 +163,7 @@ public class DataRowDiffTest {
     public void testMatchingRows() {
         runDiff(createRow(2, 4), createRow(2, 4));
 
-        assertThat(cellResults.get(0).getStatus(), is(SUCCESS));
-        assertThat(cellResults.get(1).getStatus(), is(SUCCESS));
-        assertThat(rowResults.get(0).getStatus(), is(SUCCESS));
+        verifyResults(SUCCESS, SUCCESS, SUCCESS);
     }
 
     @Test
@@ -176,9 +171,7 @@ public class DataRowDiffTest {
     public void testMissingRow() {
         runDiff(createRow(2, 4), null);
 
-        assertThat(cellResults.get(0).getStatus(), is(MISSING));
-        assertThat(cellResults.get(1).getStatus(), is(MISSING));
-        assertThat(rowResults.get(0).getStatus(), is(MISSING));
+        verifyResults(MISSING, MISSING, MISSING);
     }
 
     @Test
@@ -186,9 +179,14 @@ public class DataRowDiffTest {
     public void testSurplusRow() {
         runDiff(null, createRow(2, 44));
 
-        assertThat(cellResults.get(0).getStatus(), is(SURPLUS));
-        assertThat(cellResults.get(1).getStatus(), is(SURPLUS));
-        assertThat(rowResults.get(0).getStatus(), is(SURPLUS));
+        verifyResults(SURPLUS, SURPLUS, SURPLUS);
+    }
+
+    private void verifyResults(MatchStatus statusCell1, MatchStatus statusCell2,
+            MatchStatus rowStatus) {
+        assertThat(cellResults.get(0).getStatus(), is(statusCell1));
+        assertThat(cellResults.get(1).getStatus(), is(statusCell2));
+        assertThat(rowResults.get(0).getStatus(), is(rowStatus));
     }
 
     private DataRow createRow(int... items) {
