@@ -12,7 +12,6 @@ import static org.mockito.Mockito.*;
 
 import java.util.Map;
 import java.util.List;
-import java.util.Iterator;
 import static java.util.Arrays.asList;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -25,8 +24,6 @@ public class MatchableDataTableTest {
     @Mock private DataTable mockedDataTable;
 
     @Mock private Map<String,Object> matchingProperties;
-
-    @Mock DataRowProcessor rowProcessor;
 
     private List<DataRow> rows;
     private MatchableDataTable mdt;
@@ -104,19 +101,5 @@ public class MatchableDataTableTest {
 
         verify(mockedDataTable).getColumns();
     }
-
-    @Test
-    public void shouldProcessAllUnprocessedDataRows() {
-        mdt.markProcessed(r3);
-
-        mdt.processDataRows(rowProcessor);
-
-        for (DataRow row: asList(r1, r2, r4)) {
-            verify(rowProcessor).process(row);
-        }
-
-        verify(rowProcessor, times(3)).process(any(DataRow.class));
-    }
-
 }
 

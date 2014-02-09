@@ -50,15 +50,6 @@ public class MatchableDataTable {
         return dt.getColumns();
     }
 
-    public void processDataRows(DataRowProcessor processor) {
-        Iterator<DataRow> unprocIter = unprocessedRows.iterator();
-
-        while (unprocIter.hasNext()) {
-            processor.process(unprocIter.next());
-            unprocIter.remove();
-        }
-    }
-
     private DataRow verified(final DataRow row) throws NoMatchingRowFoundException {
         if (row == null) {
             throw new NoMatchingRowFoundException();
