@@ -1,5 +1,6 @@
 package dbfit.diff;
 
+import dbfit.util.DefaultDataTableProcessor;
 import dbfit.util.MatchableDataTable;
 import dbfit.util.DataTable;
 import dbfit.util.DataRow;
@@ -48,7 +49,7 @@ public class DataTableDiff extends CompositeDiff<DataTable, DataRow> {
 
         @Override
         protected void uncheckedDiff() {
-            new MatchableDataTable(obj1).processDataRows(this);
+            new DefaultDataTableProcessor(this).process(obj1);
 
             for (DataRow dr: mdt2.getUnprocessedRows()) {
                 getChildDiff().diff(null, dr);
