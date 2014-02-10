@@ -236,8 +236,6 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
                 values.append(comma);
                 //This will allow column names that have spaces or are keywords.
                 sb.append("[" + accessor.getName() + "]");
-                //sb.append(accessor.getName());
-                // values.append(":").append(accessor.getName());
                 values.append("?");
                 comma = ",";
             }
