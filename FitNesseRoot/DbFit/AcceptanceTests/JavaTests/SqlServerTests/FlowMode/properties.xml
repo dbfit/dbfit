@@ -37,6 +37,7 @@
 		<BulkInsertWithReturning>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsertWithReturning</BulkInsertWithReturning>
 		<CallingFunctions>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.CallingFunctions</CallingFunctions>
 		<UnknownParametersAreIgnored>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.UnknownParametersAreIgnored</UnknownParametersAreIgnored>
+		<BulkInsertWithWeirdColumnNames>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsertWithWeirdColumnNames</BulkInsertWithWeirdColumnNames>
 	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>
