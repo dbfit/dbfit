@@ -13,5 +13,7 @@ jdk:
   - oraclejdk7
 after_success:
   - "./gradlew bundle"
+# the next line is a workaround for https://github.com/travis-ci/travis-artifacts/issues/23
+  - "gem install --version 0.8.9 faraday"
   - "gem install travis-artifacts"
   - "travis-artifacts upload --path zips --target-path artifacts/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID"
