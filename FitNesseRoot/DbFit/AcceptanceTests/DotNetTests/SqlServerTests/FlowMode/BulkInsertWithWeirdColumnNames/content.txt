@@ -1,9 +1,17 @@
+!path C:\Git\COLTS\dependencies\sqljdbc_4.0\enu\sqljdbc4.jar
+
 |Execute|Create table Test_DBFit(name varchar(50), [lucky Number] int)|
 
 |Insert|Test_DBFit|
-|name|luckyNumber|
+|name|lucky Number|
 |pera|1|
+
+|Insert|Test_DBFit|
+|name|luckyNumber|
 |nuja|2|
+
+|Insert|Test_DBFit|
+|name|[lucky Number]|
 |nnn|3|
 
 |Query|Select * from Test_DBFit|
