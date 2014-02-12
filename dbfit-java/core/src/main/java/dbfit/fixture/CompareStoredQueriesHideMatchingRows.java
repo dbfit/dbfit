@@ -1,9 +1,16 @@
 package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
-import dbfit.util.*;
-import fit.Fixture;
+import dbfit.fixture.report.FitFixtureReportingSystem;
+import dbfit.util.DataRow;
+import dbfit.util.DataCell;
+import dbfit.util.MatchResult;
+import static dbfit.util.MatchStatus.*;
+
 import fit.Parse;
+
+import java.util.List;
+import java.util.ArrayList;
 
 public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries {
 
@@ -15,43 +22,62 @@ public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries {
         super(environment, symbol1, symbol2);
     }
 
+    @Override
     public void doTable(Parse table) {
         super.doTable(table);
-        table.parts.last().more = getSummary();
+        addSummary(table);
     }
 
-    protected Parse processDataTable(final MatchableDataTable t1, final MatchableDataTable t2, final Parse lastScreenRow, final String queryName) {
-        class DataTablesMatchProcessor implements DataRowProcessor {
-            Parse screenRow = lastScreenRow;
-
-            public void process(DataRow dr) {
-                int rememberWrongMatchings = counts.wrong;
-                Parse newRow = null;
-                try {
-                    DataRow dr2 = t2.findMatching(buildMatchingMask(dr));
-                    t2.markProcessed(dr2);
-                    newRow = parseDataRows(dr, dr2);
-                } catch (NoMatchingRowFoundException nex) {
-                    newRow = parseDataRowAsError(dr, " missing from " + queryName);
-                }
-                if (rememberWrongMatchings != counts.wrong) {
-                    screenRow.more = newRow;
-                    screenRow = newRow;
-                }
-            }
-        }
-
-        DataTablesMatchProcessor processor = new DataTablesMatchProcessor();
-        t1.processDataRows(processor);
-        return processor.screenRow;
+    private void addSummary(Parse table) {
+        Parse summary = getSummary();
+        summary.parts.addToTag(" colspan=\"" + numColumns(table) + "\"");
+        Parse lastRow = table.parts.last().more = summary;
     }
 
     public Parse getSummary() {
         Parse summary = new Parse("tr", null, null, null);
         summary.addToTag(" class=\"pass\"");
         Parse firstCell = new Parse("td", this.counts(), null, null);
-        firstCell.addToTag(" colspan=\"" + (columnNames.length + 1) + "\"");
         summary.parts = firstCell;
         return summary;
     }
+
+    private int numColumns(Parse table) {
+        int cnt = 0;
+        for (Parse row = table.parts; row != null; row = row.more) {
+            cnt = Math.max(cnt, row.size());
+        }
+
+        return cnt;
+    }
+
+    @Override
+    protected FitFixtureReporter getReporter(final Parse table) {
+        return new FitFixtureReporter(new FitFixtureReportingSystem(this, table)) {
+            List<MatchResult<DataCell, DataCell>> lastRow = new ArrayList<>();
+
+            @Override
+            public void endRow(MatchResult<DataRow, DataRow> result) {
+                for (MatchResult cellRes: lastRow) {
+                    if (result.getStatus() != SUCCESS) {
+                        reportingSystem.addCell(cellRes);
+                    } else {
+                        reportingSystem.incRight();
+                    }
+                }
+
+                if (result.getStatus() != SUCCESS) {
+                    reportingSystem.endRow(result);
+                }
+
+                lastRow.clear();
+            }
+
+            @Override
+            public void endCell(MatchResult<DataCell, DataCell> result) {
+                lastRow.add(result);
+            }
+        };
+    }
+
 }

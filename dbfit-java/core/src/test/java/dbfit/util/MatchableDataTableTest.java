@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
@@ -11,7 +12,6 @@ import static org.mockito.Mockito.*;
 
 import java.util.Map;
 import java.util.List;
-import java.util.Iterator;
 import static java.util.Arrays.asList;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -24,8 +24,6 @@ public class MatchableDataTableTest {
     @Mock private DataTable mockedDataTable;
 
     @Mock private Map<String,Object> matchingProperties;
-
-    @Mock DataRowProcessor rowProcessor;
 
     private List<DataRow> rows;
     private MatchableDataTable mdt;
@@ -57,6 +55,13 @@ public class MatchableDataTableTest {
     }
 
     @Test
+    public void markWithNullShouldMakeNoChange() {
+        final int ORIGINAL_SIZE = mdt.getUnprocessedRows().size();
+        mdt.markProcessed(null);
+        assertEquals(ORIGINAL_SIZE, mdt.getUnprocessedRows().size());
+    }
+
+    @Test
     public void findFirstUnprocessedRowShouldBeR1() throws NoMatchingRowFoundException {
         DataRow firstUnprocessed = mdt.findFirstUnprocessedRow();
         assertEquals(r1, firstUnprocessed);
@@ -85,24 +90,16 @@ public class MatchableDataTableTest {
     }
 
     @Test
+    public void findMatchingNoThrowShouldReturnNullOnMiss() {
+        mdt.markProcessed(r3);
+        assertNull(mdt.findMatchingNothrow(matchingProperties));
+    }
+
+    @Test
     public void shouldDelegateGetColumnsToDataTable() {
         mdt.getColumns();
 
         verify(mockedDataTable).getColumns();
     }
-
-    @Test
-    public void shouldProcessAllUnprocessedDataRows() {
-        mdt.markProcessed(r3);
-
-        mdt.processDataRows(rowProcessor);
-
-        for (DataRow row: asList(r1, r2, r4)) {
-            verify(rowProcessor).process(row);
-        }
-
-        verify(rowProcessor, times(3)).process(any(DataRow.class));
-    }
-
 }
 

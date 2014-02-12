@@ -16,14 +16,18 @@ public class MatchableDataTable {
         unprocessedRows = new LinkedList<DataRow>(dt.getRows());
     }
 
-    public DataRow findMatching(final Map<String,Object> keyProperties) throws NoMatchingRowFoundException {
+    public DataRow findMatching(final Map<String, Object> keyProperties) throws NoMatchingRowFoundException {
+        return verified(findMatchingNothrow(keyProperties));
+    }
+
+    public DataRow findMatchingNothrow(final Map<String, Object> keyProperties) {
         for (DataRow dr: getUnprocessedRows()) {
             if (dr.matches(keyProperties)) {
                 return dr;
             }
         }
 
-        throw new NoMatchingRowFoundException();
+        return null;
     }
 
     public DataRow findFirstUnprocessedRow() throws NoMatchingRowFoundException {
@@ -46,13 +50,12 @@ public class MatchableDataTable {
         return dt.getColumns();
     }
 
-    public void processDataRows(DataRowProcessor processor) {
-        Iterator<DataRow> unprocIter = unprocessedRows.iterator();
-
-        while (unprocIter.hasNext()) {
-            processor.process(unprocIter.next());
-            unprocIter.remove();
+    private DataRow verified(final DataRow row) throws NoMatchingRowFoundException {
+        if (row == null) {
+            throw new NoMatchingRowFoundException();
         }
+
+        return row;
     }
 }
 
