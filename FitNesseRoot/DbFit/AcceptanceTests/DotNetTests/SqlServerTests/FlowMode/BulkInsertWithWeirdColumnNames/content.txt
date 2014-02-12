@@ -5,11 +5,8 @@
 |pera|1|
 
 |Insert|Test_DBFit|
-|name|luckyNumber|
-|nuja|2|
-
-|Insert|Test_DBFit|
 |name|[lucky Number]|
+|nuja|2|
 |nnn|3|
 
 |Query|Select * from Test_DBFit|
@@ -17,6 +14,5 @@
 |pera|1|
 |nuja|2|
 |nnn|3|
-
 
 |Execute|Drop table Test_DBFit|
