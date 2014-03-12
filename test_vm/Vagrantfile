@@ -48,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         }
       },
       "git" => {
-        "version" => "1.8.5.2"
+        "version" => "1.9.0"
       },
       "run_list" => ["recipe[dbfit_test]"]
     }
