@@ -180,46 +180,31 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
         if (!rs.next()) {
             throw new SQLException("Unknown procedure " + procName);
         }
+
         Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
         String type = rs.getString(1);
         String paramList = rs.getString(2);
         String returns = rs.getString(3);
         rs.close();
+
+        MySqlProcedureParametersParser parser = new MySqlProcedureParametersParser();
+
         int position = 0;
-        for (String param : paramList.split(",")) {
-            StringTokenizer s = new StringTokenizer(param.trim().toLowerCase(),
-                    " ()");
-            if (!s.hasMoreElements())
-                return allParams;
-            String token = s.nextToken();
-            Direction direction = Direction.INPUT;
-
-            if (token.equals("inout")) {
-                direction = Direction.INPUT_OUTPUT;
-                token = s.nextToken();
-            }
-            if (token.equals("in")) {
-                token = s.nextToken();
-            } else if (token.equals("out")) {
-                direction = Direction.OUTPUT;
-                token = s.nextToken();
-            }
-            String paramName = token;
-            String dataType = s.nextToken();
-
-            DbParameterAccessor dbp = new DbParameterAccessor(paramName,
-                    direction, getSqlType(dataType), getJavaClass(dataType),
+        for (ParamDescriptor pd: parser.parseParameters(paramList)) {
+            DbParameterAccessor dbp = new DbParameterAccessor(
+                    pd.name, pd.direction,
+                    getSqlType(pd.type), getJavaClass(pd.type),
                     position++);
-            allParams.put(NameNormaliser.normaliseName(paramName), dbp);
+            allParams.put(NameNormaliser.normaliseName(pd.name), dbp);
         }
+
         if ("FUNCTION".equals(type)) {
-            StringTokenizer s = new StringTokenizer(returns.trim()
-                    .toLowerCase(), " ()");
-            String dataType = s.nextToken();
+            ParamDescriptor rd = parser.parseReturnType(returns);
             allParams.put("", new DbParameterAccessor("",
-                    Direction.RETURN_VALUE, getSqlType(dataType),
-                    getJavaClass(dataType), -1));
+                    Direction.RETURN_VALUE, getSqlType(rd.type),
+                    getJavaClass(rd.type), -1));
         }
+
         return allParams;
     }
 }
