@@ -1,0 +1,9 @@
+!3 execute procedure allows data types with precision and scale (m, n)
+
+!|Execute|create function sumab(a decimal(6, 2), b decimal(6, 2)) returns decimal(6, 4) deterministic return a + b;|
+
+!|Execute Procedure|sumab    |
+|?                 |a   |b   |
+|5.2000            |3.14|2.06|
+
+!|Execute|drop function sumab|
