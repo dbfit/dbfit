@@ -3,9 +3,6 @@ package dbfit.util;
 import java.math.BigDecimal;
 
 import dbfit.api.TestHost;
-import dbfit.util.BigDecimalParseDelegate;
-import dbfit.util.SqlDateParseDelegate;
-import dbfit.util.SqlTimestampParseDelegate;
 import fit.TypeAdapter;
 
 public class FitNesseTestHost implements TestHost {
