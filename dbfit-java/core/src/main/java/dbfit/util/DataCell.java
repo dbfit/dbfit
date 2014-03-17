@@ -23,6 +23,11 @@ public class DataCell {
     }
 
     public boolean equalTo(final DataCell cell2) {
-        return (cell2 != null) && toString().equals(cell2.toString());
+        return (cell2 != null) &&
+            ( (this == cell2) || getValue().equals(cell2.getValue()) );
+    }
+
+    private Object getValue() {
+        return row.get(columnName);
     }
 }

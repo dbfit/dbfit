@@ -19,11 +19,11 @@ public class DataCellTest {
 
     @Before
     public void prepare() {
-        when(row.getStringValue("n")).thenReturn("2");
-        when(row.getStringValue("2n")).thenReturn("4");
+        when(row.get("n")).thenReturn("2");
+        when(row.get("2n")).thenReturn("4");
 
-        when(row2.getStringValue("n")).thenReturn("1");
-        when(row2.getStringValue("2n")).thenReturn("2");
+        when(row2.get("n")).thenReturn("1");
+        when(row2.get("2n")).thenReturn("2");
 
         cell = new DataCell(row, "n");
     }
@@ -32,11 +32,6 @@ public class DataCellTest {
     public void toStringShouldInvokeDataRowGetStringValue() {
         cell.toString();
         verify(row).getStringValue("n");
-    }
-
-    @Test
-    public void toStringShouldReturnCorrectValue() {
-        assertThat(cell.toString(), is("2"));
     }
 
     @Test
