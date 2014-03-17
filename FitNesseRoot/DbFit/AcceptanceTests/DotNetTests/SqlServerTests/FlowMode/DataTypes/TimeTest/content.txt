@@ -1,0 +1,79 @@
+!3 Time
+
+|Execute|Create table datatypetest(id int, my_time time)|
+
+|Ordered Query|select cast(sysdatetime() as time) my_time|
+|my_time                                                 |
+|>>tm1                                                   |
+
+|insert|datatypetest|
+|id    |my_time     |
+|1     |<<tm1       |
+
+|ordered query|select * from datatypetest|
+|id           |my_time                   |
+|1            |<<tm1                     |
+
+|ordered query|select * from datatypetest|
+|id           |my_time?                  |
+|1            |<<tm1                     |
+
+!3 Using stored queries
+
+!|Store Query|select * from datatypetest|q1|
+
+!|Store Query|select * from datatypetest|q2|
+
+!|Compare Stored Queries|q1 |q2 |
+|id                     |my_time|
+
+!|Compare Stored Queries|q1  |q2 |
+|id                     |my_time?|
+
+
+!3 dates accept literals in standard jdbc time format
+
+|execute|delete from datatypetest|
+
+|insert|datatypetest|
+|my_time            |
+|11:12:22           |
+
+|query|select * from datatypetest|
+|my_time                         |
+|11:12:22                        |
+
+!3 Millisecond times
+
+|execute|delete from datatypetest|
+
+|insert|datatypetest|
+|id    |my_time     |
+|1     |11:12:22.1  |
+
+|query|select * from datatypetest|
+|id   |my_time?                  |
+|1    |11:12:22.1                |
+
+|query|select * from datatypetest|
+|id   |my_time?                  |
+|1    |fail[11:12:22.2]          |
+
+!3 should accept fail[null]
+|query|select * from datatypetest|
+|id   |my_time?                  |
+|1    |fail[null]                |
+
+
+!3 will accept nulls
+
+|execute|delete from datatypetest|
+
+|insert|datatypetest|
+|my_time            |
+|null               |
+
+|query|select * from datatypetest|
+|my_time                         |
+|null                            |
+
