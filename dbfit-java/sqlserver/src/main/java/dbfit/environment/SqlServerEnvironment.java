@@ -5,6 +5,7 @@ import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
+import dbfit.util.TypeNormaliserFactory;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
@@ -15,12 +16,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.Properties;
 
 @DatabaseEnvironment(name="SqlServer", driver="com.microsoft.sqlserver.jdbc.SQLServerDriver")
 public class SqlServerEnvironment extends AbstractDbEnvironment {
 
     public SqlServerEnvironment(String driverClassName) {
         super(driverClassName);
+
+        TypeNormaliserFactory.setNormaliser(java.sql.Time.class,
+                new MillisecondTimeNormaliser());
     }
 
     public boolean supportsOuputOnInsert() {
@@ -42,13 +47,21 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
         return s;
     }
 
+    @Override
     protected String getConnectionString(String dataSource) {
         return "jdbc:sqlserver://" + getInstanceString(dataSource);
     }
 
+    @Override
     protected String getConnectionString(String dataSource, String database) {
-        return "jdbc:sqlserver://" + getInstanceString(dataSource)
-                + ";database=" + database;
+        return getConnectionString(dataSource) + ";database=" + database;
+    }
+
+    @Override
+    public void connect(String connectionString, Properties info) throws SQLException {
+        // Add sendTimeAsDatetime=false option to enforce sending Time as
+        // java.sql.Time (otherwise some precision is lost in conversions)
+        super.connect(connectionString + ";sendTimeAsDatetime=false", info);
     }
 
     private static String paramNamePattern = "@([A-Za-z0-9_]+)";
@@ -129,6 +142,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
             "DECIMAL", "NUMERIC", "MONEY", "SMALLMONEY" });
     private static List<String> timestampTypes = Arrays.asList(new String[] {
             "SMALLDATETIME", "DATETIME", "DATETIME2", "TIMESTAMP" });
+    private static List<String> timeTypes = Arrays.asList("TIME");
 
     // private static List<String> refCursorTypes = Arrays.asList(new String[] {
     // });
@@ -171,6 +185,8 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
             return java.sql.Types.INTEGER;
         if (timestampTypes.contains(dataType))
             return java.sql.Types.TIMESTAMP;
+        if (timeTypes.contains(dataType))
+            return java.sql.Types.TIME;
         if (booleanTypes.contains(dataType))
             return java.sql.Types.BOOLEAN;
         if (floatTypes.contains(dataType))
@@ -197,6 +213,8 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
             return Integer.class;
         if (timestampTypes.contains(dataType))
             return java.sql.Timestamp.class;
+        if (timeTypes.contains(dataType))
+            return java.sql.Time.class;
         if (booleanTypes.contains(dataType))
             return Boolean.class;
         if (floatTypes.contains(dataType))
