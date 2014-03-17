@@ -11,6 +11,7 @@ public class FitNesseTestHost implements TestHost {
         TypeAdapter.registerParseDelegate(BigDecimal.class, BigDecimalParseDelegate.class);
         TypeAdapter.registerParseDelegate(java.sql.Date.class, SqlDateParseDelegate.class);
         TypeAdapter.registerParseDelegate(java.sql.Timestamp.class, SqlTimestampParseDelegate.class);
+        TypeAdapter.registerParseDelegate(java.sql.Time.class, SqlTimeParseDelegate.class);
     }
 
     @Override

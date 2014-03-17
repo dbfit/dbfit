@@ -103,6 +103,7 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             .asList(new String[] { "DATE" });
     private static List<String> timestampTypes = Arrays.asList(new String[] {
             "TIMESTAMP", "DATETIME" });
+    private static List<String> timeTypes = Arrays.asList("TIME");
     private static List<String> refCursorTypes = Arrays.asList(new String[] {});
 
     private static String normaliseTypeName(String dataType) {
@@ -130,6 +131,8 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             return java.sql.Types.TIMESTAMP;
         if (dateTypes.contains(dataType))
             return java.sql.Types.DATE;
+        if (timeTypes.contains(dataType))
+            return java.sql.Types.TIME;
         if (refCursorTypes.contains(dataType))
             return java.sql.Types.REF;
         throw new UnsupportedOperationException("Type " + dataType
@@ -156,6 +159,8 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             return Long.class;
         if (timestampTypes.contains(dataType))
             return java.sql.Timestamp.class;
+        if (timeTypes.contains(dataType))
+            return java.sql.Time.class;
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
     }
