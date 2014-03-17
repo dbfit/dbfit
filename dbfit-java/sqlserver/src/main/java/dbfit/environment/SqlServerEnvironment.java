@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.Properties;
 
 @DatabaseEnvironment(name="SqlServer", driver="com.microsoft.sqlserver.jdbc.SQLServerDriver")
 public class SqlServerEnvironment extends AbstractDbEnvironment {
@@ -54,6 +55,13 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
     @Override
     protected String getConnectionString(String dataSource, String database) {
         return getConnectionString(dataSource) + ";database=" + database;
+    }
+
+    @Override
+    public void connect(String connectionString, Properties info) throws SQLException {
+        // Add sendTimeAsDatetime=false option to enforce sending Time as
+        // java.sql.Time (otherwise some precision is lost in conversions)
+        super.connect(connectionString + ";sendTimeAsDatetime=false", info);
     }
 
     private static String paramNamePattern = "@([A-Za-z0-9_]+)";
