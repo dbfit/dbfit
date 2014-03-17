@@ -46,13 +46,14 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
         return s;
     }
 
+    @Override
     protected String getConnectionString(String dataSource) {
         return "jdbc:sqlserver://" + getInstanceString(dataSource);
     }
 
+    @Override
     protected String getConnectionString(String dataSource, String database) {
-        return "jdbc:sqlserver://" + getInstanceString(dataSource)
-                + ";database=" + database;
+        return getConnectionString(dataSource) + ";database=" + database;
     }
 
     private static String paramNamePattern = "@([A-Za-z0-9_]+)";
