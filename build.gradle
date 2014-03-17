@@ -137,8 +137,14 @@ task bundle(type: Zip, dependsOn: [copyLocal, wikiDocs, bundleFitsharp]) {
 task start(type: Exec, dependsOn: [copyLocal, copyExtraLibs, wikiDocs, bundleFitsharp]) {
     workingDir './dist'
     description = 'starts fitness with dbfit'
-    executable onWindows() ? 'cmd.exe' : '/bin/sh'
-    args onWindows() ? '/C' : '-c', onWindows() ? 'startFitnesse.bat' : './startFitnesse.sh'
+    executable onWindows() ? 'startFitnesse.bat' : './startFitnesse.sh'
+}
+
+task starthere(type: Exec, dependsOn: [copyLocal, copyExtraLibs]) {
+    workingDir './dist'
+    description = 'starts fitness with dbfit on top of real tests sources'
+    executable onWindows() ? 'startFitnesse.bat' : './startFitnesse.sh'
+    args '-d', '..', '-o', '-f', 'plugins.properties'
 }
 
 task fastbuild(dependsOn: [':dbfit-java:core:check', ':dbfit-java:derby:check'])
