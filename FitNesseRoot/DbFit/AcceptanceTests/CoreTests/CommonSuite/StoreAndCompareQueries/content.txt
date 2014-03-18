@@ -7,12 +7,16 @@
 |1      |2      |
 |2      |4      |
 |3      |6      |
+|99     |null   |
+|null   |9      |
 
 !|Insert|TESTTBLA|
 |N      |TWON    |
 |1      |2       |
 |2      |4       |
 |3      |6       |
+|99     |null    |
+|null   |9       |
 
 !|Store Query|select * from TESTTBL|q1|
 
@@ -25,6 +29,8 @@
 |1     |2    |
 |2     |4    |
 |3     |6    |
+|99    |null |
+|null  |9    |
 
 # Reuse same stored query to verify that there are no side effects
 !|Query|<<q1 |
@@ -32,6 +38,8 @@
 |1     |2    |
 |2     |4    |
 |3     |6    |
+|99    |null |
+|null  |9    |
 
 !|Compare Stored Queries|q1|q2|
 |TWON                   |N?   |
