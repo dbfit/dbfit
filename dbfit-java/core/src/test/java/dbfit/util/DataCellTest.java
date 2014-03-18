@@ -15,7 +15,10 @@ public class DataCellTest {
 
     @Mock private DataRow row;
     @Mock private DataRow row2;
+    @Mock private DataRow row3;
     private DataCell cell;
+    private DataCell nullValueCell;
+    private DataCell nullValueCell2;
 
     @Before
     public void prepare() {
@@ -25,7 +28,12 @@ public class DataCellTest {
         when(row2.get("n")).thenReturn("1");
         when(row2.get("2n")).thenReturn("2");
 
+        when(row3.get("n")).thenReturn(null);
+        when(row3.get("2n")).thenReturn(null);
+
         cell = new DataCell(row, "n");
+        nullValueCell = new DataCell(row3, "n");
+        nullValueCell2 = new DataCell(row3, "2n");
     }
 
     @Test
@@ -49,6 +57,21 @@ public class DataCellTest {
     @Test
     public void shouldNotBeEqualToNull() {
         assertFalse(cell.equalTo(null));
+    }
+
+    @Test
+    public void shouldNotBeEqualToNullValueCell() {
+        assertFalse(cell.equalTo(nullValueCell));
+    }
+
+    @Test
+    public void nullValueCellShouldNotBeEqualToNotNullOne() {
+        assertFalse(nullValueCell.equalTo(cell));
+    }
+
+    @Test
+    public void twoNullValueCellsShouldBeEqualToEachOther() {
+        assertTrue(nullValueCell.equalTo(nullValueCell2));
     }
 
     @Test
