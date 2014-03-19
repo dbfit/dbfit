@@ -142,12 +142,11 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
             "DECIMAL", "NUMERIC", "MONEY", "SMALLMONEY" });
     private static List<String> timestampTypes = Arrays.asList(new String[] {
             "SMALLDATETIME", "DATETIME", "DATETIME2", "TIMESTAMP" });
+    private static List<String> dateTypes = Arrays.asList("DATE");
     private static List<String> timeTypes = Arrays.asList("TIME");
 
     // private static List<String> refCursorTypes = Arrays.asList(new String[] {
     // });
-    // private static List<String> dateTypes = Arrays.asList(new String[] {
-    // "DATE"});
     // private static List<String> doubleTypes=Arrays.asList(new
     // String[]{"DOUBLE"});
 
@@ -185,6 +184,8 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
             return java.sql.Types.INTEGER;
         if (timestampTypes.contains(dataType))
             return java.sql.Types.TIMESTAMP;
+        if (dateTypes.contains(dataType))
+            return java.sql.Types.DATE;
         if (timeTypes.contains(dataType))
             return java.sql.Types.TIME;
         if (booleanTypes.contains(dataType))
@@ -213,6 +214,8 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
             return Integer.class;
         if (timestampTypes.contains(dataType))
             return java.sql.Timestamp.class;
+        if (dateTypes.contains(dataType))
+            return java.sql.Date.class;
         if (timeTypes.contains(dataType))
             return java.sql.Time.class;
         if (booleanTypes.contains(dataType))

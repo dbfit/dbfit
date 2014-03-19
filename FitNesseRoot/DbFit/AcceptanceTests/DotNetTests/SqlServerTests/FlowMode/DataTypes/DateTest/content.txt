@@ -1,0 +1,67 @@
+!3 Date
+
+|Execute|Create table datatypetest(id int, my_date date)|
+
+|Ordered Query|select cast(getdate() as date) my_date|
+|my_date                                             |
+|>>dt1                                               |
+
+|insert|datatypetest|
+|id    |my_date     |
+|1     |<<dt1       |
+
+|ordered query|select * from datatypetest|
+|id           |my_date                   |
+|1            |<<dt1                     |
+
+|ordered query|select * from datatypetest|
+|id           |my_date?                  |
+|1            |<<dt1                     |
+
+!3 Using stored queries
+
+!|Store Query|select * from datatypetest|q1|
+
+!|Store Query|select * from datatypetest|q2|
+
+!|Compare Stored Queries|q1 |q2 |
+|id                     |my_date|
+
+!|Compare Stored Queries|q1  |q2 |
+|id                     |my_date?|
+
+
+!3 Accepts date literals in standard jdbc date format
+
+|execute|delete from datatypetest|
+
+|insert|datatypetest|
+|my_date            |
+|2011-12-22         |
+
+|query|select * from datatypetest|
+|my_date                         |
+|2011-12-22                      |
+
+
+!3 Accepts fail (expecting difference)
+|query|select * from datatypetest|
+|my_date?                        |
+|fail[null]                      |
+
+|query|select * from datatypetest|
+|my_date?                        |
+|fail[2014-03-18]                |
+
+
+!3 Accepts nulls
+
+|execute|delete from datatypetest|
+
+|insert|datatypetest|
+|my_date            |
+|null               |
+
+|query|select * from datatypetest|
+|my_date                         |
+|null                            |
