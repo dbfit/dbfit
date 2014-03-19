@@ -1,5 +1,7 @@
 package dbfit.util;
 
+import java.util.Objects;
+
 public class DataCell {
     private DataRow row;
     private String columnName;
@@ -24,7 +26,7 @@ public class DataCell {
 
     public boolean equalTo(final DataCell cell2) {
         return (cell2 != null) &&
-            ( (this == cell2) || getValue().equals(cell2.getValue()) );
+            ( (this == cell2) || Objects.equals(getValue(), cell2.getValue()) );
     }
 
     private Object getValue() {
