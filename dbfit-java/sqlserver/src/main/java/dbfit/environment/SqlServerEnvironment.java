@@ -4,6 +4,7 @@ import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;
+import static dbfit.util.Direction.*;
 import dbfit.util.NameNormaliser;
 import dbfit.util.TypeNormaliserFactory;
 
@@ -156,10 +157,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
     // private static string[] VariantTypes = new string[] { "SQL_VARIANT" };
 
     private static Direction getParameterDirection(int isOutput) {
-        if (isOutput == 1)
-            return Direction.OUTPUT;
-        else
-            return Direction.INPUT;
+        return (isOutput == 1) ? OUTPUT : INPUT;
     }
 
     private static String normaliseTypeName(String dataType) {
