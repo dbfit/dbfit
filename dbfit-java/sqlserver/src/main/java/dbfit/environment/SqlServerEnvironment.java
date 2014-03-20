@@ -32,24 +32,9 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
         return false;
     }
 
-    private String getInstanceString(String s) {
-
-        int idx = s.indexOf('\\');
-        if (idx > 0) {
-            throw new UnsupportedOperationException(
-                    "Java SQL Server Driver does not work with instance names. "
-                            + "Create an alias for your SQL Server Instance.");
-            // String server = s.substring(0, idx);
-            // String instance = s.substring(idx + 1);
-            // System.out.println(server + ";instanceName=" + instance);
-            // return "localhost;instanceName=" + instance;
-        }
-        return s;
-    }
-
     @Override
     protected String getConnectionString(String dataSource) {
-        return "jdbc:sqlserver://" + getInstanceString(dataSource);
+        return "jdbc:sqlserver://" + dataSource;
     }
 
     @Override
