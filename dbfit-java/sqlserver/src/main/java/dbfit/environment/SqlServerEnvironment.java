@@ -7,6 +7,7 @@ import dbfit.util.Direction;
 import static dbfit.util.Direction.*;
 import dbfit.util.NameNormaliser;
 import dbfit.util.TypeNormaliserFactory;
+import static dbfit.environment.SqlServerTypeNameNormaliser.normaliseTypeName;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
@@ -158,17 +159,6 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
 
     private static Direction getParameterDirection(int isOutput) {
         return (isOutput == 1) ? OUTPUT : INPUT;
-    }
-
-    private static String normaliseTypeName(String dataType) {
-        dataType = dataType.toUpperCase().trim();
-        int idx = dataType.indexOf(" ");
-        if (idx >= 0)
-            dataType = dataType.substring(0, idx);
-        idx = dataType.indexOf("(");
-        if (idx >= 0)
-            dataType = dataType.substring(0, idx);
-        return dataType;
     }
 
     private static int getSqlType(String dataType) {
