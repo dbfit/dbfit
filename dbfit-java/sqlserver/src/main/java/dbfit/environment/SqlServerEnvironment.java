@@ -6,7 +6,7 @@ import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessorsMapBuilder;
 import dbfit.util.Direction;
 import static dbfit.util.Direction.*;
-import dbfit.util.NameNormaliser;
+import static dbfit.util.NameNormaliser.normaliseName;
 import dbfit.util.TypeNormaliserFactory;
 import static dbfit.environment.SqlServerTypeNameNormaliser.normaliseTypeName;
 
@@ -84,11 +84,11 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
             String[] schemaAndName = objname.split("[\\.]", 2);
             objname = "[" + schemaAndName[0] + "].[" + schemaAndName[1] + "]";
         } else {
-            objname = "[" + NameNormaliser.normaliseName(objname) + "]";
+            objname = "[" + normaliseName(objname) + "]";
         }
 
         try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
-            dc.setString(1, NameNormaliser.normaliseName(objname));
+            dc.setString(1, normaliseName(objname));
             ResultSet rs = dc.executeQuery();
 
             while (rs.next()) {
