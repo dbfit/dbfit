@@ -3,6 +3,7 @@ package dbfit.environment;
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
+import dbfit.util.DbParameterAccessorsMapBuilder;
 import dbfit.util.Direction;
 import static dbfit.util.Direction.*;
 import dbfit.util.NameNormaliser;
@@ -19,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.Properties;
+
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 @DatabaseEnvironment(name="SqlServer", driver="com.microsoft.sqlserver.jdbc.SQLServerDriver")
 public class SqlServerEnvironment extends AbstractDbEnvironment {
@@ -75,42 +78,29 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
 
     private Map<String, DbParameterAccessor> readIntoParams(String objname,
             String query) throws SQLException {
+        DbParameterAccessorsMapBuilder params = new DbParameterAccessorsMapBuilder();
+
         if (objname.contains(".")) {
             String[] schemaAndName = objname.split("[\\.]", 2);
             objname = "[" + schemaAndName[0] + "].[" + schemaAndName[1] + "]";
         } else {
             objname = "[" + NameNormaliser.normaliseName(objname) + "]";
         }
-        PreparedStatement dc = currentConnection.prepareStatement(query);
-        dc.setString(1, NameNormaliser.normaliseName(objname));
-        ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-        int position = 0;
-        while (rs.next()) {
-            String paramName = rs.getString(1);
-            if (paramName == null)
-                paramName = "";
-            String dataType = rs.getString(2);
-            // int length = rs.getInt(3);
-            int direction = rs.getInt(4);
-            Direction paramDirection;
-            int paramPosition;
 
-            if (paramName.trim().length() == 0) {
-                paramDirection = Direction.RETURN_VALUE;
-                paramPosition = -1;
-            } else {
-                paramDirection = getParameterDirection(direction);
-                paramPosition = position++;
+        try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
+            dc.setString(1, NameNormaliser.normaliseName(objname));
+            ResultSet rs = dc.executeQuery();
+
+            while (rs.next()) {
+                String paramName = defaultIfNull(rs.getString(1), "");
+                params.add(paramName,
+                           getParameterDirection(rs.getInt(4), paramName),
+                           getSqlType(rs.getString(2)),
+                           getJavaClass(rs.getString(2)));
             }
-
-            DbParameterAccessor dbp = new DbParameterAccessor(paramName,
-                    paramDirection, getSqlType(dataType),
-                    getJavaClass(dataType), paramPosition);
-            allParams.put(NameNormaliser.normaliseName(paramName), dbp);
         }
-        rs.close();
-        return allParams;
+
+        return params.toMap();
     }
 
     // List interface has sequential search, so using list instead of array to
@@ -147,7 +137,11 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
     // private static string[] GuidTypes = new string[] { "UNIQUEIDENTIFIER" };
     // private static string[] VariantTypes = new string[] { "SQL_VARIANT" };
 
-    private static Direction getParameterDirection(int isOutput) {
+    private static Direction getParameterDirection(int isOutput, String name) {
+        if (name.isEmpty()) {
+            return RETURN_VALUE;
+        }
+
         return (isOutput == 1) ? OUTPUT : INPUT;
     }
 
