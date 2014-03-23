@@ -121,8 +121,9 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
     private static List<String> shortTypes = Arrays.asList(new String[] {
             "TINYINT", "SMALLINT" });
 
+    private static List<String> numericTypes = Arrays.asList("NUMERIC");
     private static List<String> decimalTypes = Arrays.asList(new String[] {
-            "DECIMAL", "NUMERIC", "MONEY", "SMALLMONEY" });
+            "DECIMAL", "MONEY", "SMALLMONEY" });
     private static List<String> timestampTypes = Arrays.asList(new String[] {
             "SMALLDATETIME", "DATETIME", "DATETIME2", "TIMESTAMP" });
     private static List<String> dateTypes = Arrays.asList("DATE");
@@ -151,8 +152,10 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
 
         if (stringTypes.contains(dataType))
             return java.sql.Types.VARCHAR;
-        if (decimalTypes.contains(dataType))
+        if (numericTypes.contains(dataType))
             return java.sql.Types.NUMERIC;
+        if (decimalTypes.contains(dataType))
+            return java.sql.Types.DECIMAL;
         if (intTypes.contains(dataType))
             return java.sql.Types.INTEGER;
         if (timestampTypes.contains(dataType))
@@ -181,6 +184,8 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
         dataType = normaliseTypeName(dataType);
         if (stringTypes.contains(dataType))
             return String.class;
+        if (numericTypes.contains(dataType))
+            return BigDecimal.class;
         if (decimalTypes.contains(dataType))
             return BigDecimal.class;
         if (intTypes.contains(dataType))
