@@ -12,6 +12,7 @@ public class FitNesseTestHost implements TestHost {
         TypeAdapter.registerParseDelegate(java.sql.Date.class, SqlDateParseDelegate.class);
         TypeAdapter.registerParseDelegate(java.sql.Timestamp.class, SqlTimestampParseDelegate.class);
         TypeAdapter.registerParseDelegate(java.sql.Time.class, SqlTimeParseDelegate.class);
+        TypeNormaliserFactory.setNormaliser(BigDecimal.class, new BigDecimalNormaliser());
     }
 
     @Override
