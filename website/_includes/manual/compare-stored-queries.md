@@ -20,9 +20,26 @@
 
     |execute|drop table testtbl|
 
-### Suppressing successfully matched rows
+### Comparing large data sets
+
+A good test should be focused and fast to execute. That helps to get a quick and precise feedback which leads the root cause of the test failure. That usually implies using very small data sets (1-3 rows) in `DbFit` tests. Nevertheless, in some special cases it may be desired to run `DbFit` on top of relatively large number of rows.
+
+#### Suppressing successfully matched rows
 
 When a large number of rows is being compared, match failures can be hard to see amongst the matched rows. It is possible to hide successfully matched rows by using `hide matching rows`.
 
     !|Compare Stored Queries Hide Matching Rows|fromtable|fromdual|
     |name                                      |n?                |
+
+#### Performance considerations
+
+For better performance when comparing large data sets it's recommended to sort the inputs in ascending order of the comparison key columns.
+
+    !|Store Query|select * from big_table1 order by name|query1|
+
+    !|Store Query|select * from big_table2 order by name|query2|
+
+    !|Compare Stored Queries|query1|query2|
+    |name                   |n?           |
+
+If it's needed to compare really huge sets: it's most likely best to push down the heavy comparison to the backend database instead of doing it in `DbFit`.
