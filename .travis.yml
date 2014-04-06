@@ -10,7 +10,7 @@ before_install:
 install: "./gradlew assemble"
 script: "./gradlew clean fastbuild"
 jdk:
-  - oraclejdk7
+  - oraclejdk8
 after_success:
   - "./gradlew bundle"
 # the next line is a workaround for https://github.com/travis-ci/travis-artifacts/issues/23
