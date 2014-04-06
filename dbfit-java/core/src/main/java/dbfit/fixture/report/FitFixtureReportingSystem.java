@@ -6,8 +6,8 @@ import static dbfit.util.MatchStatus.*;
 import fit.Fixture;
 import fit.Parse;
 
-import org.apache.commons.lang3.ObjectUtils;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import java.util.Objects;
 
 public class FitFixtureReportingSystem implements ReportingSystem {
 
@@ -64,11 +64,11 @@ public class FitFixtureReportingSystem implements ReportingSystem {
 
         switch (res.getStatus()) {
         case MISSING:
-            descr = ObjectUtils.toString(descr, "missing");
+            descr = Objects.toString(descr, "missing");
             fixture.wrong(newRow);
             break;
         case SURPLUS:
-            descr = ObjectUtils.toString(descr, "surplus");
+            descr = Objects.toString(descr, "surplus");
             fixture.wrong(newRow);
             break;
         }
