@@ -30,6 +30,9 @@ subprojects {
     jar.baseName = "dbfit-" + project.archivesBaseName
     repositories {
         mavenCentral()
+        maven {
+            url "http://mvnrepository.com"
+        }
         ivy {
             artifactPattern "https://s3.amazonaws.com/dbfit/[artifact]-[revision].[ext]"
             ivyPattern "https://aws.amazon.com/s3/ivy.xml"
@@ -139,7 +142,7 @@ project('postgres') {
 
     dependencies {
         compile project(':dbfit-java:core')
-        compile group: 'postgresql', name: 'postgresql', version: '9.1-901.jdbc4'
+        compile group: 'org.postgresql', name: 'postgresql', version: '9.3-1101-jdbc41'
     }
 
     test.doFirst {
