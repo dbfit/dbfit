@@ -5,7 +5,6 @@ import static dbfit.util.DbParameterAccessor.normaliseValue;
 
 import java.util.*;
 import java.sql.*;
-import org.apache.commons.lang3.ObjectUtils;
 
 public class DataRow {
     private Map<String, Object> values = new HashMap<String, Object>();
@@ -32,7 +31,7 @@ public class DataRow {
     }
 
     public String getStringValue(String columnName) {
-        return ObjectUtils.toString(values.get(columnName), "null");
+        return String.valueOf(values.get(columnName));
     }
 
     public boolean matches(final Map<String, Object> keyProperties) {
@@ -51,7 +50,7 @@ public class DataRow {
     }
 
     private boolean equals(Object a, Object b) {
-        return ObjectUtils.equals(a, b);
+        return Objects.equals(a, b);
     }
 
     public Object get(String key) {
