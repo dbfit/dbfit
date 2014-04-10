@@ -29,3 +29,10 @@ If you want to use non-standard connection properties, or initialise your connec
 
 You can use this feature, for example, to utilise Windows integrated authentication or to use the OCI driver for Oracle under Java.
 
+### 3. Additional references
+
+For additional information about database connection settings, please refer to:
+
+* the [Database-specific Information](database-specific-information.html) section
+* the database vendor's official site
+
