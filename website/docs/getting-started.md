@@ -88,7 +88,7 @@ DbFit requires two commands to connect to the database. The first line specifies
 
     !|Connect|localhost|dbfit_user|password|dbfit|
 
-Notice the `MySqlTest` in the first line above. That tells DbFit which type of database driver to use. For `SQL Server 2005` and later, you should use `SqlServerTest`. For MySql use `MySqlTest`. For Oracle, use `OracleTest`. For Db2, use `DB2Test`. For Derby (JavaDB), use `DerbyTest`.
+Notice the `MySqlTest` in the first line above. That tells DbFit which type of database driver to use. For `SQL Server 2005` and later, you should use `SqlServerTest`. For MySql use `MySqlTest`. For Oracle, use `OracleTest`. For Db2, use `DB2Test`. For Derby (JavaDB), use `DerbyTest`. For PostgreSQL, use `PostgresTest`.
 
 <div class="alert alert-info alert-block">
   Notice how each command starts with an exclamation mark (<code>!</code>), followed by a pipe symbol (<code>|</code>). Command arguments are then separated by the pipe symbol as well. In FitNesse, tables are used to describe commands, tests, inputs and expected results (you will see the table when the page is saved). In the FitNesse wiki syntax, tables are described simply by separating cells with the pipe symbol. The exclamation mark before the first row of the table is optional, and tells FitNesse not to apply any smart formatting to table contents.
