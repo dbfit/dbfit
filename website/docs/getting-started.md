@@ -54,7 +54,7 @@ Let's run a quick test to make sure that you have everything set up correctly an
 
 ## 2. Creating a new test page
 
-Open [http://localhost:8085/HelloWorldTest](http://localhost:8085/HelloWorldTest) in your browser. You should see an editor - this is where we'll create our new test page. 
+Open [http://localhost:8085/HelloWorldTest](http://localhost:8085/HelloWorldTest) in your browser. You should see an editor - this is where we'll create our new test page.
 
 <span class="label label-info">Note</span> Notice that the page name is a CamelCase word.
 
@@ -88,7 +88,21 @@ DbFit requires two commands to connect to the database. The first line specifies
 
     !|Connect|localhost|dbfit_user|password|dbfit|
 
-Notice the `MySqlTest` in the first line above. That tells DbFit which type of database driver to use. For `SQL Server 2005` and later, you should use `SqlServerTest`. For MySql use `MySqlTest`. For Oracle, use `OracleTest`. For Db2, use `DB2Test`. For Derby (JavaDB), use `DerbyTest`.
+Notice the `MySqlTest` in the first line above. That tells DbFit which type of database driver to use.
+
+Here's a comprehensive list of available types:
+
+| Database                  | DbFit Database Type |
+|:--------------------------|:--------------------|
+| Oracle                    | OracleTest          |
+| SQL Server 2005 and later | SqlServerTest       |
+| MySQL                     | MySqlTest           |
+| Postgres                  | PostgresTest        |
+| Derby                     | DerbyTest           |
+| HSQLDB                    | HSQLDBTest          |
+| DB2                       | DB2Test             |
+| DB2i                      | DB2iTest            |
+{: class="table table-bordered"}
 
 <div class="alert alert-info alert-block">
   Notice how each command starts with an exclamation mark (<code>!</code>), followed by a pipe symbol (<code>|</code>). Command arguments are then separated by the pipe symbol as well. In FitNesse, tables are used to describe commands, tests, inputs and expected results (you will see the table when the page is saved). In the FitNesse wiki syntax, tables are described simply by separating cells with the pipe symbol. The exclamation mark before the first row of the table is optional, and tells FitNesse not to apply any smart formatting to table contents.
