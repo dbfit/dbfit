@@ -4,6 +4,12 @@ title: Database-specific Information
 nav_bar_name: docs
 show_comments: true
 ---
+
+*   [DB2](#db2)
+*   [MS SQL Server](#microsoft-sql-server)
+
+---
+
 ## DB2
 
 _Contributed by [Mike Patrick](https://github.com/mikepatrick)_
@@ -88,3 +94,50 @@ There are two ways around this:
 * [Differences between Toolbox driver and Native driver on iSeries](http://publib.boulder.ibm.com/infocenter/radhelp/v7r0m0/index.jsp?topic=/com.ibm.datatools.connection.ui.doc/topics/rdbconn_db2udb_iseries.html)
 * [Toolbox FAQ](http://www-03.ibm.com/systems/i/software/toolbox/faqjdbc.html)
 * [More on IBM JDBC drivers](http://publib.boulder.ibm.com/infocenter/db2luw/v8/index.jsp?topic=/com.ibm.db2.udb.dc.doc/dc/r_jdbcdrivers.htm)
+
+----
+
+## Microsoft SQL Server
+
+### Deploying the JDBC Driver
+
+1. [Download MS SQL Server JDBC driver from their site](http://www.microsoft.com/en-us/download/details.aspx?id=11774) *(It is not open source and cannot be distributed with DbFit.)*
+2. Deploy `sqljdbc4.jar` in DbFit's `lib` folder - the same folder as dbfit-XXX.jar.
+
+### Network and firewall settings
+
+* If connecting over network each database should be configured to accept TCP/IP connections (including allowance in firewall if any).
+* Connection to named instance requires MS SQL Server Browser service to be up and running and allowed by firewalls.
+
+### Connection string to MS SQL Server database
+
+* Check DbFit reference documentation: [ConnectUsingFile](/dbfit/docs/reference.html#connect-using-file) and [Connect](/dbfit/docs/reference.html#connect).
+* Refer to the [MS SQL Server docs](http://technet.microsoft.com/en-us/library/ms378428.aspx) for details about JDBC url syntax.
+
+
+#### Examples
+
+* Using host and port number
+
+`!|Connect|myhost:1433|myuser|mypassword|mydbname|`
+
+* Default port is 1433
+
+`!|Connect|myhost|myuser|mypassword|mydbname|`
+
+* Using instance name with backslash prefix
+
+`!|Connect|myhost\myinstance|myuser|mypassword|mydbname|`
+
+* Using instance name property
+
+`!|Connect|myhost;instanceName=myinstance|myuser|mypassword|mydbname|`
+
+* Using raw JDBC url
+
+`!|Connect|jdbc:sqlserver://myhost\myinstance;user=myuser;password=mypassword;databaseName=mydbname|`
+
+* Using integrated security
+
+`!|Connect|jdbc:sqlserver://myhost;integratedSecurity=true|`
+

@@ -25,7 +25,14 @@ Here is an Oracle example:
 
 If you want to use non-standard connection properties, or initialise your connection differently, call `Connect` with a single argument - the full ADO.NET or JDBC connection string. Here is an example:
 
-    |Connect|data source=Instance;user id=User;password=Pwd;database=TestDB;|
+    |Connect|jdbc:sqlserver://myhost\myinstance;user=myuser;password=mypassword;databaseName=mydbname|
 
 You can use this feature, for example, to utilise Windows integrated authentication or to use the OCI driver for Oracle under Java.
+
+### 3. Additional references
+
+For additional information about database connection settings, please refer to:
+
+* the [Database-specific Information](database-specific-information.html) section
+* the database vendor's official site
 
