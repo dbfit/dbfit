@@ -18,13 +18,11 @@ public class SymbolUtil {
         String symbolName = getSymbolName(name);
         validateSymbolExists(symbolName);
         Object value = fit.Fixture.getSymbol(symbolName);
-        if (value == dbNull) {
-            return null;
-        }
-        return value;
+
+        return (value == dbNull) ? null : value;
     }
 
-    public static void clearSymbols(){
+    public static void clearSymbols() {
         fit.Fixture.ClearSymbols();
     }
 
