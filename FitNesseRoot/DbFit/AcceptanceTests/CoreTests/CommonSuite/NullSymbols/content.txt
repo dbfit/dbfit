@@ -5,9 +5,9 @@
 |1      |null   |
 
 #Assigning
-!|Query|select val from testtbl where id = 1|
-|val?                                       |
-|>>NullVal                                  |
+!|Query|select val from testtbl|
+|val?                          |
+|>>NullVal                     |
 
 #Comparing
 !|Query|select val from testtbl|
