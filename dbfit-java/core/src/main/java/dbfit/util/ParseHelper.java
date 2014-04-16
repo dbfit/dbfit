@@ -35,7 +35,7 @@ public class ParseHelper {
 
     private Object parseSymbol(String s) throws Exception {
         Object value = dbfit.util.SymbolUtil.getSymbol(s);
-        if (value.getClass().equals(type)) {
+        if (null == value || value.getClass().equals(type)) {
             return value;
         }
 
