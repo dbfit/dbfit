@@ -1,0 +1,18 @@
+!|Execute|create table testtbl(id int, val int)|
+
+!|Insert|testtbl|
+|id     |val    |
+|1      |null   |
+
+#Assigning
+!|Query|select val from testtbl|
+|val?                          |
+|>>NullVal                     |
+
+#Comparing
+!|Query|select val from testtbl|
+|val?                          |
+|<<NullVal                     |
+
+# Tear Down
+!|Execute|drop table testtbl|

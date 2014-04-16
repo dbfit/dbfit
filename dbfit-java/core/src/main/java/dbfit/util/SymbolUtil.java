@@ -15,14 +15,14 @@ public class SymbolUtil {
     }
 
     public static Object getSymbol(String name) {
-        Object value = fit.Fixture.getSymbol(getSymbolName(name));
-        if (value == dbNull) {
-            return null;
-        }
-        return value;
+        String symbolName = getSymbolName(name);
+        validateSymbolExists(symbolName);
+        Object value = fit.Fixture.getSymbol(symbolName);
+
+        return (value == dbNull) ? null : value;
     }
 
-    public static void clearSymbols(){
+    public static void clearSymbols() {
         fit.Fixture.ClearSymbols();
     }
 
@@ -64,5 +64,11 @@ public class SymbolUtil {
 
     public static boolean isSymbolSetter(String text) {
         return text != null && text.startsWith(">>");
+    }
+
+    private static void validateSymbolExists(String name) {
+        if (!fit.Fixture.hasSymbol(name)) {
+            throw new RuntimeException("Symbol '" + name + "' does not exist");
+        }
     }
 }
