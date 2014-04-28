@@ -1,0 +1,7 @@
+# Copy this to vagrant_config_custom.rb, uncomment and customize the settings.
+# If config for a given parameter is not overriden here - defaults will be used
+# as defined in vagrant_config_defaults.rb
+
+CONFIG['memory'] = "2048"
+#CONFIG['synced_folder_options'] = nil
+

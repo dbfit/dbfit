@@ -1,0 +1,7 @@
+unix_synced_folder_defaults =
+  {nfs: true, nfs_version: 4, mount_options: ["noatime", "nodiratime"]}
+
+# Default options
+CONFIG['memory'] = "1100"
+CONFIG['synced_folder_options'] = windows? ? nil : unix_synced_folder_defaults
+
