@@ -1,16 +1,13 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-require 'rbconfig'
-is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
-local_config_path = File.expand_path("../vagrantconfig-local.yaml", __FILE__)
-CONFIG = File.exist?(local_config_path) ? YAML.load(File.read(local_config_path)) : {}
+require_relative 'vagrant_config_helper'
 
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider "virtualbox" do |vb|
-    vb.customize ["modifyvm", :id, "--memory", CONFIG['memory'] || "1100"]
+    vb.customize ["modifyvm", :id, "--memory", CONFIG['memory']]
   end
 
   config.omnibus.chef_version = :latest
@@ -20,8 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-6.5_chef-provisionerless.box"
   config.vm.host_name = "dbfitvm"
   config.vm.network "private_network", ip: "192.168.33.10"
-  config.vm.synced_folder "..", "/var/dbfit", :nfs => !is_windows,
-    :nfs_version => 4, :mount_options => ["noatime", "nodiratime"]
+  config.vm.synced_folder "..", "/var/dbfit", CONFIG['synced_folder_options']
 
   config.vm.provision :chef_solo do |chef|
     chef.add_recipe "dbfit_test"

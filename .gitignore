@@ -19,7 +19,7 @@ test_vm/cookbooks
 test_vm/.vagrant
 test_vm/tmp
 test_vm/Disk1
-test_vm/vagrantconfig-local.yaml
+test_vm/vagrant_config_custom.rb
 oracle-xe-*.rpm.zip
 
 # the documentation
