@@ -25,6 +25,10 @@ SITE
       build-essential (>= 0.0.0)
       mysql (>= 0.0.0)
     openssl (1.1.0)
+    postgresql (3.4.0)
+      apt (>= 1.9.0)
+      build-essential (>= 0.0.0)
+      openssl (>= 0.0.0)
     runit (1.5.10)
       build-essential (>= 0.0.0)
       yum (~> 3.0)
@@ -36,16 +40,6 @@ SITE
     yum (3.1.6)
     yum-epel (0.3.4)
       yum (~> 3.0)
-
-GIT
-  remote: https://github.com/dbfit/postgresql
-  ref: master
-  sha: e23ea6ecf36d102b58e0050bc44cdb8bc61205f3
-  specs:
-    postgresql (3.3.4)
-      apt (>= 0.0.0)
-      build-essential (>= 0.0.0)
-      openssl (>= 0.0.0)
 
 PATH
   remote: vendor/cookbooks/dbfit_test
@@ -60,5 +54,4 @@ PATH
 
 DEPENDENCIES
   dbfit_test (>= 0)
-  postgresql (>= 0)
 
