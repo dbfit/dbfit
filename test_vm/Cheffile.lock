@@ -1,18 +1,18 @@
 SITE
   remote: http://community.opscode.com/api/v1
   specs:
-    apt (2.3.8)
-    aws (2.1.1)
+    apt (2.3.10)
+    aws (2.2.0)
     build-essential (2.0.0)
-    chef_handler (1.1.5)
-    database (2.1.2)
+    chef_handler (1.1.6)
+    database (2.1.8)
       aws (>= 0.0.0)
       mysql (>= 5.0.0)
       mysql-chef_gem (>= 0.0.0)
       postgresql (>= 1.0.0)
       xfs (>= 0.0.0)
     dmg (2.2.0)
-    git (4.0.0)
+    git (4.0.2)
       build-essential (>= 0.0.0)
       dmg (>= 0.0.0)
       runit (>= 1.0.0)
@@ -20,7 +20,7 @@ SITE
       yum (~> 3.0)
       yum-epel (>= 0.0.0)
     java (1.22.0)
-    mysql (5.0.2)
+    mysql (5.2.2)
     mysql-chef_gem (0.0.2)
       build-essential (>= 0.0.0)
       mysql (>= 0.0.0)
@@ -37,8 +37,8 @@ SITE
     windows (1.30.2)
       chef_handler (>= 0.0.0)
     xfs (1.1.0)
-    yum (3.1.6)
-    yum-epel (0.3.4)
+    yum (3.2.0)
+    yum-epel (0.3.6)
       yum (~> 3.0)
 
 PATH
