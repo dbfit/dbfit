@@ -41,3 +41,5 @@ su -s /bin/bash oracle -c "${CONFIG_CMD}" || { echo "Config via '${CONFIG_CMD}' 
 
 rm -rf $RPM_PATH/Disk1
 
+exit 0
+
