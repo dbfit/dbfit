@@ -14,5 +14,5 @@ require_relative 'vagrant_config_defaults'
 require_relative custom_config_file if File.exist?(custom_config_file)
 
 def customize_config(cfg_group, cfg)
-  CONFIG[cfg_group].each { |key, val| cfg.send("#{key}=", val) }
+  CONFIG[cfg_group].each { |key, val| cfg.send("#{key}=", *val) }
 end
