@@ -5,3 +5,16 @@
 CONFIG['memory'] = "2048"
 #CONFIG['synced_folder_options'] = nil
 
+#
+# vagrant.vm.* and chef.* settings can be overriden using the following syntax:
+#
+#CONFIG[:vm] = {
+#  'box' => "dbfitvm-test-2c",
+#  'box_url' => "https://github.com/2creatives/vagrant-centos/releases/download/v6.5.3/centos65-x86_64-20140116.box"
+#}
+#
+# Using environment variables is possible too:
+#CONFIG[:chef] = {
+#  'log_level' => ENV.fetch("CHEF_LOG", "info").downcase.to_sym
+#}
+#

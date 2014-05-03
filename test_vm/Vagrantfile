@@ -48,6 +48,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       },
       "run_list" => ["recipe[dbfit_test]"]
     }
+
+    customize_config(:chef, chef)
   end
+
+  customize_config(:vm, config.vm)
 end
 
