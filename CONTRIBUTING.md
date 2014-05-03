@@ -8,6 +8,15 @@ Please raise pull requests against master; the `gh-pages` branch is used only fo
 
 Pull requests are most welcome, but please try to test them with the existing tests first.
 
+#### Conventions
+
+##### End of line style
+DbFit is using Unix style end of line (`LF`) in source files.
+
+Be careful with that on Windows where the default end of line style is `CR+LF`. If your editor or other tools are not supporting well the end of line conventions: you may consider using the help of Git's [autocrlf option](http://git-scm.com/book/en/Customizing-Git-Git-Configuration). If you do so, be aware that DbFit tests and VM setup scripts rely on having some files unchanged. So it's advised that you use `autocrlf = input` instead of `autocrlf = auto`.
+
+If you or your tools have good support for Unix end of line format - it's perfectly OK to run with autocrlf unconfigured (or `autocrlf = false`).
+
 #### Fast build
 
 The quickest way to get feedback on your code changes is to run the fast build:
