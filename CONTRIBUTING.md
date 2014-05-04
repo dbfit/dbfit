@@ -60,14 +60,16 @@ The VM doesn't include:
         vagrant plugin install vagrant-omnibus
         vagrant plugin install vagrant-vbguest
 
-4. If you want to provision Oracle database - download the setup package as
+4. It's possible to customize some settings for the VM setup. If you want to do that, please take a look at [`Vagrantfile`](test_vm/Vagrantfile) and [`vagrant_config_custom.rb.sample`](test_vm/vagrant_config_custom.rb.sample). The latter provides instruction how most Vagrantfile settings can be customized.
+
+5. If you want to provision Oracle database - download the setup package as
    described in 1st bullet of [ORACLE file](ORACLE.md).
 
-5. Run every subsequent command from the `test_vm` folder:
+6. Run every subsequent command from the `test_vm` folder:
 
         cd test_vm
 
-6. Provision and start the vagrant VM:
+7. Provision and start the vagrant VM:
 
         vagrant up
 
