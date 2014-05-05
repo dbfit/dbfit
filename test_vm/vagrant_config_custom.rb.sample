@@ -2,6 +2,37 @@
 # If config for a given parameter is not overriden here - defaults will be used
 # as defined in vagrant_config_defaults.rb
 
-CONFIG['memory'] = "2048"
+###############################################################################
+## Basic parameters - for VM memory and synced folder options
+###############################################################################
+#CONFIG['memory'] = "2048"
 #CONFIG['synced_folder_options'] = nil
 
+
+###############################################################################
+## Advanced customization
+###############################################################################
+# Vagrant general config and chef settings can be overriden as shown in the
+# below examples.
+#
+#DbFit.customize_config(:vagrant) do |config|
+#  config.vm.box_url = "https://github.com/2creatives/vagrant-centos/releases/download/v6.5.3/centos65-x86_64-20140116.box"
+#
+#  # Proxy settings
+#  config.proxy.http = "http://my_ad_domain%5cmy_ad_user:my_ad_password@myproxyserver.myorg.co.uk:80"
+#  config.proxy.https = "http://my_ad_domain%5cmy_ad_user:my_ad_password@myproxyserver.myorg.co.uk:80"
+#  config.proxy.no_proxy = "localhost,127.0.0.1"
+#end
+#
+#DbFit.customize_config(:chef) do |chef|
+#  chef.log_level = ENV.fetch("CHEF_LOG", "info").downcase.to_sym
+#
+#  # Proxy settings
+#  chef.http_proxy = "http://myproxyserver.myorg.co.uk:80"
+#  chef.http_proxy_user = "my_ad_domain\\my_ad_user"
+#  chef.http_proxy_pass = "my_ad_password"
+#
+#  chef.https_proxy = "http://myproxyserver.myorg.co.uk:80"
+#  chef.https_proxy_user = "my_ad_domain\\my_ad_user"
+#  chef.https_proxy_pass = "my_ad_password"
+#end

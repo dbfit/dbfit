@@ -81,6 +81,11 @@ The VM doesn't include:
 
         vagrant up
 
+---
+
+*Note:*
+If provisioning fails, you may need to customize some settings according to the specifics of your environment. Please take a look at [`Vagrantfile`](test_vm/Vagrantfile) and [`vagrant_config_custom.rb.sample`](test_vm/vagrant_config_custom.rb.sample). The latter provides instruction how Vagrantfile settings can be customized.
+
 ### Setting up to build successfully
 
 The subsequent steps need to be followed on the project folder within the VM. To get there:
