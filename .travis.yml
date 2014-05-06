@@ -10,6 +10,7 @@ before_install:
 install: "./gradlew assemble"
 script: "./gradlew clean fastbuild"
 jdk:
+  - oraclejdk7
   - oraclejdk8
 after_success:
   - "./gradlew bundle"
