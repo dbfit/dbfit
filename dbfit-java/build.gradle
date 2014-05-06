@@ -11,8 +11,6 @@ allprojects {
     version = rootProject.dbfitVersion
     
     apply plugin: 'java'
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
 
     apply plugin: 'checkstyle'
 
