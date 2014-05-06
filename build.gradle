@@ -1,6 +1,6 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-ext.dbfitVersion = '2.2.0'
+ext.dbfitVersion = '3.0.0'
 
 task cleanFitnesseroot(type:Exec) {
     executable onWindows() ? 'cmd.exe' : '/bin/sh'
