@@ -52,6 +52,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     DbFit.apply_custom_config(:chef, chef)
   end
 
+  config.vm.provision "shell", path: "../dbfit-java/db2/src/test/resources/install_db2.sh" 
+
   DbFit.apply_custom_config(:vagrant, config)
 end
 

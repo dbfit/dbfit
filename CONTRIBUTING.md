@@ -49,10 +49,10 @@ The easiest way to get a DbFit test environment is to provision a Linux virtual 
 The fully-built VM includes:
  *  working installs of Gradle, MySQL, PostgreSQL, Derby and HSQLDB
  *  the pre-requisites to easily install Oracle
+ *  the pre-requisites to easily install DB2
 
 The VM doesn't include:
  *  a working Oracle installation (however there is a shell script to help with the installation described below)
- *  a working DB2 installation
  *  a working SQL Server installation (obviously)
 
 ### Setting up the test VM
@@ -73,7 +73,10 @@ The VM doesn't include:
 4. If you want to provision Oracle database - download the setup package as
    described in 1st bullet of [ORACLE file](ORACLE.md).
 
-5. Run every subsequent command from the `test_vm` folder:
+5. If you want to provision DB2 database - download the setup package as
+   described in 1st bullet of [DB2 file](DB2.md).
+   
+6. Run every subsequent command from the `test_vm` folder:
 
         cd test_vm
 
@@ -104,6 +107,13 @@ If you downloaded Oracle setup package before provisioning vagrant VM - the
 Oracle database is automatically installed and configured.
 
 For manual setup instructions see [ORACLE file](ORACLE.md).
+
+#### Installing Oracle XE
+
+If you downloaded DB2 setup package before provisioning vagrant VM - the
+DB2 database is automatically installed and configured.
+
+For manual setup instructions see [DB2 file](DB2.md).
 
 #### IDE Integration
 
@@ -164,6 +174,11 @@ Please be aware that if you change any code whilst the `/.gradlew start` command
  *  Logging in as the `system` superuser for `oracle`:
 
         sqlplus system/oracle
+
+ *  Logging in as the `db2inst1` superuser for `db2`:
+
+		sudo su - db2inst1
+        db2
 
 ### Adding a new database adapter
 
