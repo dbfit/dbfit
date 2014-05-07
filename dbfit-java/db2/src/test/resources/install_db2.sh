@@ -145,6 +145,6 @@ then
 fi
 
 echo "$IM removing DB2 installer package files..."
-rm -fe "$DB2_INST_ROOT/expc"
+rm -fr "$DB2_INST_ROOT/expc"
 
 exit 0
