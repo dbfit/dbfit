@@ -108,7 +108,7 @@ Oracle database is automatically installed and configured.
 
 For manual setup instructions see [ORACLE file](ORACLE.md).
 
-#### Installing Oracle XE
+#### Installing DB2 Express-C
 
 If you downloaded DB2 setup package before provisioning vagrant VM - the
 DB2 database is automatically installed and configured.
