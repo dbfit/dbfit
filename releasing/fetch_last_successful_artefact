@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+require 'travis'
+
+S3_BASE_URL = "https://s3.amazonaws.com/dbfit"
+
+def artefact_url_from_last_successful_job
+  job = last_successful_jdk7_job
+  relative_url = job.log.clean_body.scan(/Uploading file .*? to (.*?), public: true/).flatten.first
+  commit = job.commit
+  { url: "#{S3_BASE_URL}/#{relative_url}", commit_message: "#{commit.author_name} - #{commit.subject}" }
+end
+
+def last_successful_jdk7_job
+  repo = Travis::Repository.find('dbfit/dbfit')
+  last_successful_build = repo.builds.detect(&:passed?)
+  last_successful_build.jobs.inspect # workaround for lazy loading, so that the next line works
+  last_successful_build.jobs.detect { |job| job.attributes["config"]["jdk"] == "oraclejdk7" }
+end
+
+artefact = artefact_url_from_last_successful_job
+puts "Downloading: #{artefact[:url]}"
+puts "Commit: #{artefact[:commit_message]}"
+puts ""
+
+`wget #{artefact[:url]}`

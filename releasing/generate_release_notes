@@ -1,0 +1,84 @@
+#!/usr/bin/env ruby
+
+require 'date'
+require 'octokit'
+
+Octokit.auto_paginate = true
+
+class DbFitIssue
+  ISSUES_RELEVANT_TO_RELEASE_NOTES = [ 'enhancement', 'docs', 'bugfix' ]
+
+  def initialize(issue)
+    @issue = issue
+  end
+
+  def to_markdown
+    "* #{@issue.title} ([##{@issue.number}](#{@issue.html_url}))"
+  end
+
+  def milestone_title
+    @issue.milestone ? @issue.milestone.title : nil
+  end
+
+  def applies_to_release_notes?
+    not (ISSUES_RELEVANT_TO_RELEASE_NOTES & label_names).empty?
+  end
+
+  def has_label?(label)
+    label_names.include?(label)
+  end
+
+  private
+  def label_names
+    @issue.labels.map(&:name)
+  end
+end
+
+class ReleaseNotes
+  SECTIONS_AND_LABELS = {
+    "New features" => "enhancement",
+    "Minor improvements and bugfixes" => "bugfix",
+    "Documentation improvements" => "docs"
+  }
+
+  def initialize(milestone_title)
+    @milestone_title = milestone_title
+  end
+
+  def to_markdown
+    heading + "\n\n" + sections.join("\n")
+  end
+
+  private
+  def heading
+    "## Release date: #{Date.today.strftime("%-d %B %Y")}"
+  end
+
+  def sections
+    SECTIONS_AND_LABELS.map do |section_heading, relevant_label|
+      "### #{section_heading}\n\n" +
+        issues_for_milestone.
+        select { |issue| issue.has_label?(relevant_label) }.
+        map(&:to_markdown).
+        join("\n") + "\n"
+    end
+  end
+
+  def issues_for_milestone
+    all_issues.select { |issue| issue.milestone_title == @milestone_title }
+  end
+
+  def all_issues
+    @all_issues ||= Octokit.issues('dbfit/dbfit', state: "closed").
+      map { |issue| DbFitIssue.new(issue) }.
+      select(&:applies_to_release_notes?)
+  end
+end
+
+if ARGV.empty?
+  puts "Usage: #{$0} <GitHub milestone>"
+  exit 1
+end
+
+github_milestone = ARGV[0]
+puts ReleaseNotes.new(github_milestone).to_markdown
