@@ -98,10 +98,18 @@ DB2PROFILE=/home/db2inst1/sqllib/db2profile
 
 # Create dftest OS user for dbfit tests.
 echo "$IM creating OS user 'dftest'..."
-useradd dftest -p DFTEST
+useradd dftest
 if [ $? -ne 0 ]
 then
 	echo "$EM creating 'dftest' OS user" 1>&2
+	exit 1
+fi
+
+echo "$IM setting passwd for OS user 'dftest'..."
+echo dftest:DFTEST|chpasswd
+if [ $? -ne 0 ]
+then
+	echo "$EM setting passwd for OS user 'dftest'" 1>&2
 	exit 1
 fi
 
