@@ -31,7 +31,9 @@ public class Execute extends Fixture {
     }
 
     private String getStatementText() {
-        if (statementText == null) statementText=args[0];
+        if (statementText == null) {
+            statementText = args[0];
+        }
         return statementText;
     }
 }

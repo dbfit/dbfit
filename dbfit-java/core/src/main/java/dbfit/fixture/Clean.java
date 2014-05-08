@@ -12,6 +12,13 @@ import java.util.List;
 
 public class Clean extends fit.ColumnFixture {
     private DeleteData deleteData;
+    private boolean hadRowOperation = false;
+
+    public String table;
+    public String columnName;
+    public BigDecimal[] ids;
+    public String[] keys;
+    public String where = null;
 
     public Clean(DBEnvironment environment) {
         this.deleteData = new DeleteData(environment);
@@ -20,14 +27,6 @@ public class Clean extends fit.ColumnFixture {
     public Clean() {
         this.deleteData = new DeleteData(DbEnvironmentFactory.getDefaultEnvironment());
     }
-
-    public String table;
-    public String columnName;
-    public BigDecimal[] ids;
-    public String[] keys;
-    public String where = null;
-
-    private boolean hadRowOperation = false;
 
     public boolean clean() throws SQLException {
         deleteData.deleteTable(table, where);
@@ -74,7 +73,7 @@ public class Clean extends fit.ColumnFixture {
             SQLQuery q = new DeleteByInclusionQuery(tableName, whereClause, columnName, keys, true);
             executeQuery(q);
         }
-        
+
         public void deleteTableByIds(String tableName, String whereClause, String columnName, Object[] ids) throws SQLException {
             SQLQuery q = new DeleteByInclusionQuery(tableName, whereClause, columnName, ids, false);
             executeQuery(q);
