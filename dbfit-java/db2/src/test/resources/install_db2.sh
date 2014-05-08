@@ -3,10 +3,49 @@
 MODNAME=`basename $0`
 IM="$MODNAME: INFO:"
 EM="$MODNAME: ERROR:"
+WM="$MODNAME: WARNING:"
 
 DB2_INST_ROOT=/var/dbfit
+DB2_TGT_ROOT=/opt/ibm/db2
 DB2_SQL_SCRIPTS=/var/dbfit/dbfit-java/db2/src/test/resources
 
+# Check for an existing installation of the instance that we install.
+echo "$IM checking for presence of existing 'db2inst1' DB2 instance..."
+grep db2inst1 /etc/passwd >/dev/null 2>&1
+XS=$?
+if [ $XS -ge 2 ]
+then
+	echo "$EM checking for presence of existing 'db2inst1' user" 1>&2
+	exit 1
+elif [ $XS -eq 0 ]
+then
+	runuser -l db2inst1 -c "db2ilist" >/tmp/$MODNAME.$$
+	if [ $? -ne 0 ]
+	then
+		echo "$EM checking for presence of existing 'db2inst1' DB2 instance" 1>&2
+		exit 1
+	fi
+	
+	grep db2inst1 /tmp/$MODNAME.$$ >/dev/null 2>&1
+	XS=$?
+	if [ $XS -ge 2 ]
+	then
+		echo "$EM checking for presence of existing 'db2inst1' DB2 instance" 1>&2
+		exit 1
+	fi
+	
+	if [ $XS -eq 0 ]
+	then
+		echo "$IM instance 'db2inst1' has already been created. Exiting..."
+		exit 0
+	fi
+fi
+
+echo "$IM existing 'db2inst1' DB2 instance not found. Continuing..."
+
+# IBM docs say that db2setup needs 32 and 64-bit libaio.
+# See: http://publib.boulder.ibm.com/infocenter/db2luw/v9r5/index.jsp?topic=%2Fcom.ibm.db2.luw.qb.server.doc%2Fdoc%2Fr0008865.html
+# This appears to be true though only if installing using the GUI.
 yum -y install libaio
 if [ $? -ne 0 ]
 then
@@ -144,15 +183,18 @@ then
 	fi
 fi
 
-DB2JDBCDRIVER=/opt/ibm/db2/V10.5/java/db2jcc4.jar
-cp "$DB2JDBCDRIVER" "$DBFITLIBDIR"
+cp $DB2_TGT_ROOT/*/java/db2jcc4.jar "$DBFITLIBDIR"
 if [ $? -ne 0 ]
 then
-	echo "$EM copying DB2 JDBC driver $DB2JDBCDRIVER to DbFit lib directory $DBFITLIBDIR" 1>&2
+	echo "$EM copying DB2 JDBC driver to DbFit lib directory $DBFITLIBDIR" 1>&2
 	exit 1
 fi
 
 echo "$IM removing DB2 installer package files..."
-rm -fr "$DB2_INST_ROOT/expc"
+rm -fr "$DB2_INST_ROOT/expc" 2>/dev/null
+if [ $? -ne 0 ]
+then
+	echo "$WM cannot remove DB2 installer packages files"
+fi
 
 exit 0
