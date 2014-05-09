@@ -23,8 +23,9 @@ public class Execute extends Fixture {
     public void doRows(Parse rows) {
         try {
             DbStatement dbObject = new DbStatement(dbEnvironment, getStatementText(), FitNesseTestHost.getInstance());
-            StatementExecution preparedStatement = dbObject.buildPreparedStatement();
-            preparedStatement.run();
+            try (StatementExecution preparedStatement = dbObject.buildPreparedStatement()) {
+                preparedStatement.run();
+            }
         } catch (Throwable e) {
             throw new Error(e);
         }

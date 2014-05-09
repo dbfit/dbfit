@@ -84,16 +84,18 @@ public class Update extends fit.Fixture {
 
         try {
             initParameters(rows.parts); //init parameters from the first row
-            statement = buildUpdateCommand();
-            Parse row = rows;
-            while ((row = row.more) != null) {
-                runRow(row);
+            try (StatementExecution st = buildUpdateCommand()) {
+                statement = st;
+                Parse row = rows;
+                while ((row = row.more) != null) {
+                    runRow(row);
+                }
             }
         } catch (Throwable e) {
             e.printStackTrace();
             exception(rows.parts, e);
         }
-      }
+    }
 
     private void initParameters(Parse headerCells) throws SQLException {
         Map<String, DbParameterAccessor> allParams =

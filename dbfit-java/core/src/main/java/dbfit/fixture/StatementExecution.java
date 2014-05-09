@@ -2,7 +2,7 @@ package dbfit.fixture;
 
 import java.sql.*;
 
-public class StatementExecution {
+public class StatementExecution implements AutoCloseable {
     private Savepoint savepoint;
     private PreparedStatement statement;
 
@@ -120,5 +120,10 @@ public class StatementExecution {
             return value;
         }
         throw new IllegalAccessException("statement has not generated any keys");
+    }
+
+    @Override
+    public void close() throws SQLException {
+        statement.close();
     }
 }

@@ -61,23 +61,29 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             dbObject = getTargetDbObject();
             if (dbObject == null) throw new Error("DB Object not specified!");
             if (rows == null) {//single execution, no args
-                StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray());
-                preparedStatement.run();
-                return;
+                try (StatementExecution preparedStatement =
+                        dbObject.buildPreparedStatement(accessors.toArray())) {
+                    preparedStatement.run();
+                    return;
+                }
             }
             List<String> columnNames = getColumnNamesFrom(rows.parts);
             accessors = getAccessors(rows.parts, columnNames);
             if (accessors == null) return;// error reading args
             columnBindings = getColumnBindings();
-            StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray());
-            execution = preparedStatement;
-            Parse row = rows;
-            while ((row = row.more) != null) {
-                runRow(row);
+            try (StatementExecution preparedStatement
+                    = dbObject.buildPreparedStatement(accessors.toArray())) {
+                execution = preparedStatement;
+                Parse row = rows;
+                while ((row = row.more) != null) {
+                    runRow(row);
+                }
             }
         } catch (Throwable e) {
             e.printStackTrace();
-            if (rows == null) throw new Error(e);
+            if (rows == null) {
+                throw new Error(e);
+            }
             exception(rows.parts, e);
         }
     }
@@ -113,7 +119,9 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         DbParameterAccessors accessors = new DbParameterAccessors();
         for (String name : columnNames) {
             DbParameterAccessor accessor = dbObject.getDbParameterAccessor(name, isOutput(name) ? OUTPUT : INPUT);
-            if (accessor == null) throw new IllegalArgumentException("Parameter/column " + name + " not found");
+            if (accessor == null) {
+                throw new IllegalArgumentException("Parameter/column " + name + " not found");
+            }
             accessors.add(accessor);
         }
         return accessors;
@@ -147,7 +155,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             executeStatementAndEvaluateOutputs(row);
         } else {
             executeStatementExpectingException(row);
-        };
+        }
     }
 
     private void executeStatementExpectingException(Parse row) throws Exception {
