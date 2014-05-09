@@ -62,33 +62,33 @@ public class DB2Environment extends AbstractDbEnvironment {
 
     private Map<String, DbParameterAccessor> readIntoParams(
             String[] queryParameters, String query) throws SQLException {
-        PreparedStatement dc = currentConnection.prepareStatement(query);
+        try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
+            for (int i = 0; i < queryParameters.length; i++) {
+                dc.setString(i + 1,
+                        NameNormaliser.normaliseName(queryParameters[i]));
+            }
 
-        for (int i = 0; i < queryParameters.length; i++) {
-            dc.setString(i + 1,
-                    NameNormaliser.normaliseName(queryParameters[i]));
+            ResultSet rs = dc.executeQuery();
+            Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+            int position = 0;
+            while (rs.next()) {
+                String paramName = rs.getString(1);
+                if (paramName == null)
+                    paramName = "";
+                String dataType = rs.getString(2);
+                // int length=rs.getInt(3);
+                String direction = rs.getString(4);
+                Direction paramDirection = getParameterDirection(direction);
+                DbParameterAccessor dbp = new DbParameterAccessor(paramName,
+                        paramDirection, getSqlType(dataType),
+                        getJavaClass(dataType),
+                        paramDirection == RETURN_VALUE ? -1
+                                : position++);
+                allParams.put(NameNormaliser.normaliseName(paramName), dbp);
+            }
+            rs.close();
+            return allParams;
         }
-
-        ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-        int position = 0;
-        while (rs.next()) {
-            String paramName = rs.getString(1);
-            if (paramName == null)
-                paramName = "";
-            String dataType = rs.getString(2);
-            // int length=rs.getInt(3);
-            String direction = rs.getString(4);
-            Direction paramDirection = getParameterDirection(direction);
-            DbParameterAccessor dbp = new DbParameterAccessor(paramName,
-                    paramDirection, getSqlType(dataType),
-                    getJavaClass(dataType),
-                    paramDirection == RETURN_VALUE ? -1
-                            : position++);
-            allParams.put(NameNormaliser.normaliseName(paramName), dbp);
-        }
-        rs.close();
-        return allParams;
     }
 
     private static Direction getParameterDirection(String direction) {

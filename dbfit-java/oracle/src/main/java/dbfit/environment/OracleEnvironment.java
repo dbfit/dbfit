@@ -341,19 +341,18 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     private Map<String, DbParameterAccessor> readIntoParams(
             String[] queryParameters, String query, InfoSource infoSrc) throws SQLException {
 
-        CallableStatement dc = openDbCallWithParameters(query, queryParameters);
-        Log.log("executing query");
-        ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-        Iterator<DbParameterOrColumnInfo> iter = createParamsOrColumnsIterator(rs, infoSrc);
+        try (CallableStatement dc = openDbCallWithParameters(query, queryParameters)) {
+            Log.log("executing query");
+            ResultSet rs = dc.executeQuery();
+            Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+            Iterator<DbParameterOrColumnInfo> iter = createParamsOrColumnsIterator(rs, infoSrc);
 
-        while (iter.hasNext()) {
-            addSingleParam(allParams, iter.next());
+            while (iter.hasNext()) {
+                addSingleParam(allParams, iter.next());
+            }
+
+            return allParams;
         }
-
-        dc.close();
-
-        return allParams;
     }
 
     private Map<String, DbParameterAccessor> readIntoParams(
