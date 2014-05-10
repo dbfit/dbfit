@@ -36,9 +36,11 @@ public class StoreQuery extends fit.Fixture {
             symbolName = args[1];
         }
 
-        try {
-            PreparedStatement st = dbEnvironment.createStatementWithBoundFixtureSymbols(
-                    FitNesseTestHost.getInstance(), query);
+        try (
+            PreparedStatement st =
+                dbEnvironment.createStatementWithBoundFixtureSymbols(
+                    FitNesseTestHost.getInstance(), query)
+        ) {
             ResultSet rs = st.executeQuery();
             DataTable dt = new DataTable(rs);
             dbfit.util.SymbolUtil.setSymbol(symbolName, dt);

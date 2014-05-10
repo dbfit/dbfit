@@ -258,76 +258,78 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                     .println("TeradataEnvironment: readIntoParams: queryParameters["
                             + i + "]: " + queryParameters[i]);
         }
-        CallableStatement dc = currentConnection.prepareCall(query);
-        for (int i = 0; i < queryParameters.length; i++) {
-            System.out
-                    .println("TeradataEnvironment: readIntoParams: Setting value for parameter: "
-                            + i);
-            dc.setString(i + 1, queryParameters[i].toUpperCase());
-        }
-        ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-        int position = 0;
-        while (rs.next()) {
-            String paramName = rs.getString(1);
-            System.out
-                    .println("TeradataEnvironment: readIntoParams: paramName: "
-                            + paramName + ", has length: " + paramName.length());
-            if (paramName == null) {
-                System.out
-                        .println("TeradataEnvironment: readIntoParams: paramName==null");
-                paramName = ""; // Function return values get empty parameter
-                                // names.
-            }
-            if (paramName.equals("")) {
-                System.out
-                        .println("TeradataEnvironment: readIntoParams: paramName==\"\"");
-                paramName = ""; // Function return values get empty parameter
-                                // names.
-            }
-            String dataType = rs.getString(2);
-            System.out
-                    .println("TeradataEnvironment: readIntoParams: dataType: "
-                            + dataType);
-            String direction = rs.getString(4);
-            System.out
-                    .println("TeradataEnvironment: readIntoParams: direction: "
-                            + direction);
-            Direction paramDirection;
-            System.out
-                    .println("TeradataEnvironment: readIntoParams: +paramName.trim().toUpperCase()+: +"
-                            + paramName.trim().toUpperCase() + "+");
-            if (paramName.trim().toUpperCase().equals("")) {
-                System.out
-                        .println("TeradataEnvironment: readIntoParams: setting paramDirection to RETURN_VALUE");
-                paramDirection = Direction.RETURN_VALUE;
-            } else {
-                System.out
-                        .println("TeradataEnvironment: readIntoParams: setting paramDirection to getParameterDirection(direction): "
-                                + getParameterDirection(direction));
-                paramDirection = getParameterDirection(direction);
-            }
 
-            System.out
-                    .println("TeradataEnvironment: readIntoParams: creating new DbParameterAccessor for paramName: "
-                            + paramName
-                            + ", paramDirection: "
-                            + paramDirection
-                            + ", dataType: " + dataType);
-            int intSqlType = getSqlType(dataType);
-            Class<?> clsJavaClass = getJavaClass(dataType);
-            DbParameterAccessor dbp = new DbParameterAccessor(paramName,
-                    paramDirection, intSqlType, clsJavaClass,
-                    paramDirection == Direction.RETURN_VALUE ? -1
-                            : position++);
-            // DbParameterAccessor dbp = new DbParameterAccessor(paramName,
-            // paramDirection, getSqlType(dataType), getJavaClass(dataType),
-            // paramDirection == DbParameterAccessor.RETURN_VALUE ? -1 :
-            // position++);
-            allParams.put(NameNormaliser.normaliseName(paramName), dbp);
+        try (CallableStatement dc = currentConnection.prepareCall(query)) {
+            for (int i = 0; i < queryParameters.length; i++) {
+                System.out
+                        .println("TeradataEnvironment: readIntoParams: Setting value for parameter: "
+                                + i);
+                dc.setString(i + 1, queryParameters[i].toUpperCase());
+            }
+            ResultSet rs = dc.executeQuery();
+            Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+            int position = 0;
+            while (rs.next()) {
+                String paramName = rs.getString(1);
+                System.out
+                        .println("TeradataEnvironment: readIntoParams: paramName: "
+                                + paramName + ", has length: " + paramName.length());
+                if (paramName == null) {
+                    System.out
+                            .println("TeradataEnvironment: readIntoParams: paramName==null");
+                    paramName = ""; // Function return values get empty parameter
+                                    // names.
+                }
+                if (paramName.equals("")) {
+                    System.out
+                            .println("TeradataEnvironment: readIntoParams: paramName==\"\"");
+                    paramName = ""; // Function return values get empty parameter
+                                    // names.
+                }
+                String dataType = rs.getString(2);
+                System.out
+                        .println("TeradataEnvironment: readIntoParams: dataType: "
+                                + dataType);
+                String direction = rs.getString(4);
+                System.out
+                        .println("TeradataEnvironment: readIntoParams: direction: "
+                                + direction);
+                Direction paramDirection;
+                System.out
+                        .println("TeradataEnvironment: readIntoParams: +paramName.trim().toUpperCase()+: +"
+                                + paramName.trim().toUpperCase() + "+");
+                if (paramName.trim().toUpperCase().equals("")) {
+                    System.out
+                            .println("TeradataEnvironment: readIntoParams: setting paramDirection to RETURN_VALUE");
+                    paramDirection = Direction.RETURN_VALUE;
+                } else {
+                    System.out
+                            .println("TeradataEnvironment: readIntoParams: setting paramDirection to getParameterDirection(direction): "
+                                    + getParameterDirection(direction));
+                    paramDirection = getParameterDirection(direction);
+                }
+
+                System.out
+                        .println("TeradataEnvironment: readIntoParams: creating new DbParameterAccessor for paramName: "
+                                + paramName
+                                + ", paramDirection: "
+                                + paramDirection
+                                + ", dataType: " + dataType);
+                int intSqlType = getSqlType(dataType);
+                Class<?> clsJavaClass = getJavaClass(dataType);
+                DbParameterAccessor dbp = new DbParameterAccessor(paramName,
+                        paramDirection, intSqlType, clsJavaClass,
+                        paramDirection == Direction.RETURN_VALUE ? -1
+                                : position++);
+                // DbParameterAccessor dbp = new DbParameterAccessor(paramName,
+                // paramDirection, getSqlType(dataType), getJavaClass(dataType),
+                // paramDirection == DbParameterAccessor.RETURN_VALUE ? -1 :
+                // position++);
+                allParams.put(NameNormaliser.normaliseName(paramName), dbp);
+            }
+            System.out.println("TeradataEnvironment: readIntoParams: returning");
+            return allParams;
         }
-        System.out.println("TeradataEnvironment: readIntoParams: returning");
-        return allParams;
     }
 
     // List interface has sequential search, so using list instead of array to

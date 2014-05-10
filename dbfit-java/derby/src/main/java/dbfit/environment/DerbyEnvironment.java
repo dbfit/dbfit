@@ -62,23 +62,24 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
     private Map<String, DbParameterAccessor> readIntoParams(
             String tableOrViewName, String query) throws SQLException {
         checkConnectionValid(currentConnection);
-        PreparedStatement dc = currentConnection.prepareStatement(query);
-        dc.setString(1, tableOrViewName);
+        try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
+            dc.setString(1, tableOrViewName);
 
-        ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-        int position = 0;
-        while (rs.next()) {
-            String columnName = rs.getString(1);
-            String dataType = rs.getString(2);
-            DbParameterAccessor dbp = new DbParameterAccessor(columnName,
-                    Direction.INPUT,
-                    typeMapper.getJDBCSQLTypeForDBType(dataType),
-                    getJavaClass(dataType), position++);
-            allParams.put(NameNormaliser.normaliseName(columnName), dbp);
+            ResultSet rs = dc.executeQuery();
+            Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+            int position = 0;
+            while (rs.next()) {
+                String columnName = rs.getString(1);
+                String dataType = rs.getString(2);
+                DbParameterAccessor dbp = new DbParameterAccessor(columnName,
+                        Direction.INPUT,
+                        typeMapper.getJDBCSQLTypeForDBType(dataType),
+                        getJavaClass(dataType), position++);
+                allParams.put(NameNormaliser.normaliseName(columnName), dbp);
+            }
+            rs.close();
+            return allParams;
         }
-        rs.close();
-        return allParams;
     }
 
     public Map<String, DbParameterAccessor> getAllProcedureParameters(

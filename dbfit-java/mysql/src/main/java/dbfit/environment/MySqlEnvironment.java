@@ -63,26 +63,27 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
 
     private Map<String, DbParameterAccessor> readColumnsFromDb(
             String[] parametersForColumnQuery, String query) throws SQLException {
-        PreparedStatement dc = currentConnection.prepareStatement(query);
-        for (int i = 0; i < parametersForColumnQuery.length; i++) {
-            dc.setString(i + 1,
-                    NameNormaliser.normaliseName(parametersForColumnQuery[i]));
+        try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
+            for (int i = 0; i < parametersForColumnQuery.length; i++) {
+                dc.setString(i + 1,
+                        NameNormaliser.normaliseName(parametersForColumnQuery[i]));
+            }
+            ResultSet rs = dc.executeQuery();
+            Map<String, DbParameterAccessor> columns = new HashMap<String, DbParameterAccessor>();
+            int position = 0;
+            while (rs.next()) {
+                String columnName = rs.getString(1);
+                if (columnName == null)
+                    columnName = "";
+                String dataType = rs.getString(2);
+                DbParameterAccessor dbp = new DbParameterAccessor(columnName,
+                        Direction.INPUT, getSqlType(dataType),
+                        getJavaClass(dataType), position++);
+                columns.put(NameNormaliser.normaliseName(columnName), dbp);
+            }
+            rs.close();
+            return columns;
         }
-        ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> columns = new HashMap<String, DbParameterAccessor>();
-        int position = 0;
-        while (rs.next()) {
-            String columnName = rs.getString(1);
-            if (columnName == null)
-                columnName = "";
-            String dataType = rs.getString(2);
-            DbParameterAccessor dbp = new DbParameterAccessor(columnName,
-                    Direction.INPUT, getSqlType(dataType),
-                    getJavaClass(dataType), position++);
-            columns.put(NameNormaliser.normaliseName(columnName), dbp);
-        }
-        rs.close();
-        return columns;
     }
 
     // List interface has sequential search, so using list instead of array to
@@ -177,22 +178,27 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             qry += " (db=database() and lower(name)=?)";
         }
 
-        PreparedStatement dc = currentConnection.prepareStatement(qry);
-        for (int i = 0; i < qualifiers.length; i++) {
-            dc.setString(i + 1, NameNormaliser.normaliseName(qualifiers[i]));
-        }
-        ResultSet rs = dc.executeQuery();
-        if (!rs.next()) {
-            throw new SQLException("Unknown procedure " + procName);
-        }
+        String type;
+        String paramList;
+        String returns;
 
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-        String type = rs.getString(1);
-        String paramList = rs.getString(2);
-        String returns = rs.getString(3);
-        rs.close();
+        try (PreparedStatement dc = currentConnection.prepareStatement(qry)) {
+            for (int i = 0; i < qualifiers.length; i++) {
+                dc.setString(i + 1, NameNormaliser.normaliseName(qualifiers[i]));
+            }
+            ResultSet rs = dc.executeQuery();
+            if (!rs.next()) {
+                throw new SQLException("Unknown procedure " + procName);
+            }
+
+            type = rs.getString(1);
+            paramList = rs.getString(2);
+            returns = rs.getString(3);
+            rs.close();
+        }
 
         MySqlProcedureParametersParser parser = new MySqlProcedureParametersParser();
+        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
 
         int position = 0;
         for (ParamDescriptor pd: parser.parseParameters(paramList)) {

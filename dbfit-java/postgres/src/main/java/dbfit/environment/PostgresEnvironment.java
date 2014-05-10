@@ -60,26 +60,27 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 
     private Map<String, DbParameterAccessor> readIntoParams(
             String[] queryParameters, String query) throws SQLException {
-        PreparedStatement dc = currentConnection.prepareStatement(query);
-        for (int i = 0; i < queryParameters.length; i++) {
-            dc.setString(i + 1,
-                    NameNormaliser.normaliseName(queryParameters[i]));
+        try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
+            for (int i = 0; i < queryParameters.length; i++) {
+                dc.setString(i + 1,
+                        NameNormaliser.normaliseName(queryParameters[i]));
+            }
+            ResultSet rs = dc.executeQuery();
+            Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+            int position = 0;
+            while (rs.next()) {
+                String paramName = rs.getString(1);
+                if (paramName == null)
+                    paramName = "";
+                String dataType = rs.getString(2);
+                DbParameterAccessor dbp = new DbParameterAccessor(paramName,
+                        Direction.INPUT, getSqlType(dataType),
+                        getJavaClass(dataType), position++);
+                allParams.put(NameNormaliser.normaliseName(paramName), dbp);
+            }
+            rs.close();
+            return allParams;
         }
-        ResultSet rs = dc.executeQuery();
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-        int position = 0;
-        while (rs.next()) {
-            String paramName = rs.getString(1);
-            if (paramName == null)
-                paramName = "";
-            String dataType = rs.getString(2);
-            DbParameterAccessor dbp = new DbParameterAccessor(paramName,
-                    Direction.INPUT, getSqlType(dataType),
-                    getJavaClass(dataType), position++);
-            allParams.put(NameNormaliser.normaliseName(paramName), dbp);
-        }
-        rs.close();
-        return allParams;
     }
 
     // List interface has sequential search, so using list instead of array to
@@ -181,25 +182,30 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
             qry += " and (lower(ns.nspname)=current_schema() and lower(proname)=?)";
         }
 
-        PreparedStatement dc = currentConnection.prepareStatement(qry);
-        for (int i = 0; i < qualifiers.length; i++) {
-            dc.setString(i + 1, NameNormaliser.normaliseName(qualifiers[i]));
+        String type;
+        String paramList;
+        String returns;
+
+        try (PreparedStatement dc = currentConnection.prepareStatement(qry)) {
+            for (int i = 0; i < qualifiers.length; i++) {
+                dc.setString(i + 1, NameNormaliser.normaliseName(qualifiers[i]));
+            }
+            ResultSet rs = dc.executeQuery();
+            if (!rs.next()) {
+                throw new SQLException("Unknown procedure " + procName);
+            }
+            type = rs.getString(1);
+            paramList = rs.getString(2);
+            returns = rs.getString(3);
+            rs.close();
         }
-        ResultSet rs = dc.executeQuery();
-        if (!rs.next()) {
-            throw new SQLException("Unknown procedure " + procName);
-        }
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-        String type = rs.getString(1);
-        String paramList = rs.getString(2);
-        String returns = rs.getString(3);
-        rs.close();
 
         int position = 0;
         Direction direction = Direction.INPUT;
         String paramName;
         String dataType;
         String token;
+        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
 
         for (String param : paramList.split(",")) {
             StringTokenizer s = new StringTokenizer(param.trim().toLowerCase(),
