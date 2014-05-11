@@ -20,13 +20,13 @@ DOFORCE=
 while getopts "dfl" OPT
 do
 	case $OPT in
-    d)	DODETECT=
+	d)	DODETECT=
 		;;
 	l)	DOLIBS=
 		;;
 	f)	DOFORCE=true
 		;;
-    \?)	echo "$EM invalid option: $OPTARG" 1>&2
+	\?)	echo "$EM invalid option: $OPTARG" 1>&2
 		exit 1
 		;;
 	esac
