@@ -39,7 +39,7 @@ And system differences:
 ### Which DB2 adapter should I use?
 
  *  Use DB2Test if your DB2 instance under test is on Windows, Linux, Unix, or System z.
-     * This adapter uses IBM's "native" JDBC driver: `db2jcc4.jar`. It can be downloaded from [IBMs' web site](http://www.ibm.com/support/docview.wss?rs=4020&uid=swg21385217)
+     * This adapter uses IBM's "native" JDBC driver: `db2jcc4.jar`. It can be downloaded from [IBM's web site](http://www.ibm.com/support/docview.wss?rs=4020&uid=swg21385217)
  *  Use DB2iSeriesTest if your DB2 instance is on an iSeries (formerly AS/400).
      * This adapter uses JTOpen's Toolbox driver for IBM i: `jt400.jar`
      * The Toolbox Driver is free, open source, and available here: <http://jt400.sourceforge.net/>
