@@ -27,6 +27,9 @@ allprojects {
 subprojects {
     jar.baseName = "dbfit-" + project.archivesBaseName
     repositories {
+        flatDir {
+            dirs "${rootProject.projectDir}/libs"
+        }
         mavenCentral()
         maven {
             url "http://mvnrepository.com"
