@@ -28,7 +28,7 @@ subprojects {
     jar.baseName = "dbfit-" + project.archivesBaseName
     repositories {
         flatDir {
-            dirs "${rootProject.projectDir}/libs"
+            dirs "${rootProject.projectDir}/custom_libs"
         }
         mavenCentral()
         maven {
