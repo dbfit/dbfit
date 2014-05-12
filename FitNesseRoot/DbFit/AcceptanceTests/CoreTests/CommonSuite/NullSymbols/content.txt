@@ -14,5 +14,10 @@
 |val?                          |
 |<<NullVal                     |
 
+!4 Undefined variable defaults to NULL
+!|Query|select val from testtbl|
+|val?                          |
+|<<UndefinedVariable           |
+
 # Tear Down
 !|Execute|drop table testtbl|
