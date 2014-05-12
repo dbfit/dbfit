@@ -27,8 +27,8 @@ public class ParseHelperTest {
         assertNull(parseHelper.parse("<<NULL_SYMBOL"));
     }
 
-    @Test(expected=Exception.class)
-    public void shouldFailWhenParsingMissingSymbol() throws Exception {
-        parseHelper.parse("<<MISSING_SYMBOL");
+    @Test
+    public void undefinedSymbolDefaultsToNull() throws Exception {
+        assertNull(parseHelper.parse("<<MISSING_SYMBOL"));
     }
 }

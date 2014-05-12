@@ -15,10 +15,7 @@ public class SymbolUtil {
     }
 
     public static Object getSymbol(String name) {
-        String symbolName = getSymbolName(name);
-        validateSymbolExists(symbolName);
-        Object value = fit.Fixture.getSymbol(symbolName);
-
+        Object value = fit.Fixture.getSymbol(getSymbolName(name));
         return (value == dbNull) ? null : value;
     }
 
@@ -64,11 +61,5 @@ public class SymbolUtil {
 
     public static boolean isSymbolSetter(String text) {
         return text != null && text.startsWith(">>");
-    }
-
-    private static void validateSymbolExists(String name) {
-        if (!fit.Fixture.hasSymbol(name)) {
-            throw new RuntimeException("Symbol '" + name + "' does not exist");
-        }
     }
 }
