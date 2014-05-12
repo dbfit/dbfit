@@ -87,7 +87,7 @@ project('db2') {
 
     dependencies {
         compile project(':dbfit-java:core')
-        runtime ':db2jcc4:4.17.29@jar'
+        runtime 'com.ibm.db2:db2jcc4:4.17.29@jar'
     }
 }
 
