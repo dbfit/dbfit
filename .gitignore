@@ -13,7 +13,7 @@ out
 dist
 /docs
 tmp/*
-libs/*.jar
+custom_libs/*.jar
 
 # the VM
 test_vm/cookbooks
