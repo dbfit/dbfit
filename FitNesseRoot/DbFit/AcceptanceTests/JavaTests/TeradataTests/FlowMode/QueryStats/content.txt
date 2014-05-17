@@ -1,0 +1,26 @@
+!3 Query Stats
+
+|Query Stats|
+|query|row count?|is empty?|
+|SELECT n FROM (SELECT ROW_NUMBER() OVER(ORDER BY calendar_date) AS n FROM sys_calendar.calendar) x WHERE n <= 5|5|false|
+
+!|Query Stats|
+|query | row count? |is empty?|
+| SELECT 1 AS n where 0=1 |0|true|
+
+|Execute|CREATE TABLE td_dual (dummy char);et|
+
+|Insert|td_dual|
+|dummy|
+|x|
+
+!|Query Stats|
+|table name| row count? |is empty?|
+| td_dual|1|false|
+
+
+!|Query Stats|
+|table name| where|row count? |is empty?|
+| td_dual |1=0|0|true|
+
+|Execute|DROP TABLE td_dual;et|

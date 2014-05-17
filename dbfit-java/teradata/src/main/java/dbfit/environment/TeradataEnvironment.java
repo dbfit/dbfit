@@ -116,10 +116,12 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     }
 
     protected String getConnectionString(String dataSource) {
+    	System.out.println("TeradataEnvironment: getConnectionString(1): entering");
         return "jdbc:teradata://" + dataSource + "/FINALIZE_AUTO_CLOSE=ON";
     }
 
     protected String getConnectionString(String dataSource, String dataBase) {
+    	System.out.println("TeradataEnvironment: getConnectionString(2): entering");
         // return "jdbc:teradata://"+dataSource+"/DATABASE="+dataBase+"";
         // return
         // "jdbc:teradata://"+dataSource+"/TMODE=ANSI,DATABASE="+dataBase;
@@ -135,7 +137,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     private static Pattern paramsNames = Pattern.compile(":([A-Za-z0-9_]+)");
 
     public Pattern getParameterPattern() {
-        return paramsNames;
+        return paramsNames	;
     }
 
     protected String parseCommandText(String commandText) {
@@ -152,6 +154,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         String[] qualifiers = NameNormaliser.normaliseName(procName).split(
                 "\\.");
 
+        //Great resource: http://stackoverflow.com/questions/21587034/get-column-type-using-teradata-system-tables
         String cols = "CASE WHEN TRIM(columnname) = 'RETURN0' AND spparametertype = 'O' ";
         cols = cols + "THEN '' ";
         cols = cols + "ELSE TRIM(columnname) ";
@@ -165,7 +168,8 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         cols = cols + "WHEN c.columntype IN ('I2') THEN 'SMALLINT' ";
         cols = cols + "WHEN c.columntype IN ('I1') THEN 'BYTEINT' ";
         cols = cols + "WHEN c.columntype IN ('D') THEN 'DECIMAL' ";
-        cols = cols + "WHEN c.columntype IN ('D') THEN 'DOUBLE' ";
+        cols = cols + "WHEN c.columntype IN ('N') THEN 'NUMBER' ";
+        cols = cols + "WHEN c.columntype IN ('F') THEN 'FLOAT' ";
         cols = cols + "WHEN c.columntype IN ('DA') THEN 'DATE' ";
         cols = cols + "WHEN c.columntype IN ('TS') THEN 'TIMESTAMP' ";
         cols = cols + "WHEN c.columntype IN ('TI') THEN 'TIME' ";
@@ -191,17 +195,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
         qry += " order by c.columnid";
 
-        // WHAT THE HELL IS THIS FOR!? ********************
-        /*
-         * if (qualifiers.length==2){ String[] newQualifiers=new String[6];
-         * newQualifiers[0]=qualifiers[0]; newQualifiers[1]=qualifiers[1];
-         * newQualifiers[2]=qualifiers[0]; newQualifiers[3]=qualifiers[1];
-         * newQualifiers[4]=qualifiers[0]; newQualifiers[5]=qualifiers[1];
-         * qualifiers=newQualifiers; } else if (qualifiers.length==1){ String[]
-         * newQualifiers=new String[2]; newQualifiers[0]=qualifiers[0];
-         * newQualifiers[1]=qualifiers[0]; qualifiers=newQualifiers; }
-         */
-
         return readIntoParams(qualifiers, qry);
     }
 
@@ -213,21 +206,24 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
         String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
                 .split("\\.");
-
+        
+        //Great resource: http://stackoverflow.com/questions/21587034/get-column-type-using-teradata-system-tables
         String cols = "columnname, CASE ";
         cols = cols + "WHEN c.columntype IN ('CF') THEN 'CHAR' ";
         cols = cols + "WHEN c.columntype IN ('CV') THEN 'VARCHAR' ";
         cols = cols + "WHEN c.columntype IN ('CO') THEN 'CLOB' ";
+        cols = cols + "WHEN c.columntype IN ('BO') THEN 'BLOB' ";
         cols = cols + "WHEN c.columntype IN ('I8') THEN 'BIGINT' ";
         cols = cols + "WHEN c.columntype IN ('I') THEN 'INTEGER' ";
         cols = cols + "WHEN c.columntype IN ('I2') THEN 'SMALLINT' ";
         cols = cols + "WHEN c.columntype IN ('I1') THEN 'BYTEINT' ";
         cols = cols + "WHEN c.columntype IN ('D') THEN 'DECIMAL' ";
-        cols = cols + "WHEN c.columntype IN ('F') THEN 'DOUBLE' ";
+        cols = cols + "WHEN c.columntype IN ('N') THEN 'NUMBER' ";
+        cols = cols + "WHEN c.columntype IN ('F') THEN 'FLOAT' ";
         cols = cols + "WHEN c.columntype IN ('DA') THEN 'DATE' ";
-        cols = cols + "WHEN c.columntype IN ('TS') THEN 'TIMESTAMP' ";
-        cols = cols + "WHEN c.columntype IN ('TI') THEN 'TIME' ";
-        cols = cols + "WHEN c.columntype IN ('BF') THEN 'BINARY' ";
+        cols = cols + "WHEN c.columntype IN ('TS', 'SZ') THEN 'TIMESTAMP' ";
+        cols = cols + "WHEN c.columntype IN ('AT', 'TZ') THEN 'TIME' ";
+        cols = cols + "WHEN c.columntype IN ('BF') THEN 'BYTE' ";
         cols = cols + "WHEN c.columntype IN ('BV') THEN 'VARBINARY' ";
         cols = cols + "WHEN c.columntype IN ('PD') THEN 'PERIOD(DATE)' ";
         cols = cols + "WHEN c.columntype IN ('PT') THEN 'PERIOD(TIME)' ";
@@ -335,9 +331,9 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     // List interface has sequential search, so using list instead of array to
     // map types
     private static List<String> stringTypes = Arrays.asList(new String[] {
-            "VARCHAR", "CHAR" });
-    private static List<String> clobTypes = Arrays
-            .asList(new String[] { "CLOB" });
+            "VARCHAR", "CHAR", "CLOB" });
+   // private static List<String> clobTypes = Arrays
+        //    .asList(new String[] { "CLOB" });
     private static List<String> longTypes = Arrays
             .asList(new String[] { "BIGINT" });
     private static List<String> intTypes = Arrays
@@ -347,24 +343,24 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     private static List<String> shortTypes = Arrays
             .asList(new String[] { "SMALLINT" });
     private static List<String> decimalTypes = Arrays
-            .asList(new String[] { "DECIMAL" });
-    private static List<String> doubleTypes = Arrays.asList(new String[] {
-            "DOUBLE", "FLOAT" });
+            .asList(new String[] { "DECIMAL", "NUMBER" });
+    private static List<String> doubleTypes = Arrays
+    		.asList(new String[] { "FLOAT" });
     private static List<String> dateTypes = Arrays
             .asList(new String[] { "DATE" });
     private static List<String> timestampTypes = Arrays
-            .asList(new String[] { "TIMESTAMP" });
+            .asList(new String[] { "TIMESTAMP", "TIMESTAMP WITH TIME ZONE" });
     private static List<String> timeTypes = Arrays
-            .asList(new String[] { "TIME" });
+            .asList(new String[] { "TIME", "TIME WITH TIME ZONE" });
     private static List<String> datePeriodTypes = Arrays
             .asList(new String[] { "PERIOD(DATE)" });
     private static List<String> timePeriodTypes = Arrays
-            .asList(new String[] { "PERIOD(TIME)" });
+            .asList(new String[] { "PERIOD(TIME)", "PERIOD(TIME WITH TIME ZONE)" });
     private static List<String> timestampPeriodTypes = Arrays
             .asList(new String[] { "PERIOD(TIMESTAMP)",
                     "PERIOD(TIMESTAMP WITH TIME ZONE)" });
     private static List<String> binaryTypes = Arrays
-            .asList(new String[] { "BINARY" });
+            .asList(new String[] { "BYTE" });
     private static List<String> varBinaryTypes = Arrays
             .asList(new String[] { "VARBINARY" });
 
@@ -374,7 +370,8 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                 + dataType);
 
         dataType = dataType.toUpperCase().trim();
-
+        //System.out.println("TeradataEnvironment: normaliseTypeName: UC: " + dataType.toUpperCase());
+        //System.out.println("TeradataEnvironment: normaliseTypeName: UC.TRIM: " + dataType.toUpperCase().trim());
         int idx = 0;
 
         if ((!datePeriodTypes.contains(dataType))
@@ -390,9 +387,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                 dataType = dataType.substring(0, idx);
         }
 
-        System.out
-                .println("TeradataEnvironment: normaliseTypeName: returning: "
-                        + dataType);
+        System.out.println("TeradataEnvironment: normaliseTypeName: returning: " + dataType);
         return dataType;
     }
 
@@ -406,8 +401,8 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
         if (stringTypes.contains(dataType))
             return java.sql.Types.VARCHAR;
-        if (clobTypes.contains(dataType))
-            return java.sql.Types.CLOB;
+        //if (clobTypes.contains(dataType))
+            //return java.sql.Types.CLOB;
         if (longTypes.contains(dataType))
             return java.sql.Types.BIGINT;
         if (intTypes.contains(dataType))
@@ -458,8 +453,10 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         if (stringTypes.contains(dataType))
             return String.class;
         // if (clobTypes.contains(dataType)) return String.class;
-        if (clobTypes.contains(dataType))
-            return java.sql.Clob.class;
+        //if (clobTypes.contains(dataType)) {
+        //	System.out.println("TeradataEnvironment: getJavaClass: returning type java.sql.Clob.class");
+        //	return Clob.class;
+        //}
         if (longTypes.contains(dataType))
             return Long.class;
         if (intTypes.contains(dataType))
@@ -546,6 +543,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                 .println("TeradataEnvironment: buildInsertCommand: sb.toString(): "
                         + sb.toString());
         return sb.toString();
-    }
+    }   
 }
 

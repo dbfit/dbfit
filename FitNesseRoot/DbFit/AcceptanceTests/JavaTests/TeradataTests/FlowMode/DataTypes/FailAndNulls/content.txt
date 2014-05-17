@@ -1,0 +1,18 @@
+|Query|SELECT null n|
+|n?|
+|fail[3]|
+
+!- PreparedStatement cannot be used to create an SPL-based Procedure. A Statement should be used but is not available through DbFit 1.1 -!
+
+!- PreparedStatement cannot be used to execute Procedure NULLS_BACK was created with: -!
+
+!- REPLACE PROCEDURE nulls_back(OUT out1 VARCHAR, OUT out2 NUMERIC, OUT out3 DATE)
+BEGIN
+   SET out1 = NULL;
+   SET out2 = NULL;
+   SET out3 = NULL;
+END; -!
+
+!|Execute Procedure|nulls_back|
+|out1?|out2?|out3?|
+|fail[ABC]|fail[10]|fail[2008-01-01]| 

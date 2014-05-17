@@ -1,0 +1,11 @@
+!3 Dates should accept standard JDBC date format
+
+|Execute|Create table datatypetest (d1 date, d2 timestamp, d3 time);et|
+
+|insert|datatypetest|
+|d1|d2|d3|
+|2008-03-02|2008-03-02 01:41:39.0|01:02:03.45|
+
+|Query| select * from datatypetest|
+|d1?|d2?|d3?|
+|2008-03-02|2008-03-02 01:41:39.0|01:02:03.45|

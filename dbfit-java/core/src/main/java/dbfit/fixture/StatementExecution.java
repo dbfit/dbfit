@@ -26,23 +26,30 @@ public class StatementExecution implements AutoCloseable {
         private java.sql.Savepoint savepoint;
 
         public Savepoint(Connection connection) {
+        	System.out.println("StatementExecution$Savepoint: Savepoint: entering");
             this.connection = connection;
             create();
         }
 
         protected void create() {
+        	System.out.println("StatementExecution$Savepoint: create: entering");
             String savepointName = "eee" + this.hashCode();
             if (savepointName.length() > 10) savepointName = savepointName.substring(1, 9);
             savepoint = null;
 
             try {
                 savepoint = connection.setSavepoint(savepointName);
-            } catch (SQLException e) {
-                throw new RuntimeException("Exception while setting savepoint", e);
+            }
+            catch (SQLException e) {
+               	// The Teradata driver does not support this feature and doesn't throw SQLFeatureNotSupportedException.
+            	System.out.println("StatementExecution$Savepoint: create: caught exception but ignoring!");
+            	System.out.println("StatementExecution$Savepoint: create: savepoint is null: " + (savepoint == null));
+                //throw new RuntimeException("Exception while setting savepoint", e);
             }
         }
 
         public void release() {
+        	System.out.println("StatementExecution$Savepoint: release: entering");
             try {
                 connection.releaseSavepoint(savepoint);
             } catch (SQLException e) {
@@ -60,9 +67,12 @@ public class StatementExecution implements AutoCloseable {
         }
 
         public void restore() {
+        	System.out.println("StatementExecution$Savepoint: restore: entering");
             try {
                 connection.rollback(savepoint);
             } catch (SQLException e) {
+            	System.out.println("StatementExecution$Savepoint: restore: caught exception!");
+            	System.out.println("StatementExecution$Savepoint: restore: savepoint is null: " + (savepoint == null));
                 throw new RuntimeException("Exception while restoring savepoint", e);
             }
         }
@@ -81,6 +91,7 @@ public class StatementExecution implements AutoCloseable {
     }
 
     private void createSavepoint() {
+    	System.out.println("StatementExecution$Savepoint: createSavepoint: entering");
         try {
             savepoint = new Savepoint(statement.getConnection());
         } catch (SQLException e) {
@@ -93,7 +104,10 @@ public class StatementExecution implements AutoCloseable {
     }
 
     public void setObject(int index, Object value) throws SQLException {
-        statement.setObject(index, value);
+    	if (value == null)
+    		statement.setNull(index, Types.NULL);
+    	else
+    		statement.setObject(index, value);
     }
 
     public Object getObject(int index) throws SQLException {

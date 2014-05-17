@@ -41,21 +41,25 @@ public class DatabaseTest extends Fixture {
     }
 
     public void connect(String dataSource, String username, String password, String database) throws SQLException {
+    	System.out.println("DatabaseTest: connect(4): entering");
         environment.connect(dataSource, username, password, database);
         environment.getConnection().setAutoCommit(false);
     }
 
     public void connect(String dataSource, String username, String password) throws SQLException {
+    	System.out.println("DatabaseTest: connect(3): entering");
         environment.connect(dataSource, username, password);
         environment.getConnection().setAutoCommit(false);
     }
 
     public void connect(String connectionString) throws SQLException {
+    	System.out.println("DatabaseTest: connect(1): entering");
         environment.connect(connectionString);
         environment.getConnection().setAutoCommit(false);
     }
 
     public void connectUsingFile(String filePath) throws SQLException, IOException, FileNotFoundException {
+    	System.out.println("DatabaseTest: connectUsingFile: entering");
         environment.connectUsingFile(filePath);
         environment.getConnection().setAutoCommit(false);
     }

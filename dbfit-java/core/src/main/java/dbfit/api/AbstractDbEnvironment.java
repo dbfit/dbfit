@@ -46,27 +46,33 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     public void connect(String connectionString, Properties info) throws SQLException {
+    	System.out.println("Entering AbstractDbEnvironment: connect(2)");
         registerDriver();
         currentConnection = DriverManager.getConnection(connectionString, info);
         currentConnection.setAutoCommit(false);
+        System.out.println("AbstractDbEnvironment: connect(2): connected to DB of version " + currentConnection.getMetaData().getDatabaseMajorVersion());
         afterConnectionEstablished();
     }
 
     @Override
     public void connect(String connectionString) throws SQLException {
-        connect(connectionString, new Properties());
+    	System.out.println("Entering AbstractDbEnvironment: connect(2)");
+        System.out.println("AbstractDbEnvironment: connect(2): connected to DB of version " + currentConnection.getMetaData().getDatabaseMajorVersion());    	
+        connect(connectionString, new Properties());        
     }
 
     @Override
     public void connect(String dataSource, String username, String password)
             throws SQLException {
+    	System.out.println("Entering AbstractDbEnvironment: connect(3)");
         connect(dataSource, username, password, null);
+        System.out.println("AbstractDbEnvironment: connect(2): connected to DB of version " + currentConnection.getMetaData().getDatabaseMajorVersion());        
     }
 
     @Override
     public void connect(String dataSource, String username, String password,
             String database) throws SQLException {
-
+    	System.out.println("Entering AbstractDbEnvironment: connect(4)");
         String connectionString = (database == null)
             ? getConnectionString(dataSource)
             : getConnectionString(dataSource, database);
@@ -74,13 +80,14 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         Properties props = new Properties();
         props.put("user", username);
         props.put("password", new PropertiesLoader().parseValue(password));
-
         connect(connectionString, props);
+        System.out.println("AbstractDbEnvironment: connect(2): connected to DB of version " + currentConnection.getMetaData().getDatabaseMajorVersion());
     }
 
     @Override
     public void connectUsingFile(String file) throws SQLException, IOException,
             FileNotFoundException {
+    	System.out.println("Entering AbstractDbEnvironment: connectUsingFile");
         DbConnectionProperties dbp = DbConnectionProperties
                 .CreateFromFile(file);
         if (dbp.FullConnectionString != null)
@@ -112,7 +119,10 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
             String paramNames[] = extractParamNames(commandText);
             for (int i = 0; i < paramNames.length; i++) {
                 Object value = testHost.getSymbolValue(paramNames[i]);
-                cs.setObject(i + 1, value);
+                if (value == null)
+                	cs.setNull(i + 1, Types.NULL);
+                else 
+                	cs.setObject(i + 1, value);
             }
         }
         return cs;

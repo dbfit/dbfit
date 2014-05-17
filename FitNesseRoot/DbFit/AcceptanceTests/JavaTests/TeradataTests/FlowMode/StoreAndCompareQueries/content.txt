@@ -1,0 +1,18 @@
+|execute|create table tn(n integer, name varchar(100));et|
+
+|insert|tn|
+|n|name|
+|5|T1|
+|10|T2|
+|15|T3|
+|20|T4|
+|25|T5|
+
+|Store query|!-SELECT n * 5 AS n, 'T' || TRIM(ROW_NUMBER() OVER(ORDER BY n)) AS name FROM (SELECT ROW_NUMBER() OVER(ORDER BY calendar_date) AS n FROM sys_calendar.calendar QUALIFY n <= 5) x-!|fromdual|
+
+|store query|select * from tn|fromtable|
+
+|compare stored queries|fromtable|fromdual|
+|n?|name|
+
+|execute|drop table tn;et|

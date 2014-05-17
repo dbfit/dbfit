@@ -1,0 +1,17 @@
+!3 Strings
+
+Following types map to string: "VARCHAR", "CHAR", "CLOB"
+
+|Execute|Create table datatypetest (s1 varchar(20), s4 char(4), s6 clob);et|
+
+|Insert|datatypetest|
+|s1|s4|s6|
+|VARCHAR|CHAR|CLOB|
+|null|null|null|
+
+|Query|Select * from datatypetest|
+|s1|s4?|s6?|
+|VARCHAR|CHAR|CLOB|
+|null|null|null|
+
+

@@ -1,0 +1,15 @@
+|Set Parameter|depth|10|
+
+|Query|SELECT n+:depth FROM (SELECT ROW_NUMBER() OVER(ORDER BY calendar_date) AS n FROM sys_calendar.calendar QUALIFY n <= :depth) x|
+|n|
+|12|
+|11|
+|13|
+|14|
+|15|
+|16|
+|17|
+|18|
+|19|
+|20|
+

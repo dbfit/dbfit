@@ -1,6 +1,7 @@
 package dbfit.api;
 
 import dbfit.annotations.DatabaseEnvironment;
+
 import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
@@ -13,6 +14,7 @@ public class DbEnvironmentFactory {
         for (Class<?> c: reflections.getTypesAnnotatedWith(DatabaseEnvironment.class)) {
             DatabaseEnvironment envAnnotation =
                 c.getAnnotation(DatabaseEnvironment.class);
+            System.out.println("DbEnvironmentFactory: initDefaultEnvironments: envAnnotation.name(): " + envAnnotation.name());
             registerEnv(envAnnotation.name(), envAnnotation.driver());
         }
     }
@@ -28,6 +30,7 @@ public class DbEnvironmentFactory {
     }
 
     public static DbEnvironmentFactory newFactoryInstance() {
+    	System.out.println("DatabaseTest: newFactoryInstance: entering");
         DbEnvironmentFactory factory = new DbEnvironmentFactory();
         factory.initDefaultEnvironments();
 
@@ -81,6 +84,7 @@ public class DbEnvironmentFactory {
     }
 
     public void registerEnv(String environmentName, String driverClassName) {
+    	System.out.println("DbEnvironmentFactory: registerEnv: entering");
         environments.put(normalise(environmentName),
                 new EnvironmentDescriptor(environmentName, driverClassName));
     }
@@ -90,19 +94,22 @@ public class DbEnvironmentFactory {
     }
 
     private EnvironmentDescriptor getEnvironmentDescriptor(String requestedEnv) {
+    	System.out.println("DbEnvironmentFactory: getEnvironmentDescriptor: entering");
         return environments.get(normalise(requestedEnv));
     }
 
     public DBEnvironment createEnvironmentInstance(String requestedEnv) {
+    	System.out.println("DbEnvironmentFactory: createEnvironmentInstance: entering");
         EnvironmentDescriptor descriptor = getEnvironmentDescriptor(requestedEnv);
         if (null == descriptor) {
             throw new IllegalArgumentException("DB Environment not supported:" + requestedEnv);
         }
-
+        System.out.println("DbEnvironmentFactory: createEnvironmentInstance: descriptor.driverClassName: " + descriptor.driverClassName); 
         return descriptor.createEnvironmentInstance();
     }
 
     public static DBEnvironment newEnvironmentInstance(String requestedEnv) {
+    	System.out.println("DbEnvironmentFactory: newEnvironmentInstance: entering: requestedEnv: " + requestedEnv);
         return newFactoryInstance().createEnvironmentInstance(requestedEnv);
     }
 }
