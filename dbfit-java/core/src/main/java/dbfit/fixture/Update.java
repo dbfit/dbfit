@@ -45,18 +45,22 @@ public class Update extends fit.Fixture {
 			s.append(updateAccessors[i].getName()).append("=").append("?");		
 		}
 		s.append(" where ");
-		for (int i=0; i<selectAccessors.length; i++){
+		for (int i=0; i<selectAccessors.length; i++) {
 			if (i>0) s.append(" and ");
-			s.append(selectAccessors[i].getName()).append("=").append("?");		
+			s.append("(").append(selectAccessors[i].getName()).append("=").append("?")
+				.append(" or (").append(selectAccessors[i].getName()).append(" is null and ? is null))");		
 		}
 //		System.out.println(s);
+		System.err.println(s);
 		StatementExecution cs=
 			new StatementExecution(environment.getConnection().prepareStatement(s.toString()));
 		for (int i=0; i<updateAccessors.length; i++){
 			updateAccessors[i].bindTo(cs, i+1);
+			System.err.println("bound update accessor " + i + " at position " + (i + 1));
 		}
-		for (int j=0; j<selectAccessors.length; j++){
-			selectAccessors[j].bindTo(cs,j+updateAccessors.length+1);
+		for (int j=0; j<selectAccessors.length; j++) {
+			selectAccessors[j].bindTo(cs, j*2+updateAccessors.length+1, j*2+updateAccessors.length+2); // selection parameters need to be bound at two positions
+			System.err.println("bound select accessor " + j + " at positions " + (j*2+updateAccessors.length+1) + " and " + (j*2+updateAccessors.length+2));
 		}			
 		return cs;
 	}
@@ -83,7 +87,7 @@ public class Update extends fit.Fixture {
         	exception(rows.parts,e);
         }
       }
-	
+		
 	private void initParameters(Parse headerCells) throws SQLException {			
 		Map<String, DbParameterAccessor> allParams=
 			environment.getAllColumns(tableName);
