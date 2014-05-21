@@ -73,3 +73,38 @@
 |ford prefect|fpref|
 |zaphod beeblebrox|zaphod|
 
+!3 updates with null in selection criteria
+
+|update|users|
+|name=|username|
+|null|zaphod|
+
+|query|select * from users where username= 'zaphod' |
+|name|username|
+|null|zaphod|
+
+|update|users|
+|name=|name|
+|mr president|null|
+
+|query|select * from users where username = 'zaphod' |
+|name|username|
+|mr president|zaphod|
+
+!3 symbols with nulls in selection criteria
+
+|update|users|
+|name=|username|
+|null|zaphod|
+
+|query|select * from users where username = 'zaphod' |
+|name?|username|
+|>>zb|zaphod|
+
+|update|users|
+|name=|name|
+|mr president|<<zb|
+
+|query|select * from users where username = 'zaphod' |
+|name|username|
+|mr president|zaphod|

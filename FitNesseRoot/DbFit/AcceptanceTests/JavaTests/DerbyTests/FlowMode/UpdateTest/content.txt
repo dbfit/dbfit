@@ -72,4 +72,40 @@
 |ford prefect|fpref|
 |zaphod beeblebrox|zaphod|
 
+!3 updates with null in selection criteria
+
+|update|USERS|
+|NAME=|USERNAME|
+|NULL|zaphod|
+
+|query|select * from USERS where USERNAME = 'zaphod' |
+|NAME|USERNAME|
+|NULL|zaphod|
+
+|update|USERS|
+|NAME=|NAME|
+|Mr President|NULL|
+
+|query|select * from USERS where USERNAME = 'zaphod' |
+|NAME|USERNAME|
+|Mr President|zaphod|
+
+!3 symbols with nulls in selection criteria
+
+|update|USERS|
+|NAME=|USERNAME|
+|NULL|zaphod|
+
+|query|select * from USERS where USERNAME = 'zaphod' |
+|NAME?|USERNAME|
+|>>zb|zaphod|
+
+|update|USERS|
+|NAME=|NAME|
+|Mr President|<<zb|
+
+|query|select * from USERS where USERNAME = 'zaphod' |
+|NAME|USERNAME|
+|Mr President|zaphod|
+
 |execute|${DROPUSERTABLE}|
