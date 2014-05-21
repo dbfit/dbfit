@@ -51,16 +51,13 @@ public class Update extends fit.Fixture {
 				.append(" or (").append(selectAccessors[i].getName()).append(" is null and ? is null))");		
 		}
 //		System.out.println(s);
-		System.err.println(s);
 		StatementExecution cs=
 			new StatementExecution(environment.getConnection().prepareStatement(s.toString()));
 		for (int i=0; i<updateAccessors.length; i++){
 			updateAccessors[i].bindTo(cs, i+1);
-			System.err.println("bound update accessor " + i + " at position " + (i + 1));
 		}
 		for (int j=0; j<selectAccessors.length; j++) {
 			selectAccessors[j].bindTo(cs, j*2+updateAccessors.length+1, j*2+updateAccessors.length+2); // selection parameters need to be bound at two positions
-			System.err.println("bound select accessor " + j + " at positions " + (j*2+updateAccessors.length+1) + " and " + (j*2+updateAccessors.length+2));
 		}			
 		return cs;
 	}
