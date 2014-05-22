@@ -32,7 +32,8 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     private Map<DbParameterAccessor, Binding> columnBindings;
     private StatementExecution execution;
     private DbObject dbObject; // intentionally private, subclasses should extend getTargetObject
-
+    private Parse header;
+    
     /**
      * override this method to control whether an exception is expected or not. By default, expects no exception to happen
      */
@@ -53,19 +54,27 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     protected abstract DbObject getTargetDbObject() throws SQLException;
 
     /**
+     * Override doTable to capture the heading row then delegate upwards
+     * @see fit.Fixture#doTable(fit.Parse)
+     */
+    @Override
+    public void doTable(Parse table) {
+    	header = table.parts;
+    	super.doTable(table);
+    }
+    
+    /**
      * executes the target dbObject for all rows of the table. if no rows are specified, executes
      * the target object only once
      */
+    @Override
     public void doRows(Parse rows) {
         try {
             dbObject = getTargetDbObject();
             if (dbObject == null) throw new Error("DB Object not specified!");
-            if (rows == null) {//single execution, no args
-                try (StatementExecution preparedStatement =
-                        dbObject.buildPreparedStatement(accessors.toArray())) {
-                    preparedStatement.run();
-                    return;
-                }
+            if (rows == null) { //single execution, no args
+            	runSingleStatement();
+				return;
             }
             List<String> columnNames = getColumnNamesFrom(rows.parts);
             accessors = getAccessors(rows.parts, columnNames);
@@ -87,6 +96,15 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             exception(rows.parts, e);
         }
     }
+
+	private void runSingleStatement() throws Throwable {
+		try (StatementExecution preparedStatement =
+		        dbObject.buildPreparedStatement(accessors.toArray())) {
+			
+			execution = preparedStatement;
+			executeAccordingToExpectedExceptionBehaviour(header);
+		}
+	}
 
     /**
      * does the column name map to an output argument
@@ -151,12 +169,17 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             columnBindings.get(inputAccessor).doCell(this, cell);
         }
 
-        if (getExpectedBehaviour() == ExpectedBehaviour.NO_EXCEPTION) {
+        executeAccordingToExpectedExceptionBehaviour(row);
+    }
+
+	private void executeAccordingToExpectedExceptionBehaviour(Parse row)
+			throws SQLException, Throwable, Exception {
+		if (getExpectedBehaviour() == ExpectedBehaviour.NO_EXCEPTION) {
             executeStatementAndEvaluateOutputs(row);
         } else {
             executeStatementExpectingException(row);
         }
-    }
+	}
 
     private void executeStatementExpectingException(Parse row) throws Exception {
         try {
