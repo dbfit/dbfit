@@ -1,4 +1,5 @@
 ''Previous page: [[!-Execute Procedure-!][.DbFit.DbFitReference.CommandReference.ExecuteProcedureCommand]] Next page: [[!-Inspect-!][.DbFit.DbFitReference.CommandReference.InspectCommand]] Parent page: [[!-Command reference-!][.DbFit.DbFitReference.CommandReference]]''
+
 !2 !-Execute-!
 '''!- Execute -!'''!- executes any SQL statement. The statement is specified as the first fixture parameter. There are no additional rows required for this command. -!
 
@@ -23,4 +24,14 @@
 |Execute|Drop table Test_DBFit|
 }}}
 
+!3 Expecting Exceptions
+
+It is also possible to trap and check exceptions resulting from the '''!- Execute -!''' command. This is done in the same manner as with the [[!-Execute Procedure-!][.DbFit.DbFitReference.CommandReference.ExecuteProcedureCommand]] command, by using '''!-Execute Expect Exception-!'''. Continuing the above example:
+
+{{{
+|Execute Expect Exception|Insert into Test_DBFit values ('Yoda Yoda Yoda Yoda Yoda Yoda Yoda Yoda Yoda Yoda Yoda Yoda ',10)|
+}}}
+As the value inserted is too large for the column an exception should be generated and trapped (and the row will go green). See the documentation for [[!-Execute Procedure-!][.DbFit.DbFitReference.CommandReference.ExecuteProcedureCommand]] for more details.
+ 
 ''Previous page: [[!-Execute Procedure-!][.DbFit.DbFitReference.CommandReference.ExecuteProcedureCommand]] Next page: [[!-Inspect-!][.DbFit.DbFitReference.CommandReference.InspectCommand]] Parent page: [[!-Command reference-!][.DbFit.DbFitReference.CommandReference]]''
+
