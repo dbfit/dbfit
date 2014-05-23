@@ -59,8 +59,8 @@ public abstract class DbObjectExecutionFixture extends Fixture {
      */
     @Override
     public void doTable(Parse table) {
-    	header = table.parts;
-    	super.doTable(table);
+        header = table.parts;
+        super.doTable(table);
     }
     
     /**
@@ -73,8 +73,8 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             dbObject = getTargetDbObject();
             if (dbObject == null) throw new Error("DB Object not specified!");
             if (rows == null) { //single execution, no args
-            	runSingleStatement();
-				return;
+                runSingleStatement();
+                return;
             }
             List<String> columnNames = getColumnNamesFrom(rows.parts);
             accessors = getAccessors(rows.parts, columnNames);
@@ -97,14 +97,14 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         }
     }
 
-	private void runSingleStatement() throws Throwable {
-		try (StatementExecution preparedStatement =
-		        dbObject.buildPreparedStatement(accessors.toArray())) {
-			
-			execution = preparedStatement;
-			executeAccordingToExpectedExceptionBehaviour(header);
-		}
-	}
+    private void runSingleStatement() throws Throwable {
+        try (StatementExecution preparedStatement =
+                dbObject.buildPreparedStatement(accessors.toArray())) {
+            
+            execution = preparedStatement;
+            executeAccordingToExpectedExceptionBehaviour(header);
+        }
+    }
 
     /**
      * does the column name map to an output argument
@@ -172,14 +172,14 @@ public abstract class DbObjectExecutionFixture extends Fixture {
         executeAccordingToExpectedExceptionBehaviour(row);
     }
 
-	private void executeAccordingToExpectedExceptionBehaviour(Parse row)
-			throws SQLException, Throwable, Exception {
-		if (getExpectedBehaviour() == ExpectedBehaviour.NO_EXCEPTION) {
+    private void executeAccordingToExpectedExceptionBehaviour(Parse row)
+            throws SQLException, Throwable, Exception {
+        if (getExpectedBehaviour() == ExpectedBehaviour.NO_EXCEPTION) {
             executeStatementAndEvaluateOutputs(row);
         } else {
             executeStatementExpectingException(row);
         }
-	}
+    }
 
     private void executeStatementExpectingException(Parse row) throws Exception {
         try {

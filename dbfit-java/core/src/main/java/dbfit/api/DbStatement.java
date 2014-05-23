@@ -6,7 +6,7 @@ import dbfit.util.Direction;
 
 import java.sql.SQLException;
 
-public class DbStatement implements DbObject{
+public class DbStatement implements DbObject {
     private DBEnvironment environment;
     private String statementText;
     private TestHost testHost;
@@ -21,13 +21,13 @@ public class DbStatement implements DbObject{
         this.testHost = testHost;
     }
 
-	@Override
-	public StatementExecution buildPreparedStatement(DbParameterAccessor[] accessors) throws SQLException {
+    @Override
+    public StatementExecution buildPreparedStatement(DbParameterAccessor[] accessors) throws SQLException {
         return new StatementExecution(environment.createStatementWithBoundFixtureSymbols(testHost, statementText), false);
-	}
+    }
 
-	@Override
-	public DbParameterAccessor getDbParameterAccessor(String paramName,	Direction expectedDirection) throws SQLException {
-		throw new Error("Argument rows not supported for Execute statements");
-	}
+    @Override
+    public DbParameterAccessor getDbParameterAccessor(String paramName, Direction expectedDirection) throws SQLException {
+        throw new Error("Argument rows not supported for Execute statements");
+    }
 }

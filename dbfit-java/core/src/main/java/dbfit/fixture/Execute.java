@@ -36,17 +36,17 @@ public class Execute extends DbObjectExecutionFixture {
     }
     
     public Execute(DBEnvironment env, String statement) {
-    	this(env, statement, false);
+        this(env, statement, false);
     }
     
-	@Override
-	protected DbObject getTargetDbObject() throws SQLException {
-		if (statementText == null) {
-			statementText = args[0];
-		}
-		return new DbStatement(dbEnvironment, statementText, FitNesseTestHost.getInstance());
-	}
-	
+    @Override
+    protected DbObject getTargetDbObject() throws SQLException {
+        if (statementText == null) {
+            statementText = args[0];
+        }
+        return new DbStatement(dbEnvironment, statementText, FitNesseTestHost.getInstance());
+    }
+ 
     @Override
     protected ExpectedBehaviour getExpectedBehaviour() {
         if (!exceptionExpected) return ExpectedBehaviour.NO_EXCEPTION;
