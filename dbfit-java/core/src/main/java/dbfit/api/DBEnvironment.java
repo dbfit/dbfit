@@ -166,5 +166,10 @@ public interface DBEnvironment {
             FileNotFoundException;
 
     DbStoredProcedureCall newStoredProcedureCall(String name, DbParameterAccessor[] accessors);
+
+    /**
+     * Indicates whether the database environment supports savepoints or not.
+     */
+    boolean supportsSavepoints();
 }
 

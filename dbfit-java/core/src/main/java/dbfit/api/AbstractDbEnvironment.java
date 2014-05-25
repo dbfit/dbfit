@@ -50,15 +50,15 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         registerDriver();
         currentConnection = DriverManager.getConnection(connectionString, info);
         currentConnection.setAutoCommit(false);
-        System.out.println("AbstractDbEnvironment: connect(2): connected to DB of version " + currentConnection.getMetaData().getDatabaseMajorVersion());
+        //System.out.println("AbstractDbEnvironment: connect(2): connected to DB of version " + currentConnection.getMetaData().getDatabaseMajorVersion());
         afterConnectionEstablished();
     }
 
     @Override
     public void connect(String connectionString) throws SQLException {
     	System.out.println("Entering AbstractDbEnvironment: connect(2)");
-        System.out.println("AbstractDbEnvironment: connect(2): connected to DB of version " + currentConnection.getMetaData().getDatabaseMajorVersion());    	
-        connect(connectionString, new Properties());        
+        //System.out.println("AbstractDbEnvironment: connect(2): connected to DB of version " + currentConnection.getMetaData().getDatabaseMajorVersion());
+        connect(connectionString, new Properties());
     }
 
     @Override
@@ -66,7 +66,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
             throws SQLException {
     	System.out.println("Entering AbstractDbEnvironment: connect(3)");
         connect(dataSource, username, password, null);
-        System.out.println("AbstractDbEnvironment: connect(2): connected to DB of version " + currentConnection.getMetaData().getDatabaseMajorVersion());        
+        //System.out.println("AbstractDbEnvironment: connect(2): connected to DB of version " + currentConnection.getMetaData().getDatabaseMajorVersion());
     }
 
     @Override
@@ -80,8 +80,9 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         Properties props = new Properties();
         props.put("user", username);
         props.put("password", new PropertiesLoader().parseValue(password));
+		
         connect(connectionString, props);
-        System.out.println("AbstractDbEnvironment: connect(2): connected to DB of version " + currentConnection.getMetaData().getDatabaseMajorVersion());
+        //System.out.println("AbstractDbEnvironment: connect(2): connected to DB of version " + currentConnection.getMetaData().getDatabaseMajorVersion());
     }
 
     @Override
@@ -109,7 +110,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return commandText;
     }
 
-    public final PreparedStatement createStatementWithBoundFixtureSymbols(
+    public PreparedStatement createStatementWithBoundFixtureSymbols(
             TestHost testHost, String commandText) throws SQLException {
         String command = Options.isBindSymbols() ? parseCommandText(commandText) : commandText;
         PreparedStatement cs = getConnection().prepareStatement(
@@ -119,9 +120,9 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
             String paramNames[] = extractParamNames(commandText);
             for (int i = 0; i < paramNames.length; i++) {
                 Object value = testHost.getSymbolValue(paramNames[i]);
-                if (value == null)
-                	cs.setNull(i + 1, Types.NULL);
-                else 
+                //if (value == null)
+                //	cs.setNull(i + 1, Types.NULL);
+                //else
                 	cs.setObject(i + 1, value);
             }
         }
@@ -233,6 +234,20 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
                             + "Make sure your database is running and that you have connected before performing any queries.");
         }
     }
-
+    public boolean supportsSavepoints() {
+        boolean supportsSavepoints;
+        
+        if (currentConnection == null)
+            return false;
+        
+        try {
+            supportsSavepoints = currentConnection.getMetaData().supportsSavepoints();
+        }
+        catch (SQLException e){
+            supportsSavepoints = false;
+            throw new Error("Exception occured geting connection metadata", e);
+        }
+        return supportsSavepoints;
+    }
 }
 

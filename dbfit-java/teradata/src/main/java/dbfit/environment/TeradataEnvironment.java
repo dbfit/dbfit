@@ -1,11 +1,15 @@
 package dbfit.environment;
 
+import dbfit.api.TestHost;
+import dbfit.util.*;
+
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.*;
 import fit.TypeAdapter;
 
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
 import java.sql.CallableStatement;
 import java.sql.Clob;
 import java.sql.ResultSet;
@@ -439,6 +443,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                         + " is not supported");
     }
 
+    @Override
     public Class<?> getJavaClass(String dataType) {
 
         System.out
@@ -507,6 +512,49 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                         + " is not supported");
     }
 
+    @Override
+    public final PreparedStatement createStatementWithBoundFixtureSymbols(
+            TestHost testHost, String commandText) throws SQLException {
+    	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: entering");
+    	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: Options.isBindSymbols: "+ Options.isBindSymbols());
+    	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: commandText: " + commandText);
+        String command = Options.isBindSymbols() ? parseCommandText(commandText) : commandText;
+        System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: command: " + command);
+        PreparedStatement cs = getConnection().prepareStatement(
+                command);
+        System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: cs param count: " + cs.getParameterMetaData().getParameterCount());
+        
+        if (Options.isBindSymbols()) {
+            System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: will extract param names from commandText: " + commandText);
+            String paramNames[] = extractParamNames(commandText);         
+            System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: paramNames.length: " + paramNames.length);
+            for (int i = 0; i < paramNames.length; i++) {
+            	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: doing param number: " + i);
+            	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: doing param name: " + paramNames[i]);
+                Object value = testHost.getSymbolValue(paramNames[i]);
+                
+                if (value == null) {
+                	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: value to set is null");
+            		// setNull is required for Teradata as setObject won't accept a null object reference.
+            		// We use a generic (string) type for the JDBC type as we don't know what the type should be.
+                	// We could simply override this method in TeradataEnvironment too.
+                	//int sqlType = getJavaClassSqlType(testHost.getSymbolClass(paramNames[i]));
+                    cs.setNull(i + 1, java.sql.Types.NULL);
+                }
+                else {
+                	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: value to set is not null");
+                	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: value.getClass.getName: " + value.getClass().getName());
+                	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: value: " + value);
+                	cs.setObject(i + 1, value);
+                	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: cs param count now: " + cs.getParameterMetaData().getParameterCount());
+                }
+            }
+        }
+        return cs;
+    }
+	
+    @Override
+    //TODO: review - can we just use the inherited implementation?
     public String buildInsertCommand(String tableName,
             DbParameterAccessor[] accessors) {
         System.out.println("TeradataEnvironment: buildInsertCommand");
