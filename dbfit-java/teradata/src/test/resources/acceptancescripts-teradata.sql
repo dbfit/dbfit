@@ -41,12 +41,14 @@ begin
 	set val = val*factor;
 end;
 
-replace procedure TestProc1(in name varchar(100), out strlength number)
+replace procedure dftest.TestProc1(in name varchar(100), out strlength number)
 begin
+	declare my_exception_condition condition for sqlstate '22012';
+	-- SQLSTATE 22012 maps to Teradata error number 2618.
 	declare x integer;
 	if (name = 'xx')
 	then
-		set x = 1/0;
+		signal my_exception_condition;
 	end if;
 	set strlength = characters(name);
 end;

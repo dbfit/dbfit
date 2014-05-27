@@ -43,7 +43,7 @@ public class StoreQuery extends fit.Fixture {
         ) {
             ResultSet rs = st.executeQuery();
             DataTable dt = new DataTable(rs);
-            dbfit.util.SymbolUtil.setSymbol(symbolName, dt);
+            dbfit.util.SymbolUtil.setSymbol(symbolName, dt, dt.getClass());
         } catch (SQLException sqle) {
             throw new Error(sqle);
         }

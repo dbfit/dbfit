@@ -552,7 +552,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         }
         return cs;
     }
-	
+    
     @Override
     //TODO: review - can we just use the inherited implementation?
     public String buildInsertCommand(String tableName,
@@ -591,6 +591,11 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                 .println("TeradataEnvironment: buildInsertCommand: sb.toString(): "
                         + sb.toString());
         return sb.toString();
-    }   
+    }
+    
+    @Override
+    public boolean supportsSetObjectNull() {
+        return false;
+    }
 }
 

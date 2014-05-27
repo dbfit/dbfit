@@ -171,5 +171,15 @@ public interface DBEnvironment {
      * Indicates whether the database environment supports savepoints or not.
      */
     boolean supportsSavepoints();
+    
+    /**
+     * Indicates whether the database environment supports null object references in setObject calls.
+     */
+    boolean supportsSetObjectNull();
+    
+    /**
+     * Get the SQL type for a Java class.
+     */
+    int getJavaClassSqlType(Class<?> javaClass);
 }
 
