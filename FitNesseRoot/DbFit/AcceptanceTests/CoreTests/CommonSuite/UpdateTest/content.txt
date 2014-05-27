@@ -1,20 +1,20 @@
 !3 Create test table
 
-|execute|create table test_dbfit_users (userid int not null, name varchar (20), username varchar (20) not null)|
+|Execute|create table test_dbfit_users (userid int not null, name varchar (20), username varchar (20) not null)|
 
 !3 Update table handles the update command - specify fields to be updated with = on the end.
 
-|insert|test_dbfit_users|
+|Insert|test_dbfit_users|
 |userid|name|username|
 |42|arthur dent|adent|
 |1938|ford prefect|fpref|
 |1|zaphod beeblebrox|zaphod|
 
-|update|test_dbfit_users|
+|Update|test_dbfit_users|
 |username=|name|
 |adent2|arthur dent|
 
-|query|select * from test_dbfit_users|
+|Query|select * from test_dbfit_users|
 |name|username|
 |arthur dent|adent2|
 |ford prefect|fpref|
@@ -22,11 +22,11 @@
 
 !3 Same column can be used in the selection and update part
 
-|update|test_dbfit_users|
+|Update|test_dbfit_users|
 |username=|username|
 |adent3|adent2|
 
-|query|select * from test_dbfit_users|
+|Query|select * from test_dbfit_users|
 |name|username|
 |arthur dent|adent3|
 |ford prefect|fpref|
@@ -34,17 +34,17 @@
 
 !3 Symbols work with update part
 
-|query|select * from test_dbfit_users|
+|Query|select * from test_dbfit_users|
 |name|username|userid?|
 |arthur dent|adent3|>>ad|
 |ford prefect|fpref|>>fp|
 |zaphod beeblebrox|zaphod|>>z|
 
-|update|test_dbfit_users|
+|Update|test_dbfit_users|
 |username=|userid|
 |adent4|<<ad|
 
-|query|select * from test_dbfit_users|
+|Query|select * from test_dbfit_users|
 |name|username|
 |arthur dent|adent4|
 |ford prefect|fpref|
@@ -52,11 +52,11 @@
 
 !3 Multiple columns on the update side
 
-|update|test_dbfit_users|
+|Update|test_dbfit_users|
 |name=|username=|userid|
 |trillian|tri|<<ad|
 
-|query|select * from test_dbfit_users|
+|Query|select * from test_dbfit_users|
 |name|username|
 |trillian|tri|
 |ford prefect|fpref|
@@ -64,11 +64,11 @@
 
 !3 Multiple columns on the select side
 
-|update|test_dbfit_users|
+|Update|test_dbfit_users|
 |name=|username=|name|userid|
 |john travolta|jtrav|trillian|<<ad|
 
-|query|select * from test_dbfit_users|
+|Query|select * from test_dbfit_users|
 |name|username|
 |john travolta|jtrav|
 |ford prefect|fpref|
@@ -76,40 +76,40 @@
 
 !3 Updates with null in selection criteria
 
-|update|test_dbfit_users|
+|Update|test_dbfit_users|
 |name=|username|
 |null|zaphod|
 
-|query|select * from test_dbfit_users where username= 'zaphod' |
+|Query|select * from test_dbfit_users where username= 'zaphod' |
 |name|username|
 |null|zaphod|
 
-|update|test_dbfit_users|
+|Update|test_dbfit_users|
 |name=|name|
 |mr president|null|
 
-|query|select * from test_dbfit_users where username = 'zaphod' |
+|Query|select * from test_dbfit_users where username = 'zaphod' |
 |name|username|
 |mr president|zaphod|
 
 !3 Symbols with nulls in selection criteria
 
-|update|test_dbfit_users|
+|Update|test_dbfit_users|
 |name=|username|
 |null|zaphod|
 
-|query|select * from test_dbfit_users where username = 'zaphod' |
+|Query|select * from test_dbfit_users where username = 'zaphod' |
 |name?|username|
 |>>zb|zaphod|
 
-|update|test_dbfit_users|
+|Update|test_dbfit_users|
 |name=|name|
 |mr president|<<zb|
 
-|query|select * from test_dbfit_users where username = 'zaphod' |
+|Query|select * from test_dbfit_users where username = 'zaphod' |
 |name|username|
 |mr president|zaphod|
 
 !3 Clean up
 
-|execute|drop table test_dbfit_users|
+|Execute|drop table test_dbfit_users|
