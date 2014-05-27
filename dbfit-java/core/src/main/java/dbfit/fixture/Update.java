@@ -57,7 +57,8 @@ public class Update extends fit.Fixture {
             if (i > 0) {
                 s.append(" and ");
             }
-            s.append(selectAccessors[i].getName()).append("=").append("?");
+            s.append("(").append(selectAccessors[i].getName()).append("=").append("?")
+            	.append(" or (").append(selectAccessors[i].getName()).append(" is null and ? is null))");
         }
 
         StatementExecution cs =
@@ -68,7 +69,8 @@ public class Update extends fit.Fixture {
         }
 
         for (int j = 0; j < selectAccessors.length; j++) {
-            selectAccessors[j].bindTo(cs, j + updateAccessors.length + 1);
+        	// selection parameters need to be bound at two positions
+            selectAccessors[j].bindTo(cs, (j * 2) + updateAccessors.length + 1, (j * 2) + updateAccessors.length + 2);
         }
         return cs;
     }
