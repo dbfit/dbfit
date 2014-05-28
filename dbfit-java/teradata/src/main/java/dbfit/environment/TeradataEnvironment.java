@@ -120,14 +120,12 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     }
 
     protected String getConnectionString(String dataSource) {
-    	System.out.println("TeradataEnvironment: getConnectionString(1): entering");
+        System.out.println("TeradataEnvironment: getConnectionString(1): entering");
         return "jdbc:teradata://" + dataSource + "/FINALIZE_AUTO_CLOSE=ON";
     }
 
     protected String getConnectionString(String dataSource, String dataBase) {
-    	System.out.println("TeradataEnvironment: getConnectionString(2): entering");
-        // return "jdbc:teradata://"+dataSource+"/DATABASE="+dataBase+"";
-        // return
+        System.out.println("TeradataEnvironment: getConnectionString(2): entering");
         // "jdbc:teradata://"+dataSource+"/TMODE=ANSI,DATABASE="+dataBase;
         String url = "jdbc:teradata://" + dataSource;
         if (dataBase != null) {
@@ -321,10 +319,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                         paramDirection, intSqlType, clsJavaClass,
                         paramDirection == Direction.RETURN_VALUE ? -1
                                 : position++);
-                // DbParameterAccessor dbp = new DbParameterAccessor(paramName,
-                // paramDirection, getSqlType(dataType), getJavaClass(dataType),
-                // paramDirection == DbParameterAccessor.RETURN_VALUE ? -1 :
-                // position++);
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }
             System.out.println("TeradataEnvironment: readIntoParams: returning");
@@ -336,8 +330,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     // map types
     private static List<String> stringTypes = Arrays.asList(new String[] {
             "VARCHAR", "CHAR", "CLOB" });
-   // private static List<String> clobTypes = Arrays
-        //    .asList(new String[] { "CLOB" });
     private static List<String> longTypes = Arrays
             .asList(new String[] { "BIGINT" });
     private static List<String> intTypes = Arrays
@@ -374,8 +366,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                 + dataType);
 
         dataType = dataType.toUpperCase().trim();
-        //System.out.println("TeradataEnvironment: normaliseTypeName: UC: " + dataType.toUpperCase());
-        //System.out.println("TeradataEnvironment: normaliseTypeName: UC.TRIM: " + dataType.toUpperCase().trim());
         int idx = 0;
 
         if ((!datePeriodTypes.contains(dataType))
@@ -405,16 +395,12 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
         if (stringTypes.contains(dataType))
             return java.sql.Types.VARCHAR;
-        //if (clobTypes.contains(dataType))
-            //return java.sql.Types.CLOB;
         if (longTypes.contains(dataType))
             return java.sql.Types.BIGINT;
         if (intTypes.contains(dataType))
             return java.sql.Types.INTEGER;
-        // if (byteTypes.contains(dataType) ) return java.sql.Types.TINYINT;
         if (byteTypes.contains(dataType))
             return java.sql.Types.INTEGER;
-        // if (shortTypes.contains(dataType) ) return java.sql.Types.SMALLINT;
         if (shortTypes.contains(dataType))
             return java.sql.Types.INTEGER;
         if (decimalTypes.contains(dataType))
@@ -457,19 +443,12 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
         if (stringTypes.contains(dataType))
             return String.class;
-        // if (clobTypes.contains(dataType)) return String.class;
-        //if (clobTypes.contains(dataType)) {
-        //	System.out.println("TeradataEnvironment: getJavaClass: returning type java.sql.Clob.class");
-        //	return Clob.class;
-        //}
         if (longTypes.contains(dataType))
             return Long.class;
         if (intTypes.contains(dataType))
             return Integer.class;
-        // if (byteTypes.contains(dataType)) return Byte.class;
         if (byteTypes.contains(dataType))
             return Integer.class;
-        // if (shortTypes.contains(dataType)) return Short.class;
         if (shortTypes.contains(dataType))
             return Integer.class;
         if (doubleTypes.contains(dataType))
@@ -489,11 +468,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         if (timestampPeriodTypes.contains(dataType))
             return TeradataTimestampPeriod.class;
 
-        // Iterator i = byteTypes.iterator();
-        // while (i.hasNext()) {
-        // System.out.println("TeradataEnvironment: getJavaClass: byteTypes: "+i.next());
-        // }
-
         throw new UnsupportedOperationException(
                 "TeradataEnvironment: getJavaClass: Type " + dataType
                         + " is not supported");
@@ -512,87 +486,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                         + " is not supported");
     }
 
-    @Override
-    public final PreparedStatement createStatementWithBoundFixtureSymbols(
-            TestHost testHost, String commandText) throws SQLException {
-    	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: entering");
-    	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: Options.isBindSymbols: "+ Options.isBindSymbols());
-    	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: commandText: " + commandText);
-        String command = Options.isBindSymbols() ? parseCommandText(commandText) : commandText;
-        System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: command: " + command);
-        PreparedStatement cs = getConnection().prepareStatement(
-                command);
-        System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: cs param count: " + cs.getParameterMetaData().getParameterCount());
-        
-        if (Options.isBindSymbols()) {
-            System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: will extract param names from commandText: " + commandText);
-            String paramNames[] = extractParamNames(commandText);         
-            System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: paramNames.length: " + paramNames.length);
-            for (int i = 0; i < paramNames.length; i++) {
-            	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: doing param number: " + i);
-            	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: doing param name: " + paramNames[i]);
-                Object value = testHost.getSymbolValue(paramNames[i]);
-                
-                if (value == null) {
-                	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: value to set is null");
-            		// setNull is required for Teradata as setObject won't accept a null object reference.
-            		// We use a generic (string) type for the JDBC type as we don't know what the type should be.
-                	// We could simply override this method in TeradataEnvironment too.
-                	//int sqlType = getJavaClassSqlType(testHost.getSymbolClass(paramNames[i]));
-                    cs.setNull(i + 1, java.sql.Types.NULL);
-                }
-                else {
-                	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: value to set is not null");
-                	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: value.getClass.getName: " + value.getClass().getName());
-                	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: value: " + value);
-                	cs.setObject(i + 1, value);
-                	System.out.println("AbstractDbEnvironment: createStatementWithBoundFixtureSymbols: cs param count now: " + cs.getParameterMetaData().getParameterCount());
-                }
-            }
-        }
-        return cs;
-    }
-    
-    @Override
-    //TODO: review - can we just use the inherited implementation?
-    public String buildInsertCommand(String tableName,
-            DbParameterAccessor[] accessors) {
-        System.out.println("TeradataEnvironment: buildInsertCommand");
-        StringBuilder sb = new StringBuilder("insert into ");
-        sb.append(tableName).append("(");
-        String comma = "";
-        String retComma = "";
-
-        StringBuilder values = new StringBuilder();
-        StringBuilder retNames = new StringBuilder();
-        StringBuilder retValues = new StringBuilder();
-
-        for (DbParameterAccessor accessor : accessors) {
-            if (accessor.hasDirection(Direction.INPUT)) {
-                sb.append(comma);
-                values.append(comma);
-                sb.append(accessor.getName());
-                // values.append(":").append(accessor.getName());
-                values.append("?");
-                comma = ",";
-            } else {
-                retNames.append(retComma);
-                retValues.append(retComma);
-                retNames.append(accessor.getName());
-                // retValues.append(":").append(accessor.getName());
-                retValues.append("?");
-                retComma = ",";
-            }
-        }
-        sb.append(") values (");
-        sb.append(values);
-        sb.append(")");
-        System.out
-                .println("TeradataEnvironment: buildInsertCommand: sb.toString(): "
-                        + sb.toString());
-        return sb.toString();
-    }
-    
     @Override
     public boolean supportsSetObjectNull() {
         return false;

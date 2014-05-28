@@ -1,5 +1,3 @@
-.logon localhost/dbc,dbc
-
 create user dftest from sysadmin as password=dftest spool=1000000 temporary=1000000 permanent=1000000;
 
 database dftest;
@@ -13,9 +11,9 @@ grant execute procedure on dftest to dftest;
 
 replace procedure nulls_back(out out1 varchar, out out2 numeric, out out3 date)
 begin
-   set :out1 = null;
-   set :out2 = null;
-   set :out3 = null;
+   set out1 = null;
+   set out2 = null;
+   set out3 = null;
 end;
 
 replace procedure ConcatenateStrings(in firstString varchar, in secondString varchar, out concatenated varchar)

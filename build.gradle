@@ -158,6 +158,6 @@ def proprietaryLibs() {
 }
 
 def experimentalItems() {
-    ['teradata/**/*.jar'] as Set
+    [] as Set
 }
 

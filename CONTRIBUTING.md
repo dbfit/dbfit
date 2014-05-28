@@ -54,6 +54,7 @@ The fully-built VM includes:
 The VM doesn't include:
  *  a working Oracle installation (however there is a shell script to help with the installation described below)
  *  a working SQL Server installation (obviously)
+ *  a working Teradata installation (this can be created as separately as a VMWare or EC2 installation)
 
 ### Setting up the test VM
 
@@ -181,8 +182,12 @@ If you need to use libraries which are not available on the public artifact repo
 
  *  Logging in as the `db2inst1` superuser for `db2`:
 
-		sudo su - db2inst1
+        sudo su - db2inst1
         db2
+
+### Installing Teradata Express Edition
+
+For manual setup instructions see [TERADATA file](TERADATA.md).
 
 ### Adding a new database adapter
 

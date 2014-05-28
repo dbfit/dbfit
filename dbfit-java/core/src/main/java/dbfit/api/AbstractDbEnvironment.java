@@ -111,7 +111,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return commandText;
     }
 
-    public PreparedStatement createStatementWithBoundFixtureSymbols(
+    public final PreparedStatement createStatementWithBoundFixtureSymbols(
             TestHost testHost, String commandText) throws SQLException {
         String command = Options.isBindSymbols() ? parseCommandText(commandText) : commandText;
         PreparedStatement cs = getConnection().prepareStatement(
@@ -277,46 +277,6 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     public boolean supportsSetObjectNull() {
         System.out.println("AbstractDBEnvironment: supportsSetObjectNull: entering");
         return true;
-/*         boolean supportsSetObjectNull;
-        
-        if (currentConnection == null) {
-            System.out.println("AbstractDBEnvironment: supportsSetObjectNull: connection closed, returning false");
-            return false;
-        }
-        
-        DbParameterAccessor[] pa = new DbParameterAccessor[1];
-        System.out.println("AbstractDBEnvironment: supportsSetObjectNull: created PA array");
-        pa[0] = new DbParameterAccessor("TestAttribute ", Direction.INPUT, Types.VARCHAR, String.class, 0);
-        System.out.println("AbstractDBEnvironment: supportsSetObjectNull: created PA");
-        PreparedStatement ps;
-        // try {
-            // ps = buildInsertPreparedStatement("TestTable ", pa);
-            // System.out.println("AbstractDBEnvironment: supportsSetObjectNull: created PS");
-        // }
-        // catch (Exception e) {
-            // System.out.println("AbstractDBEnvironment: supportsSetObjectNull: caught exception of type: " + e.getClass().getName());
-            // throw new Error("SQLException occured building insert statement", e);
-        // }
-        try {
-            ps = getConnection().prepareStatement("insert into ? (?) values (?)");
-        }
-        catch (SQLException e) {
-            System.out.println("AbstractDBEnvironment: supportsSetObjectNull: caught exception of type: " + e.getClass().getName());
-            throw new Error("SQLException occured building insert statement", e);
-        }
-        System.out.println("AbstractDBEnvironment: supportsSetObjectNull: created ps");
-        
-        supportsSetObjectNull = true;
-        
-        try {
-            ps.setObject(1, null);
-        }
-        catch (SQLException e) {
-            System.out.println("AbstractDBEnvironment: supportsSetObjectNull: caught SQLException, msg: " + e.getMessage());
-            supportsSetObjectNull = false;
-        }
-        System.out.println("AbstractDBEnvironment: supportsSetObjectNull: returning with: " + supportsSetObjectNull);
-        return supportsSetObjectNull; */
     }
     
     public int getJavaClassSqlType(Class<?> javaClass) {
