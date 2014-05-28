@@ -137,7 +137,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     private static Pattern paramsNames = Pattern.compile(":([A-Za-z0-9_]+)");
 
     public Pattern getParameterPattern() {
-        return paramsNames	;
+        return paramsNames;
     }
 
     protected String parseCommandText(String commandText) {
@@ -294,7 +294,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     private static List<String> decimalTypes = Arrays
             .asList(new String[] { "DECIMAL", "NUMBER" });
     private static List<String> doubleTypes = Arrays
-    		.asList(new String[] { "FLOAT" });
+            .asList(new String[] { "FLOAT" });
     private static List<String> dateTypes = Arrays
             .asList(new String[] { "DATE" });
     private static List<String> timestampTypes = Arrays
@@ -316,6 +316,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     private static String normaliseTypeName(String dataType) {
 
         dataType = dataType.toUpperCase().trim();
+
         int idx = 0;
 
         if ((!datePeriodTypes.contains(dataType))

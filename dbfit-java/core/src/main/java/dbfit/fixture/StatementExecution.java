@@ -104,7 +104,7 @@ public class StatementExecution implements AutoCloseable {
     public void setObject(int index, Object value, int SqlType) throws SQLException {
         if (value == null) {
             // TODO: ??? call setObject, regardless of value being null or not, if the DB environment supports it.
-            //       We'd need to be able to access teh DBEnvironment's supportsSetObjectNull().
+            //       We'd need to be able to access the DBEnvironment's supportsSetObjectNull().
             //
             // setNull is required for Teradata as setObject won't accept a null object reference.
             statement.setNull(index, SqlType);

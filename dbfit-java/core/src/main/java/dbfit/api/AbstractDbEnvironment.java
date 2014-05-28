@@ -67,6 +67,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     @Override
     public void connect(String dataSource, String username, String password,
             String database) throws SQLException {
+
         String connectionString = (database == null)
             ? getConnectionString(dataSource)
             : getConnectionString(dataSource, database);
@@ -74,7 +75,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         Properties props = new Properties();
         props.put("user", username);
         props.put("password", new PropertiesLoader().parseValue(password));
-        
+
         connect(connectionString, props);
     }
 

@@ -98,6 +98,7 @@ public class DbEnvironmentFactory {
         if (null == descriptor) {
             throw new IllegalArgumentException("DB Environment not supported:" + requestedEnv);
         }
+
         return descriptor.createEnvironmentInstance();
     }
 
