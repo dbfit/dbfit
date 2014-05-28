@@ -54,7 +54,7 @@ The fully-built VM includes:
 The VM doesn't include:
  *  a working Oracle installation (however there is a shell script to help with the installation described below)
  *  a working SQL Server installation (obviously)
- *  a working Teradata installation (this can be created as separately as a VMWare or EC2 installation)
+ *  a working Teradata installation (this can be created separately as a VMWare or EC2 installation)
 
 ### Setting up the test VM
 

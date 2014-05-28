@@ -120,12 +120,10 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     }
 
     protected String getConnectionString(String dataSource) {
-        System.out.println("TeradataEnvironment: getConnectionString(1): entering");
         return "jdbc:teradata://" + dataSource + "/FINALIZE_AUTO_CLOSE=ON";
     }
 
     protected String getConnectionString(String dataSource, String dataBase) {
-        System.out.println("TeradataEnvironment: getConnectionString(2): entering");
         // "jdbc:teradata://"+dataSource+"/TMODE=ANSI,DATABASE="+dataBase;
         String url = "jdbc:teradata://" + dataSource;
         if (dataBase != null) {
@@ -149,9 +147,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
     public Map<String, DbParameterAccessor> getAllProcedureParameters(
             String procName) throws SQLException {
-        System.out
-                .println("TeradataEnvironment: getAllProcedureParameters: tableOrViewName: "
-                        + procName);
 
         String[] qualifiers = NameNormaliser.normaliseName(procName).split(
                 "\\.");
@@ -202,9 +197,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
-        System.out
-                .println("TeradataEnvironment: getAllColumns: tableOrViewName: "
-                        + tableOrViewName);
 
         String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
                 .split("\\.");
@@ -248,20 +240,9 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
     private Map<String, DbParameterAccessor> readIntoParams(
             String[] queryParameters, String query) throws SQLException {
-
-        System.out.println("TeradataEnvironment: readIntoParams: query: "
-                + query);
-        for (int i = 0; i < queryParameters.length; i++) {
-            System.out
-                    .println("TeradataEnvironment: readIntoParams: queryParameters["
-                            + i + "]: " + queryParameters[i]);
-        }
-
+        
         try (CallableStatement dc = currentConnection.prepareCall(query)) {
             for (int i = 0; i < queryParameters.length; i++) {
-                System.out
-                        .println("TeradataEnvironment: readIntoParams: Setting value for parameter: "
-                                + i);
                 dc.setString(i + 1, queryParameters[i].toUpperCase());
             }
             ResultSet rs = dc.executeQuery();
@@ -269,50 +250,23 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
             int position = 0;
             while (rs.next()) {
                 String paramName = rs.getString(1);
-                System.out
-                        .println("TeradataEnvironment: readIntoParams: paramName: "
-                                + paramName + ", has length: " + paramName.length());
                 if (paramName == null) {
-                    System.out
-                            .println("TeradataEnvironment: readIntoParams: paramName==null");
                     paramName = ""; // Function return values get empty parameter
                                     // names.
                 }
                 if (paramName.equals("")) {
-                    System.out
-                            .println("TeradataEnvironment: readIntoParams: paramName==\"\"");
                     paramName = ""; // Function return values get empty parameter
                                     // names.
                 }
                 String dataType = rs.getString(2);
-                System.out
-                        .println("TeradataEnvironment: readIntoParams: dataType: "
-                                + dataType);
                 String direction = rs.getString(4);
-                System.out
-                        .println("TeradataEnvironment: readIntoParams: direction: "
-                                + direction);
                 Direction paramDirection;
-                System.out
-                        .println("TeradataEnvironment: readIntoParams: +paramName.trim().toUpperCase()+: +"
-                                + paramName.trim().toUpperCase() + "+");
                 if (paramName.trim().toUpperCase().equals("")) {
-                    System.out
-                            .println("TeradataEnvironment: readIntoParams: setting paramDirection to RETURN_VALUE");
                     paramDirection = Direction.RETURN_VALUE;
                 } else {
-                    System.out
-                            .println("TeradataEnvironment: readIntoParams: setting paramDirection to getParameterDirection(direction): "
-                                    + getParameterDirection(direction));
                     paramDirection = getParameterDirection(direction);
                 }
 
-                System.out
-                        .println("TeradataEnvironment: readIntoParams: creating new DbParameterAccessor for paramName: "
-                                + paramName
-                                + ", paramDirection: "
-                                + paramDirection
-                                + ", dataType: " + dataType);
                 int intSqlType = getSqlType(dataType);
                 Class<?> clsJavaClass = getJavaClass(dataType);
                 DbParameterAccessor dbp = new DbParameterAccessor(paramName,
@@ -321,7 +275,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                                 : position++);
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }
-            System.out.println("TeradataEnvironment: readIntoParams: returning");
             return allParams;
         }
     }
@@ -362,9 +315,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
     private static String normaliseTypeName(String dataType) {
 
-        System.out.println("TeradataEnvironment: normaliseTypeName: received: "
-                + dataType);
-
         dataType = dataType.toUpperCase().trim();
         int idx = 0;
 
@@ -381,17 +331,12 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                 dataType = dataType.substring(0, idx);
         }
 
-        System.out.println("TeradataEnvironment: normaliseTypeName: returning: " + dataType);
         return dataType;
     }
 
     private static int getSqlType(String dataType) {
         // todo:strip everything from first blank
         dataType = normaliseTypeName(dataType);
-
-        System.out
-                .println("TeradataEnvironment: getSqlType: received data type: "
-                        + dataType);
 
         if (stringTypes.contains(dataType))
             return java.sql.Types.VARCHAR;
@@ -431,10 +376,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
     @Override
     public Class<?> getJavaClass(String dataType) {
-
-        System.out
-                .println("TeradataEnvironment: getJavaClass: received data type: "
-                        + dataType);
 
         dataType = normaliseTypeName(dataType);
 

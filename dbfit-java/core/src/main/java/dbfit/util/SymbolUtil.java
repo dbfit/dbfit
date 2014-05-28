@@ -13,25 +13,16 @@ public class SymbolUtil {
     private static HashMap<String, Class<?>> SymbolType = new HashMap<String, Class<?>>();
 
     public static void setSymbol(String name, Object value, Class<?> clazz) {
-        System.out.println("SymbolUtil: setSymbol: entering");
-        System.out.println("SymbolUtil: setSymbol: name: " + name + ", value");
-        System.out.println("SymbolUtil: setSymbol: value == null: " + (value == null));
         fit.Fixture.setSymbol(getSymbolName(name), value == null ? dbNull : value);
         SymbolType.put(name, clazz);
     }
 
     public static Object getSymbol(String name) {
-        System.out.println("SymbolUtil: getSymbol: entering");
-        System.out.println("SymbolUtil: getSymbol: name: " + name);
         Object value = fit.Fixture.getSymbol(getSymbolName(name));
-        System.out.println("SymbolUtil: getSymbol: value == null: " + (value == null));
-        System.out.println("SymbolUtil: getSymbol: value: " + value);
         return (value == dbNull) ? null : value;
     }
 
     public static Class<?> getSymbolType(String name) {
-        System.out.println("SymbolUtil: getSymbolType: entering");
-        System.out.println("SymbolUtil: getSymbolType: name: " + name);
         return SymbolType.get(getSymbolName(name));
     }
     
@@ -67,7 +58,6 @@ public class SymbolUtil {
     }
 
     public static String getSymbolName(String symbolFullName) {
-        System.out.println("SymbolUtil: getSymbolName: entering, with symbolFullName: " + symbolFullName);
         return ((isSymbolGetter(symbolFullName) || isSymbolSetter(symbolFullName))
                 ? symbolFullName.substring(2)
                 : symbolFullName).trim();

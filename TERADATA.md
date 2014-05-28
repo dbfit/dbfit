@@ -21,18 +21,22 @@ There are two options for hosting the Teradata Express Edition (TDE) Linux VM:
      
      **NOTE:** if you need to logon to the VM use user name `root` (password `root`).
 
-2. Download, unpack and install [Teradata](https://downloads.teradata.com/download/tools/teradata-studio-express) Studio Express on the DbFit development host.
-   (e.g. `TeradataStudioExpress__linux_x86_64.15.00.00.00-1.tar.gz`)
+2. Log into the Teradata VM as the user `root` (password `root`) and start Teradata Studio Express from the desktop icon.
+   Connect to Teradata (on `localhost`) as user `dbc` (password `dbc`).
 
-3. Start Teradata Studio Express and connect to the Teradata VM. Use user name `dbc` (password `dbc`).
+3. Open the Teradata acceptance tests database objects setup script from the host `dbfit-java/teradata/src/test/resources/acceptancescripts-teradata.sql`.
+   
+   Copy and paste the script into a Teradata Studio Express SQL Editor query window on the guest and run the script.
+   
+   Alternatively you may set up shared folders for the VM to acccess folders on the host from
+       Player -> Manage -> Virtual Machine Settings -> Options -> Shared Folders
+   
+   Or install Teradata Studio Express on the host machine and connect to the VM (the default IP address is `192.168.68.128`).
 
-4. Download and unpack the [Teradata](https://downloads.teradata.com/download/connectivity/jdbc-driver) JDBC driver.
+3. Download and unpack the [Teradata](https://downloads.teradata.com/download/connectivity/jdbc-driver) JDBC driver.
    (e.g. `TeraJDBC__indep_indep.15.00.00.15.zip`)
    
    Create the `custom_libs` directory in the git root directory and copy the driver files `terajdbc4.jar` and `tdgssconfig.jar` into it.
-
-4. Open and execute the Teradata acceptance tests database objects setup script:
-   * dbfit-java/teradata/src/test/resources/acceptancescripts-teradata.sql
 
 5. Run integration tests to verify setup
 

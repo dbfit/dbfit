@@ -9,11 +9,9 @@ public class StatementExecution implements AutoCloseable {
 
     public StatementExecution(PreparedStatement statement, boolean useSavepoints) {
         this(statement, true, useSavepoints);
-        System.out.println("StatementExecution: StatementExecution(1): entering: supportsSavepoints: " + useSavepoints);
     }
 
     public StatementExecution(PreparedStatement statement, boolean clearParameters, boolean useSavepoints) {
-        System.out.println("StatementExecution: StatementExecution(2): entering: clearParameters: " + clearParameters + ", supportsSavepoints: " + useSavepoints);
         this.statement = statement;
         this.useSavepoints = useSavepoints;
         if (clearParameters) {
@@ -30,13 +28,11 @@ public class StatementExecution implements AutoCloseable {
         private java.sql.Savepoint savepoint;
 
         public Savepoint(Connection connection) {
-            System.out.println("StatementExecution$Savepoint: Savepoint(1): entering");
             this.connection = connection;
             create();
         }
 
         protected void create() {
-            System.out.println("StatementExecution$Savepoint: create: entering");
             String savepointName = "eee" + this.hashCode();
             if (savepointName.length() > 10) savepointName = savepointName.substring(1, 9);
             savepoint = null;
@@ -46,15 +42,11 @@ public class StatementExecution implements AutoCloseable {
             }
             catch (SQLException e) {
                	// The Teradata driver does not support this feature and doesn't throw SQLFeatureNotSupportedException.
-                System.out.println("StatementExecution$Savepoint: create: caught exception of type: " + e.getClass().getName());
-                System.out.println("StatementExecution$Savepoint: create: caught exception but ignoring!");
-                System.out.println("StatementExecution$Savepoint: create: savepoint is null: " + (savepoint == null));
                 throw new RuntimeException("Exception while setting savepoint", e);
             }
         }
 
         public void release() {
-            System.out.println("StatementExecution$Savepoint: release: entering");
             try {
                 connection.releaseSavepoint(savepoint);
             } catch (SQLException e) {
@@ -72,21 +64,15 @@ public class StatementExecution implements AutoCloseable {
         }
 
         public void restore() {
-            System.out.println("StatementExecution$Savepoint: restore: entering");
             try {
                 connection.rollback(savepoint);
             } catch (SQLException e) {
-                System.out.println("StatementExecution$Savepoint: restore: caught exception!");
-                System.out.println("StatementExecution$Savepoint: restore: savepoint is null: " + (savepoint == null));
                 throw new RuntimeException("Exception while restoring savepoint", e);
             }
         }
     }
 
     public void run() throws SQLException {
-        System.out.println("StatementExecution: run: entering");
-        System.out.println("StatementExecution: run: this.supportsSavepoints: " + this.useSavepoints);
-        System.out.println("StatementExecution: run: statement param count: " + statement.getParameterMetaData().getParameterCount());
         if (useSavepoints)
             createSavepoint();
         
@@ -104,7 +90,6 @@ public class StatementExecution implements AutoCloseable {
     }
 
     private void createSavepoint() {
-        System.out.println("StatementExecution$Savepoint: createSavepoint: entering");
         try {
             savepoint = new Savepoint(statement.getConnection());
         } catch (SQLException e) {
@@ -117,16 +102,14 @@ public class StatementExecution implements AutoCloseable {
     }
 
     public void setObject(int index, Object value, int SqlType) throws SQLException {
-        System.out.println("StatementExecution: setObject: entering");
         if (value == null) {
-            // TODO: call setObject, regardless of value being null or not, if the DB environment supports it.
-            System.out.println("StatementExecution: setObject: using setNull for param number: " + index);
+            // TODO: ??? call setObject, regardless of value being null or not, if the DB environment supports it.
+            //       We'd need to be able to access teh DBEnvironment's supportsSetObjectNull().
+            //
             // setNull is required for Teradata as setObject won't accept a null object reference.
             statement.setNull(index, SqlType);
-            System.out.println("StatementExecution: setObject: back from calling setNull");
         }
         else {
-            System.out.println("StatementExecution: setObject: using setObject for param number: " + index + ", with value of: " + value);
             statement.setObject(index, value);
         }
     }

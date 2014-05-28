@@ -47,33 +47,26 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     public void connect(String connectionString, Properties info) throws SQLException {
-        System.out.println("Entering AbstractDbEnvironment: connect(2)");
         registerDriver();
         currentConnection = DriverManager.getConnection(connectionString, info);
         currentConnection.setAutoCommit(false);
-        //System.out.println("AbstractDbEnvironment: connect(2): connected to DB of version " + currentConnection.getMetaData().getDatabaseMajorVersion());
         afterConnectionEstablished();
     }
 
     @Override
     public void connect(String connectionString) throws SQLException {
-        System.out.println("Entering AbstractDbEnvironment: connect(2)");
-        //System.out.println("AbstractDbEnvironment: connect(2): connected to DB of version " + currentConnection.getMetaData().getDatabaseMajorVersion());
         connect(connectionString, new Properties());
     }
 
     @Override
     public void connect(String dataSource, String username, String password)
             throws SQLException {
-        System.out.println("Entering AbstractDbEnvironment: connect(3)");
         connect(dataSource, username, password, null);
-        //System.out.println("AbstractDbEnvironment: connect(2): connected to DB of version " + currentConnection.getMetaData().getDatabaseMajorVersion());
     }
 
     @Override
     public void connect(String dataSource, String username, String password,
             String database) throws SQLException {
-        System.out.println("Entering AbstractDbEnvironment: connect(4)");
         String connectionString = (database == null)
             ? getConnectionString(dataSource)
             : getConnectionString(dataSource, database);
@@ -83,13 +76,11 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         props.put("password", new PropertiesLoader().parseValue(password));
         
         connect(connectionString, props);
-        //System.out.println("AbstractDbEnvironment: connect(2): connected to DB of version " + currentConnection.getMetaData().getDatabaseMajorVersion());
     }
 
     @Override
     public void connectUsingFile(String file) throws SQLException, IOException,
             FileNotFoundException {
-        System.out.println("Entering AbstractDbEnvironment: connectUsingFile");
         DbConnectionProperties dbp = DbConnectionProperties
                 .CreateFromFile(file);
         if (dbp.FullConnectionString != null)
@@ -122,28 +113,16 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
             for (int i = 0; i < paramNames.length; i++) {
                 Object value = testHost.getSymbolValue(paramNames[i]);
                 if (value == null) {
-                    System.out.println("AbstractDBEnvironment: createStatementWithBoundFixtureSymbols: value for param " + i + " is null");
                     if (supportsSetObjectNull()) {
-                        System.out.println("AbstractDBEnvironment: createStatementWithBoundFixtureSymbols: DB env supports set object null");
                         cs.setObject(i + 1, value);
                     }
                     else {
-                        System.out.println("AbstractDBEnvironment: createStatementWithBoundFixtureSymbols: DB env does not support set object null");
-                        System.out.println("AbstractDBEnvironment: createStatementWithBoundFixtureSymbols: calling getSymbolType");
                         Class<?> clazz = testHost.getSymbolType(paramNames[i]);
-                        System.out.println("AbstractDBEnvironment: createStatementWithBoundFixtureSymbols: back from getSymbolType");
-                        System.out.println("AbstractDBEnvironment: createStatementWithBoundFixtureSymbols: clazz == null?: " + (clazz == null));
-                        System.out.println("AbstractDBEnvironment: createStatementWithBoundFixtureSymbols: clazz.getName(): " + clazz.getName());
-                        System.out.println("AbstractDBEnvironment: createStatementWithBoundFixtureSymbols: calling getJavaClassSqlType");
                         int sqlType = getJavaClassSqlType(clazz);
-                        System.out.println("AbstractDBEnvironment: createStatementWithBoundFixtureSymbols: back from getJavaClassSqlType");
-                        System.out.println("AbstractDBEnvironment: createStatementWithBoundFixtureSymbols: sqlType: " + sqlType);
                         cs.setNull(i + 1, sqlType);
-                        System.out.println("AbstractDBEnvironment: createStatementWithBoundFixtureSymbols: back setNull");
                     }
                 }
                 else {
-                    System.out.println("AbstractDBEnvironment: createStatementWithBoundFixtureSymbols: value for param " + i + " is not null");
                     cs.setObject(i + 1, value);
                 }
             }
@@ -235,7 +214,6 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         sb.append(") values (");
         sb.append(values);
         sb.append(")");
-        System.out.println("AbstractDBEnvironment: buildInsertCommand: returning: " + sb.toString());
         return sb.toString();
     }
 
@@ -275,15 +253,10 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
     
     public boolean supportsSetObjectNull() {
-        System.out.println("AbstractDBEnvironment: supportsSetObjectNull: entering");
         return true;
     }
     
     public int getJavaClassSqlType(Class<?> javaClass) {
-        
-        System.out.println("AbstractDBEnvironment: getJavaClassSqlType: entering");
-        System.out.println("AbstractDBEnvironment: getJavaClassSqlType: javaClass == null: " + (javaClass == null));
-        System.out.println("AbstractDBEnvironment: getJavaClassSqlType: javaClass.getName: " + javaClass.getName());
         
         if (javaClass.equals(Long.class))
             return java.sql.Types.BIGINT;
@@ -299,10 +272,9 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
             return java.sql.Types.INTEGER;
         if (javaClass.equals(Double.class))
             return java.sql.Types.DOUBLE;
-        if (javaClass == BigDecimal.class)
+        if (javaClass.equals(BigDecimal.class))
             return java.sql.Types.DECIMAL;
         
-        System.out.println("AbstractDBEnvironment: getJavaClassSqlType: about to error with no defined class");
         throw new Error("No SQL Type mapping defined for Java class " + javaClass.getName());
     }
 }
