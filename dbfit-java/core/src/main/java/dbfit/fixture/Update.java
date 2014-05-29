@@ -69,7 +69,7 @@ public class Update extends fit.Fixture {
             // could result in a "Value from cast operand is larger than cast target size" error.
             //
             s.append("(").append(selectAccessors[i].getName()).append("=").append("?")
-            	.append(" or (").append(selectAccessors[i].getName()).append(" is null and cast(? as varchar(255)) is null))");
+                .append(" or (").append(selectAccessors[i].getName()).append(" is null and cast(? as varchar(255)) is null))");
         }
 
         StatementExecution cs =
@@ -80,7 +80,7 @@ public class Update extends fit.Fixture {
         }
 
         for (int j = 0; j < selectAccessors.length; j++) {
-        	// selection parameters need to be bound at two positions
+            // selection parameters need to be bound at two positions
             selectAccessors[j].bindTo(cs, (j * 2) + updateAccessors.length + 1, (j * 2) + updateAccessors.length + 2);
         }
         return cs;
