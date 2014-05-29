@@ -58,7 +58,7 @@ public class Update extends fit.Fixture {
                 s.append(" and ");
             }
             s.append("(").append(selectAccessors[i].getName()).append("=").append("?")
-            	.append(" or (").append(selectAccessors[i].getName()).append(" is null and ? is null))");
+            	.append(" or (").append(selectAccessors[i].getName()).append(" is null and cast(? as char(1)) is null))");
         }
 
         StatementExecution cs =

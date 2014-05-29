@@ -1,20 +1,20 @@
 !3 Create test table
 
-|Execute|create table test_dbfit_users (userid int not null, name varchar (20), username varchar (20) not null)|
+|Execute|create table test_dbfit_update (userid int not null, name varchar (20), username varchar (20) not null, lucky_number int, birthday date)|
 
 !3 Update table handles the update command - specify fields to be updated with = on the end.
 
-|Insert|test_dbfit_users|
-|userid|name|username|
-|42|arthur dent|adent|
-|1938|ford prefect|fpref|
-|1|zaphod beeblebrox|zaphod|
+|Insert|test_dbfit_update|
+|userid|name|username|lucky_number|birthday|
+|3|arthur dent|adent|42|1984-01-02|
+|2|ford prefect|fpref|1938|2020-12-31|
+|1|zaphod beeblebrox|zaphod|1|2000-01-01|
 
-|Update|test_dbfit_users|
+|Update|test_dbfit_update|
 |username=|name|
 |adent2|arthur dent|
 
-|Query|select * from test_dbfit_users|
+|Query|select * from test_dbfit_update|
 |name|username|
 |arthur dent|adent2|
 |ford prefect|fpref|
@@ -22,11 +22,11 @@
 
 !3 Same column can be used in the selection and update part
 
-|Update|test_dbfit_users|
+|Update|test_dbfit_update|
 |username=|username|
 |adent3|adent2|
 
-|Query|select * from test_dbfit_users|
+|Query|select * from test_dbfit_update|
 |name|username|
 |arthur dent|adent3|
 |ford prefect|fpref|
@@ -34,17 +34,17 @@
 
 !3 Symbols work with update part
 
-|Query|select * from test_dbfit_users|
+|Query|select * from test_dbfit_update|
 |name|username|userid?|
 |arthur dent|adent3|>>ad|
 |ford prefect|fpref|>>fp|
 |zaphod beeblebrox|zaphod|>>z|
 
-|Update|test_dbfit_users|
+|Update|test_dbfit_update|
 |username=|userid|
 |adent4|<<ad|
 
-|Query|select * from test_dbfit_users|
+|Query|select * from test_dbfit_update|
 |name|username|
 |arthur dent|adent4|
 |ford prefect|fpref|
@@ -52,11 +52,11 @@
 
 !3 Multiple columns on the update side
 
-|Update|test_dbfit_users|
+|Update|test_dbfit_update|
 |name=|username=|userid|
 |trillian|tri|<<ad|
 
-|Query|select * from test_dbfit_users|
+|Query|select * from test_dbfit_update|
 |name|username|
 |trillian|tri|
 |ford prefect|fpref|
@@ -64,11 +64,11 @@
 
 !3 Multiple columns on the select side
 
-|Update|test_dbfit_users|
+|Update|test_dbfit_update|
 |name=|username=|name|userid|
 |john travolta|jtrav|trillian|<<ad|
 
-|Query|select * from test_dbfit_users|
+|Query|select * from test_dbfit_update|
 |name|username|
 |john travolta|jtrav|
 |ford prefect|fpref|
@@ -76,40 +76,62 @@
 
 !3 Updates with null in selection criteria
 
-|Update|test_dbfit_users|
+|Update|test_dbfit_update|
 |name=|username|
 |null|zaphod|
 
-|Query|select * from test_dbfit_users where username= 'zaphod' |
+|Query|select * from test_dbfit_update where username= 'zaphod' |
 |name|username|
 |null|zaphod|
 
-|Update|test_dbfit_users|
+|Update|test_dbfit_update|
 |name=|name|
 |mr president|null|
 
-|Query|select * from test_dbfit_users where username = 'zaphod' |
+|Query|select * from test_dbfit_update where username = 'zaphod' |
 |name|username|
 |mr president|zaphod|
 
 !3 Symbols with nulls in selection criteria
 
-|Update|test_dbfit_users|
+|Update|test_dbfit_update|
 |name=|username|
 |null|zaphod|
 
-|Query|select * from test_dbfit_users where username = 'zaphod' |
+|Query|select * from test_dbfit_update where username = 'zaphod' |
 |name?|username|
 |>>zb|zaphod|
 
-|Update|test_dbfit_users|
+|Update|test_dbfit_update|
 |name=|name|
 |mr president|<<zb|
 
-|Query|select * from test_dbfit_users where username = 'zaphod' |
+|Query|select * from test_dbfit_update where username = 'zaphod' |
 |name|username|
 |mr president|zaphod|
 
+!3 Nulls of non-string datatypes
+
+|Update|test_dbfit_update|
+|username|lucky_number=|birthday=|
+|zaphod|null|null|
+
+|Update|test_dbfit_update|
+|username|lucky_number|lucky_number=|
+|zaphod|null|4242|
+
+|Query|select lucky_number from test_dbfit_update where username = 'zaphod' |
+|lucky_number|
+|4242|
+
+|Update|test_dbfit_update|
+|birthday|birthday=|
+|null|2014-05-28|
+
+|Query|select birthday from test_dbfit_update where username = 'zaphod' |
+|birthday|
+|2014-05-28|
+
 !3 Clean up
 
-|Execute|drop table test_dbfit_users|
+|Execute|drop table test_dbfit_update|
