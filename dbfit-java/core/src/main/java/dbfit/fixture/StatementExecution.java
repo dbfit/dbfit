@@ -3,7 +3,6 @@ package dbfit.fixture;
 import java.sql.*;
 
 public class StatementExecution implements AutoCloseable {
-    private Savepoint savepoint;
     private PreparedStatement statement;
 
     public StatementExecution(PreparedStatement statement) {
@@ -21,71 +20,8 @@ public class StatementExecution implements AutoCloseable {
         }
     }
 
-    public static class Savepoint {
-        private Connection connection;
-        private java.sql.Savepoint savepoint;
-
-        public Savepoint(Connection connection) {
-            this.connection = connection;
-            create();
-        }
-
-        protected void create() {
-            String savepointName = "eee" + this.hashCode();
-            if (savepointName.length() > 10) savepointName = savepointName.substring(1, 9);
-            savepoint = null;
-
-            try {
-                savepoint = connection.setSavepoint(savepointName);
-            } catch (SQLException e) {
-                throw new RuntimeException("Exception while setting savepoint", e);
-            }
-        }
-
-        public void release() {
-            try {
-                connection.releaseSavepoint(savepoint);
-            } catch (SQLException e) {
-                /*
-                Now, the correct thing would be to rethrow the exception here.
-
-                However, *some* databases (yes, I'm looking at you, Oracle) don't support savepoint releasing
-                (http://docs.oracle.com/cd/B10500_01/java.920/a96654/jdbc30ov.htm#1006294) but at the same time
-                don't throw an SQLFeatureNotSupportedException
-                (http://stackoverflow.com/questions/10667292/jdbc-check-for-capability-savepoint-release)
-                like they're supposed to
-                (http://docs.oracle.com/javase/7/docs/api/java/sql/Connection.html#releaseSavepoint(java.sql.Savepoint) ).
-                 */
-            }
-        }
-
-        public void restore() {
-            try {
-                connection.rollback(savepoint);
-            } catch (SQLException e) {
-                throw new RuntimeException("Exception while restoring savepoint", e);
-            }
-        }
-    }
-
     public void run() throws SQLException {
-        createSavepoint();
-
-        try {
-            statement.execute();
-            savepoint.release();
-        } catch (SQLException e) {
-            savepoint.restore();
-            throw e;
-        }
-    }
-
-    private void createSavepoint() {
-        try {
-            savepoint = new Savepoint(statement.getConnection());
-        } catch (SQLException e) {
-            throw new RuntimeException("Error while getting connection for setting savepoint", e);
-        }
+        statement.execute();
     }
 
     public void registerOutParameter(int index, int sqlType) throws SQLException {
