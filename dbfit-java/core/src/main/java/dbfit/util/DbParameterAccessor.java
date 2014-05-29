@@ -9,8 +9,8 @@ import static dbfit.util.Direction.*;
 
 public class DbParameterAccessor {
 
-	private int[] indices; //indices in effective sql statement (not necessarily the same as position below)
-	private Direction direction;
+    private int[] indices; //indices in effective sql statement (not necessarily the same as position below)
+    private Direction direction;
     private String name;
     private int sqlType;
     private Class<?> javaType;
