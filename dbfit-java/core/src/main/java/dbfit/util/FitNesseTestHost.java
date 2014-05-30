@@ -20,16 +20,6 @@ public class FitNesseTestHost implements TestHost {
         return SymbolUtil.getSymbol(symbolName);
     }
 
-    @Override
-    public void setSymbolValue(String symbolName, Object value) {
-        SymbolUtil.setSymbol(symbolName, value);
-    }
-
-    @Override
-    public void clearSymbols() {
-        SymbolUtil.clearSymbols();
-    }
-
     private FitNesseTestHost() {
     }
 
