@@ -85,6 +85,14 @@ public class DatabaseTest extends Fixture {
         return new dbfit.fixture.Execute(environment, statement);
     }
 
+    public Fixture executeExpectException(String statement) {
+        return new dbfit.fixture.Execute(environment, statement, true);
+    }
+    
+    public Fixture executeExpectException(String statement, int code) {
+        return new dbfit.fixture.Execute(environment, statement, code);
+    }
+    
     public Fixture executeProcedure(String statement) {
         return new dbfit.fixture.ExecuteProcedure(environment, statement);
     }
@@ -156,7 +164,7 @@ public class DatabaseTest extends Fixture {
     }
 
     public Fixture compareStoredQueriesHideMatchingRows(String symbol1, String symbol2) {
-        return new dbfit.fixture.CompareStoredQueriesHideMatchingRows(environment, symbol1, symbol2);    	
+        return new dbfit.fixture.CompareStoredQueriesHideMatchingRows(environment, symbol1, symbol2);
     }
 
     public void setOption(String option, String value) {

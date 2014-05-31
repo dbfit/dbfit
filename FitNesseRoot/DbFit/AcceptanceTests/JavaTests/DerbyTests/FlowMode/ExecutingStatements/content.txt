@@ -11,4 +11,8 @@
 |Darth Maul|10|
 |Obi Wan|80|
 
+|Execute Expect Exception|Insert into Test_DBFit values ('Yoda Yoda Yoda Yoda Yoda Yoda Yoda Yoda Yoda Yoda Yoda Yoda ', 20)|
+
+|Execute Expect Exception|Insert into Test_DBFit values ('Yoda Yoda Yoda Yoda Yoda Yoda Yoda Yoda Yoda Yoda Yoda Yoda ', 20)| 20000 |
+
 |Execute|Drop table Test_DBFit|
