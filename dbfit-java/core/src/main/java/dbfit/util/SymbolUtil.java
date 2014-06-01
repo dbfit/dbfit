@@ -2,7 +2,6 @@ package dbfit.util;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 
 /** ugly workaround for fit change in release 200807, which internally converts NULL into a string value "null";
  * for db access, we need to make a difference between NULL and "null" so this class provides a centralised
@@ -10,11 +9,9 @@ import java.util.HashMap;
  */
 public class SymbolUtil {
     private static final Object dbNull = new Object();
-    private static HashMap<String, Class<?>> SymbolType = new HashMap<String, Class<?>>();
 
-    public static void setSymbol(String name, Object value, Class<?> clazz) {
+    public static void setSymbol(String name, Object value) {
         fit.Fixture.setSymbol(getSymbolName(name), value == null ? dbNull : value);
-        SymbolType.put(name, clazz);
     }
 
     public static Object getSymbol(String name) {
@@ -22,13 +19,8 @@ public class SymbolUtil {
         return (value == dbNull) ? null : value;
     }
 
-    public static Class<?> getSymbolType(String name) {
-        return SymbolType.get(getSymbolName(name));
-    }
-    
     public static void clearSymbols() {
         fit.Fixture.ClearSymbols();
-        SymbolType.clear();
     }
 
     public static DataTable getDataTable(String symbolName) {

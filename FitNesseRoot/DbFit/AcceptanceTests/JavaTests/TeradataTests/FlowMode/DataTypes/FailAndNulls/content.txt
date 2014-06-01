@@ -2,7 +2,7 @@
 |n?|
 |fail[3]|
 
-!- PreparedStatement cannot be used to create an SPL-based Procedure. A Statement should be used but is not available through DbFit 1.1 -!
+!- PreparedStatement cannot be used to create an SPL-based Procedure. A Statement should be used but is not available through DbFit -!
 
 !- PreparedStatement cannot be used to execute Procedure NULLS_BACK was created with: -!
 
@@ -15,4 +15,4 @@ END; -!
 
 !|Execute Procedure|nulls_back|
 |out1?|out2?|out3?|
-|fail[ABC]|fail[10]|fail[2008-01-01]| 
+|fail[ABC]|fail[10]|fail[2008-01-01]|

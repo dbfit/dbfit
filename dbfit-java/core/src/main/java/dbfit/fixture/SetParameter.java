@@ -12,14 +12,14 @@ import static dbfit.util.SymbolUtil.isSymbolGetter;
 public class SetParameter extends fit.Fixture{
 	public static void setParameter(String name, String value){
 		if (value == null || "null".equals(value.toString().toLowerCase())) {
-			dbfit.util.SymbolUtil.setSymbol(name, null, String.class);
+			dbfit.util.SymbolUtil.setSymbol(name, null);
 		} else if (isSymbolGetter(value)) {
 			String varname = value.toString().substring(2);
 			if (!name.equals(varname)) {
-				dbfit.util.SymbolUtil.setSymbol(name, dbfit.util.SymbolUtil.getSymbol(varname), value.getClass());
+				dbfit.util.SymbolUtil.setSymbol(name, dbfit.util.SymbolUtil.getSymbol(varname));
 			}
 		} else
-			dbfit.util.SymbolUtil.setSymbol(name, value, value.getClass());
+			dbfit.util.SymbolUtil.setSymbol(name, value);
 	}
 	@Override
 	public void doTable(Parse table) {

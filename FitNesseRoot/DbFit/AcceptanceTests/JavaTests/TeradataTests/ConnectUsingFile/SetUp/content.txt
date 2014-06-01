@@ -1,6 +1,4 @@
-(override setup so that parent setup does not load)
+!|dbfit.TeradataTest|
 
-!|dbfit.OracleTest|
-
-|Connect using file|testdbconnection.properties|
+|Connect using file|../dbfit-java/teradata/src/test/resources/testdbconnection.properties|
 

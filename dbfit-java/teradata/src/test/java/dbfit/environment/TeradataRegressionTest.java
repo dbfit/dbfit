@@ -10,6 +10,7 @@ import static fitnesse.junit.FitNesseSuite.*;
 
 public class TeradataRegressionTest {
 
+    @Ignore("Teradata tests not active on build yet")
     @RunWith(FitNesseSuite.class)
     @Name("DbFit.AcceptanceTests.JavaTests.TeradataTests.FlowMode")
     @FitnesseDir("../..")

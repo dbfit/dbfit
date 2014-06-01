@@ -51,7 +51,7 @@ public class DbStoredProcedureCall {
     }
 
     public StatementExecution toStatementExecution() throws SQLException {
-        StatementExecution cs = new StatementExecution(this.environment.getConnection().prepareCall(toSqlString()), environment.supportsSavepoints());
+        StatementExecution cs = new StatementExecution(this.environment.getConnection().prepareCall(toSqlString()));
         bindParametersTo(cs);
         return cs;
     }

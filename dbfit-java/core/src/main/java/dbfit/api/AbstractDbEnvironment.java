@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Properties;
-import java.math.BigDecimal;
 
 public abstract class AbstractDbEnvironment implements DBEnvironment {
 
@@ -113,19 +112,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
             String paramNames[] = extractParamNames(commandText);
             for (int i = 0; i < paramNames.length; i++) {
                 Object value = testHost.getSymbolValue(paramNames[i]);
-                if (value == null) {
-                    if (supportsSetObjectNull()) {
-                        cs.setObject(i + 1, value);
-                    }
-                    else {
-                        Class<?> clazz = testHost.getSymbolType(paramNames[i]);
-                        int sqlType = getJavaClassSqlType(clazz);
-                        cs.setNull(i + 1, sqlType);
-                    }
-                }
-                else {
-                    cs.setObject(i + 1, value);
-                }
+                cs.setObject(i + 1, value);
             }
         }
         return cs;
@@ -236,47 +223,6 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
                             + "Make sure your database is running and that you have connected before performing any queries.");
         }
     }
-    
-    public boolean supportsSavepoints() {
-        boolean supportsSavepoints;
-        
-        if (currentConnection == null)
-            return false;
-        
-        try {
-            supportsSavepoints = currentConnection.getMetaData().supportsSavepoints();
-        }
-        catch (SQLException e){
-            supportsSavepoints = false;
-            throw new Error("SQLEception occured getting connection metadata", e);
-        }
-        return supportsSavepoints;
-    }
-    
-    public boolean supportsSetObjectNull() {
-        return true;
-    }
-    
-    public int getJavaClassSqlType(Class<?> javaClass) {
-        
-        if (javaClass.equals(Long.class))
-            return java.sql.Types.BIGINT;
-        if (javaClass.equals(String.class))
-            return java.sql.Types.VARCHAR;
-        if (javaClass.equals(Date.class))
-            return java.sql.Types.DATE;
-        if (javaClass.equals(Timestamp.class))
-            return java.sql.Types.TIMESTAMP;
-        if (javaClass.equals(Time.class))
-            return java.sql.Types.TIME;
-        if (javaClass.equals(Integer.class))
-            return java.sql.Types.INTEGER;
-        if (javaClass.equals(Double.class))
-            return java.sql.Types.DOUBLE;
-        if (javaClass.equals(BigDecimal.class))
-            return java.sql.Types.DECIMAL;
-        
-        throw new Error("No SQL Type mapping defined for Java class " + javaClass.getName());
-    }
+
 }
 

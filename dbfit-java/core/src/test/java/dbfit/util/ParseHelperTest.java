@@ -12,8 +12,8 @@ public class ParseHelperTest {
 
     @Before
     public void prepare() {
-        SymbolUtil.setSymbol("NULL_SYMBOL", null, String.class);
-        SymbolUtil.setSymbol("SYMBOL_X", "X", String.class);
+        SymbolUtil.setSymbol("NULL_SYMBOL", null);
+        SymbolUtil.setSymbol("SYMBOL_X", "X");
         parseHelper = new ParseHelper(new Fixture(), String.class);
     }
 

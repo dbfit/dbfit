@@ -1,15 +1,11 @@
 package dbfit.environment;
 
-import dbfit.api.TestHost;
-import dbfit.util.*;
-
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.*;
 import fit.TypeAdapter;
 
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
 import java.sql.CallableStatement;
 import java.sql.Clob;
 import java.sql.ResultSet;
@@ -426,11 +422,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         throw new UnsupportedOperationException(
                 "TeradataEnvironment: Direction " + direction
                         + " is not supported");
-    }
-
-    @Override
-    public boolean supportsSetObjectNull() {
-        return false;
     }
 }
 
