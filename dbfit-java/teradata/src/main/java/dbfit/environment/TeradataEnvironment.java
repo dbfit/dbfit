@@ -424,4 +424,3 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                         + " is not supported");
     }
 }
-
