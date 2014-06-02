@@ -196,7 +196,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
         String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
                 .split("\\.");
-        
+
         //Great resource: http://stackoverflow.com/questions/21587034/get-column-type-using-teradata-system-tables
         String cols = "columnname, CASE ";
         cols = cols + "WHEN c.columntype IN ('CF') THEN 'CHAR' ";
@@ -236,7 +236,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
     private Map<String, DbParameterAccessor> readIntoParams(
             String[] queryParameters, String query) throws SQLException {
-        
+
         try (CallableStatement dc = currentConnection.prepareCall(query)) {
             for (int i = 0; i < queryParameters.length; i++) {
                 dc.setString(i + 1, queryParameters[i].toUpperCase());
