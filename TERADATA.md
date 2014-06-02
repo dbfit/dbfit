@@ -33,11 +33,6 @@ There are two options for hosting the Teradata Express Edition (TDE) Linux VM:
    
    Or install Teradata Studio Express on the host machine and connect to the VM (the default IP address is `192.168.68.128`).
 
-3. Download and unpack the [Teradata](https://downloads.teradata.com/download/connectivity/jdbc-driver) JDBC driver.
-   (e.g. `TeraJDBC__indep_indep.15.00.00.15.zip`)
-   
-   Create the `custom_libs` directory in the git root directory and copy the driver files `terajdbc4.jar` and `tdgssconfig.jar` into it.
-
-5. Run integration tests to verify setup
+4. Run integration tests to verify setup
 
         ./gradlew :dbfit-java:teradata:test
