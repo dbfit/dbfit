@@ -166,8 +166,8 @@ project('teradata') {
 
     dependencies {
         compile project(':dbfit-java:core')
-        runtime 'com.teradata:terajdbc4:15.00.00.15@jar'
-        runtime 'com.teradata:tdgssconfig:15.00.00.15@jar'
+        runtime 'com.teradata:terajdbc4:15.0.0.15@jar'
+        runtime 'com.teradata:tdgssconfig:15.0.0.15@jar'
     }
 }
 
