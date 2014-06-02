@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 
 public class TeradataDbEnvironmentFactoryTest {
 
-    @Ignore("Teradata tests not active on build yet")
+    @Test
     public void newDbEnvironmentTest() throws Exception {
         DBEnvironment env = dbfit.api.DbEnvironmentFactory.newEnvironmentInstance("Teradata");
         assertNotNull(env);

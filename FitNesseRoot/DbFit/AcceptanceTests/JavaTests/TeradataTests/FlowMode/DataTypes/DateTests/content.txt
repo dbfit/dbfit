@@ -18,6 +18,7 @@ Following types map to Date/Time: "TIMESTAMP" ,"DATE", "TIME".
 
 |execute|delete from datatypetest|
 
+NULL handling tests currently disabled {{{
 |insert|datatypetest|
 |d1|ts1|t1|
 |null|null|null|
@@ -25,3 +26,4 @@ Following types map to Date/Time: "TIMESTAMP" ,"DATE", "TIME".
 |Query|select * from datatypetest|
 |d1|ts1|t1|
 |null|null|null|
+}}}

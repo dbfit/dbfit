@@ -7,12 +7,16 @@ All numbers map to decimal, except float which maps to float
 |Insert|datatypetest|
 |n2|n3|f|n4|n5|n6|n7|
 |11|10.88|13.1|113|123.45|45678|56.789|
-|null|null|null|null|null|null|null|
+
+Null handling tests currently disabled {{{
+|null|null|null|null|null|null|null|}}}
 
 |Query|select * from datatypetest|
 |n2|n3?|f?|n4?|n5?|n6?|n7|
 |11|10.88|13.1|113|123.45|45678|56.789|
-|null|null|null|null|null|null|null|
+
+Null handling tests currently disabled {{{
+|null|null|null|null|null|null|null|}}}
 
 |Ordered Query|select * from datatypetest where n3=10.88|
 |n2|n3|f|n4|n5|n6|n7|

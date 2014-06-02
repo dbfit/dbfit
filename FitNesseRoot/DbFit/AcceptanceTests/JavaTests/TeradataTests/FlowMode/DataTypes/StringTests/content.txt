@@ -7,11 +7,15 @@ Following types map to string: "VARCHAR", "CHAR", "CLOB"
 |Insert|datatypetest|
 |s1|s4|s6|
 |VARCHAR|CHAR|CLOB|
-|null|null|null|
+
+Null handling tests currently disabled {{{
+|null|null|null|}}}
 
 |Query|Select * from datatypetest|
 |s1|s4?|s6?|
 |VARCHAR|CHAR|CLOB|
-|null|null|null|
+
+Null handling tests currently disabled {{{
+|null|null|null|}}}
 
 
