@@ -154,7 +154,7 @@ def onWindows() {
 }
 
 def proprietaryLibs() {
-    ['**/ojdbc*.jar', '**/db2jcc4*.jar'] as Set
+    ['**/ojdbc*.jar', '**/db2jcc4*.jar', '**/terajdbc*.jar', '**/tdgssconfig*.jar'] as Set
 }
 
 def experimentalItems() {
