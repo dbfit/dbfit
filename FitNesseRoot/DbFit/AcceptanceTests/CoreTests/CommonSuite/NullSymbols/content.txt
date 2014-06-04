@@ -1,4 +1,4 @@
-!|Execute|create table testtbl(id int, val int)|
+!|Execute Ddl|create table testtbl(id int, val int)|
 
 !|Insert|testtbl|
 |id     |val    |
@@ -20,4 +20,4 @@
 |<<UndefinedVariable           |
 
 # Tear Down
-!|Execute|drop table testtbl|
+!|Execute Ddl|drop table testtbl|
