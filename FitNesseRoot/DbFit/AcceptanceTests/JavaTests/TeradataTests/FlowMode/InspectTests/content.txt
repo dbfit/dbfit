@@ -13,4 +13,4 @@
 |david haselhoff|dhoff|1|
 |arthur dent|adent|2|
 
-!|Inspect query|select * from users|
+!|Inspect query|Select * from users|

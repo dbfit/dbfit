@@ -1,1 +1,3 @@
-!|Execute|Drop table datatypetest;ET|
+!|Execute|Drop table datatypetest|
+
+|Commit|

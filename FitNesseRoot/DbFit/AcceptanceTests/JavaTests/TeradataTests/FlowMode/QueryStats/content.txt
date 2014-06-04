@@ -2,13 +2,15 @@
 
 |Query Stats|
 |query|row count?|is empty?|
-|SELECT n FROM (SELECT ROW_NUMBER() OVER(ORDER BY calendar_date) AS n FROM sys_calendar.calendar) x WHERE n <= 5|5|false|
+|Select n From (Select Row_Number() Over(Order by calendar_date) AS n From sys_calendar.calendar) x Where n <= 5|5|false|
 
 !|Query Stats|
-|query | row count? |is empty?|
-| SELECT 1 AS n where 0=1 |0|true|
+|query|row count?|is empty?|
+|Select 1 AS n Where 0=1 |0|true|
 
-|Execute|CREATE TABLE td_dual (dummy char);et|
+|Execute|Create table td_dual (dummy char)|
+
+|Commit|
 
 |Insert|td_dual|
 |dummy|
@@ -16,11 +18,13 @@
 
 !|Query Stats|
 |table name| row count? |is empty?|
-| td_dual|1|false|
-
+|td_dual|1|false|
 
 !|Query Stats|
 |table name| where|row count? |is empty?|
-| td_dual |1=0|0|true|
+|td_dual|1=0|0|true|
 
-|Execute|DROP TABLE td_dual;et|
+|Execute|Drop table td_dual|
+
+|Commit|
+

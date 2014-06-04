@@ -1,15 +1,15 @@
 Pipes (||) have special meaning both in FitNesse and Teradata - so they may break a query into several columns incorrectly: here is an example:
 
-|note|SELECT :txt AS n, :txt || 'ABC' || :txt AS token|
+|note|Select :txt AS n, :txt || 'ABC' || :txt AS token|
 
-to prevent query from breaking, add !- !- -! and !- -! -! around it - FitNesse will parse it correctly:
+To prevent the query from breaking, add !- !- -! and !- -! -! around it - FitNesse will parse it correctly:
 
-|note|!-SELECT :txt AS n, :txt || 'ABC' || :txt AS token-!|
+|note|!-Select :txt AS n, :txt || 'ABC' || :txt AS token-!|
 
-here is a test example
+Here is a test example
 
 !|set parameter|txt|1|
 
-!|Query|!-SELECT :txt AS n, :txt || 'ABC' || :txt AS token-!|
+!|Query|!-Select :txt AS n, :txt || 'ABC' || :txt AS token-!|
 |n|token|
 |1|1ABC1|

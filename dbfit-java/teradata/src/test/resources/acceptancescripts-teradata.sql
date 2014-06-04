@@ -2,7 +2,7 @@ create user dftest from sysadmin as password=dftest spool=1000000 temporary=1000
 
 database dftest;
 
-create table users(name varchar(50), username varchar(50), userid numeric primary key);
+create table users(name varchar(50), username varchar(50), userid numeric);
 
 grant create function on dftest to dftest;
 grant execute function on dftest to dftest;
@@ -49,4 +49,9 @@ begin
 		signal my_exception_condition;
 	end if;
 	set strlength = characters(name);
+end;
+
+replace procedure makeuser()
+begin
+	insert into users (name,username) values ('user1','fromproc');
 end;

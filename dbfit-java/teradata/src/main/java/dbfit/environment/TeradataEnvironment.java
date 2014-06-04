@@ -144,13 +144,12 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     public Map<String, DbParameterAccessor> getAllProcedureParameters(
             String procName) throws SQLException {
 
-        String[] qualifiers = NameNormaliser.normaliseName(procName).split(
-                "\\.");
+        String[] qualifiers = procName.split("\\.");
 
         //Great resource: http://stackoverflow.com/questions/21587034/get-column-type-using-teradata-system-tables
         String cols = "CASE WHEN TRIM(columnname) = 'RETURN0' AND spparametertype = 'O' ";
         cols = cols + "THEN '' ";
-        cols = cols + "ELSE TRIM(columnname) ";
+        cols = cols + "ELSE TRIM(TRAILING FROM columnname) ";
         cols = cols + "END AS columnname, ";
         cols = cols + "CASE ";
         cols = cols + "WHEN c.columntype IN ('CF') THEN 'CHAR' ";
@@ -181,9 +180,10 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
         String qry = "SELECT " + cols + "  FROM dbc.columns c " + "WHERE ";
         if (qualifiers.length == 2) {
-            qry += "c.databasename=? and c.tablename=?";
+            qry += "TRIM(TRAILING FROM c.databasename) = TRIM(TRAILING FROM ?) AND TRIM(TRAILING FROM c.tablename) = TRIM(TRAILING FROM ?)";
         } else {
-            qry += "c.databasename=user AND c.tablename=?";
+            // User names are always stored as upper case. For ANSI mode this is significant.
+            qry += "TRIM(TRAILING FROM UPPER(c.databasename))= USER AND TRIM(TRAILING FROM c.tablename) = TRIM(TRAILING FROM ?)";
         }
 
         qry += " order by c.columnid";
@@ -194,11 +194,10 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
 
-        String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
-                .split("\\.");
+        String[] qualifiers = tableOrViewName.split("\\.");
 
         //Great resource: http://stackoverflow.com/questions/21587034/get-column-type-using-teradata-system-tables
-        String cols = "columnname, CASE ";
+        String cols = "TRIM(TRAILING FROM columnname) AS columnname, CASE ";
         cols = cols + "WHEN c.columntype IN ('CF') THEN 'CHAR' ";
         cols = cols + "WHEN c.columntype IN ('CV') THEN 'VARCHAR' ";
         cols = cols + "WHEN c.columntype IN ('CO') THEN 'CLOB' ";
@@ -226,9 +225,10 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
         String qry = "SELECT " + cols + " FROM dbc.columns c " + "WHERE ";
         if (qualifiers.length == 2) {
-            qry += "c.databasename=? and c.tablename=?";
+            qry += "TRIM(TRAILING FROM c.databasename) = TRIM(TRAILING FROM ?) AND TRIM(TRAILING FROM c.tablename) = TRIM(TRAILING FROM ?)";
         } else {
-            qry += "c.databasename=user AND c.tablename=?";
+            // User names are always stored as upper case. For ANSI mode this is significant.
+            qry += "TRIM(TRAILING FROM UPPER(c.databasename)) = USER AND TRIM(TRAILING FROM c.tablename) = TRIM(TRAILING FROM ?)";
         }
         qry += " order by c.columnid ";
         return readIntoParams(qualifiers, qry);
@@ -238,14 +238,19 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
             String[] queryParameters, String query) throws SQLException {
 
         try (CallableStatement dc = currentConnection.prepareCall(query)) {
+
             for (int i = 0; i < queryParameters.length; i++) {
-                dc.setString(i + 1, queryParameters[i].toUpperCase());
+                dc.setString(i + 1, queryParameters[i]);
             }
+
             ResultSet rs = dc.executeQuery();
             Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
             int position = 0;
+
             while (rs.next()) {
+
                 String paramName = rs.getString(1);
+
                 if (paramName == null) {
                     paramName = ""; // Function return values get empty parameter
                                     // names.
@@ -257,7 +262,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                 String dataType = rs.getString(2);
                 String direction = rs.getString(4);
                 Direction paramDirection;
-                if (paramName.trim().toUpperCase().equals("")) {
+                if (paramName.trim().equals("")) {
                     paramDirection = Direction.RETURN_VALUE;
                 } else {
                     paramDirection = getParameterDirection(direction);
@@ -269,6 +274,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                         paramDirection, intSqlType, clsJavaClass,
                         paramDirection == Direction.RETURN_VALUE ? -1
                                 : position++);
+                // Note that the HashMap key case must match the normalised name access by DbTable.getDbParameterAccessor.
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }
             return allParams;

@@ -3,14 +3,14 @@
 {{{
 replace procedure TestProc1(in name varchar(100), out strlength number)
 begin
-	declare my_exception_condition condition for sqlstate '22012';
-	-- SQLSTATE 22012 maps to Teradata error number 2618.
-	declare x integer;
-	if (name = 'xx')
-	then
-		signal my_exception_condition;
-	end if;
-	set strlength = characters(name);
+    declare my_exception_condition condition for sqlstate '22012';
+    -- SQLSTATE 22012 maps to Teradata error number 2618.
+    declare x integer;
+    if (name = 'xx')
+    then
+        signal my_exception_condition;
+    end if;
+    set strlength = characters(name);
 end;
 }}}
 
@@ -27,9 +27,7 @@ Execute procedure will still work ok if it does not throw an error
 |mika|4|
 |paradajz|8|
 
-
 !3 Use an explicit error code with ''Execute Procedure With Exception'' to for an explicit error code
-
 
 !|Execute Procedure Expect Exception |TestProc1|2618|
 |name|str length?|

@@ -1,4 +1,4 @@
-|Store query|!-SELECT n * 5 AS n, 'T' || TRIM(ROW_NUMBER() OVER(ORDER BY n)) AS name FROM (SELECT ROW_NUMBER() OVER(ORDER BY calendar_date) AS n FROM sys_calendar.calendar QUALIFY n <= 5) x -!|fromdual|
+|Store query|!-Select n * 5 AS n, 'T' || Trim(Row_Number() Over(Order by n)) AS name FROM (Select Row_Number() Over(Order by calendar_date) AS n From sys_calendar.calendar Qualify n <= 5) x -!|fromdual|
 
 |query|<<fromdual|
 |n|name?|

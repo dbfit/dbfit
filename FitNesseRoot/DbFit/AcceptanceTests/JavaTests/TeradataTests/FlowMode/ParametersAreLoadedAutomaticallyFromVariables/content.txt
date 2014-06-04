@@ -1,6 +1,6 @@
 Parameters are loaded automatically from variables, no need to set them explicitly with Set Parameter
 
-!|Insert|Users|
+!|Insert|users|
 |username|name|userid|
 |pera|Petar Detlic|1|
 |Mika|Mitar Miric|2|

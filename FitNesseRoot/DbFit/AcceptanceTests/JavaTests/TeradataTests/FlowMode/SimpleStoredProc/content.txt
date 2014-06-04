@@ -3,14 +3,14 @@ This stored proc tests output parameters - CalcLength returns string length as s
 {{{
 replace procedure CalcLength(in name varchar(100), out strlength numeric)
 begin
-	set strlength=characters(name);
+    set strlength=characters(name);
 end;
 }}}
 
 
 !|Execute Procedure |CalcLength|
 |name |strlength?|
-|mika |  4|
-|paradajz |  8|
-|saeiluhrweurhfi7fhi7rhgf |  24|
+|mika |4|
+|paradajz |8|
+|saeiluhrweurhfi7fhi7rhgf |24|
 

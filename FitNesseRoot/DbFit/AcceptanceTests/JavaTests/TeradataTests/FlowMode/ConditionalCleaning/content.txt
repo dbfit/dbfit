@@ -1,4 +1,6 @@
-|Execute|CREATE TABLE TEST_TABLE (TEST_ID NUMERIC, TEST_VAL  VARCHAR(10));ET|
+|Execute|Create table test_table (test_id NUMERIC, test_val VARCHAR(10))|
+
+|Commit|
 
 |Insert|test_table|
 |test_id|test_val|
@@ -7,7 +9,7 @@
 |3|three|
 |4|four|
 
-|Query|select * from test_table|
+|Query|Select * from test_table|
 |test_id|test_val|
 |1|one|
 |2|two|
@@ -20,7 +22,7 @@
 |table|where|clean?|
 |test_table|test_id>=4|true|
 
-|Query|select * from test_table|
+|Query|Select * from test_table|
 |test_id|test_val|
 |1|one|
 |2|two|
@@ -30,7 +32,7 @@
 |table|where|clean?|
 |test_table|test_id=3|true|
 
-|Query|select * from test_table|
+|Query|Select * from test_table|
 |test_id|test_val|
 |1|one|
 |2|two|
@@ -41,22 +43,20 @@
 |table|columnName|ids|DeleteRowsForIDs?|
 |test_table|test_id|2|true|
 
-|Query|select * from test_table|
+|Query|Select * from test_table|
 |test_id|test_val|
 |1|one|
-
 
 |Insert|test_table|
 |test_id|test_val|
 |2|two|
 |3|three|
 
-|Query|select * from test_table|
+|Query|Select * from test_table|
 |test_id|test_val|
 |1|one|
 |2|two|
 |3|three|
-
 
 !3 DeleteRowsForKeys should only delete the row with test_val 'two'
 
@@ -64,10 +64,11 @@
 |table|columnName|keys|DeleteRowsForKeys?|
 |test_table|test_val|two|true|
 
-|Query|select * from test_table|
+|Query|Select * from test_table|
 |test_id|test_val|
 |1|one|
 |3|three|
 
-|Execute|drop table test_table;ET|
+|Execute|Drop table test_table|
 
+|Commit|
