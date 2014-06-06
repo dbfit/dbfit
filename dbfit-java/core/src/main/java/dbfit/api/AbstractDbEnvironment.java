@@ -118,6 +118,12 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return cs;
     }
 
+    @Override
+    public DdlStatementExecution createDdlStatementExecution(String ddl)
+            throws SQLException {
+        return new DdlStatementExecution(getConnection().createStatement(), ddl);
+    }
+
     public void closeConnection() throws SQLException {
         if (currentConnection != null) {
             currentConnection.rollback();

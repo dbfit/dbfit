@@ -1,0 +1,13 @@
+!|Execute Ddl|create table tab_with_trigger(x int)|
+
+!|Execute Ddl|create or replace trigger trg_double_x before insert on tab_with_trigger for each row begin :new.x := :new.x * 2; end;|
+
+!|Insert|tab_with_trigger|
+|x                       |
+|13                      |
+
+!|Query|select x from tab_with_trigger|
+|x                                    |
+|26                                   |
+
+!|Execute Ddl|drop table tab_with_trigger|

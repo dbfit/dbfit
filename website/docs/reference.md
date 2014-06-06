@@ -15,6 +15,7 @@ show_comments: false
       <li><a href="#update">Update</a></li>
       <li><a href="#execute-procedure">Execute Procedure</a></li>
       <li><a href="#execute">Execute</a></li>
+      <li><a href="#execute-ddl">Execute Ddl</a></li>
       <li><a href="#inspect">Inspect</a></li>
       <li><a href="#store-query">Store Query</a></li>
       <li><a href="#compare-stored-queries">Compare Stored Queries</a></li>
@@ -34,6 +35,7 @@ show_comments: false
 {% include manual/update.md %}
 {% include manual/execute-procedure.md %}
 {% include manual/execute.md %}
+{% include manual/execute-ddl.md %}
 {% include manual/inspect.md %}
 {% include manual/store-query.md %}
 {% include manual/compare-stored-queries.md %}

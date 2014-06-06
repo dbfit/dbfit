@@ -2,6 +2,7 @@ package dbfit.api;
 
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
+import dbfit.util.DdlStatementExecution;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -62,6 +63,12 @@ public interface DBEnvironment {
      */
     PreparedStatement createStatementWithBoundFixtureSymbols(TestHost th, String commandText)
             throws SQLException;
+
+    /**
+     * Create a statement execution object for the given DDL text. Bind variables
+     * are not supported.
+     */
+    DdlStatementExecution createDdlStatementExecution(String ddl) throws SQLException;
 
     /**
      * Closes the current connection and rolls back any active transactions. The

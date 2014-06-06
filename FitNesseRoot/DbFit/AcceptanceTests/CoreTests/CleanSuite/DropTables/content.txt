@@ -1,3 +1,3 @@
-|Execute|Drop table Test_DBFit|
+|Execute Ddl|Drop table Test_DBFit|
 
-|Execute|Drop table Test_DBFit2|
+|Execute Ddl|Drop table Test_DBFit2|
