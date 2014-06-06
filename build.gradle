@@ -3,8 +3,11 @@ import org.apache.tools.ant.filters.ReplaceTokens
 ext.dbfitVersion = '3.0.1'
 
 task cleanFitnesseroot(type:Exec) {
+    def gitArgs = ['clean', '-d', '-x', '-f', 'FitNesseRoot/']
+    gitArgs += keepUncommitedTests() ? ['-e', 'FitNesseRoot/DbFit/'] : []
+
     executable 'git'
-    args 'clean', '-d', '-x', '-f', 'FitNesseRoot/'
+    args gitArgs
 }
 
 task cleanDist << {
@@ -159,5 +162,9 @@ def proprietaryLibs() {
 
 def experimentalItems() {
     ['teradata/**/*.jar'] as Set
+}
+
+def keepUncommitedTests() {
+    project.hasProperty('keepTests') && keepTests != 'false'
 }
 
