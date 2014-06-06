@@ -3,8 +3,8 @@ import org.apache.tools.ant.filters.ReplaceTokens
 ext.dbfitVersion = '3.0.1'
 
 task cleanFitnesseroot(type:Exec) {
-    executable onWindows() ? 'cmd.exe' : '/bin/sh'
-    args onWindows() ? '/C' : '-c', 'git clean -d -x -f FitNesseRoot/'
+    executable 'git'
+    args 'clean', '-d', '-x', '-f', 'FitNesseRoot/'
 }
 
 task cleanDist << {
