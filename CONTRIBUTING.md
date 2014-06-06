@@ -160,6 +160,11 @@ This will compile the source, copy the jars and resources to the `dist` director
 
 Please be aware that if you change any code whilst the `/.gradlew start` command is running you will have to stop the command and re-run it in order to compile and pick up the changes.  To stop the running instance it is preferable to point your browser to [http://localhost:8085/?shutdown](http://localhost:8085/?shutdown) rather than killing it at the command line, i.e. don't do a Ctrl+C or equivalent (again adjust `localhost` to match the host on which the instance is actually running).
 
+
+*  By default the uncommitted acceptance tests are being purged when preparing the new content of `dist` directory. In order to keep them, `keepTests` project property may be used
+
+        dbfit$ ./gradlew starthere -PkeepTests
+
 #### Using custom libraries
 
 If you need to use libraries which are not available on the public artifact repositories (e.g. proprietary JDBC drivers) - you may place them in `custom_libs` directory. This folder is configured as [flat directory repository](http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:flat_dir_resolver) in Gradle - the typical naming format of JARs inside is `<main_name>-<version>.jar`.
