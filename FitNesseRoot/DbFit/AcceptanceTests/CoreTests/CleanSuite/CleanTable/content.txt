@@ -1,6 +1,6 @@
 !include -c <CleanSuite.CreateTables
 
-|Execute|Create table Test_DBFit3(name varchar(50), luckyNumber int)|
+|Execute Ddl|Create table Test_DBFit3(name varchar(50), luckyNumber int)|
 
 |Insert|Test_DBFit |
 |name  |luckyNumber|
@@ -37,4 +37,4 @@
 
 !include -c <CleanSuite.DropTables
 
-|Execute|Drop table Test_DBFit3|
+|Execute Ddl|Drop table Test_DBFit3|
