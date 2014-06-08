@@ -1,6 +1,4 @@
-|Execute|Create table test_table (test_id NUMERIC, test_val VARCHAR(10))|
-
-|Commit|
+|Execute Ddl|Create table test_table (test_id NUMERIC, test_val VARCHAR(10))|
 
 |Insert|test_table|
 |test_id|test_val|
@@ -16,7 +14,7 @@
 |3|three|
 |4|four|
 
-!3 Where can specify a criteria to be appended to the delete statement
+!3 Where can specify a criterion to be appended to the delete statement
 
 |Clean|
 |table|where|clean?|
@@ -69,6 +67,4 @@
 |1|one|
 |3|three|
 
-|Execute|Drop table test_table|
-
-|Commit|
+|Execute Ddl|Drop table test_table|

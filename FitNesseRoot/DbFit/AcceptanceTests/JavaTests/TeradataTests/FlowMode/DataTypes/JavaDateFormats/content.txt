@@ -1,8 +1,6 @@
 !3 Dates should accept standard JDBC date format
 
-|Execute|Create table datatypetest (d1 date, d2 timestamp, d3 time)|
-
-|Commit|
+|Execute Ddl|Create table datatypetest (d1 date, d2 timestamp, d3 time)|
 
 |Insert|datatypetest|
 |d1|d2|d3|

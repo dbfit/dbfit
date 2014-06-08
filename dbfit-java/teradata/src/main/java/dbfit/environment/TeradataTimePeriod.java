@@ -3,16 +3,16 @@ package dbfit.environment;
 import java.sql.*;
 
 public class TeradataTimePeriod extends DbStruct {
-    
+
     public TeradataTimePeriod(Object[] dates) {
         super("PERIOD(TIME)", dates);
     }
     
-    @Override
+
     public String toString() {
         
         String r = "";
-        
+
         try {
             Object[] a = super.getAttributes();
 
@@ -29,7 +29,7 @@ public class TeradataTimePeriod extends DbStruct {
         
         return r;
     }
-    
+
     @Override
     public boolean equals(Object other) {
         
@@ -38,12 +38,12 @@ public class TeradataTimePeriod extends DbStruct {
 
         if (!(other instanceof TeradataTimePeriod))
             return false;
-        
+
         TeradataTimePeriod odp = (TeradataTimePeriod)other;
-        
+
         Object[] thisAtts = null;
         Object[] otherAtts = null;
-        
+
         try {
             otherAtts = odp.getAttributes();
             thisAtts = this.getAttributes();
@@ -51,13 +51,13 @@ public class TeradataTimePeriod extends DbStruct {
         catch (SQLException e) {
             throw new Error("TeradataTimePeriod: equals: error getting attributes of DbStruct");
         }
-        
+
         if (!(thisAtts[0].equals(otherAtts[0])))
             return false;
-        
+
         if (!(thisAtts[1].equals(otherAtts[1])))
             return false;
-        
+
         return true;
     }
 }

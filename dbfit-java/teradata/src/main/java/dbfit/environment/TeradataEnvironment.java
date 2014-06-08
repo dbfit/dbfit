@@ -129,6 +129,18 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         return url;
     }
 
+    @Override
+    public DdlStatementExecution createDdlStatementExecution(String ddl)
+            throws SQLException {
+        return new DdlStatementExecution(getConnection().createStatement(), ddl) {
+            @Override
+            public void run() throws SQLException {
+                super.run();
+                getConnection().commit();
+            }
+        };
+    }
+
     private static String paramNamePattern = ":([A-Za-z0-9_]+)";
     private static Pattern paramsNames = Pattern.compile(":([A-Za-z0-9_]+)");
 

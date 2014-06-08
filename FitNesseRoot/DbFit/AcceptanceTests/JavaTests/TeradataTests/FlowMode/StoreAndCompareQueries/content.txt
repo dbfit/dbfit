@@ -1,6 +1,4 @@
-|Execute|Create table tn(n integer, name varchar(100))|
-
-|Commit|
+|Execute Ddl|Create table tn(n integer, name varchar(100))|
 
 |Insert|tn|
 |n|name|
@@ -17,6 +15,4 @@
 |Compare stored queries|fromtable|fromdual|
 |n|name?|
 
-|Execute|Drop table tn|
-
-|Commit|
+|Execute Ddl|Drop table tn|

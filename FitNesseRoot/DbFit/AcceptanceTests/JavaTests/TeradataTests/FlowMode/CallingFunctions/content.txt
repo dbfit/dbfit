@@ -12,8 +12,7 @@ end;
 
 This User Defined Function 'Multiply' (UDF) is written in C. The C source code file (TeradataUDFMultiply.c) needs to be in the CLASSPATH in order for the REPLACE FUNCTION statement to work.
 
-!|Execute|!-
-replace function Multiply (n1 numeric, n2 numeric)
+!|Execute Ddl|!-replace function Multiply (n1 numeric, n2 numeric)
 returns numeric
 specific Multiply
 language c
@@ -22,13 +21,9 @@ parameter style sql
 external name 'CS!Multiply!TeradataUDFMultiply.c'
 -!|
 
-|Commit|
-
 The Teradata JDBC driver does not support direct invocation of functions (either built-in or UDFs). They can be invoked only through other SQL statements.
 
-|Execute|Create table test_multiply (n1 numeric, n2 numeric)|
-
-|Commit|
+|Execute Ddl|Create table test_multiply (n1 numeric, n2 numeric)|
 
 |Insert|test_multiply|
 |n1|n2|
@@ -46,6 +41,4 @@ Note that this UDF implementation doesn't support fractions!
 |-1701|
 |6|
 
-|Execute|drop table test_multiply|
-
-|Commit|
+|Execute Ddl|drop table test_multiply|

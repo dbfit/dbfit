@@ -8,9 +8,7 @@
 |query|row count?|is empty?|
 |Select 1 AS n Where 0=1 |0|true|
 
-|Execute|Create table td_dual (dummy char)|
-
-|Commit|
+|Execute Ddl|Create table td_dual (dummy char)|
 
 |Insert|td_dual|
 |dummy|
@@ -24,7 +22,4 @@
 |table name| where|row count? |is empty?|
 |td_dual|1=0|0|true|
 
-|Execute|Drop table td_dual|
-
-|Commit|
-
+|Execute Ddl|Drop table td_dual|

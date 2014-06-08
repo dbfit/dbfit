@@ -2,9 +2,7 @@
 
 Following types map to Date/Time: "TIMESTAMP" ,"DATE", "TIME".
 
-|Execute|Create table datatypetest (d1 date, ts1 timestamp, t1 time)|
-
-|Commit|
+|Execute Ddl|Create table datatypetest (d1 date, ts1 timestamp, t1 time)|
 
 |Query|Select current_date as d, current_timestamp as ts, current_time as t|
 |d?|ts?|t?|
@@ -18,7 +16,7 @@ Following types map to Date/Time: "TIMESTAMP" ,"DATE", "TIME".
 |d1?|ts1?|t1?|
 |fail[null]|fail[null]|fail[null]|
 
-|Execute|Delete from datatypetest|
+|Execute Ddl|Delete from datatypetest|
 
 NULL handling tests currently disabled {{{
 |Insert|datatypetest|

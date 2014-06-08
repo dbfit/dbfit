@@ -102,6 +102,7 @@ Here's a comprehensive list of available types:
 | HSQLDB                    | HSQLDBTest          |
 | DB2                       | DB2Test             |
 | DB2i                      | DB2iTest            |
+| Teradata                  | TeradataTest        |
 {: class="table table-bordered"}
 
 <div class="alert alert-info alert-block">
