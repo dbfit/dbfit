@@ -14,6 +14,7 @@ public class TeradataRegressionTest {
     @Name("DbFit.AcceptanceTests.JavaTests.TeradataTests.FlowMode")
     @FitnesseDir("../..")
     @OutputDir("../../tmp")
+    @Ignore
     public static class FlowModeTest {
         @Test public void dummy(){}
     }
