@@ -1,0 +1,12 @@
+Parameter values persist between statements - they are not cleared after a statement is executed
+
+|Set parameter|p1|val1|
+
+|Query|select :p1  as what|
+|what|
+|val1|
+
+
+|Query|select :p1 as whatnext|
+|whatnext|
+|val1|

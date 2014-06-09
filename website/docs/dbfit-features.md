@@ -34,10 +34,8 @@ There are two ways to run DbFit - through Java or through .NET. As a database de
 | HSQLDB     | x          |                |
 | Sybase     |            | x              |
 | DB2        | x          |                |
-| Teradata   | *          |                |
+| Teradata   | x          |                |
 {: class="table table-bordered"}
-
-_* The DbFit support for Teradata is experimental_
 
 ----
 

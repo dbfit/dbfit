@@ -1,0 +1,18 @@
+|Execute Ddl|Create table tn(n integer, name varchar(100))|
+
+|Insert|tn|
+|n|name|
+|5|T1|
+|10|T2|
+|15|T3|
+|20|T4|
+|25|T5|
+
+|Store query|!-Select Cast(n * 5 AS INTEGER) AS n, 'T' || n AS name From (Select Trim(Row_Number() Over(Order by calendar_date)) AS n From sys_calendar.calendar Qualify n <= 5) x-!|fromdual|
+
+|Store query|Select * from tn|fromtable|
+
+|Compare stored queries|fromtable|fromdual|
+|n|name?|
+
+|Execute Ddl|Drop table tn|

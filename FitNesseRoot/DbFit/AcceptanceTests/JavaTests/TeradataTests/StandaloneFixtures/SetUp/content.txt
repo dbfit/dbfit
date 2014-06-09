@@ -1,0 +1,10 @@
+|Import|
+|dbfit.fixture|
+
+Connect in Teradata mode:
+|Database Environment|teradata|
+|Connect|jdbc:teradata://192.168.68.128/DATABASE=dftest,USER=dftest,PASSWORD=dftest,TMODE=TERA|
+
+To connect in ANSI mode:
+{{{|Database Environment|teradata|
+|Connect|jdbc:teradata://192.168.68.128/DATABASE=dftest,USER=dftest,PASSWORD=dftest,TMODE=ANSI|}}}

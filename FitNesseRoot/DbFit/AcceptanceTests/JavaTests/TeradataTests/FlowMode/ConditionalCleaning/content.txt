@@ -1,0 +1,70 @@
+|Execute Ddl|Create table test_table (test_id NUMERIC, test_val VARCHAR(10))|
+
+|Insert|test_table|
+|test_id|test_val|
+|1|one|
+|2|two|
+|3|three|
+|4|four|
+
+|Query|Select * from test_table|
+|test_id|test_val|
+|1|one|
+|2|two|
+|3|three|
+|4|four|
+
+!3 Where can specify a criterion to be appended to the delete statement
+
+|Clean|
+|table|where|clean?|
+|test_table|test_id>=4|true|
+
+|Query|Select * from test_table|
+|test_id|test_val|
+|1|one|
+|2|two|
+|3|three|
+
+|Clean|
+|table|where|clean?|
+|test_table|test_id=3|true|
+
+|Query|Select * from test_table|
+|test_id|test_val|
+|1|one|
+|2|two|
+
+!3 DeleteRowsForIDs should only delete the row with test_id 2
+
+|Clean|
+|table|columnName|ids|DeleteRowsForIDs?|
+|test_table|test_id|2|true|
+
+|Query|Select * from test_table|
+|test_id|test_val|
+|1|one|
+
+|Insert|test_table|
+|test_id|test_val|
+|2|two|
+|3|three|
+
+|Query|Select * from test_table|
+|test_id|test_val|
+|1|one|
+|2|two|
+|3|three|
+
+!3 DeleteRowsForKeys should only delete the row with test_val 'two'
+
+|Clean|
+|table|columnName|keys|DeleteRowsForKeys?|
+|test_table|test_val|two|true|
+
+|Query|Select * from test_table|
+|test_id|test_val|
+|1|one|
+|3|three|
+
+|Execute Ddl|Drop table test_table|

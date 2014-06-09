@@ -1,0 +1,21 @@
+!3 Periods
+
+|Set Option|bind symbols|false|
+
+|Execute Ddl|Create table datatypetest (c1 integer, d1 period(date), ts1 period(timestamp(0)), t1 period(time(0)))|
+
+|Insert|datatypetest|
+|c1|d1|ts1|t1|
+|1|1971-08-05,2014-06-01|1971-08-05 01:23:45,2014-06-01 23:59:59|01:23:45,23:59:59|
+
+|Query|Select * from datatypetest|
+|c1|d1?|ts1?|t1?|
+|1|1971-08-05,2014-06-01|1971-08-05 01:23:45,2014-06-01 23:59:59|01:23:45,23:59:59|
+
+|Query|Select d1, ts1, t1 from datatypetest|
+|d1?|ts1?|t1?|
+|>>d1|>>ts1|>>t1|
+
+|Query|Select * from datatypetest|
+|c1|d1?|ts1?|t1?|
+|1|<<d1|<<ts1|<<t1|
