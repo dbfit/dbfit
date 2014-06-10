@@ -7,6 +7,7 @@ show_comments: true
 
 *   [DB2](#db2)
 *   [MS SQL Server](#microsoft-sql-server)
+*   [Teradata](#teradata)
 
 ---
 
@@ -141,3 +142,43 @@ There are two ways around this:
 
 `!|Connect|jdbc:sqlserver://myhost;integratedSecurity=true|`
 
+----
+
+## Teradata
+
+### Deploying the JDBC Driver
+
+1. [Download the Teradata JDBC driver from their site](http://downloads.teradata.com/download/connectivity/jdbc-driver) *(It is not open source and cannot be distributed with DbFit.)*
+2. Deploy `terajdbc4.jar` and `tdgssconfig.jar` in DbFit's `lib` folder - the same folder as dbfit-XXX.jar.
+
+### Connection string to a Teradata database
+
+* Check DbFit reference documentation: [ConnectUsingFile](/dbfit/docs/reference.html#connect-using-file) and [Connect](/dbfit/docs/reference.html#connect).
+* Refer to the [Teradata JDBC Driver Reference](http://developer.teradata.com/connectivity/reference/jdbc-driver) for details about JDBC url syntax.
+
+
+#### Examples
+
+* Using Teradata server host name, user name, password and default database
+
+`!|Connect|myhost|myuser|mypassword|mydbname|`
+
+* Using Teradata server host name, user name, password and no default database
+
+`!|Connect|myhost|myuser|mypassword|`
+
+* Using LDAP as the authentication source (note it is not currently possible to specify a default database name and LDAP as an authentication source with this method)
+
+`!|Connect|myhost/LOGMECH=LDAP|myuser|mypassword|`
+
+* Using Teradata as the transaction mode.authentication source (note it is not currently possible to specify a default database name and a transaction mode wiht thi method)
+
+`!|Connect|myhost/TMODE=TERA|myuser|mypassword|`
+
+* Using ANSI as the transaction mode.authentication source (note it is not currently possible to specify a default database name and LDAP as an authentication source with this method)
+
+`!|Connect|myhost/TMODE=ANSI|myuser|mypassword|`
+
+* Using raw JDBC url (note that a default database, a logon authentication source and a transaction mode can all be specified with this method)
+
+`!|Connect|jdbc:teradata://myhost/user=myuser,password=mypassword,database=mydbname,tmode=TERA,logmech=td2|`

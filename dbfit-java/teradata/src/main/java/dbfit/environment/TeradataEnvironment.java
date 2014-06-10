@@ -120,8 +120,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     }
 
     protected String getConnectionString(String dataSource, String dataBase) {
-        // return "jdbc:teradata://"+dataSource+"/DATABASE="+dataBase+"";
-        // return
         // "jdbc:teradata://"+dataSource+"/TMODE=ANSI,DATABASE="+dataBase;
         String url = "jdbc:teradata://" + dataSource;
         if (dataBase != null) {
@@ -129,6 +127,18 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         }
         url = url + ",FINALIZE_AUTO_CLOSE=ON";
         return url;
+    }
+
+    @Override
+    public DdlStatementExecution createDdlStatementExecution(String ddl)
+            throws SQLException {
+        return new DdlStatementExecution(getConnection().createStatement(), ddl) {
+            @Override
+            public void run() throws SQLException {
+                super.run();
+                getConnection().commit();
+            }
+        };
     }
 
     private static String paramNamePattern = ":([A-Za-z0-9_]+)";
@@ -145,16 +155,13 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
     public Map<String, DbParameterAccessor> getAllProcedureParameters(
             String procName) throws SQLException {
-        System.out
-                .println("TeradataEnvironment: getAllProcedureParameters: tableOrViewName: "
-                        + procName);
 
-        String[] qualifiers = NameNormaliser.normaliseName(procName).split(
-                "\\.");
+        String[] qualifiers = procName.split("\\.");
 
+        //Great resource: http://stackoverflow.com/questions/21587034/get-column-type-using-teradata-system-tables
         String cols = "CASE WHEN TRIM(columnname) = 'RETURN0' AND spparametertype = 'O' ";
         cols = cols + "THEN '' ";
-        cols = cols + "ELSE TRIM(columnname) ";
+        cols = cols + "ELSE TRIM(TRAILING FROM columnname) ";
         cols = cols + "END AS columnname, ";
         cols = cols + "CASE ";
         cols = cols + "WHEN c.columntype IN ('CF') THEN 'CHAR' ";
@@ -165,7 +172,8 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         cols = cols + "WHEN c.columntype IN ('I2') THEN 'SMALLINT' ";
         cols = cols + "WHEN c.columntype IN ('I1') THEN 'BYTEINT' ";
         cols = cols + "WHEN c.columntype IN ('D') THEN 'DECIMAL' ";
-        cols = cols + "WHEN c.columntype IN ('D') THEN 'DOUBLE' ";
+        cols = cols + "WHEN c.columntype IN ('N') THEN 'NUMBER' ";
+        cols = cols + "WHEN c.columntype IN ('F') THEN 'FLOAT' ";
         cols = cols + "WHEN c.columntype IN ('DA') THEN 'DATE' ";
         cols = cols + "WHEN c.columntype IN ('TS') THEN 'TIMESTAMP' ";
         cols = cols + "WHEN c.columntype IN ('TI') THEN 'TIME' ";
@@ -184,50 +192,39 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
         String qry = "SELECT " + cols + "  FROM dbc.columns c " + "WHERE ";
         if (qualifiers.length == 2) {
-            qry += "c.databasename=? and c.tablename=?";
+            qry += "TRIM(TRAILING FROM c.databasename) = TRIM(TRAILING FROM ?) AND TRIM(TRAILING FROM c.tablename) = TRIM(TRAILING FROM ?)";
         } else {
-            qry += "c.databasename=user AND c.tablename=?";
+            // User names are always stored as upper case. For ANSI mode this is significant.
+            qry += "TRIM(TRAILING FROM UPPER(c.databasename))= USER AND TRIM(TRAILING FROM c.tablename) = TRIM(TRAILING FROM ?)";
         }
 
         qry += " order by c.columnid";
-
-        // WHAT THE HELL IS THIS FOR!? ********************
-        /*
-         * if (qualifiers.length==2){ String[] newQualifiers=new String[6];
-         * newQualifiers[0]=qualifiers[0]; newQualifiers[1]=qualifiers[1];
-         * newQualifiers[2]=qualifiers[0]; newQualifiers[3]=qualifiers[1];
-         * newQualifiers[4]=qualifiers[0]; newQualifiers[5]=qualifiers[1];
-         * qualifiers=newQualifiers; } else if (qualifiers.length==1){ String[]
-         * newQualifiers=new String[2]; newQualifiers[0]=qualifiers[0];
-         * newQualifiers[1]=qualifiers[0]; qualifiers=newQualifiers; }
-         */
 
         return readIntoParams(qualifiers, qry);
     }
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
-        System.out
-                .println("TeradataEnvironment: getAllColumns: tableOrViewName: "
-                        + tableOrViewName);
 
-        String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
-                .split("\\.");
+        String[] qualifiers = tableOrViewName.split("\\.");
 
-        String cols = "columnname, CASE ";
+        //Great resource: http://stackoverflow.com/questions/21587034/get-column-type-using-teradata-system-tables
+        String cols = "TRIM(TRAILING FROM columnname) AS columnname, CASE ";
         cols = cols + "WHEN c.columntype IN ('CF') THEN 'CHAR' ";
         cols = cols + "WHEN c.columntype IN ('CV') THEN 'VARCHAR' ";
         cols = cols + "WHEN c.columntype IN ('CO') THEN 'CLOB' ";
+        cols = cols + "WHEN c.columntype IN ('BO') THEN 'BLOB' ";
         cols = cols + "WHEN c.columntype IN ('I8') THEN 'BIGINT' ";
         cols = cols + "WHEN c.columntype IN ('I') THEN 'INTEGER' ";
         cols = cols + "WHEN c.columntype IN ('I2') THEN 'SMALLINT' ";
         cols = cols + "WHEN c.columntype IN ('I1') THEN 'BYTEINT' ";
         cols = cols + "WHEN c.columntype IN ('D') THEN 'DECIMAL' ";
-        cols = cols + "WHEN c.columntype IN ('F') THEN 'DOUBLE' ";
+        cols = cols + "WHEN c.columntype IN ('N') THEN 'NUMBER' ";
+        cols = cols + "WHEN c.columntype IN ('F') THEN 'FLOAT' ";
         cols = cols + "WHEN c.columntype IN ('DA') THEN 'DATE' ";
-        cols = cols + "WHEN c.columntype IN ('TS') THEN 'TIMESTAMP' ";
-        cols = cols + "WHEN c.columntype IN ('TI') THEN 'TIME' ";
-        cols = cols + "WHEN c.columntype IN ('BF') THEN 'BINARY' ";
+        cols = cols + "WHEN c.columntype IN ('TS', 'SZ') THEN 'TIMESTAMP' ";
+        cols = cols + "WHEN c.columntype IN ('AT', 'TZ') THEN 'TIME' ";
+        cols = cols + "WHEN c.columntype IN ('BF') THEN 'BYTE' ";
         cols = cols + "WHEN c.columntype IN ('BV') THEN 'VARBINARY' ";
         cols = cols + "WHEN c.columntype IN ('PD') THEN 'PERIOD(DATE)' ";
         cols = cols + "WHEN c.columntype IN ('PT') THEN 'PERIOD(TIME)' ";
@@ -240,9 +237,10 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
         String qry = "SELECT " + cols + " FROM dbc.columns c " + "WHERE ";
         if (qualifiers.length == 2) {
-            qry += "c.databasename=? and c.tablename=?";
+            qry += "TRIM(TRAILING FROM c.databasename) = TRIM(TRAILING FROM ?) AND TRIM(TRAILING FROM c.tablename) = TRIM(TRAILING FROM ?)";
         } else {
-            qry += "c.databasename=user AND c.tablename=?";
+            // User names are always stored as upper case. For ANSI mode this is significant.
+            qry += "TRIM(TRAILING FROM UPPER(c.databasename)) = USER AND TRIM(TRAILING FROM c.tablename) = TRIM(TRAILING FROM ?)";
         }
         qry += " order by c.columnid ";
         return readIntoParams(qualifiers, qry);
@@ -251,83 +249,46 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     private Map<String, DbParameterAccessor> readIntoParams(
             String[] queryParameters, String query) throws SQLException {
 
-        System.out.println("TeradataEnvironment: readIntoParams: query: "
-                + query);
-        for (int i = 0; i < queryParameters.length; i++) {
-            System.out
-                    .println("TeradataEnvironment: readIntoParams: queryParameters["
-                            + i + "]: " + queryParameters[i]);
-        }
-
         try (CallableStatement dc = currentConnection.prepareCall(query)) {
+
             for (int i = 0; i < queryParameters.length; i++) {
-                System.out
-                        .println("TeradataEnvironment: readIntoParams: Setting value for parameter: "
-                                + i);
-                dc.setString(i + 1, queryParameters[i].toUpperCase());
+                dc.setString(i + 1, queryParameters[i]);
             }
+
             ResultSet rs = dc.executeQuery();
             Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
             int position = 0;
+
             while (rs.next()) {
+
                 String paramName = rs.getString(1);
-                System.out
-                        .println("TeradataEnvironment: readIntoParams: paramName: "
-                                + paramName + ", has length: " + paramName.length());
+
                 if (paramName == null) {
-                    System.out
-                            .println("TeradataEnvironment: readIntoParams: paramName==null");
                     paramName = ""; // Function return values get empty parameter
                                     // names.
                 }
                 if (paramName.equals("")) {
-                    System.out
-                            .println("TeradataEnvironment: readIntoParams: paramName==\"\"");
                     paramName = ""; // Function return values get empty parameter
                                     // names.
                 }
                 String dataType = rs.getString(2);
-                System.out
-                        .println("TeradataEnvironment: readIntoParams: dataType: "
-                                + dataType);
                 String direction = rs.getString(4);
-                System.out
-                        .println("TeradataEnvironment: readIntoParams: direction: "
-                                + direction);
                 Direction paramDirection;
-                System.out
-                        .println("TeradataEnvironment: readIntoParams: +paramName.trim().toUpperCase()+: +"
-                                + paramName.trim().toUpperCase() + "+");
-                if (paramName.trim().toUpperCase().equals("")) {
-                    System.out
-                            .println("TeradataEnvironment: readIntoParams: setting paramDirection to RETURN_VALUE");
+                if (paramName.trim().equals("")) {
                     paramDirection = Direction.RETURN_VALUE;
                 } else {
-                    System.out
-                            .println("TeradataEnvironment: readIntoParams: setting paramDirection to getParameterDirection(direction): "
-                                    + getParameterDirection(direction));
                     paramDirection = getParameterDirection(direction);
                 }
 
-                System.out
-                        .println("TeradataEnvironment: readIntoParams: creating new DbParameterAccessor for paramName: "
-                                + paramName
-                                + ", paramDirection: "
-                                + paramDirection
-                                + ", dataType: " + dataType);
                 int intSqlType = getSqlType(dataType);
                 Class<?> clsJavaClass = getJavaClass(dataType);
                 DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                         paramDirection, intSqlType, clsJavaClass,
                         paramDirection == Direction.RETURN_VALUE ? -1
                                 : position++);
-                // DbParameterAccessor dbp = new DbParameterAccessor(paramName,
-                // paramDirection, getSqlType(dataType), getJavaClass(dataType),
-                // paramDirection == DbParameterAccessor.RETURN_VALUE ? -1 :
-                // position++);
+                // Note that the HashMap key case must match the normalised name access by DbTable.getDbParameterAccessor.
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }
-            System.out.println("TeradataEnvironment: readIntoParams: returning");
             return allParams;
         }
     }
@@ -335,9 +296,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     // List interface has sequential search, so using list instead of array to
     // map types
     private static List<String> stringTypes = Arrays.asList(new String[] {
-            "VARCHAR", "CHAR" });
-    private static List<String> clobTypes = Arrays
-            .asList(new String[] { "CLOB" });
+            "VARCHAR", "CHAR", "CLOB" });
     private static List<String> longTypes = Arrays
             .asList(new String[] { "BIGINT" });
     private static List<String> intTypes = Arrays
@@ -347,31 +306,28 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     private static List<String> shortTypes = Arrays
             .asList(new String[] { "SMALLINT" });
     private static List<String> decimalTypes = Arrays
-            .asList(new String[] { "DECIMAL" });
-    private static List<String> doubleTypes = Arrays.asList(new String[] {
-            "DOUBLE", "FLOAT" });
+            .asList(new String[] { "DECIMAL", "NUMBER" });
+    private static List<String> doubleTypes = Arrays
+            .asList(new String[] { "FLOAT" });
     private static List<String> dateTypes = Arrays
             .asList(new String[] { "DATE" });
     private static List<String> timestampTypes = Arrays
-            .asList(new String[] { "TIMESTAMP" });
+            .asList(new String[] { "TIMESTAMP", "TIMESTAMP WITH TIME ZONE" });
     private static List<String> timeTypes = Arrays
-            .asList(new String[] { "TIME" });
+            .asList(new String[] { "TIME", "TIME WITH TIME ZONE" });
     private static List<String> datePeriodTypes = Arrays
             .asList(new String[] { "PERIOD(DATE)" });
     private static List<String> timePeriodTypes = Arrays
-            .asList(new String[] { "PERIOD(TIME)" });
+            .asList(new String[] { "PERIOD(TIME)", "PERIOD(TIME WITH TIME ZONE)" });
     private static List<String> timestampPeriodTypes = Arrays
             .asList(new String[] { "PERIOD(TIMESTAMP)",
                     "PERIOD(TIMESTAMP WITH TIME ZONE)" });
     private static List<String> binaryTypes = Arrays
-            .asList(new String[] { "BINARY" });
+            .asList(new String[] { "BYTE" });
     private static List<String> varBinaryTypes = Arrays
             .asList(new String[] { "VARBINARY" });
 
     private static String normaliseTypeName(String dataType) {
-
-        System.out.println("TeradataEnvironment: normaliseTypeName: received: "
-                + dataType);
 
         dataType = dataType.toUpperCase().trim();
 
@@ -390,9 +346,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                 dataType = dataType.substring(0, idx);
         }
 
-        System.out
-                .println("TeradataEnvironment: normaliseTypeName: returning: "
-                        + dataType);
         return dataType;
     }
 
@@ -400,22 +353,14 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         // todo:strip everything from first blank
         dataType = normaliseTypeName(dataType);
 
-        System.out
-                .println("TeradataEnvironment: getSqlType: received data type: "
-                        + dataType);
-
         if (stringTypes.contains(dataType))
             return java.sql.Types.VARCHAR;
-        if (clobTypes.contains(dataType))
-            return java.sql.Types.CLOB;
         if (longTypes.contains(dataType))
             return java.sql.Types.BIGINT;
         if (intTypes.contains(dataType))
             return java.sql.Types.INTEGER;
-        // if (byteTypes.contains(dataType) ) return java.sql.Types.TINYINT;
         if (byteTypes.contains(dataType))
             return java.sql.Types.INTEGER;
-        // if (shortTypes.contains(dataType) ) return java.sql.Types.SMALLINT;
         if (shortTypes.contains(dataType))
             return java.sql.Types.INTEGER;
         if (decimalTypes.contains(dataType))
@@ -444,11 +389,8 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                         + " is not supported");
     }
 
+    @Override
     public Class<?> getJavaClass(String dataType) {
-
-        System.out
-                .println("TeradataEnvironment: getJavaClass: received data type: "
-                        + dataType);
 
         dataType = normaliseTypeName(dataType);
 
@@ -457,17 +399,12 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
         if (stringTypes.contains(dataType))
             return String.class;
-        // if (clobTypes.contains(dataType)) return String.class;
-        if (clobTypes.contains(dataType))
-            return java.sql.Clob.class;
         if (longTypes.contains(dataType))
             return Long.class;
         if (intTypes.contains(dataType))
             return Integer.class;
-        // if (byteTypes.contains(dataType)) return Byte.class;
         if (byteTypes.contains(dataType))
             return Integer.class;
-        // if (shortTypes.contains(dataType)) return Short.class;
         if (shortTypes.contains(dataType))
             return Integer.class;
         if (doubleTypes.contains(dataType))
@@ -487,11 +424,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         if (timestampPeriodTypes.contains(dataType))
             return TeradataTimestampPeriod.class;
 
-        // Iterator i = byteTypes.iterator();
-        // while (i.hasNext()) {
-        // System.out.println("TeradataEnvironment: getJavaClass: byteTypes: "+i.next());
-        // }
-
         throw new UnsupportedOperationException(
                 "TeradataEnvironment: getJavaClass: Type " + dataType
                         + " is not supported");
@@ -509,43 +441,4 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                 "TeradataEnvironment: Direction " + direction
                         + " is not supported");
     }
-
-    public String buildInsertCommand(String tableName,
-            DbParameterAccessor[] accessors) {
-        System.out.println("TeradataEnvironment: buildInsertCommand");
-        StringBuilder sb = new StringBuilder("insert into ");
-        sb.append(tableName).append("(");
-        String comma = "";
-        String retComma = "";
-
-        StringBuilder values = new StringBuilder();
-        StringBuilder retNames = new StringBuilder();
-        StringBuilder retValues = new StringBuilder();
-
-        for (DbParameterAccessor accessor : accessors) {
-            if (accessor.hasDirection(Direction.INPUT)) {
-                sb.append(comma);
-                values.append(comma);
-                sb.append(accessor.getName());
-                // values.append(":").append(accessor.getName());
-                values.append("?");
-                comma = ",";
-            } else {
-                retNames.append(retComma);
-                retValues.append(retComma);
-                retNames.append(accessor.getName());
-                // retValues.append(":").append(accessor.getName());
-                retValues.append("?");
-                retComma = ",";
-            }
-        }
-        sb.append(") values (");
-        sb.append(values);
-        sb.append(")");
-        System.out
-                .println("TeradataEnvironment: buildInsertCommand: sb.toString(): "
-                        + sb.toString());
-        return sb.toString();
-    }
 }
-

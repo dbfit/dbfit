@@ -1,0 +1,7 @@
+This table matches only n, so it will report that 4 is a wrong value for 2
+
+|Query|Select rownum AS n, rownum * 2 AS l From (Select Row_Number() Over(Order by calendar_date) AS rownum From sys_calendar.calendar) x Where rownum <= 3|
+|n|l?|
+|1|2|
+|2|fail[7]|
+|3|6|

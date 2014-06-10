@@ -15,11 +15,11 @@ public class TeradataDatePeriod extends DbStruct {
 		try {
 			Object[] a = super.getAttributes();
 
-			for (int i = 0; i <= a.length; i++) {
+			for (int i = 0; i < a.length; i++) {
 				if (i > 0)
 					r = r + ",";
 			
-					r = r + a.toString();
+				r = r + a[i].toString();
 			}
 		}
 		catch (SQLException e){
