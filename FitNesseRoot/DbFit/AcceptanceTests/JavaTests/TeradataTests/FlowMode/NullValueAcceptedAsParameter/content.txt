@@ -1,0 +1,8 @@
+Null value should be accepted as parameter
+
+|Set Parameter|myid|null|
+
+Null handling tests currently disabled {{{
+|Query|Select case when :myid is null then -1 else 0 end as val|
+|val|
+|-1|}}}

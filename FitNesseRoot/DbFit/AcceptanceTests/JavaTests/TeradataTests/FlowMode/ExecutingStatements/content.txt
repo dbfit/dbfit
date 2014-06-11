@@ -1,0 +1,12 @@
+|Execute Ddl|Create table Test_DBFit(name varchar(50), luckyNumber number)|
+
+|Execute|Insert into Test_DBFit values ('Obi Wan',80.9)|
+
+|Execute|Insert into Test_DBFit values ('Darth Maul',10)|
+
+|Query|Select * from Test_DBFit|
+|Name|Lucky Number|
+|Darth Maul|10|
+|Obi Wan|80.9|
+
+|Execute Ddl|Drop table Test_DBFit|

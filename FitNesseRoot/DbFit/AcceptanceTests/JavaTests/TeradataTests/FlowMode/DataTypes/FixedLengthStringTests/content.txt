@@ -1,0 +1,21 @@
+!3 use fixed string length parsing to test blank-padded chars
+
+|Execute Ddl|Create table datatypetest(s1 char(10))|
+
+|Set option|fixed length string parsing|true|
+
+|Insert|datatypetest|
+|s1|
+|testch|
+
+direct comparison will fail
+
+|Query|Select * from datatypetest|
+|s1?|
+|fail[testch]|
+
+use single quotes to pad to appropriate length
+
+|Query|Select * from datatypetest|
+|s1?|
+|'testch    '|

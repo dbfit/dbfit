@@ -1,0 +1,32 @@
+!3 Use ''Execute Procedure With Exception'' to check if a stored proc will throw an exception
+
+|Execute Ddl|!-Replace Procedure TestProc1(in name varchar(100), out strlength number)
+begin
+    declare my_exception_condition condition for sqlstate '22012';
+    -- SQLSTATE 22012 maps to Teradata error number 2618.
+    declare x integer;
+    if (name = 'xx')
+    then
+        signal my_exception_condition;
+    end if;
+    set strlength = characters(name);
+end;-!|
+
+Output parameters will just be ignored in case of an exception
+
+!|Execute Procedure Expect Exception|TestProc1|
+|name|str length?|
+|xx|4|
+
+Execute procedure will still work ok if it does not throw an error
+
+!|Execute Procedure|TestProc1|
+|name|str length?|
+|mika|4|
+|paradajz|8|
+
+!3 Use an explicit error code with ''Execute Procedure Expect Exception'' to for an explicit error code
+
+!|Execute Procedure Expect Exception |TestProc1|2618|
+|name|str length?|
+|xx|4|
