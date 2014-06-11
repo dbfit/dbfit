@@ -1,5 +1,5 @@
 rootProject.name = 'dbfit'
-include ':dbfit-java', ':dbfit-java:core', ':dbfit-java:mysql', ':dbfit-java:oracle', ':dbfit-java:derby', ':dbfit-java:db2', ':dbfit-java:postgres', ':dbfit-java:hsqldb', ':dbfit-java:sqlserver', ':dbfit-java:teradata'
+include ':dbfit-java', ':dbfit-java:core', ':dbfit-java:mysql', ':dbfit-java:oracle', ':dbfit-java:derby', ':dbfit-java:db2', ':dbfit-java:postgres', ':dbfit-java:hsqldb', ':dbfit-java:sqlserver', ':dbfit-java:sybase', ':dbfit-java:teradata'
 
 project(':dbfit-java').projectDir = "$rootDir/dbfit-java" as File
 
@@ -11,4 +11,5 @@ project(':dbfit-java:db2').projectDir = "$rootDir/dbfit-java/db2" as File
 project(':dbfit-java:postgres').projectDir = "$rootDir/dbfit-java/postgres" as File
 project(':dbfit-java:hsqldb').projectDir = "$rootDir/dbfit-java/hsqldb" as File
 project(':dbfit-java:sqlserver').projectDir = "$rootDir/dbfit-java/sqlserver" as File
+project(':dbfit-java:sybase').projectDir = "$rootDir/dbfit-java/sybase" as File
 project(':dbfit-java:teradata').projectDir = "$rootDir/dbfit-java/teradata" as File

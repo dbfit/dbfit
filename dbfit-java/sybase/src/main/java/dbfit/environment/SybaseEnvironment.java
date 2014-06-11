@@ -15,7 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -23,7 +23,7 @@ import java.util.Properties;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
-@DatabaseEnvironment(name="Sybase", driver="com.sybase.jdbc3.jdbc.SybDriver")
+@DatabaseEnvironment(name="Sybase", driver="net.sourceforge.jtds.jdbc.Driver")
 public class SybaseEnvironment extends AbstractDbEnvironment {
 
     public SybaseEnvironment(String driverClassName) {
@@ -39,7 +39,7 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
 
     @Override
     protected String getConnectionString(String dataSource) {
-        return "jdbc:sybase:Tds:" + dataSource;
+        return "jdbc:jtds:sybase://" + dataSource;
     }
 
     @Override
@@ -52,6 +52,15 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
         // Add sendTimeAsDatetime=false option to enforce sending Time as
         // java.sql.Time (otherwise some precision is lost in conversions)
         super.connect(connectionString + ";sendTimeAsDatetime=false", info);
+    	/*SybDriver sybDriver = null;
+    	
+    	try{
+    		sybDriver = (SybDriver)Class.forName("com.sybase.jdbc2.jdbc.SybDriver").newInstance();
+    		currentConnection = DriverManager.getConnection(connectionString, info.getProperty("user"),info.getProperty("password"));
+    	}catch(Exception E){
+    		E.printStackTrace();
+    		}*/
+    		
     }
 
     private static String paramNamePattern = "@([A-Za-z0-9_]+)";

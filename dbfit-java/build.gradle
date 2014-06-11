@@ -161,6 +161,15 @@ project('sqlserver') {
     }
 }
 
+project('sybase') {
+    description = 'DBFit Sybase engine'
+
+    dependencies {
+        compile group: 'net.sourceforge.jtds', name: 'jtds', version: '1.2.2'
+        compile project(':dbfit-java:core')
+    }
+}
+
 project('teradata') {
     description = 'DBFit Teradata engine'
 

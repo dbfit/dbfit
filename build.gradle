@@ -1,11 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-ext.dbfitVersion = '3.0.1'
+ext.dbfitVersion = '3.0.2'
 
-task cleanFitnesseroot(type:Exec) {
-    executable onWindows() ? 'cmd.exe' : '/bin/sh'
-    args onWindows() ? '/C' : '-c', 'git clean -d -x -f FitNesseRoot/'
-}
 
 task cleanDist << {
     delete 'dist'
@@ -13,7 +9,7 @@ task cleanDist << {
     delete 'docs'
 }
 
-task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAll', ':dbfit-java:libs']) << {
+task copyLocal(dependsOn: [ cleanDist, ':dbfit-java:assembleAll', ':dbfit-java:libs']) << {
     copy {
         from 'LICENSE', 'README.md'
         into 'dist'
