@@ -57,7 +57,19 @@ public class Update extends fit.Fixture {
             if (i > 0) {
                 s.append(" and ");
             }
-            s.append(selectAccessors[i].getName()).append("=").append("?");
+            // Extra complexity for null selector check ...
+            //
+            // Can't directly compare to null with '=', hence need 'is null' check.
+            //
+            // Use of cast is required for (at least) Postgres, as otherwise it can't infer
+            // the type from a null bind variable value.
+            //
+            // Choice of varchar(255) as opposed to something smaller handles a possible
+            // problem with Oracle whereby conversion of dates/times and numeric values
+            // could result in a "Value from cast operand is larger than cast target size" error.
+            //
+            s.append("(").append(selectAccessors[i].getName()).append("=").append("?")
+                .append(" or (").append(selectAccessors[i].getName()).append(" is null and cast(? as varchar(255)) is null))");
         }
 
         StatementExecution cs =
@@ -68,7 +80,8 @@ public class Update extends fit.Fixture {
         }
 
         for (int j = 0; j < selectAccessors.length; j++) {
-            selectAccessors[j].bindTo(cs, j + updateAccessors.length + 1);
+            // selection parameters need to be bound at two positions
+            selectAccessors[j].bindTo(cs, (j * 2) + updateAccessors.length + 1, (j * 2) + updateAccessors.length + 2);
         }
         return cs;
     }

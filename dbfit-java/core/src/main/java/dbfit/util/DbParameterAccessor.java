@@ -9,7 +9,7 @@ import static dbfit.util.Direction.*;
 
 public class DbParameterAccessor {
 
-    private int index; //index in effective sql statement (not necessarily the same as position below)
+    private int[] indices; //indices in effective sql statement (not necessarily the same as position below)
     private Direction direction;
     private String name;
     private int sqlType;
@@ -60,25 +60,35 @@ public class DbParameterAccessor {
     }
 
     /*******************************************/
-    public void bindTo(StatementExecution cs, int ind) throws SQLException{
-        this.cs=cs;
-        this.index=ind;    
+    public void bindTo(StatementExecution cs, int ind) throws SQLException {
+        this.cs = cs;
+        this.indices = new int[] {ind};    
         if (direction != INPUT){
             cs.registerOutParameter(ind, getSqlType());
         }
     }
 
+    public void bindTo(StatementExecution cs, int... inds) throws SQLException {
+        this.cs = cs;
+        this.indices = inds;
+        if (direction != INPUT) {
+            throw new IllegalArgumentException("bindTo with multiple indices can only be used with input parameters");
+        }
+    }
+ 
     public void set(Object value) throws Exception {
         if (direction == OUTPUT|| direction == RETURN_VALUE)
             throw new UnsupportedOperationException("Trying to set value of output parameter "+name);
-        cs.setObject(index, value);
+        for (int index : indices) {
+            cs.setObject(index, value);
+        }
     }    
 
     public Object get() throws IllegalAccessException, InvocationTargetException {
         try{
             if (direction.equals(INPUT))
                 throw new UnsupportedOperationException("Trying to get value of input parameter "+name);            
-            return normaliseValue(cs.getObject(index));
+            return normaliseValue(cs.getObject(indices[0]));
         }
         catch (SQLException sqle){
             throw new InvocationTargetException(sqle);
