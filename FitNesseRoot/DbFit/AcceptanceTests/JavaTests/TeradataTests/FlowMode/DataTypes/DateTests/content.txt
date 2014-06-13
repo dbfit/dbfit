@@ -18,7 +18,6 @@ Following types map to Date/Time: "TIMESTAMP" ,"DATE", "TIME".
 
 |Execute Ddl|Delete from datatypetest|
 
-NULL handling tests currently disabled {{{
 |Insert|datatypetest|
 |d1|ts1|t1|
 |null|null|null|
@@ -26,4 +25,3 @@ NULL handling tests currently disabled {{{
 |Query|Select * from datatypetest|
 |d1|ts1|t1|
 |null|null|null|
-}}}
