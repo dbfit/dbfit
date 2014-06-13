@@ -122,15 +122,40 @@ For manual setup instructions see [DB2 file](DB2.md).
 
 An IntelliJ project can be created by running:
 
- 1. `dbfit-java$ ./gradlew idea`
+ 1. `$ ./gradlew idea`
 
  2. set gradle.java.home=<gradle jdk path> in $IDEA_HOME/bin/idea.properties    
 
 ##### Eclipse
 
-An Eclipse project can be created by running:
+An Eclipse project can be created using gradle.
 
-    dbfit-java$ ./gradlew eclipse
+1. On the host or guest (depending upon from where you'll run Eclipse) run:
+
+    `$ .\gradlew eclipse`   (Windows)
+    `$ ./gradlew eclipse`   (Linux)
+
+    (Note that this also populates the gradle cache with the project dependencies)
+
+2. From Eclipse:
+
+    `File` -> `Import` -> `General` -> `Existing Projects into workspace`
+
+3. Select the Java code root directory. E.g:
+
+    `C:\dbfit\dbfit-java`  (Windows)
+
+    `/dbfit/dbfit-java`    (Linux)
+
+4. Check the `Search for nested projects` box.
+
+5. Uncheck `dbfit-java` (parent) project from the search results.
+
+6. Click `Finish`.
+
+7. Ensure all of the DbFit projects are set to use the correct JDK compliance settings by right-clicking on each project
+
+    `Properties` -> `Java Compiler`
 
 #### Building
 
