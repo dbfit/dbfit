@@ -13,9 +13,7 @@ public class SymbolAccessQueryBinding extends Binding.QueryBinding {
                 dbfit.util.SymbolUtil.setSymbol(content.text(), actual);
                 cell.addToBody(Fixture.gray("= " + String.valueOf(actual)));
                 // fixture.ignore(cell);
-                return;
-            }
-            if (content.isSymbolGetter()) {
+            } else if (content.isSymbolGetter()) {
                 Object actual = this.adapter.get();
                 Object expected = this.adapter.parse(content.text());
                 cell.addToBody(Fixture.gray("= " + String.valueOf(expected)));
@@ -25,10 +23,7 @@ public class SymbolAccessQueryBinding extends Binding.QueryBinding {
                 } else {
                     fixture.wrong(cell, String.valueOf(actual));
                 }
-
-                return;
-            }
-            if (content.isExpectingInequality()) {
+            } else if (content.isExpectingInequality()) {
                 //expect failing comparison
                 Object actual = this.adapter.get();
                 String expectedVal = content.getExpectedFailureValue();
@@ -39,15 +34,12 @@ public class SymbolAccessQueryBinding extends Binding.QueryBinding {
                 } else {
                     fixture.right(cell);
                 }
-
-                return;
+            } else {
+                super.doCell(fixture, cell);
             }
         } catch (Throwable t) {
             fixture.exception(cell, t);
-            return;
         }
-
-        super.doCell(fixture, cell);
     }
 
     static class ContentOfTableCell {
