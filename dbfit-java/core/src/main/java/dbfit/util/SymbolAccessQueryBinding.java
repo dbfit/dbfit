@@ -19,10 +19,13 @@ public class SymbolAccessQueryBinding extends Binding.QueryBinding {
                 Object actual = this.adapter.get();
                 Object expected = this.adapter.parse(content.text());
                 cell.addToBody(Fixture.gray("= " + String.valueOf(expected)));
-                if (adapter.equals(actual, expected))
+
+                if (adapter.equals(actual, expected)) {
                     fixture.right(cell);
-                else
+                } else {
                     fixture.wrong(cell, String.valueOf(actual));
+                }
+
                 return;
             }
             if (content.isExpectingInequality()) {
@@ -30,10 +33,13 @@ public class SymbolAccessQueryBinding extends Binding.QueryBinding {
                 Object actual = this.adapter.get();
                 String expectedVal = content.getExpectedFailureValue();
                 cell.addToBody(Fixture.gray("= " + String.valueOf(actual)));
-                if (adapter.equals(actual, adapter.parse(expectedVal)))
+
+                if (adapter.equals(actual, adapter.parse(expectedVal))) {
                     fixture.wrong(cell);
-                else
+                } else {
                     fixture.right(cell);
+                }
+
                 return;
             }
         } catch (Throwable t) {
