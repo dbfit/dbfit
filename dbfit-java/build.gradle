@@ -139,6 +139,15 @@ project('mysql') {
     }
 }
 
+project('informix') {
+    description = 'DBFit Informix engine'
+
+    dependencies {
+        compile project(':dbfit-java:core')
+    }
+}
+
+
 project('postgres') {
     description = 'DBFit PostGreSQL engine'
 
