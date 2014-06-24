@@ -159,6 +159,14 @@ project('hsqldb') {
     }
 }
 
+project('informix') {
+    description = 'DBFit Informix engine'
+
+    dependencies {
+        compile project(':dbfit-java:core')
+    }
+}
+
 def publicOracleCompileDeps = [
     'commons-io:commons-io:2.4'
 ]
@@ -353,5 +361,5 @@ uploadArchives {
                 }
             }
         }
-     }
+    }
 }
