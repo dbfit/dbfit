@@ -164,6 +164,7 @@ project('informix') {
 
     dependencies {
         compile project(':dbfit-java:core')
+        compile 'com.informix.jdbc:ifxjdbc:3.70@jar'
     }
 }
 
