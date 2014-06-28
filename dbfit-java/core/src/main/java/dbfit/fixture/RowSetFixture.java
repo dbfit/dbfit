@@ -29,14 +29,17 @@ public abstract class RowSetFixture extends ColumnFixture {
             this.key = key;
         }
 
+        @Override
         public void set(Object value) throws Exception {
             throw new UnsupportedOperationException("changing values in row sets is not supported");
         }
 
+        @Override
         public Object get() {
             return currentRow.get(key);
         }
 
+        @Override
         public Object invoke() throws IllegalAccessException {
             return get();
         }
@@ -60,6 +63,7 @@ public abstract class RowSetFixture extends ColumnFixture {
         throw new Exception("Unknown column " + normalisedName);
     }
 
+    @Override
     protected void bind(Parse heads) {
         try {
             columnBindings = new Binding[heads.size()];
@@ -82,18 +86,19 @@ public abstract class RowSetFixture extends ColumnFixture {
         }
     }
 
+    @Override
     public void doRows(Parse rows) {
         try {
             dt = getDataTable();
             super.doRows(rows);
             addSurplusRows(rows.last());
-        }
-        catch (SQLException sqle){
+        } catch (SQLException sqle) {
             sqle.printStackTrace();
             exception(rows, sqle);
         }
     }
 
+    @Override
     public void doRow(Parse row) {
         try {
             if (isOrdered()) {
@@ -103,8 +108,7 @@ public abstract class RowSetFixture extends ColumnFixture {
             }
             super.doRow(row);
             dt.markProcessed(currentRow);
-        }
-        catch (NoMatchingRowFoundException e) {
+        } catch (NoMatchingRowFoundException e) {
             row.parts.addToBody(Fixture.gray(" missing"));
             wrong(row);
         }
@@ -118,8 +122,7 @@ public abstract class RowSetFixture extends ColumnFixture {
                 try {
                     Object value = columnBindings[i].adapter.parse(columns.text());
                     keyMap.put(keyColumns[i], value);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     exception(columns, e);
                 }
             }
@@ -147,8 +150,7 @@ public abstract class RowSetFixture extends ColumnFixture {
                     firstCell.more = nextCell;
                     firstCell = nextCell;
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 exception(newRow, e);
             }
         }
