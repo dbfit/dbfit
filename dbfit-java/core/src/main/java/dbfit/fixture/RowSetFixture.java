@@ -29,14 +29,17 @@ public abstract class RowSetFixture extends ColumnFixture {
             this.key = key;
         }
 
+        @Override
         public void set(Object value) throws Exception {
             throw new UnsupportedOperationException("changing values in row sets is not supported");
         }
 
+        @Override
         public Object get() {
             return currentRow.get(key);
         }
 
+        @Override
         public Object invoke() throws IllegalAccessException {
             return get();
         }
@@ -60,6 +63,7 @@ public abstract class RowSetFixture extends ColumnFixture {
         throw new Exception("Unknown column " + normalisedName);
     }
 
+    @Override
     protected void bind(Parse heads) {
         try {
             columnBindings = new Binding[heads.size()];
@@ -82,6 +86,7 @@ public abstract class RowSetFixture extends ColumnFixture {
         }
     }
 
+    @Override
     public void doRows(Parse rows) {
         try {
             dt = getDataTable();
@@ -94,6 +99,7 @@ public abstract class RowSetFixture extends ColumnFixture {
         }
     }
 
+    @Override
     public void doRow(Parse row) {
         try {
             if (isOrdered()) {
