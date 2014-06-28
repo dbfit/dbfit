@@ -92,8 +92,7 @@ public abstract class RowSetFixture extends ColumnFixture {
             dt = getDataTable();
             super.doRows(rows);
             addSurplusRows(rows.last());
-        }
-        catch (SQLException sqle){
+        } catch (SQLException sqle) {
             sqle.printStackTrace();
             exception(rows, sqle);
         }
@@ -109,8 +108,7 @@ public abstract class RowSetFixture extends ColumnFixture {
             }
             super.doRow(row);
             dt.markProcessed(currentRow);
-        }
-        catch (NoMatchingRowFoundException e) {
+        } catch (NoMatchingRowFoundException e) {
             row.parts.addToBody(Fixture.gray(" missing"));
             wrong(row);
         }
@@ -124,8 +122,7 @@ public abstract class RowSetFixture extends ColumnFixture {
                 try {
                     Object value = columnBindings[i].adapter.parse(columns.text());
                     keyMap.put(keyColumns[i], value);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     exception(columns, e);
                 }
             }
@@ -153,8 +150,7 @@ public abstract class RowSetFixture extends ColumnFixture {
                     firstCell.more = nextCell;
                     firstCell = nextCell;
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 exception(newRow, e);
             }
         }
