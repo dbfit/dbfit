@@ -42,13 +42,14 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
      * Intended to be overriden for post-connect activities
      */
     protected void afterConnectionEstablished() throws SQLException {
-        // empty stub
+          if(currentConnection.getAutoCommit()){
+              currentConnection.setAutoCommit(false);
+          }
     }
 
     public void connect(String connectionString, Properties info) throws SQLException {
         registerDriver();
         currentConnection = DriverManager.getConnection(connectionString, info);
-        currentConnection.setAutoCommit(false);
         afterConnectionEstablished();
     }
 
@@ -139,7 +140,9 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
 
     public void rollback() throws SQLException {
         checkConnectionValid(currentConnection);
-        currentConnection.rollback();
+        if(currentConnection.getAutoCommit()){
+            currentConnection.rollback();
+        }
     }
 
     /*****/
