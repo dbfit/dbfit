@@ -5,6 +5,7 @@ import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
+import dbfit.util.TypeNormaliserFactory;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -18,83 +19,19 @@ import static dbfit.util.Direction.*;
  */
 @DatabaseEnvironment(name="Informix", driver="com.informix.jdbc.IfxDriver")
 public class InformixEnvironment extends AbstractDbEnvironment  {
-    private boolean driverRegistered = false;
-    private static String Role;
 
-    // IfxSqliConnect ifxSqliConnection;
-    Savepoint savepoint;
+   private static  String connectionString;
 
-
-    public InformixEnvironment(String driverClassName) {
-
+    public  InformixEnvironment(String driverClassName) {
         super(driverClassName);
-        System.out.println("driverClassName"+driverClassName);
-
+//        TypeNormaliserFactory.setNormaliser( com.informix.jdbc.IfxDateTime.class,
+//                new OracleTimestampNormaliser());
+        TypeNormaliserFactory.setNormaliser( com.informix.jdbc.IfxDate.class,
+                new InformixDateNormalizer());
+//        TypeNormaliserFactory.setNormaliser(java.sql.Date.class,
+//                new SqlDateNormaliser());
     }
 
-
-
-    @Override
-    public void connect(String connectionString, Properties info) throws SQLException {
-        registerDriver();
-        currentConnection = DriverManager.getConnection(connectionString, info);
-        if(connectionString.contains("sentryprod")){
-            currentConnection.setAutoCommit(true);
-            Role="dontdo";
-        }else{
-            currentConnection.setAutoCommit(false);
-        }
-
-
-        System.out.println(" currentConnection.setAutoCommit(true);");
-
-        afterConnectionEstablished();
-    }
-
-    @Override
-    public void commit() throws SQLException {
-        //Savepoint savepoint=currentConnection.setSavepoint("Test");
-        //StatementExecution.Savepoint savepoints= (StatementExecution.Savepoint) currentConnection.setSavepoint("Test");
-        //currentConnection.releaseSavepoint((Savepoint) savepoint);
-        //currentConnection.setTransactionIsolation(2);
-        currentConnection.commit();
-
-        //StatementExecution.Savepoint  sss;
-        // new StatementExecution.Savepoint((Connection) ifxSqliConnection.setSavepoint("test"));
-
-        //currentConnection.setAutoCommit(false);
-
-
-    }
-    // StatementExecution. Savepoint()
-    @Override
-    public void rollback() throws SQLException {
-       System.out.println("Rolling back");
-
-        if(Role.equals("dontdo")){
-            System.out.println("DontDo");
-            currentConnection.setAutoCommit(true);
-        }else {
-            currentConnection.rollback();
-            currentConnection.setAutoCommit(false);
-        }   }
-
-
-
-
-
-    private void registerDriver() throws SQLException {
-        String driverName = getDriverClassName();
-        try {
-            if (driverRegistered)
-                return;
-            DriverManager.registerDriver((Driver) Class.forName(driverName)
-                    .newInstance());
-            driverRegistered = true;
-        } catch (Exception e) {
-            throw new Error("Cannot register SQL driver " + driverName);
-        }
-    }
 
     protected String parseCommandText(String commandText) {
         commandText = commandText.replaceAll(paramNamePattern, "?");
@@ -109,12 +46,12 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
     }
 
     protected String getConnectionString(String dataSource) {
-        System.out.println("getConnection="+dataSource);
+      //  System.out.println("getConnection="+dataSource);
         return "jdbc:informix-sqli://" + dataSource;
     }
 
     protected String getConnectionString(String dataSource, String database) {
-        System.out.println("getConnection=" + dataSource + "/" + database);
+       // System.out.println("getConnection=" + dataSource + "/" + database);
         return "jdbc:informix-sqli://" + dataSource + "/" + database;
     }
 
@@ -122,15 +59,6 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
             throws SQLException {
         String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
                 .split("\\.");
-      /* String qry = "SELECT first 10 * from sentrycf.scprofil where ";
-
-        if (qualifiers.length == 2) {
-            qry += " lower(tabschema)=? and lower(tabname)=? ";
-        } else {
-            qry += " (lower(tabname)=?)";
-        }
-        qry += " order by colname"; */
-
         String qry = "  select sc.colname as column_name,'VARCHAR' as data_type ,'P' as direction from systables st,syscolumns sc,sysdefaults sd  where st.tabid=sc.tabid and sc.colno=sd.colno and ";
         if (qualifiers.length == 2) {
             qry += " lower(st.owner)=? and lower(st.tabname)=? ";
@@ -143,14 +71,13 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
 
     private Map<String, DbParameterAccessor> readIntoParams(
             String[] queryParameters, String query) throws SQLException {
-        // currentConnection.setAutoCommit(false);
-        System.out.println("query="+query);
+// System.out.println("query="+query);
         PreparedStatement dc = currentConnection.prepareStatement(query);
         try {
             for (int i = 0; i < queryParameters.length; i++) {
                 dc.setString(i + 1,
                         NameNormaliser.normaliseName(queryParameters[i]));
-                System.out.println("parametersare ="+queryParameters[i]);
+ //System.out.println("parametersare ="+queryParameters[i]);
             }
 
             ResultSet rs = dc.executeQuery();
@@ -199,7 +126,7 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
     private static List<String> stringTypes = Arrays.asList(new String[] {
             "VARCHAR","VARCHAR2","LVARCHAR", "CHAR", "CHARACTER", "GRAPHIC", "VARGRAPHIC" });
     private static List<String> intTypes = Arrays.asList(new String[] {
-            "SMALLINT", "INT", "INTEGER" });
+            "SMALLINT", "INT", "INTEGER","SERIAL" });
     private static List<String> longTypes = Arrays
             .asList(new String[] { "BIGINT" });
     private static List<String> floatTypes = Arrays
@@ -209,9 +136,9 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
     private static List<String> decimalTypes = Arrays.asList(new String[] {
             "DECIMAL", "DEC", "DECFLOAT", "NUMERIC" });
     private static List<String> dateTypes = Arrays
-            .asList(new String[] { "DATE" });
+            .asList(new String[] { "DATE","DATETIME YEAR TO DAY" });
     private static List<String> timestampTypes = Arrays
-            .asList(new String[] { "TIMESTAMP" ,"DATETIME YEAR TO FRACTION(5)"});
+            .asList(new String[] { "TIMESTAMP" ,"DATETIME YEAR TO FRACTION(5)","DATETIME YEAR TO SECOND"});
 
     private static String NormaliseTypeName(String dataType) {
         dataType = dataType.toUpperCase().trim();
@@ -268,20 +195,23 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
             String procName) throws SQLException {
         String[] qualifiers = NameNormaliser.normaliseName(procName).split(
                 "\\.");
-        String qry = "  select procname as column_name,owner as data_type ,numargs as direction from sysprocedures where";
+       // String qry = " select spi.paramname as column_name,'VARCHAR' as data_type,spi.direction as direction from sysprocedures sp ,storedprocinfo333 spi where sp.procname=spi.procname and ";
+        String qry ="select spc.paramname as column_name,'VARCHAR' as data_type,'P' as directionfrom  from sysprocedures sp,sysproccolumns spc where sp.procid=spc.procid and";
         if (qualifiers.length == 2) {
-            qry += " lower(owner)=? and lower(procname)=? ";
+            qry += " lower(sp.owner)=? and lower(sp.procname)=? ";
         } else {
-            qry += " (lower(procname)=?)";
+            qry += " (lower(sp.procname)=?)";
         }
-        qry += " order by owner";
-        System.out.println("Excecuting procedure");
+        qry += " order by sp.owner";
+      /*  System.out.println("Excecuting procedure");
         for (int i = 0; i < qualifiers.length; i++) {
 
             System.out.println("proc parametersare ="+qualifiers[i]);
-        }
+        } */
 
         return readIntoParams(qualifiers, qry);
     }
+
+    
 }
 
