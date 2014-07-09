@@ -18,7 +18,7 @@ allprojects {
         configFile = new File(parent.projectDir, "config/checkstyle/checkstyle.xml")
     }
 
-    tasks.withType(Compile) {
+    tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked"
         options.compilerArgs << "-Xlint:deprecation"
     }
