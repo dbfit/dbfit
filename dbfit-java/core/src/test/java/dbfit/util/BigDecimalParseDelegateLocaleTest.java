@@ -13,7 +13,7 @@ public class BigDecimalParseDelegateLocaleTest {
     public void aDecimalOfLocaleFormatIsParsed() {
         DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.getDefault());
         BigDecimalNormaliser bdn = new BigDecimalNormaliser();
-        BigDecimal bd1 = (BigDecimal) bdn.normalise(new BigDecimal(111.111));
+        BigDecimal bd1 = (BigDecimal) bdn.normalise(new BigDecimal("111.111"));
         BigDecimal bd2 = (BigDecimal) bdn.normalise(BigDecimalParseDelegate.parse("111" + dfs.getDecimalSeparator() + "111"));
         assertEquals(bd1, bd2);
     }
