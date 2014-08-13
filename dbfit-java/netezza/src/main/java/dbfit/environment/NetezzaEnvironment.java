@@ -53,15 +53,14 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
             throws SQLException {
         String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
                 .split("\\.");
-        String qry = " select column_name, data_type, character_maximum_length "
-                + "	as direction from information_schema.columns where ";
+        String qry = " select ATTNAME, FORMAT_TYPE, ATTLEN from _v_relation_column where ";
 
         if (qualifiers.length == 2) {
-            qry += " lower(table_schema)=? and lower(table_name)=? ";
+            qry += " lower(owner)=? and lower(name)=? ";
         } else {
-            qry += " (table_schema=CURRENT_SCHEMA and lower(table_name)=?)";
+            qry += " (lower(name)=?)";
         }
-        qry += " order by ordinal_position";
+        qry += " order by attnum";
         return readIntoParams(qualifiers, qry);
     }
 
@@ -93,7 +92,7 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
     // List interface has sequential search, so using list instead of array to
     // map types
     private static List<String> stringTypes = Arrays.asList(new String[] {
-            "VARCHAR", "CHAR", "CHARACTER", "CHARACTER VARYING", "VARYING", "TEXT",
+            "VARCHAR", "CHAR", "CHARACTER", "CHARACTER VARYING", "CHARACTER VARYIN", "VARYING", "TEXT",
             "NAME", "XML", "BPCHAR", "UNKNOWN", "NVCHAR" ,"NCHAR", "NATIONAL CHARACTER VARYING", "NATIONAL CHARACTER"});
     private static List<String> intTypes = Arrays.asList(new String[] {
             "SMALLINT", "INT", "INT4", "INT2", "INTEGER", "SERIAL" });
@@ -120,9 +119,6 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
            dataType = dataType.toUpperCase().trim();
         else
            dataType = dataType.toUpperCase().trim().substring(0,dataType.indexOf("("));
- 
-        // PSM remove any brackets and their contents from the end of the datatype
-        //        String blaat = dataType.substring(0,dataType.indexOf("(")-1);
         return dataType;
     }
 
@@ -218,6 +214,7 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
                 throw new SQLException("Unknown procedure " + procName);
             }
             type = rs.getString(1);
+
             paramList = rs.getString(2);
             returns = rs.getString(3);
             rs.close();
@@ -230,48 +227,32 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
         String token;
         Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
 
+        if (paramList.length()!=0) {
         for (String param : paramList.split(",")) {
+
             StringTokenizer s = new StringTokenizer(param.trim().toLowerCase(),
                     " ()");
 
             token = s.nextToken();
+            paramName = "$" + (position + 1);
 
-            if (token.equals("in")) {
-                token = s.nextToken();
-            } else if (token.equals("inout")) {
-                direction = Direction.INPUT_OUTPUT;
-                token = s.nextToken();
-            } else if (token.equals("out")) {
-                direction = Direction.OUTPUT;
-                token = s.nextToken();
-            }
-
-            if (s.hasMoreTokens()) {
-                paramName = token;
-                dataType = s.nextToken();
-            } else {
-                paramName = "$" + (position + 1);
-                dataType = token;
-            }
+            dataType = normaliseTypeName(param);
 
             DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                     direction, getSqlType(dataType), getJavaClass(dataType),
                     position++);
             allParams.put(NameNormaliser.normaliseName(paramName), dbp);
         }
-
-        if ("FUNCTION".equals(type)) {
-            StringTokenizer s = new StringTokenizer(returns.trim()
-                    .toLowerCase(), " ()");
-            dataType = s.nextToken();
-
-            if (!dataType.equals("void")) {
-                allParams.put("", new DbParameterAccessor("",
-                        Direction.RETURN_VALUE, getSqlType(dataType),
-                        getJavaClass(dataType), -1));
-            }
         }
 
+        StringTokenizer s = new StringTokenizer(returns.trim().toLowerCase(), " ()");
+        dataType = s.nextToken();
+
+        if (!dataType.equals("void")) {
+            allParams.put("", new DbParameterAccessor("",
+                    Direction.RETURN_VALUE, getSqlType(dataType),
+                    getJavaClass(dataType), -1));
+        }
         return allParams;
     }
 
