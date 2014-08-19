@@ -1,0 +1,73 @@
+!3 Update table handles the update command - specify fields to be updated with = on the end.
+
+|Execute|Delete from users|
+
+|Insert|users|
+|name|username|userid|
+|arthur dent|adent|1|
+|ford prefect|fpref|2|
+|zaphod beeblebrox|zaphod|3|
+
+|Update|users|
+|username=|name|
+|adent2|arthur dent|
+
+|Query|Select * from users|
+|name|username|
+|arthur dent|adent2|
+|ford prefect|fpref|
+|zaphod beeblebrox|zaphod|
+
+!3 same column can be used in the selection and update part
+
+|Update|users|
+|username=|username|
+|adent3|adent2|
+
+|Query|Select * from users|
+|name|username|
+|arthur dent|adent3|
+|ford prefect|fpref|
+|zaphod beeblebrox|zaphod|
+
+!3 symbols work with update part
+
+|Query|Select * from users|
+|name|username|userid?|
+|arthur dent|adent3|>>ad|
+|ford prefect|fpref|>>fp|
+|zaphod beeblebrox|zaphod|>>z|
+
+|Update|users|
+|username=|userid|
+|adent4|<<ad|
+
+|Query|Select * from users|
+|name|username|
+|arthur dent|adent4|
+|ford prefect|fpref|
+|zaphod beeblebrox|zaphod|
+
+!3 multiple columns on the update side
+
+|Update|users|
+|name=|username=|userid|
+|ford prefect|fpref2|<<ad|
+
+|Query|Select * from users|
+|name|username|
+|ford prefect|fpref2|
+|ford prefect|fpref|
+|zaphod beeblebrox|zaphod|
+
+!3 multiple columns on the select side
+
+|Update|users|
+|name=|username=|name|userid|
+|john travolta|jtrav|ford prefect|<<ad|
+
+|Query|Select * from users|
+|name|username|
+|john travolta|jtrav|
+|ford prefect|fpref|
+|zaphod beeblebrox|zaphod|

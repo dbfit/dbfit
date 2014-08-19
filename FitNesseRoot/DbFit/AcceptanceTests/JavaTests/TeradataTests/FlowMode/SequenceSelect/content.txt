@@ -1,0 +1,9 @@
+!3 Query Results do not have to be in the same order as table data
+
+|Query|Select n*5 AS n From (Select Row_Number() Over(Order by calendar_date) AS n From sys_calendar.calendar Qualify n <= 5) x Order by n|
+|n|
+|25|
+|5|
+|10|
+|15|
+|20|

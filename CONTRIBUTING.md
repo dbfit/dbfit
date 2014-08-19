@@ -54,6 +54,7 @@ The fully-built VM includes:
 The VM doesn't include:
  *  a working Oracle installation (however there is a shell script to help with the installation described below)
  *  a working SQL Server installation (obviously)
+ *  a working Teradata installation (this can be created separately as a VMWare or EC2 installation)
 
 ### Setting up the test VM
 
@@ -121,15 +122,40 @@ For manual setup instructions see [DB2 file](DB2.md).
 
 An IntelliJ project can be created by running:
 
- 1. `dbfit-java$ ./gradlew idea`
+ 1. `$ ./gradlew idea`
 
  2. set gradle.java.home=<gradle jdk path> in $IDEA_HOME/bin/idea.properties    
 
 ##### Eclipse
 
-An Eclipse project can be created by running:
+An Eclipse project can be created using gradle.
 
-    dbfit-java$ ./gradlew eclipse
+1. On the host or guest (depending upon from where you'll run Eclipse) run:
+
+    `$ .\gradlew eclipse`   (Windows)
+    `$ ./gradlew eclipse`   (Linux)
+
+    (Note that this also populates the gradle cache with the project dependencies)
+
+2. From Eclipse:
+
+    `File` -> `Import` -> `General` -> `Existing Projects into workspace`
+
+3. Select the Java code root directory. E.g:
+
+    `C:\dbfit\dbfit-java`  (Windows)
+
+    `/dbfit/dbfit-java`    (Linux)
+
+4. Check the `Search for nested projects` box.
+
+5. Uncheck `dbfit-java` (parent) project from the search results.
+
+6. Click `Finish`.
+
+7. Ensure all of the DbFit projects are set to use the correct JDK compliance settings by right-clicking on each project
+
+    `Properties` -> `Java Compiler`
 
 #### Building
 
@@ -160,6 +186,11 @@ This will compile the source, copy the jars and resources to the `dist` director
 
 Please be aware that if you change any code whilst the `/.gradlew start` command is running you will have to stop the command and re-run it in order to compile and pick up the changes.  To stop the running instance it is preferable to point your browser to [http://localhost:8085/?shutdown](http://localhost:8085/?shutdown) rather than killing it at the command line, i.e. don't do a Ctrl+C or equivalent (again adjust `localhost` to match the host on which the instance is actually running).
 
+
+*  By default the uncommitted acceptance tests are being purged when preparing the new content of `dist` directory. In order to keep them, `keepTests` project property may be used
+
+        dbfit$ ./gradlew starthere -PkeepTests
+
 #### Using custom libraries
 
 If you need to use libraries which are not available on the public artifact repositories (e.g. proprietary JDBC drivers) - you may place them in `custom_libs` directory. This folder is configured as [flat directory repository](http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:flat_dir_resolver) in Gradle - the typical naming format of JARs inside is `<main_name>-<version>.jar`.
@@ -181,8 +212,12 @@ If you need to use libraries which are not available on the public artifact repo
 
  *  Logging in as the `db2inst1` superuser for `db2`:
 
-		sudo su - db2inst1
+        sudo su - db2inst1
         db2
+
+### Installing Teradata Express Edition
+
+For manual setup instructions see [TERADATA file](TERADATA.md).
 
 ### Adding a new database adapter
 

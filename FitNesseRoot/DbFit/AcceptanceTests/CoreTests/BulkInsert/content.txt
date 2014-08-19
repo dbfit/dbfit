@@ -1,4 +1,4 @@
-|Execute|Create table Test_DBFit(name varchar(50), luckyNumber int)|
+|Execute Ddl|Create table Test_DBFit(name varchar(50), luckyNumber int)|
 
 |Insert|Test_DBFit|
 |name|luckyNumber|
@@ -13,4 +13,4 @@
 |nnn|3|
 
 
-|Execute|Drop table Test_DBFit|
+|Execute Ddl|Drop table Test_DBFit|

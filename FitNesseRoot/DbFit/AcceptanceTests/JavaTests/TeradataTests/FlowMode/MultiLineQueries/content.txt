@@ -1,0 +1,11 @@
+!3 Enclose multi-line queries into !- !- -! and !- -! -! to prevent table breaks
+
+newlines are replaced with blanks - so don't use them in string values. edit page source to see that query is multi-line
+
+|Ordered Query|!-Select n From (
+  Select Row_Number() Over(Order by calendar_date) as n From sys_calendar.calendar Qualify n <= 3
+) x -!|
+|n|
+|1|
+|2|
+|3|

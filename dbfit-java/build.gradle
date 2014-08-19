@@ -18,7 +18,7 @@ allprojects {
         configFile = new File(parent.projectDir, "config/checkstyle/checkstyle.xml")
     }
 
-    tasks.withType(Compile) {
+    tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked"
         options.compilerArgs << "-Xlint:deprecation"
     }
@@ -166,6 +166,8 @@ project('teradata') {
 
     dependencies {
         compile project(':dbfit-java:core')
+        runtime 'com.teradata:terajdbc4:15.0.0.15@jar'
+        runtime 'com.teradata:tdgssconfig:15.0.0.15@jar'
     }
 }
 

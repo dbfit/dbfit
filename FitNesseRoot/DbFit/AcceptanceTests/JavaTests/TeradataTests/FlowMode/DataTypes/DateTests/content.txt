@@ -1,0 +1,27 @@
+!3 Dates
+
+Following types map to Date/Time: "TIMESTAMP" ,"DATE", "TIME".
+
+|Execute Ddl|Create table datatypetest (d1 date, ts1 timestamp, t1 time)|
+
+|Query|Select current_date as d, current_timestamp as ts, current_time as t|
+|d?|ts?|t?|
+|>>d1|>>ts1|>>t1|
+
+|Insert|datatypetest|
+|d1|ts1|t1|
+|<<d1|<<ts1|<<t1|
+
+|Query|Select * from datatypetest|
+|d1?|ts1?|t1?|
+|fail[null]|fail[null]|fail[null]|
+
+|Execute Ddl|Delete from datatypetest|
+
+|Insert|datatypetest|
+|d1|ts1|t1|
+|null|null|null|
+
+|Query|Select * from datatypetest|
+|d1|ts1|t1|
+|null|null|null|

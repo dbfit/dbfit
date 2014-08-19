@@ -1,0 +1,19 @@
+!3 Strings
+
+Following types map to string: "VARCHAR", "CHAR", "CLOB"
+
+|Execute Ddl|Create table datatypetest (s1 varchar(20), s4 char(4), s6 clob)|
+
+|Insert|datatypetest|
+|s1|s4|s6|
+|VARCHAR|CHAR|CLOB|
+
+Null handling tests currently disabled {{{
+|null|null|null|}}}
+
+|Query|Select * from datatypetest|
+|s1|s4?|s6?|
+|VARCHAR|CHAR|CLOB|
+
+Null handling tests currently disabled {{{
+|null|null|null|}}}

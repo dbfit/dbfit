@@ -1,0 +1,4 @@
+!|dbfit.TeradataTest|
+
+|Connect using file|../dbfit-java/teradata/src/test/resources/testdbconnection.properties|
+

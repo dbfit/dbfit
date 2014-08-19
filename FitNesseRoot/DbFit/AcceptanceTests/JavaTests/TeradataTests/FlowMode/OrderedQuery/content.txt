@@ -1,0 +1,15 @@
+This will fail because the order is wrong
+
+|Ordered Query|Select n From (Select Row_Number() Over(Order by calendar_date) AS n From sys_calendar.calendar) x Where n <= 3|
+|n|
+|fail[2]|
+|fail[1]|
+|3|
+
+This will pass because the order is correct
+
+|Ordered Query|Select n From (Select Row_Number() Over(Order by calendar_date) AS n From sys_calendar.calendar) x Where n <= 3|
+|n|
+|1|
+|2|
+|3|

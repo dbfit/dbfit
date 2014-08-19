@@ -42,13 +42,12 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
      * Intended to be overriden for post-connect activities
      */
     protected void afterConnectionEstablished() throws SQLException {
-        // empty stub
+        currentConnection.setAutoCommit(false);
     }
 
     public void connect(String connectionString, Properties info) throws SQLException {
         registerDriver();
         currentConnection = DriverManager.getConnection(connectionString, info);
-        currentConnection.setAutoCommit(false);
         afterConnectionEstablished();
     }
 
@@ -116,6 +115,12 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
             }
         }
         return cs;
+    }
+
+    @Override
+    public DdlStatementExecution createDdlStatementExecution(String ddl)
+            throws SQLException {
+        return new DdlStatementExecution(getConnection().createStatement(), ddl);
     }
 
     public void closeConnection() throws SQLException {

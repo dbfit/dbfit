@@ -1,0 +1,19 @@
+!3 Numbers
+
+All numbers map to decimal, except float which maps to float
+
+|Execute Ddl|Create table datatypetest (n2 decimal(10), n3 decimal(5,2), f float, n4 decimal(13), n5 number, n6 number(5), n7 number(5,3))|
+
+|Insert|datatypetest|
+|n2|n3|f|n4|n5|n6|n7|
+|11|10.88|13.1|113|123.45|45678|56.789|
+|null|null|null|null|null|null|null|
+
+|Query|Select * from datatypetest|
+|n2|n3?|f?|n4?|n5?|n6?|n7|
+|11|10.88|13.1|113|123.45|45678|56.789|
+|null|null|null|null|null|null|null|
+
+|Ordered Query|Select * from datatypetest where n3=10.88|
+|n2|n3|f|n4|n5|n6|n7|
+|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|
