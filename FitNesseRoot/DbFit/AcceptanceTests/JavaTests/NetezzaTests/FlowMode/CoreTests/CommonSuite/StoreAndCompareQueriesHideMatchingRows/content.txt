@@ -1,0 +1,27 @@
+!|Execute Ddl|create table TESTTBL (N int, TWON int)|
+
+!|Execute Ddl|create table TESTTBLA (N int, TWON int)|
+
+!|Insert|TESTTBL|
+|N      |TWON   |
+|1      |2      |
+|2      |4      |
+|3      |6      |
+
+!|Insert|TESTTBLA|
+|N      |TWON    |
+|1      |2       |
+|2      |4       |
+|3      |6       |
+
+!|Store Query|select * from TESTTBL|q1|
+
+!|Store Query|select * from TESTTBLA|q2|
+
+# Should appear no rows since both queries match all rows.
+!|Compare Stored Queries Hide Matching Rows|q1|q2|
+|TWON                   |N?                      |
+
+!|Execute Ddl|drop table TESTTBL|
+
+!|Execute Ddl|drop table TESTTBLA|

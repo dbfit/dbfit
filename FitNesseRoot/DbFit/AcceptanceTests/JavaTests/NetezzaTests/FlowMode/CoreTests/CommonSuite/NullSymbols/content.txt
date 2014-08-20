@@ -1,0 +1,23 @@
+!|Execute Ddl|create table testtbl(id int, val int)|
+
+!|Insert|testtbl|
+|id     |val    |
+|1      |null   |
+
+#Assigning
+!|Query|select val from testtbl|
+|val?                          |
+|>>NullVal                     |
+
+#Comparing
+!|Query|select val from testtbl|
+|val?                          |
+|<<NullVal                     |
+
+!4 Undefined variable defaults to NULL
+!|Query|select val from testtbl|
+|val?                          |
+|<<UndefinedVariable           |
+
+# Tear Down
+!|Execute Ddl|drop table testtbl|

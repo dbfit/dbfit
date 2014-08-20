@@ -234,15 +234,6 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
             allParams.put(NameNormaliser.normaliseName(paramName), dbp);
         }
         }
-
-        StringTokenizer s = new StringTokenizer(returns.trim().toLowerCase(), " ()");
-        dataType = s.nextToken();
-
-        if (!dataType.equals("void")) {
-            allParams.put("", new DbParameterAccessor("",
-                    Direction.RETURN_VALUE, getSqlType(dataType),
-                    getJavaClass(dataType), -1));
-        }
         return allParams;
     }
 

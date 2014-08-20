@@ -1,0 +1,40 @@
+!include -c <CleanSuite.CreateTables
+
+|Execute Ddl|Create table Test_DBFit3(name varchar(50), luckyNumber int)|
+
+|Insert|Test_DBFit |
+|name  |luckyNumber|
+|pera  |1          |
+|nuja  |2          |
+|nnn   |3          |
+
+|Insert|Test_DBFit2|
+|name  |luckyNumber|
+|pera2 |11         |
+|nuja2 |22         |
+|nnn2  |33         |
+
+!3 test cleaning using the clean? attribute
+|Clean             |
+|table      |clean?|
+|Test_DBFit |true  |
+|Test_DBFit2|true  |
+
+!3 test cleaning without the clean? attribute
+|Clean      |
+|table      |
+|Test_DBFit3|
+
+|Query|Select * from Test_DBFit|
+|name |lucky Number            |
+
+|Query|Select * from Test_DBFit2|
+|name |lucky Number             |
+
+|Query|Select * from Test_DBFit3|
+|name |lucky Number             |
+
+
+!include -c <CleanSuite.DropTables
+
+|Execute Ddl|Drop table Test_DBFit3|

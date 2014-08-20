@@ -1,0 +1,28 @@
+!include -c <CleanSuite.CreateTables
+
+|Insert|Test_DBFit|
+|name|luckyNumber|
+|pera|1|
+|nuja|2|
+|nnn|3|
+
+|Insert|Test_DBFit2|
+|name|luckyNumber|
+|pera2|11|
+|nuja2|22|
+|nnn2|33|
+
+|Clean|
+|table|where|clean?|
+|Test_DBFit|luckyNumber>1|true|
+|Test_DBFit2|luckyNumber<33|true|
+
+|Query|Select * from Test_DBFit|
+|name|lucky Number|
+|pera|1|
+
+|Query|Select * from Test_DBFit2|
+|name|lucky Number|
+|nnn2|33|
+
+!include -c <CleanSuite.DropTables

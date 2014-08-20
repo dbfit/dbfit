@@ -1,0 +1,15 @@
+!|execute|CREATE TABLE NETEZZATEST(BLAAT INTEGER) DISTRIBUTE ON (BLAAT);|
+
+!|insert|NETEZZATEST|
+|BLAAT|
+|3|
+|4|
+
+!|query|select * from NETEZZATEST|
+|blaat|
+|3|
+|4|
+
+!|Inspect Table|NETEZZATEST|
+
+!|execute|DROP TABLE NETEZZATEST;|

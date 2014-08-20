@@ -1,0 +1,53 @@
+!|Execute Ddl|create table TESTTBL (N int, TWON int)|
+
+!|Execute Ddl|create table TESTTBLA (N int, TWON int)|
+
+!|Insert|TESTTBL|
+|N      |TWON   |
+|1      |2      |
+|2      |4      |
+|3      |6      |
+|99     |null   |
+|null   |9      |
+
+!|Insert|TESTTBLA|
+|N      |TWON    |
+|1      |2       |
+|2      |4       |
+|3      |6       |
+|99     |null    |
+|null   |9       |
+
+!|Store Query|select * from TESTTBL|q1|
+
+!|Store Query|select * from TESTTBLA|q2|
+
+!|Store Query|select * from TESTTBL|q3|
+
+!|Query|<<q1 |
+|N     |TWON?|
+|1     |2    |
+|2     |4    |
+|3     |6    |
+|99    |null |
+|null  |9    |
+
+# Reuse same stored query to verify that there are no side effects
+!|Query|<<q1 |
+|N     |TWON?|
+|1     |2    |
+|2     |4    |
+|3     |6    |
+|99    |null |
+|null  |9    |
+
+!|Compare Stored Queries|q1|q2|
+|TWON                   |N?   |
+
+# Reuse same stored query to verify that there are no side effects
+!|Compare Stored Queries|q1|q3|
+|TWON                   |N?   |
+
+!|Execute Ddl|drop table TESTTBL|
+
+!|Execute Ddl|drop table TESTTBLA|
