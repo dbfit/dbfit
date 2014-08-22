@@ -246,28 +246,11 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
             allParams.put(NameNormaliser.normaliseName(paramName), dbp);
         }
         }
-        /*
-        StringTokenizer s = new StringTokenizer(returns.trim().toLowerCase(), " ()");
-        dataType = s.nextToken();
-
-        if (!dataType.equals("void")) {
-            allParams.put("", new DbParameterAccessor("",
-                    Direction.RETURN_VALUE, getSqlType(dataType),
-                    getJavaClass(dataType), -1));
-        }
-        */
         return allParams;
     }
 
     public String buildInsertCommand(String tableName,
             DbParameterAccessor[] accessors) {
-        /*
-         * oracle jdbc interface with callablestatement has problems with
-         * returning into...
-         * http://forums.oracle.com/forums/thread.jspa?threadID
-         * =438204&tstart=0&messageID=1702717 so begin/end block has to be built
-         * around it
-         */
         StringBuilder sb = new StringBuilder("insert into ");
         sb.append(tableName).append("(");
         String comma = "";
