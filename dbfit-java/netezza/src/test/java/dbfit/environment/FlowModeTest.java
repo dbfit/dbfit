@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import static fitnesse.junit.FitNesseSuite.*;
 
 @RunWith(FitNesseSuite.class)
-@Name("DbFit.AcceptanceTests.JavaTests.PostgresTests.FlowMode")
+@Name("DbFit.AcceptanceTests.JavaTests.NetezzaTests.FlowMode")
 @FitnesseDir("../..")
 @OutputDir("../../tmp")
 public class FlowModeTest {

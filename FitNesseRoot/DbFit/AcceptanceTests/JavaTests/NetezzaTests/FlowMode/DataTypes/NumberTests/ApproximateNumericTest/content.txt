@@ -1,0 +1,30 @@
+!3 Exact Numeric Data Types
+
+|Execute|create table approximatenumerictest (fp1 FLOAT(6), fp2 FLOAT(15), fp3 REAL,fp4 DOUBLE PRECISION);|
+
+
+|Insert|approximatenumerictest|
+|fp1|fp2|fp3|fp4|
+|1|2.2|3.3|4.444444|
+
+|Ordered Query|select * from approximatenumerictest|
+|fp1|fp2|fp3|fp4|
+|1|2.2|3.3|4.444444|
+
+!3 should accept fail[null]
+
+|Ordered Query|select * from approximatenumerictest|
+|fp1|fp2|fp3|fp4|
+|fail[null]|fail[null]|fail[null]|fail[null]|
+
+|execute|delete from approximatenumerictest|
+
+|Insert|approximatenumerictest|
+|fp1|fp2|fp3|fp4|
+|null|null|null|null|
+
+|Ordered Query|select * from approximatenumerictest|
+|fp1|fp2|fp3|fp4|
+|null|null|null|null|
+
+|Execute|drop table approximatenumerictest|

@@ -1,0 +1,30 @@
+!3 Exact Numeric Data Types
+
+|Execute|create table exactnumerictest (n1 INT1, n2 BYTEINT, n3 INT2, n4 SMALLINT, n5 INTEGER,n6 INT,n7 INT4, n8 INT8,n9 BIGINT);|
+Ordered Query 	select * from exactnumerictest
+
+|Insert|exactnumerictest|
+|n1|n2|n3|n4|n5|n6|n7|n8|n9|
+|1|2|3|4|5|6|77|88|99|
+
+|Ordered Query|select * from exactnumerictest|
+|n1|n2|n3|n4|n5|n6|n7|n8|n9|
+|1|2|3|4|5|6|77|88|99|
+
+!3 should accept fail[null]
+
+|Ordered Query|select * from exactnumerictest|
+|n1|n2|n3|n4|n5|n6|n7|n8|n9|
+|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|
+
+|execute|delete from exactnumerictest|
+
+|Insert|exactnumerictest|
+|n1|n2|n3|n4|n5|n6|n7|n8|n9|
+|null|null|null|null|null|null|null|null|null|
+
+|Ordered Query|select * from exactnumerictest|
+|n1|n2|n3|n4|n5|n6|n7|n8|n9|
+|null|null|null|null|null|null|null|null|null|
+
+|Execute|drop table exactnumerictest|

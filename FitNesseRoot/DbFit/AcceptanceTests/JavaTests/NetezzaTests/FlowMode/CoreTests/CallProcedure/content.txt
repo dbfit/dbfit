@@ -2,14 +2,29 @@
 RETURNS INTEGER
 LANGUAGE NZPLSQL AS
 BEGIN_PROC
-DECLARE
-test1 ALIAS FOR $1;
-test2 ALIAS FOR $2;
-BEGIN
-RETURN test1;
-END;
+ DECLARE 
+   test1 ALIAS FOR $1; 
+   test2 ALIAS FOR $2; 
+ BEGIN 
+ EXECUTE IMMEDIATE 'INSERT INTO PROCEDURETEST VALUES ('||test1||','''||test2||''')';
+ RETURN test1; END; 
 END_PROC;-!|
+
+!|execute|CREATE TABLE PROCEDURETEST(ID INTEGER,DESCRR VARCHAR(10)) DISTRIBUTE ON (ID);|
 
 !|query|select SP_PROCEDURE(22,'TESTJE')|
 |SP_PROCEDURE|
 |22|
+
+!|Inspect Procedure|sp_procedure|
+
+!|Execute Procedure|sp_procedure|
+|$1|$2|
+|23|TESJE|
+
+!|query|select * from PROCEDURETEST|
+|ID|DESCRR|
+|22|TESTJE|
+|23|TESJE|
+
+!|execute|DROP TABLE PROCEDURETEST|

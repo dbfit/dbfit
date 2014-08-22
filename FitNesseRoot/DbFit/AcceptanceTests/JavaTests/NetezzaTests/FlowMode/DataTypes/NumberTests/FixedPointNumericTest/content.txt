@@ -1,0 +1,30 @@
+!3 Exact Numeric Data Types
+
+|Execute|create table fixedpointnumerictest (fp1 NUMERIC, fp2 NUMERIC(4), fp3 NUMERIC(4,1),fp4 DECIMAL, fp5 DECIMAL(4), fp6 DECIMAL(4,1));|
+
+
+|Insert|fixedpointnumerictest|
+|fp1|fp2|fp3|fp4|fp5|fp6|
+|1|2.2|3.3|4|5.24|6.6|
+
+|Ordered Query|select * from fixedpointnumerictest|
+|fp1|fp2|fp3|fp4|fp5|fp6|
+|1|2|3.3|4|5|6.6|
+
+!3 should accept fail[null]
+
+|Ordered Query|select * from fixedpointnumerictest|
+|fp1|fp2|fp3|fp4|fp5|fp6|
+|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|
+
+|execute|delete from fixedpointnumerictest|
+
+|Insert|fixedpointnumerictest|
+|fp1|fp2|fp3|fp4|fp5|fp6|
+|null|null|null|null|null|null|
+
+|Ordered Query|select * from fixedpointnumerictest|
+|fp1|fp2|fp3|fp4|fp5|fp6|
+|null|null|null|null|null|null|
+
+|Execute|drop table fixedpointnumerictest|

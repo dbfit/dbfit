@@ -95,7 +95,11 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
             "VARCHAR", "CHAR", "CHARACTER", "CHARACTER VARYING", "VARYING", "TEXT",
             "NAME", "XML", "BPCHAR", "UNKNOWN", "NVCHAR" ,"NCHAR", "NATIONAL CHARACTER VARYING", "NATIONAL CHARACTER"});
     private static List<String> intTypes = Arrays.asList(new String[] {
-            "SMALLINT", "INT", "INT4", "INT2", "INTEGER", "SERIAL" });
+            "INT", "INT4", "INTEGER", "SERIAL" });
+    private static List<String> tinyintTypes = Arrays.asList(new String[] {
+            "BYTEINT","INT1"});
+    private static List<String> smallintTypes = Arrays.asList(new String[] {
+            "SMALLINT", "INT2"});
     private static List<String> longTypes = Arrays.asList(new String[] {
             "BIGINT", "BIGSERIAL", "INT8" });
     private static List<String> floatTypes = Arrays.asList(new String[] {
@@ -132,6 +136,10 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
             return java.sql.Types.NUMERIC;
         if (intTypes.contains(dataType))
             return java.sql.Types.INTEGER;
+        if (tinyintTypes.contains(dataType))
+            return java.sql.Types.TINYINT;
+        if (smallintTypes.contains(dataType))
+            return java.sql.Types.SMALLINT;
         if (floatTypes.contains(dataType))
             return java.sql.Types.FLOAT;
         if (doubleTypes.contains(dataType))
@@ -158,6 +166,10 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
             return BigDecimal.class;
         if (intTypes.contains(dataType))
             return Integer.class;
+        if (tinyintTypes.contains(dataType))
+            return Byte.class;
+        if (smallintTypes.contains(dataType))
+            return Short.class;
         if (floatTypes.contains(dataType))
             return Float.class;
         if (dateTypes.contains(dataType))
@@ -234,7 +246,7 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
             allParams.put(NameNormaliser.normaliseName(paramName), dbp);
         }
         }
-
+        /*
         StringTokenizer s = new StringTokenizer(returns.trim().toLowerCase(), " ()");
         dataType = s.nextToken();
 
@@ -243,6 +255,7 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
                     Direction.RETURN_VALUE, getSqlType(dataType),
                     getJavaClass(dataType), -1));
         }
+        */
         return allParams;
     }
 
