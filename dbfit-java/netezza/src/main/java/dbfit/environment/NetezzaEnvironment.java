@@ -42,7 +42,7 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
                 buildInsertCommand(tableName, accessors));
     }
 
-    // postgres jdbc driver does not support named parameters - so just map them
+    // netezza jdbc driver does not support named parameters - so just map them
     // to standard jdbc question marks
     protected String parseCommandText(String commandText) {
         commandText = commandText.replaceAll(paramNamePattern, "?");
@@ -76,8 +76,9 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
             int position = 0;
             while (rs.next()) {
                 String paramName = rs.getString(1);
-                if (paramName == null)
+                if (paramName == null) {
                     paramName = "";
+                }
                 String dataType = rs.getString(2);
                 DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                         Direction.INPUT, getSqlType(dataType),
@@ -119,10 +120,11 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
             "BOOL", "BOOLEAN" });
 
     private static String normaliseTypeName(String dataType) {
-        if (dataType.indexOf("(")<=0) 
+        if (dataType.indexOf("(") <= 0) {
            dataType = dataType.toUpperCase().trim();
-        else
+        } else {
            dataType = dataType.toUpperCase().trim().substring(0,dataType.indexOf("("));
+        }
         return dataType;
     }
 

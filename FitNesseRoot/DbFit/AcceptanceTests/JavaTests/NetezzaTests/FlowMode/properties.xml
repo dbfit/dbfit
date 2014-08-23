@@ -9,6 +9,9 @@
 	<Search>true</Search>
 	<Suite/>
 	<Suites></Suites>
+	<SymbolicLinks>
+		<CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
+	</SymbolicLinks>
 	<Versions>true</Versions>
 	<WhereUsed>true</WhereUsed>
 </properties>
