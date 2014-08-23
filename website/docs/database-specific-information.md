@@ -182,3 +182,23 @@ There are two ways around this:
 * Using raw JDBC url (note that a default database, a logon authentication source and a transaction mode can all be specified with this method)
 
 `!|Connect|jdbc:teradata://myhost/user=myuser,password=mypassword,database=mydbname,tmode=TERA,logmech=td2|`
+
+----
+
+## Netezza
+
+### Deploying the JDBC Driver
+
+1. [Download the Netezza JDBC driver from their site](https://www14.software.ibm.com/webapp/iwm/web/reg/pick.do?source=swg-im-ibmndn&lang=en_US) *(It is not open source and cannot be distributed with DbFit.)*
+2. Deploy `nzjdbc.jar` in DbFit's `lib` folder - the same folder as dbfit-XXX.jar.
+
+### Connection string to a Netezza database
+
+* Check DbFit reference documentation: [ConnectUsingFile](/dbfit/docs/reference.html#connect-using-file) and [Connect](/dbfit/docs/reference.html#connect).
+* URL format is	jdbc:netezza://<HOST>:<PORT>/<DATABASE_NAME>
+
+#### Examples
+
+* Using Netezza Emulator default IP address and port, user name, password and test database
+
+`!|Connect|192.168.85.128:5480|admin|password|NETEZZATEST|`
