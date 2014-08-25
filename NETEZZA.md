@@ -30,8 +30,10 @@ It consists of 2 VMware images which theoretically could be run on any WMware en
 
 3. Create the database NETEZZATEST using either the Administrator GUI or nzsql 
 
-4. Rename the nzjdbc.jar to nzjdbc-7.1.jar and put it in the custom libs
+4. Run 001_add_objects_needed_for_acceptance_test.sql to create the objects needed for the coretests
 
-5. Build dbfit excluding tests (gradlew clean check install -x test)
+5. Rename the nzjdbc.jar to nzjdbc-7.1.jar and put it in the custom libs
 
-6. Start FitNesse from gradlew and run the Netezza acceptance tests from a browser.
+6. Build dbfit excluding tests (gradlew clean check install -x test)
+
+7. Run the tests ./gradlew :dbfit-java:netezza:test

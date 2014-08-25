@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<properties>
+	<Edit/>
+	<Files/>
+	<LastModified>20080301172638</LastModified>
+	<Properties/>
+	<RecentChanges/>
+	<Refactor/>
+	<Search/>
+	<Suite/>
+	<Suites>null</Suites>
+	<SymbolicLinks>
+		<OrderedQuery>.DbFit.AcceptanceTests.JavaTests.MySqlTests.FlowMode.OrderedQuery</OrderedQuery>
+		<CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
+	</SymbolicLinks>
+	<Versions/>
+	<WhereUsed/>
+	<saveId>1186735591564</saveId>
+	<ticketId>-8989150350196239075</ticketId>
+</properties>

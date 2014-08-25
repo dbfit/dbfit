@@ -115,7 +115,7 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
             "TIMESTAMP", "TIMESTAMP WITHOUT TIME ZONE",
             "TIMESTAMP WITH TIME ZONE", "TIMESTAMPTZ" });
     private static List<String> refCursorTypes = Arrays
-        .asList(new String[] { "REFCURSOR" });
+        .asList(new String[] { "REFTABLE" });
     private static List<String> booleanTypes = Arrays.asList(new String[] {
             "BOOL", "BOOLEAN" });
 
@@ -195,8 +195,7 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
 
         String[] qualifiers = NameNormaliser.normaliseName(procName).split(
                 "\\.");
-
-        String qry = "select 'FUNCTION' as type,btrim(btrim(arguments,'('),')') as param_list,returns from _v_procedure where 1=1";
+        String qry = "select btrim(btrim(arguments,'('),')') as param_list from _v_procedure where 1=1";
         if (qualifiers.length == 3) {
             qry += " and lower(database)=? and lower(schema)=? and lower(procedure)=? ";
         } else if (qualifiers.length == 2) {
@@ -205,9 +204,7 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
             qry += " and lower(procedure)=? ";
         }
 
-        String type;
         String paramList;
-        String returns;
 
         try (PreparedStatement dc = currentConnection.prepareStatement(qry)) {
             for (int i = 0; i < qualifiers.length; i++) {
@@ -217,10 +214,7 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
             if (!rs.next()) {
                 throw new SQLException("Unknown procedure " + procName);
             }
-            type = rs.getString(1);
-
-            paramList = rs.getString(2);
-            returns = rs.getString(3);
+            paramList = rs.getString(1);
             rs.close();
         }
 
@@ -231,22 +225,22 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
         String token;
         Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
 
-        if (paramList.length()!=0) {
-        for (String param : paramList.split(",")) {
+        if (paramList.length() != 0) {
+            for (String param : paramList.split(",")) {
 
-            StringTokenizer s = new StringTokenizer(param.trim().toLowerCase(),
-                    " ()");
+                StringTokenizer s = new StringTokenizer(param.trim().toLowerCase(),
+                        " ()");
 
-            token = s.nextToken();
-            paramName = "$" + (position + 1);
+                token = s.nextToken();
+                paramName = "$" + (position + 1);
 
-            dataType = normaliseTypeName(param);
+                dataType = normaliseTypeName(param);
 
-            DbParameterAccessor dbp = new DbParameterAccessor(paramName,
-                    direction, getSqlType(dataType), getJavaClass(dataType),
-                    position++);
-            allParams.put(NameNormaliser.normaliseName(paramName), dbp);
-        }
+                DbParameterAccessor dbp = new DbParameterAccessor(paramName,
+                        direction, getSqlType(dataType), getJavaClass(dataType),
+                        position++);
+                allParams.put(NameNormaliser.normaliseName(paramName), dbp);
+            }
         }
         return allParams;
     }
