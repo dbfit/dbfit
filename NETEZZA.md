@@ -1,10 +1,10 @@
 #### Installing and testing with Netezza emulator
 
 The Netezza emulator is only available for windows installation. 
-It consists of 2 VMware images which theoretically could be run on any WMware environment, but this is not tested.
+It consists of 2 VMware images which theoretically could be run on any VMware environment, but this is not tested.
 
 1. Install the Netezza Emulator from IBM Netezza Developer Network
-   * Download [VMWare](https://my.vmware.com/web/vmware/downloads) Player.
+   * Download [VMware](https://my.vmware.com/web/vmware/downloads) Player.
    * Download the [Netezza Emulator](https://www14.software.ibm.com/webapp/iwm/web/reg/pick.do?source=swg-im-ibmndn&lang=en_US)
    * Also download the Netezza Client components from the same location. This contains the JDBC driver and the IBM netezza Administrator GUI
   
