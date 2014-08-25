@@ -1,0 +1,9 @@
+!|DatabaseEnvironment|
+|Rollback|
+
+java fit imports fixture packages into the loader before loading a class. this may cause problems later on because
+standalone fixtures and !-DatabaseTest-! methods may collide. The following class unloads a fixture package, to avoid 
+ambiguities
+   
+!|dbfit.util.ExportFixture|
+|dbfit.fixture|

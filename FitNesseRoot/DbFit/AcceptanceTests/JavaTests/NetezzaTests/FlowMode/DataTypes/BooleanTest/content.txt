@@ -1,0 +1,19 @@
+!3 Bolean
+
+|Execute|Create table datatypetest (b1 boolean,b2 bool)|
+
+|Ordered Query|select TRUE as t, FALSE as f|
+|t  |f  |
+|>>t|>>f|
+
+|insert|datatypetest|
+|b1 |b2|
+|<<t|<<f|
+|<<f|<<t|
+
+|Query|select * from datatypetest|
+|b1 |b2|
+|<<t|<<f|
+|<<f|<<t|
+
+|Execute|Drop table datatypetest|

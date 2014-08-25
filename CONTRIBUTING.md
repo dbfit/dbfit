@@ -219,6 +219,10 @@ If you need to use libraries which are not available on the public artifact repo
 
 For manual setup instructions see [TERADATA file](TERADATA.md).
 
+### Installing and testing with IBM Netezza Emulator 
+
+For manual setup instructions see [NETEZZA file](NETEZZA.md).
+
 ### Adding a new database adapter
 
 Let's say that you wish to implement a DbFit driver for an as-yet-unsupported database, Newdata. Here is a broad outline of the steps that you would need to take:

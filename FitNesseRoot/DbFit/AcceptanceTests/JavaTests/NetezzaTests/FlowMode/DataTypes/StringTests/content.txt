@@ -1,0 +1,31 @@
+!3 Character string data types
+
+Following types map to string: "VARCHAR", "CHAR", "NVARCHAR", "NCHAR"
+|Execute|Create table charactertest (c1 varchar(20), c2 char(4), c3 nvarchar(20),c4 nchar(5),c5 char,c6 nchar)|
+
+|Insert|charactertest|
+|c1|c2|c3|c4|c5|c6|
+|VARCHAR|CHAR|NVARCHAR|NCHAR|X|⳧|
+
+|Ordered Query|Select c1, c2, c3, c4, c5, c6, 'UNKNOWN' as c7 from charactertest|
+|c1?|c2?|c3?|c4?|c5?|c6?|c7?|
+|VARCHAR|CHAR|NVARCHAR|NCHAR|X|⳧|
+
+!3 should accept fail[null]
+charactertest
+|Ordered Query|Select * from charactertest|
+|c1?|c2?|c3?|c4?|c5?|c6?|
+|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|
+
+|execute|delete from charactertest|
+
+|Insert|charactertest|
+|c1|c2|c3|c4|c5|c6|
+|null|null|null|null|null|null|
+
+|Ordered Query|Select * from charactertest|
+|c1?|c2?|c3?|c4?|c5?|c6?|
+|null|null|null|null|null|null|
+
+|execute|drop table charactertest|
+

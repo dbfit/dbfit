@@ -1,0 +1,60 @@
+!3 Dates
+
+Following types map to Date/Time: "TIMESTAMP" ,"DATE", "DATETIME"
+
+|Execute|Create table datatypetest (d1 date, d2 timestamp, d3 timestamp)|
+
+|Ordered Query| select current_date as dat, current_timestamp as ts, current_timestamp as dt|
+|dat|ts|dt|
+|>>dat1|>>ts1|>>dt1|
+
+|insert|datatypetest|
+|d1|d2|d3|
+|<<dat1|<<ts1|<<dt1|
+
+|ordered query|select * from datatypetest|
+|d1?|d2?|d3?|
+|<<dat1|<<ts1|<<dt1|
+
+!3 dates accept literals in standard jdbc date format
+
+|execute|delete from datatypetest|
+
+|insert|datatypetest|
+|d1|d2|d3|
+|2007-01-01|2007-01-02 11:12:22|2007-01-02 11:12:22|
+
+|query|select * from datatypetest|
+|d1?|d2?|d3?|
+|2007-01-01|2007-01-02 11:12:22|2007-01-02 11:12:22|
+
+!3 should accept fail[null]
+|query|select * from datatypetest|
+|d1?|d2?|d3?|
+|fail[null]|fail[null]|fail[null]|
+
+!3 timestamp should also accept short date format
+
+|execute|delete from datatypetest|
+
+|insert|datatypetest|
+|d1|d2|d3|
+|2007-01-01|2007-01-01|2007-01-01|
+
+|query|select * from datatypetest|
+|d1?|d2?|d3?|
+|2007-01-01|2007-01-01|2007-01-01|
+
+!3 dates will accept nulls
+
+|execute|delete from datatypetest|
+
+|insert|datatypetest|
+|d1|d2|d3|
+|null|null|null|
+
+|query|select * from datatypetest|
+|d1?|d3?|d2?|
+|null|null|null|
+
+|Execute|Drop table datatypetest|

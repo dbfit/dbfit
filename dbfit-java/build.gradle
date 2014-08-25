@@ -171,3 +171,12 @@ project('teradata') {
     }
 }
 
+project('netezza') {
+    description = 'DBFit netezza engine'
+
+    dependencies {
+        compile project(':dbfit-java:core')
+        runtime 'org.netezza:nzjdbc:7.1@jar'
+    }
+}
+

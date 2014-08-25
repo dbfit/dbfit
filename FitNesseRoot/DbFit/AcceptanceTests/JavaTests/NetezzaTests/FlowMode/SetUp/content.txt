@@ -1,0 +1,3 @@
+!|dbfit.NetezzaTest|
+
+!|Connect|192.168.85.128:5480|admin|password|NETEZZATEST|
