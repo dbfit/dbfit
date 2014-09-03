@@ -41,3 +41,5 @@ build
 .gradle
 target
 dbfit-complete-*.zip
+dbfit-java/oracle/TestDbConnectionDbFitOracle.properties
+dbfit-java/oracle/TestDbConnectionDbFitOracle.properties.custom
