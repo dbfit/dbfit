@@ -1,5 +1,5 @@
 ext {
-    fitNesseVersion = '20140317'
+    fitNesseVersion = '20140903'
 }
 
 allprojects {
