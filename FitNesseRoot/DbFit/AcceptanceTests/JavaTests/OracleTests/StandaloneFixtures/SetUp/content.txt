@@ -2,4 +2,4 @@
 |dbfit.fixture|
 
 !|DatabaseEnvironment|oracle|
-|connect|localhost:1521|dftest|dftest|xe|
+|ConnectUsingFile|TestDbConnectionDbFitOracle.properties|

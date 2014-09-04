@@ -124,6 +124,20 @@ project('oracle') {
         compile 'dummy:ojdbc6:11.2.0.3.0@jar'
         testCompile "org.mockito:mockito-all:1.9.5"
     }
+
+    test.doFirst {
+        copy {
+            from 'TestDbConnectionDbFitOracle.properties.default'
+            into '.'
+            rename '(.*).default', '$1'
+        }
+
+        copy {
+            from 'TestDbConnectionDbFitOracle.properties.custom'
+            into '.'
+            rename '(.*).custom', '$1'
+        }
+    }
 }
 
 project('mysql') {

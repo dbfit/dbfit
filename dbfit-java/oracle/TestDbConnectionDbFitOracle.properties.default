@@ -1,0 +1,3 @@
+service=localhost:1521/xe
+username=dftest
+password=dftest

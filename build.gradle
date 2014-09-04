@@ -68,6 +68,20 @@ task copyExtraLibs(dependsOn: [copyLocal]) << {
     }
 }
 
+task copyConnections(dependsOn: [copyLocal]) << {
+    copy {
+        from 'dbfit-java/oracle/TestDbConnectionDbFitOracle.properties.default'
+        into 'dist'
+        rename '(.*).default', '$1'
+    }
+
+    copy {
+        from 'dbfit-java/oracle/TestDbConnectionDbFitOracle.properties.custom'
+        into 'dist'
+        rename '(.*).custom', '$1'
+    }
+}
+
 task wikiDocsDir << {
     mkdir('docs/Resources/')
 }
@@ -137,13 +151,13 @@ task bundle(type: Zip, dependsOn: [copyLocal, wikiDocs, bundleFitsharp]) {
     destinationDir new File('zips')
 }
 
-task start(type: Exec, dependsOn: [copyLocal, copyExtraLibs, wikiDocs, bundleFitsharp]) {
+task start(type: Exec, dependsOn: [copyLocal, copyExtraLibs, copyConnections, wikiDocs, bundleFitsharp]) {
     workingDir './dist'
     description = 'starts fitness with dbfit'
     executable onWindows() ? 'startFitnesse.bat' : './startFitnesse.sh'
 }
 
-task starthere(type: Exec, dependsOn: [copyLocal, copyExtraLibs]) {
+task starthere(type: Exec, dependsOn: [copyLocal, copyExtraLibs, copyConnections]) {
     workingDir './dist'
     description = 'starts fitness with dbfit on top of real tests sources'
     executable onWindows() ? 'startFitnesse.bat' : './startFitnesse.sh'
