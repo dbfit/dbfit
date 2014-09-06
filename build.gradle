@@ -1,6 +1,6 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-ext.dbfitVersion = '3.0.1'
+ext.dbfitVersion = '3.0.2'
 
 task cleanFitnesseroot(type:Exec) {
     def gitArgs = ['clean', '-d', '-x', '-f', 'FitNesseRoot/']
