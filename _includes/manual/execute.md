@@ -6,7 +6,7 @@
 
     !3 to execute statements, use the 'execute' command
 
-    |Execute|Create table Test_DBFit(name varchar(50), luckyNumber int)|
+    |Execute Ddl|Create table Test_DBFit(name varchar(50), luckyNumber int)|
 
     |Execute|Insert into Test_DBFit values ('Obi Wan',80)|
      
@@ -19,5 +19,5 @@
     |Darth Maul|10|
     |Obi Wan|80|
 
-    |Execute|Drop table Test_DBFit|
+    |Execute Ddl|Drop table Test_DBFit|
 
