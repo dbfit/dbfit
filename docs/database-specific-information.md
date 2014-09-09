@@ -8,6 +8,7 @@ show_comments: true
 *   [DB2](#db2)
 *   [MS SQL Server](#microsoft-sql-server)
 *   [Teradata](#teradata)
+*   [Netezza](#netezza)
 
 ---
 
