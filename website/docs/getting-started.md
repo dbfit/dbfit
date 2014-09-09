@@ -103,6 +103,7 @@ Here's a comprehensive list of available types:
 | DB2                       | DB2Test             |
 | DB2i                      | DB2iTest            |
 | Teradata                  | TeradataTest        |
+| Netezza                   | NetezzaTest         |
 {: class="table table-bordered"}
 
 <div class="alert alert-info alert-block">
