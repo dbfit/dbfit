@@ -105,6 +105,7 @@ There are two ways around this:
 
 1. [Download MS SQL Server JDBC driver from their site](http://www.microsoft.com/en-us/download/details.aspx?id=11774) *(It is not open source and cannot be distributed with DbFit.)*
 2. Deploy `sqljdbc4.jar` in DbFit's `lib` folder - the same folder as dbfit-XXX.jar.
+3. Deploy auth\x86\sqljdbc_auth.dll in `%programfiles(x86)%\Java\jre7\bin` folder to allow `integrated windows authentication`
 
 ### Network and firewall settings
 
