@@ -3,10 +3,9 @@ package dbfit.util;
 public class OracleDbParameterAccessor extends DbParameterAccessor {
     private String originalTypeName;
 
-    public OracleDbParameterAccessor(String name, Direction direction, int sqlType,
-            Class javaType, int position,
+    public OracleDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position,
             String originalTypeName) {
-        super(name, direction, sqlType, javaType, position);
+        super(name, direction, sqlType, originalTypeName, javaType, position);
         setOriginalTypeName(originalTypeName);
     }
 

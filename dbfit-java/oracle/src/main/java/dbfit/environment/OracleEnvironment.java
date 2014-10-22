@@ -124,6 +124,11 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             info.dataType = rs.getString(2);
             info.direction = rs.getString(4);
             info.position = position;
+
+            String objectType = rs.getString(6);
+            if(objectType != null) {
+                info.dataType = info.dataType + " " + objectType;
+            }
         }
     }
 
@@ -160,15 +165,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         }
 
         private String getColumnType(int columnID) throws SQLException {
-            String columnClassName = md.getColumnClassName(columnID);
-            String columnTypeName = md.getColumnTypeName(columnID);
-            String prefix = "";
-
-            if ("oracle.jdbc.OracleStruct".equals(columnClassName)) {
-                prefix = "ABSTRACT_TYPE ";
-            }
-
-            return prefix + columnTypeName;
+            return md.getColumnTypeName(columnID);
         }
 
         private void readToInfo() throws SQLException {
@@ -198,6 +195,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     protected void afterConnectionEstablished() throws SQLException {
         super.afterConnectionEstablished();
         TypeAdapter.registerParseDelegate(java.sql.Struct.class,
+                new OracleObjectTypeParseDelegate(this));
+        TypeAdapter.registerParseDelegate(java.sql.Array.class,
                 new OracleObjectTypeParseDelegate(this));
     }
 
@@ -252,7 +251,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             String procName) throws SQLException {
         String[] qualifiers = NameNormaliser.normaliseName(procName).split(
                 "\\.");
-        String cols = " argument_name, data_type, data_length,  IN_OUT, sequence ";
+        String cols = " argument_name, data_type, data_length,  IN_OUT, sequence, " +
+                "(case when type_name is null then null else type_owner ||'.'|| type_name end) as type";
         String qry = "select " + cols
                 + "  from all_arguments where data_level=0 and ";
         if (qualifiers.length == 3) {
@@ -333,7 +333,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
         DbParameterAccessor dbp = new OracleDbParameterAccessor(paramName,
                 paramDirection, getSqlType(dataType), getJavaClass(dataType),
-                paramPosition, normaliseTypeName(dataType));
+                paramPosition, extractObjectType(dataType));
 
         return dbp;
     }
@@ -387,7 +387,40 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     private static List<String> refCursorTypes = Arrays
             .asList(new String[] { "REF" });
     private static List<String> objectTypes = Arrays.asList(new String[] {
-            "ABSTRACT_TYPE" });
+            "OBJECT", "MDSYS.SDO_GEOMETRY" });
+
+    private static List<String> recordTypes = Arrays.asList(new String[] {
+            "VARRAY", "TABLE" });
+
+
+    private static String extractObjectType(String dataType) {
+        dataType = dataType.toUpperCase().trim();
+        if (dataType.endsWith("BOOLEAN")) {
+            return "BOOLEAN";
+        }
+
+        // Abstract data type
+        if (dataType.startsWith("ABSTRACT_TYPE ")) {
+            return dataType.substring("ABSTRACT_TYPE ".length());
+        }
+
+        // Abstract data type
+        if (dataType.startsWith("TABLE ")) {
+            return dataType.substring("TABLE ".length());
+        }
+
+        if (dataType.startsWith("VARRAY ")) {
+            return dataType.substring("VARRAY ".length());
+        }
+
+        int idx = dataType.indexOf(" ");
+        if (idx >= 0)
+            dataType = dataType.substring(0, idx);
+        idx = dataType.indexOf("(");
+        if (idx >= 0)
+            dataType = dataType.substring(0, idx);
+        return dataType;
+    }
 
     private static String normaliseTypeName(String dataType) {
         dataType = dataType.toUpperCase().trim();
@@ -399,6 +432,16 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         if (dataType.startsWith("ABSTRACT_TYPE ")) {
             return "ABSTRACT_TYPE";
         }
+
+        // Abstract data type
+        if (dataType.startsWith("TABLE ")) {
+            return "TABLE";
+        }
+
+        if (dataType.startsWith("VARRAY ")) {
+            return "VARRAY";
+        }
+
 
         int idx = dataType.indexOf(" ");
         if (idx >= 0)
@@ -425,6 +468,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             return java.sql.Types.TIMESTAMP;
         if (objectTypes.contains(dataTypeNormalised))
             return OracleTypes.STRUCT;
+        if (recordTypes.contains(dataTypeNormalised))
+            return OracleTypes.ARRAY;
 
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
@@ -444,6 +489,9 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             return java.sql.Timestamp.class;
         if (objectTypes.contains(dataType))
             return java.sql.Struct.class;
+        if (recordTypes.contains(dataType))
+            return java.sql.Array.class;
+
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
     }
