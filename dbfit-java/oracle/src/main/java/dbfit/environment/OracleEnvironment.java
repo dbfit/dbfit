@@ -168,10 +168,26 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         private void readToInfo() throws SQLException {
             info = new DbParameterOrColumnInfo();
 
-            info.name = md.getColumnName(currentColumn + 1);
-            info.dataType = getColumnType(currentColumn + 1);
+            int columnIndex = currentColumn + 1;
+
+            info.name = md.getColumnName(columnIndex);
+            info.dataType = getColumnType(columnIndex);
+
+            setUserDefinedTypes(columnIndex);
             info.direction = "IN";
             info.position = position;
+        }
+
+        private void setUserDefinedTypes(int columnIndex) throws SQLException {
+            switch (md.getColumnType(columnIndex)) {
+                case OracleTypes.ARRAY:
+                    info.userDefinedTypeName = info.dataType;
+                    info.dataType = "TABLE";
+                    break;
+                case OracleTypes.STRUCT:
+                    info.userDefinedTypeName = info.dataType;
+                    info.dataType = "OBJECT";
+            }
         }
     }
 
