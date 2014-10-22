@@ -33,6 +33,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         String name = null;
         String direction = null;
         String dataType = null;
+        String userDefinedTypeName;
         int position = -1;
     }
 
@@ -124,11 +125,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             info.dataType = rs.getString(2);
             info.direction = rs.getString(4);
             info.position = position;
-
-            String objectType = rs.getString(6);
-            if(objectType != null) {
-                info.dataType = info.dataType + " " + objectType;
-            }
+            info.userDefinedTypeName = rs.getString(6);
         }
     }
 
@@ -314,11 +311,11 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     }
 
     private DbParameterAccessor makeSingleParam(DbParameterOrColumnInfo info) {
-        return makeSingleParam(info.name, info.dataType, info.direction, info.position);
+        return makeSingleParam(info.name, info.dataType, info.userDefinedTypeName, info.direction, info.position);
     }
 
     private DbParameterAccessor makeSingleParam(
-            String paramName, String dataType, String direction, int position) {
+            String paramName, String dataType, String userTypeName, String direction, int position) {
         if (paramName == null)
             paramName = "";
         Direction paramDirection;
@@ -333,7 +330,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
         DbParameterAccessor dbp = new OracleDbParameterAccessor(paramName,
                 paramDirection, getSqlType(dataType), getJavaClass(dataType),
-                paramPosition, extractObjectType(dataType));
+                paramPosition,  normaliseTypeName(dataType), userTypeName);
 
         return dbp;
     }
@@ -392,56 +389,11 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     private static List<String> recordTypes = Arrays.asList(new String[] {
             "VARRAY", "TABLE" });
 
-
-    private static String extractObjectType(String dataType) {
-        dataType = dataType.toUpperCase().trim();
-        if (dataType.endsWith("BOOLEAN")) {
-            return "BOOLEAN";
-        }
-
-        // Abstract data type
-        if (dataType.startsWith("ABSTRACT_TYPE ")) {
-            return dataType.substring("ABSTRACT_TYPE ".length());
-        }
-
-        // Abstract data type
-        if (dataType.startsWith("TABLE ")) {
-            return dataType.substring("TABLE ".length());
-        }
-
-        if (dataType.startsWith("VARRAY ")) {
-            return dataType.substring("VARRAY ".length());
-        }
-
-        int idx = dataType.indexOf(" ");
-        if (idx >= 0)
-            dataType = dataType.substring(0, idx);
-        idx = dataType.indexOf("(");
-        if (idx >= 0)
-            dataType = dataType.substring(0, idx);
-        return dataType;
-    }
-
     private static String normaliseTypeName(String dataType) {
         dataType = dataType.toUpperCase().trim();
         if (dataType.endsWith("BOOLEAN")) {
             return "BOOLEAN";
         }
-
-        // Abstract data type
-        if (dataType.startsWith("ABSTRACT_TYPE ")) {
-            return "ABSTRACT_TYPE";
-        }
-
-        // Abstract data type
-        if (dataType.startsWith("TABLE ")) {
-            return "TABLE";
-        }
-
-        if (dataType.startsWith("VARRAY ")) {
-            return "VARRAY";
-        }
-
 
         int idx = dataType.indexOf(" ");
         if (idx >= 0)

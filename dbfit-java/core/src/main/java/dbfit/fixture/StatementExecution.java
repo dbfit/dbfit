@@ -28,9 +28,9 @@ public class StatementExecution implements AutoCloseable {
         convertStatementToCallable().registerOutParameter(index, sqlType);
     }
 
-    public void setObject(int index, Object value, int sqlType, String sqlTypeName) throws SQLException {
+    public void setObject(int index, Object value, int sqlType, String userDefinedTypeName) throws SQLException {
         if (value == null) {
-            statement.setNull(index, sqlType, sqlTypeName);
+            statement.setNull(index, sqlType, userDefinedTypeName);
         } else {
             // Don't use the variant that takes sqlType.
             // Derby (at least) assumes no decimal places for Types.DECIMAL and truncates the source data.

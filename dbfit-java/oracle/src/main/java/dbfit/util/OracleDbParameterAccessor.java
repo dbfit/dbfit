@@ -4,8 +4,8 @@ public class OracleDbParameterAccessor extends DbParameterAccessor {
     private String originalTypeName;
 
     public OracleDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position,
-            String originalTypeName) {
-        super(name, direction, sqlType, originalTypeName, javaType, position);
+            String originalTypeName, String userTypeName) {
+        super(name, direction, sqlType, userTypeName, javaType, position);
         setOriginalTypeName(originalTypeName);
     }
 
@@ -24,7 +24,8 @@ public class OracleDbParameterAccessor extends DbParameterAccessor {
     @Override
     public OracleDbParameterAccessor clone() {
         OracleDbParameterAccessor copy = new OracleDbParameterAccessor(
-                getName(), getDirection(), getSqlType(), getJavaType(), getPosition(), originalTypeName);
+                getName(), getDirection(), getSqlType(), getJavaType(), getPosition(),
+                originalTypeName, getUserDefinedTypeName());
         copy.cs = null;
 
         return copy;

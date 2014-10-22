@@ -13,7 +13,7 @@ public class DbParameterAccessor {
     private Direction direction;
     private String name;
     private int sqlType;
-    private String sqlTypeName;
+    private String userDefinedTypeName;
     private Class<?> javaType;
     private int position; //zero-based index of parameter in procedure or column in table
     protected StatementExecution cs;
@@ -40,17 +40,21 @@ public class DbParameterAccessor {
         this(name, direction, sqlType, null, javaType, position);
     }
 
-    public DbParameterAccessor(String name, Direction direction, int sqlType, String sqlTypeName, Class javaType, int position) {
+    public DbParameterAccessor(String name, Direction direction, int sqlType, String userDefinedTypeName, Class javaType, int position) {
         this.name = name;
         this.direction = direction;
         this.sqlType = sqlType;
-        this.sqlTypeName = sqlTypeName;
+        this.userDefinedTypeName = userDefinedTypeName;
         this.javaType = javaType;
         this.position=position;
     }
 
     protected int getSqlType() {
         return sqlType;
+    }
+
+    public String getUserDefinedTypeName() {
+        return userDefinedTypeName;
     }
 
     public Direction getDirection() {
@@ -77,7 +81,7 @@ public class DbParameterAccessor {
     public void set(Object value) throws Exception {
         if (direction == OUTPUT|| direction == RETURN_VALUE)
             throw new UnsupportedOperationException("Trying to set value of output parameter "+name);
-        cs.setObject(index, value, sqlType, sqlTypeName);
+        cs.setObject(index, value, sqlType, userDefinedTypeName);
     }    
 
     public Object get() throws IllegalAccessException, InvocationTargetException {
