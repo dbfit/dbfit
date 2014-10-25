@@ -1,9 +1,9 @@
-!|Execute|create or replace force type person_type as object(id number, name varchar2(50 char))|
-!|Execute|create or replace force type person_type_tab as table of person_type|
+!|Execute Ddl|create or replace type person_type force as object(id number, name varchar2(50 char))|
+!|Execute Ddl|create or replace type person_type_tab force as table of person_type|
 
-!|Execute|create table persons(reg_id integer, member person_type)|
+!|Execute Ddl|create table persons(reg_id integer, member person_type)|
 
-!|Execute|!-
+!|Execute Ddl|!-
 create procedure store_persons(persons person_type_tab) as
   id integer := 1;
 begin
