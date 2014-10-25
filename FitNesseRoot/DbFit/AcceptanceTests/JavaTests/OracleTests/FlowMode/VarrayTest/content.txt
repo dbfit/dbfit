@@ -1,0 +1,24 @@
+!|Execute Ddl|create or replace type person_type force as object(id number, name varchar2(50 char))|
+!|Execute Ddl|create or replace type person_type_tab force as varray(20) of person_type|
+
+!|Execute Ddl|create table persons(reg_id integer, member person_type)|
+
+!|Execute Ddl|!-
+create procedure store_persons(persons person_type_tab) as
+  id integer := 1;
+begin
+  for i in persons.first .. persons.last loop
+    insert into persons(reg_id, member) values (id, persons(i));
+    id := id + 1;
+  end loop;
+end;
+-!|
+
+!|Execute Procedure|store_persons|
+|persons|
+|person_type_tab(person_type(7, 'Batman'), person_type(8, 'Superman'))|
+
+!|Query|select reg_id, treat(member as person_type).id person_id, treat(member as person_type).name person_name from persons|
+|reg_id|person_id?                                               |person_name?                                              |
+|1     |7                                                        |Batman      |
+|2     |8                                                        |Superman      |

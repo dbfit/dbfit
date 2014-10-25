@@ -33,6 +33,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         String name = null;
         String direction = null;
         String dataType = null;
+        String userDefinedTypeName;
         int position = -1;
     }
 
@@ -124,6 +125,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             info.dataType = rs.getString(2);
             info.direction = rs.getString(4);
             info.position = position;
+            info.userDefinedTypeName = rs.getString(6);
         }
     }
 
@@ -160,24 +162,32 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         }
 
         private String getColumnType(int columnID) throws SQLException {
-            String columnClassName = md.getColumnClassName(columnID);
-            String columnTypeName = md.getColumnTypeName(columnID);
-            String prefix = "";
-
-            if ("oracle.jdbc.OracleStruct".equals(columnClassName)) {
-                prefix = "ABSTRACT_TYPE ";
-            }
-
-            return prefix + columnTypeName;
+            return md.getColumnTypeName(columnID);
         }
 
         private void readToInfo() throws SQLException {
             info = new DbParameterOrColumnInfo();
 
-            info.name = md.getColumnName(currentColumn + 1);
-            info.dataType = getColumnType(currentColumn + 1);
+            int columnIndex = currentColumn + 1;
+
+            info.name = md.getColumnName(columnIndex);
+            info.dataType = getColumnType(columnIndex);
+
+            setUserDefinedTypes(columnIndex);
             info.direction = "IN";
             info.position = position;
+        }
+
+        private void setUserDefinedTypes(int columnIndex) throws SQLException {
+            switch (md.getColumnType(columnIndex)) {
+                case OracleTypes.ARRAY:
+                    info.userDefinedTypeName = info.dataType;
+                    info.dataType = "TABLE";
+                    break;
+                case OracleTypes.STRUCT:
+                    info.userDefinedTypeName = info.dataType;
+                    info.dataType = "OBJECT";
+            }
         }
     }
 
@@ -198,6 +208,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     protected void afterConnectionEstablished() throws SQLException {
         super.afterConnectionEstablished();
         TypeAdapter.registerParseDelegate(java.sql.Struct.class,
+                new OracleObjectTypeParseDelegate(this));
+        TypeAdapter.registerParseDelegate(java.sql.Array.class,
                 new OracleObjectTypeParseDelegate(this));
     }
 
@@ -252,7 +264,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             String procName) throws SQLException {
         String[] qualifiers = NameNormaliser.normaliseName(procName).split(
                 "\\.");
-        String cols = " argument_name, data_type, data_length,  IN_OUT, sequence ";
+        String cols = " argument_name, data_type, data_length,  IN_OUT, sequence, " +
+                "(case when type_name is null then null else type_owner ||'.'|| type_name end) as type";
         String qry = "select " + cols
                 + "  from all_arguments where data_level=0 and ";
         if (qualifiers.length == 3) {
@@ -314,11 +327,11 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     }
 
     private DbParameterAccessor makeSingleParam(DbParameterOrColumnInfo info) {
-        return makeSingleParam(info.name, info.dataType, info.direction, info.position);
+        return makeSingleParam(info.name, info.dataType, info.userDefinedTypeName, info.direction, info.position);
     }
 
     private DbParameterAccessor makeSingleParam(
-            String paramName, String dataType, String direction, int position) {
+            String paramName, String dataType, String userTypeName, String direction, int position) {
         if (paramName == null)
             paramName = "";
         Direction paramDirection;
@@ -333,7 +346,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
         DbParameterAccessor dbp = new OracleDbParameterAccessor(paramName,
                 paramDirection, getSqlType(dataType), getJavaClass(dataType),
-                paramPosition, normaliseTypeName(dataType));
+                paramPosition, normaliseTypeName(dataType), userTypeName);
 
         return dbp;
     }
@@ -387,17 +400,15 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     private static List<String> refCursorTypes = Arrays
             .asList(new String[] { "REF" });
     private static List<String> objectTypes = Arrays.asList(new String[] {
-            "ABSTRACT_TYPE" });
+            "OBJECT", "MDSYS.SDO_GEOMETRY" });
+
+    private static List<String> recordTypes = Arrays.asList(new String[] {
+            "VARRAY", "TABLE" });
 
     private static String normaliseTypeName(String dataType) {
         dataType = dataType.toUpperCase().trim();
         if (dataType.endsWith("BOOLEAN")) {
             return "BOOLEAN";
-        }
-
-        // Abstract data type
-        if (dataType.startsWith("ABSTRACT_TYPE ")) {
-            return "ABSTRACT_TYPE";
         }
 
         int idx = dataType.indexOf(" ");
@@ -425,6 +436,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             return java.sql.Types.TIMESTAMP;
         if (objectTypes.contains(dataTypeNormalised))
             return OracleTypes.STRUCT;
+        if (recordTypes.contains(dataTypeNormalised))
+            return OracleTypes.ARRAY;
 
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
@@ -444,6 +457,9 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             return java.sql.Timestamp.class;
         if (objectTypes.contains(dataType))
             return java.sql.Struct.class;
+        if (recordTypes.contains(dataType))
+            return java.sql.Array.class;
+
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
     }
