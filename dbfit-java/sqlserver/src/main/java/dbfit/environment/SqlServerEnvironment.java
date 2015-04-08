@@ -215,10 +215,19 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
             String procName) throws SQLException {
         return readIntoParams(
                 procName,
-                "select p.[name], TYPE_NAME(p.system_type_id) as [Type],  "
-                        + " p.max_length, p.is_output, p.is_cursor_ref from sys.parameters p "
-                        + " where p.object_id = OBJECT_ID(?) order by parameter_id ");
-
+                "select [name], [Type], max_length, is_output, is_cursor_ref from "
+                    + "("
+                    + "   select "
+                    + "       p.[name], TYPE_NAME(p.system_type_id) as [Type], "
+                    + "       p.max_length, p.is_output, p.is_cursor_ref, "
+                    + "       p.parameter_id, 0 as set_id, p.object_id "
+                    + "   from sys.parameters p "
+                    + "   union all select "
+                    + "        '' as [name], 'int' as [Type], "
+                    + "        4 as max_length, 1 as [is_output], 0 as is_cursor_ref, "
+                    + "        null as parameter_id, 1 as set_id, o.object_id "
+                    + "   from sys.objects where type in (N'P', N'PC') "
+                    + ") where object_id = OBJECT_ID(?) order by set_id, parameter_id");
     }
 
     public String buildInsertCommand(String tableName,
