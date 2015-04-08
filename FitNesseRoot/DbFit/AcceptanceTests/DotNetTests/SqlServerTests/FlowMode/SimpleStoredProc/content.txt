@@ -16,3 +16,8 @@ GO
 |paradajz|8|
 
 
+Caputure the implicit return value
+
+!|Execute Procedure|CalcLength_P|
+|name|str length?|?|
+|mika|4|0|
