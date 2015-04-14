@@ -1,12 +1,21 @@
-include_recipe "mysql::server"
-include_recipe "mysql::client"
-include_recipe "database::mysql"
+mysql2_chef_gem 'default' do
+  gem_version '0.3.18'
+  client_version node['mysql']['version'] if node['mysql']
+  action :install
+end
 
-mysql_connection_info = {:host => "localhost",
+mysql_connection_info = {:host => "127.0.0.1",
                          :username => 'root',
                          :password => node['mysql']['server_root_password']}
 
 users = {"dftest" => "dftest", "dbfit_user" => "password"}
+
+mysql_service 'default' do
+  version node['mysql']['version'] if node['mysql'] && node['mysql']['version']
+  bind_address mysql_connection_info[:host]
+  initial_root_password mysql_connection_info[:password]
+  action [:create, :start]
+end
 
 mysql_database 'dbfit' do
   connection mysql_connection_info
@@ -41,8 +50,9 @@ end
 
 # needed to support DbDeploy
 mysql_database 'dbfit' do
+  database_name 'dbfit'
   connection(
-    :host => 'localhost',
+    :host => mysql_connection_info[:host],
     :username => 'dbfit_user',
     :password => users['dbfit_user']
   )

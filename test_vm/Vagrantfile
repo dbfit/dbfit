@@ -13,8 +13,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.omnibus.chef_version = :latest
   config.vbguest.auto_update = true
 
-  config.vm.box = "dbfitvm-test"
-  config.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-6.5_chef-provisionerless.box"
+  config.vm.box = "chef/centos-6.6"
+  config.vm.box_url = "chef/centos-6.6"
   config.vm.host_name = "dbfitvm"
   config.vm.network "private_network", ip: "192.168.33.10"
   config.vm.synced_folder "..", "/var/dbfit", CONFIG['synced_folder_options']
@@ -44,7 +44,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         }
       },
       "git" => {
-        "version" => "1.9.3"
+        "version" => "2.3.5",
+        "checksum" => "6dc78683fd905a8e0147ed470b1716e8a742d955f8dc6e63261fce62b9b3c40e"
       },
       "run_list" => ["recipe[dbfit_test]"]
     }
