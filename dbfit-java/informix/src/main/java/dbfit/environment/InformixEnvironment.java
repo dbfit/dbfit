@@ -20,16 +20,23 @@ import static dbfit.util.Direction.*;
 @DatabaseEnvironment(name="Informix", driver="com.informix.jdbc.IfxDriver")
 public class InformixEnvironment extends AbstractDbEnvironment  {
 
-   private static  String connectionString;
-
-     @Override
+   @Override
      public void afterConnectionEstablished() throws SQLException {
-          if(!currentConnection.getAutoCommit()){
-              currentConnection.setAutoCommit(true);
+          if(currentConnection.getTransactionIsolation()==0){
+        	  System.out.println("afterConnectionEstablished method");
+        	currentConnection.setAutoCommit(true);
           }else{
               currentConnection.setAutoCommit(false);
           }
     }
+    @Override
+     public void connect(String connectionString, Properties info) throws SQLException {
+        // registerDriver();
+         currentConnection = DriverManager.getConnection(connectionString, info);
+         //currentConnection.setAutoCommit(false);
+         System.out.println("connect method");
+         afterConnectionEstablished();
+     }  
 
 
     public  InformixEnvironment(String driverClassName) {
@@ -69,17 +76,7 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
             throws SQLException {
         String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
                 .split("\\.");
-        /*  String qry = "  select sc.colname as column_name,'VARCHAR' as data_type ,'P' as direction from systables st,syscolumns sc,sysdefaults sd  where st.tabid=sc.tabid  and ";
         
-        if (qualifiers.length == 2) {
-            qry += " lower(st.owner)=? and lower(st.tabname)=? ";
-        } else {
-            qry += " (lower(st.tabname)=?)";
-        }
-        qry += " order by st.owner";
-        
-        System.out.println("Query="+qry);
-        return readIntoParams(qualifiers, qry); */
         
           String qry1=" SELECT  c.colname[1,20] column_name ,";                          
           qry1+= " CASE coltype   ";                                                             
@@ -113,7 +110,8 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
           qry1+= " WHEN 22 THEN 'row'";                                                      
           qry1+= " WHEN 23 THEN 'collection'";                                               
           qry1+= " WHEN 24 THEN 'rowdef'";                                                   
-          qry1+= " WHEN 256 THEN 'char'";                                                        
+          qry1+= " WHEN 256 THEN 'char(' || TRIM(CAST(c.collength AS CHAR(5))) ||";          
+          qry1+= " ')'";                                                        
           qry1+= " WHEN 257 THEN 'smallint'";                                       
           qry1+= " WHEN 258 THEN 'integer'";                                        
           qry1+= " WHEN 259 THEN 'float'";                                          
@@ -122,13 +120,13 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
           qry1+= "  WHEN 261 THEN 'decimal('||";                                              
           qry1+= "      TRIM(CAST(TRUNC(c.collength/256) AS VARCHAR(8)) || ',' ||";           
           qry1+= "      CAST(c.collength - TRUNC(c.collength/256)*256 AS VARCHAR(8))) ||";    
-          qry1+= "      ') not null'";                                                        
+          qry1+= "      ')'";                                                        
           qry1+= " WHEN 262 THEN 'serial'";                                         
           qry1+= " WHEN 263 THEN 'date'";                                           
           qry1+= " WHEN 264 THEN 'money(' ||";                                               
           qry1+= " TRIM(CAST(TRUNC(c.collength/256) AS VARCHAR(8)) || ',' ||";           
           qry1+= " CAST(c.collength - TRUNC(c.collength/256)*256 AS VARCHAR(8))) ||";    
-          qry1+= " ') not null'";                                                        
+          qry1+= " ')'";                                                        
           qry1+= " WHEN 265 THEN 'null'";                                           
           qry1+= " WHEN 266 THEN 'datetime'";                                       
           qry1+= " WHEN 267 THEN 'byte'";                                           
@@ -136,9 +134,9 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
           qry1+= " WHEN 269 THEN 'varchar'";                                                        
           qry1+= " WHEN 270 THEN 'interval'";                                       
           qry1+= " WHEN 271 THEN 'nchar(' || TRIM(CAST(c.collength AS CHAR(5))) ||";         
-          qry1+= " ') not null'";                                                        
+          qry1+= " ')'";                                                        
           qry1+= " WHEN 272 THEN 'nvarchar(' || TRIM(CAST(c.collength AS CHAR(5))) ||";      
-          qry1+= " ') not null'";                                                        
+          qry1+= " ')'";                                                        
           qry1+= " WHEN 273 THEN 'int8'";                                           
           qry1+= " WHEN 274 THEN 'serial8'";                                        
           qry1+= " WHEN 275 THEN 'set'";                                            
@@ -148,7 +146,7 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
           qry1+= " WHEN 279 THEN 'collection'";                                     
           qry1+= " WHEN 280 THEN 'rowdef'";                                         
           qry1+= " ELSE CAST(coltype AS CHAR(10))";                                          
-          qry1+= " END data_type ,'P' as direction ";                                                                
+          qry1+= " END data_type ,'P' as direction, c.colno as position ";                                                                
           qry1+= " FROM systables t, syscolumns c";                                                  
           qry1+= " WHERE  t.tabid = c.tabid and ";                                                           
            
@@ -165,21 +163,22 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
     
     private Map<String, DbParameterAccessor> readIntoParams(
             String[] queryParameters, String query) throws SQLException {
-      System.out.println("query="+query);
+    	System.out.println("query="+query);
         PreparedStatement dc = currentConnection.prepareStatement(query);
         try {
             for (int i = 0; i < queryParameters.length; i++) {
+            	
             	if(queryParameters[i].length()==0)
             		queryParameters[i]="return_value";
             		
                 dc.setString(i + 1,
                         NameNormaliser.normaliseName(queryParameters[i]));
- //System.out.println("parametersare ="+queryParameters[i]+"and length is "+queryParameters[i].length());
+                	System.out.println("parameters are ="+queryParameters[i]+"and length is "+queryParameters[i].length());
             }
 
             ResultSet rs = dc.executeQuery();
             Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-            int position = 0;
+            
             while (rs.next()) {
                 String paramName = rs.getString(1);
                 if (paramName == null)
@@ -188,17 +187,25 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
                 // int length=rs.getInt(3);
                 // System.out.println("length="+length);
                 String direction = rs.getString(3);
+                int position = rs.getInt(4);
                 Direction paramDirection = getParameterDirection(direction);
                 DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                         paramDirection, getSqlType(dataType),
                         getJavaClass(dataType),
                         paramDirection == RETURN_VALUE ? -1
-                                : position++);
+                                : position);
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
 
 
             }
             rs.close();
+            Iterator it = allParams.values().iterator();
+            while(it.hasNext()) {
+            	DbParameterAccessor dbp = (DbParameterAccessor)it.next();
+            	System.out.println("----dbp.getName()----"+dbp.getName());
+            	System.out.println("----dbp.getPosition()----"+dbp.getPosition());
+            }
+            
             return allParams;
         } finally {
             dc.close();
@@ -216,14 +223,7 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
         return (isOutput == 1) ? OUTPUT : INPUT;
     }
     private static Direction getParameterDirection(String direction) {
-    	/* if ("P".equals(direction))
-            return INPUT;
-        if ("O".equals(direction))
-            return OUTPUT;
-        if ("B".equals(direction))
-            return INPUT_OUTPUT;
-        if ("C".equals(direction))
-            return RETURN_VALUE; 
+    	/* 
             
             0 = Parameter is of unknown type 
             1 = Parameter is INPUT mode 
@@ -232,17 +232,7 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
             4 = Parameter is OUT mode 
             5 = Parameter is a return value
             */
-        // todo return val
-    	/* if ("P".equals(direction))
-            return INPUT;
-        if ("P".equals(direction))
-            return OUTPUT;
-        if ("P".equals(direction))
-            return INPUT_OUTPUT;
-        if ("C".equals(direction))
-            return RETURN_VALUE;
-        throw new UnsupportedOperationException("Direction " + direction
-                + " is not supported"); */
+        
     	if ("P".equals(direction))
             return INPUT;
         if ("P".equals(direction))
@@ -376,32 +366,32 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
         qry1+= " WHEN 23 THEN 'collection'";                                               
         qry1+= " WHEN 24 THEN 'rowdef'";                                                   
         qry1+= " WHEN 256 THEN 'char(' || TRIM(CAST(spc.paramlen AS CHAR(5))) ||";          
-        qry1+= " ') not null'";                                                        
+        qry1+= " ')'";                                                        
         qry1+= " WHEN 257 THEN 'smallint'";                                       
-        qry1+= " WHEN 258 THEN 'integer not null'";                                        
-        qry1+= " WHEN 259 THEN 'float not null'";                                          
-        qry1+= " WHEN 260 THEN 'smallfloat not null'"; 
+        qry1+= " WHEN 258 THEN 'integer'";                                        
+        qry1+= " WHEN 259 THEN 'float'";                                          
+        qry1+= " WHEN 260 THEN 'smallfloat'"; 
         //qry1+= " WHEN 5 THEN 'decimal not null' "; 
         qry1+= "  WHEN 261 THEN 'decimal('||";                                              
         qry1+= "      TRIM(CAST(TRUNC(spc.paramlen/256) AS VARCHAR(8)) || ',' ||";           
         qry1+= "      CAST(spc.paramlen - TRUNC(spc.paramlen/256)*256 AS VARCHAR(8))) ||";    
-        qry1+= "      ') not null'";                                                        
-        qry1+= " WHEN 262 THEN 'serial not null'";                                         
-        qry1+= " WHEN 263 THEN 'date not null'";                                           
+        qry1+= "      ')'";                                                        
+        qry1+= " WHEN 262 THEN 'serial'";                                         
+        qry1+= " WHEN 263 THEN 'date'";                                           
         qry1+= " WHEN 264 THEN 'money(' ||";                                               
         qry1+= " TRIM(CAST(TRUNC(spc.paramlen/256) AS VARCHAR(8)) || ',' ||";           
         qry1+= " CAST(spc.paramlen - TRUNC(spc.paramlen/256)*256 AS VARCHAR(8))) ||";    
-        qry1+= " ') not null'";                                                        
-        qry1+= " WHEN 265 THEN 'null not null'";                                           
-        qry1+= " WHEN 266 THEN 'datetime not null'";                                       
+        qry1+= " ')'";                                                        
+        qry1+= " WHEN 265 THEN 'null'";                                           
+        qry1+= " WHEN 266 THEN 'datetime'";                                       
         qry1+= " WHEN 267 THEN 'byte'";                                           
-        qry1+= " WHEN 268 THEN 'text not null'";                                           
+        qry1+= " WHEN 268 THEN 'text'";                                           
         qry1+= " WHEN 269 THEN 'varchar'";                                                        
         qry1+= " WHEN 270 THEN 'interval'";                                       
         qry1+= " WHEN 271 THEN 'nchar(' || TRIM(CAST(spc.paramlen AS CHAR(5))) ||";         
-        qry1+= " ') not null'";                                                        
+        qry1+= " ')'";                                                        
         qry1+= " WHEN 272 THEN 'nvarchar(' || TRIM(CAST(spc.paramlen AS CHAR(5))) ||";      
-        qry1+= " ') not null'";                                                        
+        qry1+= " ')'";                                                        
         qry1+= " WHEN 273 THEN 'int8'";                                           
         qry1+= " WHEN 274 THEN 'serial8'";                                        
         qry1+= " WHEN 275 THEN 'set'";                                            
@@ -411,7 +401,7 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
         qry1+= " WHEN 279 THEN 'collection'";                                     
         qry1+= " WHEN 280 THEN 'rowdef'";                                         
         qry1+= " ELSE CAST(paramtype AS CHAR(10))";                                          
-        qry1+= " END  data_type, spc.paramattr  as direction  from sysprocedures sp,sysproccolumns spc where sp.procid=spc.procid and";
+        qry1+= " END  data_type, spc.paramattr  as direction, spc.paramid as position  from sysprocedures sp,sysproccolumns spc where sp.procid=spc.procid and";
         if (qualifiers.length == 2) {
             qry1 += " lower(sp.owner)=? and lower(sp.procname)=? ";
         } else {
@@ -420,16 +410,9 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
         qry1 += " order by sp.owner";
         
         System.out.println("Procedure is ="+qry1);
-      /*  System.out.println("Excecuting procedure");
-        for (int i = 0; i < qualifiers.length; i++) {
-
-            System.out.println("proc parametersare ="+qualifiers[i]);
-        } */
-
+      
         return readIntoParams(qualifiers, qry1);
     }
 //select sc.colname as column_name, 'VARCHAR'  as data_type    //,'P' as direction from systables st,syscolumns sc where //st.tabid=sc.tabid and lower(st.tabname)='test_dbfit'
     
 }
-
-
