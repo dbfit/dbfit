@@ -224,10 +224,10 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
                     + "   from sys.parameters p "
                     + "   union all select "
                     + "        '' as [name], 'int' as [Type], "
-                    + "        4 as max_length, 1 as [is_output], 0 as is_cursor_ref, "
-                    + "        null as parameter_id, 1 as set_id, o.object_id "
+                    + "        4 as max_length, 1 as is_output, 0 as is_cursor_ref, "
+                    + "        null as parameter_id, 1 as set_id, object_id "
                     + "   from sys.objects where type in (N'P', N'PC') "
-                    + ") where object_id = OBJECT_ID(?) order by set_id, parameter_id");
+                    + ") as u where object_id = OBJECT_ID(?) order by set_id, parameter_id");
     }
 
     public String buildInsertCommand(String tableName,
