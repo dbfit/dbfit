@@ -1,0 +1,7 @@
+|dbfit.HSQLDBTest|
+
+|Connect|jdbc:hsqldb:mem:dbfit|
+
+|Execute Ddl|CREATE TABLE users (name VARCHAR(20) NOT NULL, username VARCHAR(20) NOT NULL)|
+
+|Execute Ddl|CREATE PROCEDURE makeuser() MODIFIES SQL DATA insert into users (name,username) values ('user1','fromproc')|
