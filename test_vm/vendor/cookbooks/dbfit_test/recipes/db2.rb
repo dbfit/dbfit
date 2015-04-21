@@ -5,6 +5,7 @@ package "libaio"
 # So we use:
 yum_package "pam.i686"
 package "numactl"
+package "libstdc++.i686"
 
 execute 'install DB2 package if available' do
   project_root = node['dbfit']['project_root']
