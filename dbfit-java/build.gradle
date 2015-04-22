@@ -112,6 +112,7 @@ project('hsqldb') {
 
     dependencies {
         compile project(':dbfit-java:core')
+        runtime 'org.hsqldb:hsqldb:2.3.2@jar'
     }
 }
 

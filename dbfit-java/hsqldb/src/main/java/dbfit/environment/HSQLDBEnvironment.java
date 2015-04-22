@@ -66,7 +66,7 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
         String qry = "SELECT COLUMN_NAME, TYPE_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS\n"
-                + "WHERE TABLE_NAME= ?";
+                + "WHERE TABLE_NAME = ?";
         return readIntoParams(tableOrViewName, qry);
     }
 
@@ -74,8 +74,18 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
             String tableOrViewName, String query) throws SQLException {
         checkConnectionValid(currentConnection);
         try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
-            dc.setString(1, tableOrViewName);
 
+            String tvname;
+            if (tableOrViewName.trim().startsWith("\"") && tableOrViewName.trim().endsWith("\"")) {
+                // Remove double quotes.
+                tvname = tableOrViewName.replaceFirst("\"", "");
+                int i = tvname.lastIndexOf("\"");
+                tvname = tvname.substring(0, i) + tvname.substring(i + 1);
+            } else {
+                tvname = tableOrViewName.toUpperCase();
+            }
+
+            dc.setString(1, tvname);
             ResultSet rs = dc.executeQuery();
             Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
             int position = 0;

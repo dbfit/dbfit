@@ -24,7 +24,7 @@ The quickest way to get feedback on your code changes is to run the fast build:
 
     $ ./gradlew clean fastbuild
 
-This is a pure-Java build that runs the `core` unit tests and the Derby integration tests (with Derby running embedded).
+This is a pure-Java build that runs the `core` unit tests, the Derby integration tests (with Derby running embedded) and the HSQLDB integration tests (with HSQLDB running in-process, memory-only).
 
 #### Integration tests
 
