@@ -1,15 +1,15 @@
 package dbfit.environment;
 
-import fitnesse.junit.FitNesseSuite;
+import fitnesse.junit.FitNesseRunner;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static fitnesse.junit.FitNesseSuite.*;
+import static fitnesse.junit.FitNesseRunner.*;
 
 public class SqlServerRegressionTest {
-    @RunWith(FitNesseSuite.class)
-    @Name("DbFit.AcceptanceTests.JavaTests.SqlServerTests.FlowMode")
+    @RunWith(FitNesseRunner.class)
+    @Suite("DbFit.AcceptanceTests.JavaTests.SqlServerTests.FlowMode")
     @FitnesseDir("../..")
     @OutputDir("../../tmp")
     @Ignore
@@ -17,8 +17,8 @@ public class SqlServerRegressionTest {
         @Test public void dummy(){}
     }
 
-    @RunWith(FitNesseSuite.class)
-    @Name("DbFit.AcceptanceTests.JavaTests.SqlServerTests.StandaloneFixtures")
+    @RunWith(FitNesseRunner.class)
+    @Suite("DbFit.AcceptanceTests.JavaTests.SqlServerTests.StandaloneFixtures")
     @FitnesseDir("../..")
     @OutputDir("../../tmp")
     @Ignore

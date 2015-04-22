@@ -1,23 +1,23 @@
 package dbfit.environment;
 
-import fitnesse.junit.FitNesseSuite;
+import fitnesse.junit.FitNesseRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static fitnesse.junit.FitNesseSuite.*;
+import static fitnesse.junit.FitNesseRunner.*;
 
 public class DerbyRegressionTest {
 
-    @RunWith(FitNesseSuite.class)
-    @Name("DbFit.AcceptanceTests.JavaTests.DerbyTests.FlowMode")
+    @RunWith(FitNesseRunner.class)
+    @Suite("DbFit.AcceptanceTests.JavaTests.DerbyTests.FlowMode")
     @FitnesseDir("../..")
     @OutputDir("../../tmp")
     public static class FlowModeTest {
         @Test public void dummy(){}
     }
 
-    @RunWith(FitNesseSuite.class)
-    @Name("DbFit.AcceptanceTests.JavaTests.DerbyTests.StandaloneFixtures")
+    @RunWith(FitNesseRunner.class)
+    @Suite("DbFit.AcceptanceTests.JavaTests.DerbyTests.StandaloneFixtures")
     @FitnesseDir("../..")
     @OutputDir("../../tmp")
     public static class StandaloneFixturesTest {
