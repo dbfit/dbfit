@@ -1,17 +1,17 @@
 package dbfit.environment;
 
-import fitnesse.junit.FitNesseSuite;
+import fitnesse.junit.FitNesseRunner;
 
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static fitnesse.junit.FitNesseSuite.*;
+import static fitnesse.junit.FitNesseRunner.*;
 
 public class TeradataRegressionTest {
 
-    @RunWith(FitNesseSuite.class)
-    @Name("DbFit.AcceptanceTests.JavaTests.TeradataTests.FlowMode")
+    @RunWith(FitNesseRunner.class)
+    @Suite("DbFit.AcceptanceTests.JavaTests.TeradataTests.FlowMode")
     @FitnesseDir("../..")
     @OutputDir("../../tmp")
     @Ignore
