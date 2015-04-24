@@ -13,7 +13,7 @@ public class TeradataTimestampPeriodTest {
 
         java.sql.Timestamp F = null;
         java.sql.Timestamp T = null;
-        
+
         try {
             F = (java.sql.Timestamp) SqlTimestampParseDelegate.parse(fromStr);
             T = (java.sql.Timestamp) SqlTimestampParseDelegate.parse(toStr);
@@ -60,7 +60,7 @@ public class TeradataTimestampPeriodTest {
 
         java.sql.Timestamp F = null;
         java.sql.Timestamp T = null;
-        
+
         try {
             F = (java.sql.Timestamp) SqlTimestampParseDelegate.parse(fromStr);
             T = (java.sql.Timestamp) SqlTimestampParseDelegate.parse(toStr);

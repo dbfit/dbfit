@@ -9,25 +9,24 @@ import java.text.ParseException;
  * date/time format, and the current locale date format.
  */
 public class SqlTimestampParseDelegate {
-	private static DateFormat dtf = DateFormat.getDateTimeInstance();
-	private static DateFormat df = DateFormat.getDateInstance();
+    private static DateFormat dtf = DateFormat.getDateTimeInstance();
+    private static DateFormat df = DateFormat.getDateInstance();
 
-	public static Object parse(String s) throws Exception {
-		try {
-			return java.sql.Timestamp.valueOf(s);
-		} catch (IllegalArgumentException iex) {
-			try {
-				return new java.sql.Timestamp(java.sql.Date.valueOf(s)
-						.getTime());
-			} catch (IllegalArgumentException iex2) {
-				try {
-					java.util.Date ud = dtf.parse(s);
-					return new java.sql.Timestamp(ud.getTime());
-				} catch (ParseException pex) {
-					java.util.Date ud = df.parse(s);
-					return new java.sql.Timestamp(ud.getTime());
-				}
-			}
-		}
-	}
+    public static Object parse(String s) throws Exception {
+        try {
+            return java.sql.Timestamp.valueOf(s);
+        } catch (IllegalArgumentException iex) {
+            try {
+                return new java.sql.Timestamp(java.sql.Date.valueOf(s).getTime());
+            } catch (IllegalArgumentException iex2) {
+                try {
+                    java.util.Date ud = dtf.parse(s);
+                    return new java.sql.Timestamp(ud.getTime());
+                } catch (ParseException pex) {
+                    java.util.Date ud = df.parse(s);
+                    return new java.sql.Timestamp(ud.getTime());
+                }
+            }
+        }
+    }
 }
