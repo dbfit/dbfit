@@ -1,13 +1,43 @@
+USE [master]
+GO
+
+CREATE DATABASE [FitNesseTestDB]
+GO
+
+/* Case sensitive collation - for additional required precision for testing */
+ALTER DATABASE [FitNesseTestDB] COLLATE Latin1_General_CS_AS
+/* Case insensitive collation
+ALTER DATABASE [FitNesseTestDB] COLLATE Latin1_General_CI_AS */
+GO
+
+CREATE LOGIN [FitNesseUser] WITH PASSWORD='FitNesseUser'
+GO
+
+USE [FitNesseTestDB]
+GO
+
+CREATE USER [FitNesseUser] FOR LOGIN [FitNesseUser] WITH DEFAULT_SCHEMA=[dbo]
+GO
+
+ALTER ROLE [db_owner] ADD MEMBER [FitNesseUser]
+GO
+
+ALTER DATABASE [FitNesseTestDB] SET  READ_WRITE
+GO
+
+
+
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Multiply]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
 BEGIN
-execute dbo.sp_executesql @statement = N'  create function [dbo].[Multiply](@n1 int, @n2 int) returns int as  begin  	declare @num3 int;  	set @num3 = @n1*@n2;  	return @num3;  end;  ' 
+execute dbo.sp_executesql @statement = N'  create function [dbo].[Multiply](@n1 int, @n2 int) returns int as  begin  	declare @num3 int;  	set @num3 = @n1*@n2;  	return @num3;  end;  '
 END
-
 GO
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -21,9 +51,10 @@ AS
 BEGIN
 	SET @strlength = DataLength(@name);
 END;
-' 
+'
 END
 GO
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -39,11 +70,11 @@ CREATE FUNCTION [dbo].[ReturnUserTable_F]
 (
 	@howmuch int
 )
-RETURNS 
-@userTable TABLE 
+RETURNS
+@userTable TABLE
 (
 	-- Add the column definitions for the TABLE variable here
-	[user] varchar(50), 
+	[user] varchar(50),
 	[username] varchar(255)
 )
 AS
@@ -57,13 +88,13 @@ BEGIN
 		INSERT @userTable([user], [username])
 			VALUES(''User '' + CAST(@i AS VARCHAR(10)), ''Username '' + CAST(@i AS VARCHAR(10)))
 	END
-	
-	RETURN 
-END
-' 
-END
 
+	RETURN
+END
+'
+END
 GO
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -79,9 +110,10 @@ AS
 BEGIN
 	SET @concatenated = @firstString + '' '' + @secondString
 END
-' 
+'
 END
 GO
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -101,10 +133,10 @@ BEGIN
 	SET @concatenated = @firstString + '' '' + @secondString
 	RETURN @concatenated
 END
-' 
+'
 END
-
 GO
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -112,12 +144,13 @@ GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Users]') AND type in (N'U'))
 BEGIN
 CREATE TABLE [dbo].[Users](
-	[name] [varchar](50) NULL,
-	[username] [varchar](50) NULL,
-	[userid] [int] IDENTITY(1,1) NOT NULL
+	[Name] [varchar](50) NULL,
+	[UserName] [varchar](50) NULL,
+	[UserId] [int] IDENTITY(1,1) NOT NULL
 ) ON [PRIMARY]
 END
 GO
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -134,13 +167,14 @@ BEGIN
 	WHILE (@i < @howmuch)
 	BEGIN
 		SET @i = @i + 1
-		INSERT [Users]([name], [username])
+		INSERT [Users]([Name], [UserName])
 			VALUES(''User '' + CAST(@i AS VARCHAR(10)), ''Username '' + CAST(@i AS VARCHAR(10)))
 	END
 END
-' 
+'
 END
 GO
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -153,14 +187,15 @@ EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[OpenCrsr_P]
 AS
 BEGIN
 	SET @OutCrsr = CURSOR FOR
-	SELECT TOP (@howmuch) [name], [username], [userid]
+	SELECT TOP (@howmuch) [Name], [UserName], [UserId]
 	FROM [Users];
 
 	OPEN @OutCrsr;
 END
-' 
+'
 END
 GO
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -170,8 +205,9 @@ BEGIN
 EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[DeleteUserTable_P]
 AS
 DELETE [Users];
-' 
+'
 END
+GO
 
 CREATE PROCEDURE [dbo].[TestProc2]
 	@iddocument int,
@@ -187,18 +223,21 @@ begin
 	raiserror(@errorsave, 15, 1, 'Custom error message')
 	return @errorsave
 end
+GO
 
-sp_addmessage @msgnum = 53120, @severity=1, @msgtext = 'test user defined error msg' 
+sp_addmessage @msgnum = 53120, @severity=1, @msgtext = 'test user defined error msg'
 
 CREATE procedure [dbo].[ListUsers_P] @howmuch int AS
 BEGIN
-select top (@howmuch) * from users order by userid
+select top (@howmuch) * from Users order by UserId
 END;
+GO
 
 create procedure MultiplyIO(@factor int, @val int output) as
 begin
 	set @val = @factor*@val;
 end;
+GO
 
 create procedure TestDecimal
 @inParam decimal(15, 8),
@@ -209,3 +248,10 @@ begin
 set @copyOfInParam = @inParam
 set @constOutParam = 123.456;
 end
+GO
+
+create procedure [dbo].[MakeUser] AS
+begin
+	insert into Users (Name, UserName) values ('user1', 'fromproc');
+end
+GO

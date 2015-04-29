@@ -6,7 +6,6 @@ import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessorsMapBuilder;
 import dbfit.util.Direction;
 import static dbfit.util.Direction.*;
-import static dbfit.util.NameNormaliser.normaliseName;
 import dbfit.util.TypeNormaliserFactory;
 import static dbfit.environment.SqlServerTypeNameNormaliser.normaliseTypeName;
 
@@ -15,7 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -80,15 +78,17 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
             String query) throws SQLException {
         DbParameterAccessorsMapBuilder params = new DbParameterAccessorsMapBuilder();
 
-        if (objname.contains(".")) {
-            String[] schemaAndName = objname.split("[\\.]", 2);
-            objname = "[" + schemaAndName[0] + "].[" + schemaAndName[1] + "]";
-        } else {
-            objname = "[" + normaliseName(objname) + "]";
+        objname = objname.replaceAll("[^a-zA-Z0-9_.#]", "");
+        String[] qualifiers = objname.split("\\.");
+        StringBuilder bracketedName = new StringBuilder();
+        String separator = "";
+        for (int i = 0; i < qualifiers.length; i++) {
+            bracketedName.append(separator + "[" + qualifiers[i] + "]");
+            separator = ".";
         }
 
         try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
-            dc.setString(1, normaliseName(objname));
+            dc.setString(1, bracketedName.toString());
             ResultSet rs = dc.executeQuery();
 
             while (rs.next()) {
@@ -125,7 +125,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
     private static List<String> decimalTypes = Arrays.asList(new String[] {
             "DECIMAL", "MONEY", "SMALLMONEY" });
     private static List<String> timestampTypes = Arrays.asList(new String[] {
-            "SMALLDATETIME", "DATETIME", "DATETIME2", "TIMESTAMP" });
+            "SMALLDATETIME", "DATETIME", "DATETIME2" });
     private static List<String> dateTypes = Arrays.asList("DATE");
     private static List<String> timeTypes = Arrays.asList("TIME");
 
@@ -134,7 +134,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
     // private static List<String> doubleTypes=Arrays.asList(new
     // String[]{"DOUBLE"});
 
-    // private static string[] BinaryTypes=new string[] {"BINARY","VARBINARY"};
+    // private static string[] BinaryTypes=new string[] {"BINARY","VARBINARY", "TIMESTAMP"};
     // private static string[] GuidTypes = new string[] { "UNIQUEIDENTIFIER" };
     // private static string[] VariantTypes = new string[] { "SQL_VARIANT" };
 

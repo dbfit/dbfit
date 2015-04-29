@@ -4,7 +4,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[Multiply]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
 BEGIN
-execute dbo.sp_executesql @statement = N'  create function [dbo].[Multiply](@n1 int, @n2 int) returns int as  begin  	declare @num3 int;  	set @num3 = @n1*@n2;  	return @num3;  end  ' 
+execute dbo.sp_executesql @statement = N'  create function [dbo].[Multiply](@n1 int, @n2 int) returns int as  begin  	declare @num3 int;  	set @num3 = @n1*@n2;  	return @num3;  end  '
 END
 GO
 
@@ -20,7 +20,7 @@ AS
 BEGIN
 	SET @strlength = DataLength(@name);
 END
-' 
+'
 END
 GO
 
@@ -40,11 +40,11 @@ CREATE FUNCTION [dbo].[ReturnUserTable_F]
 (
 	@howmuch int
 )
-RETURNS 
-@userTable TABLE 
+RETURNS
+@userTable TABLE
 (
 	-- Add the column definitions for the TABLE variable here
-	[user] varchar(50), 
+	[user] varchar(50),
 	[username] varchar(255)
 )
 AS
@@ -58,10 +58,10 @@ BEGIN
 		INSERT @userTable([user], [username])
 			VALUES(''User '' + CAST(@i AS VARCHAR(10)), ''Username '' + CAST(@i AS VARCHAR(10)))
 	END
-	
-	RETURN 
+
+	RETURN
 END
-' 
+'
 END
 GO
 
@@ -81,7 +81,7 @@ AS
 BEGIN
 	SET @concatenated = @firstString + '' '' + @secondString
 END
-' 
+'
 END
 GO
 
@@ -104,7 +104,7 @@ BEGIN
 	SET @concatenated = @firstString + '' '' + @secondString
 	RETURN @concatenated
 END
-' 
+'
 END
 
 
@@ -146,7 +146,7 @@ BEGIN
 			VALUES(''User '' + CAST(@i AS VARCHAR(10)), ''Username '' + CAST(@i AS VARCHAR(10)))
 	END
 END
-' 
+'
 END
 GO
 
@@ -159,7 +159,7 @@ BEGIN
 EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[DeleteUserTable_P]
 AS
 DELETE [Users];
-' 
+'
 END
 GO
 
@@ -186,7 +186,7 @@ end
 GO
 
 --User needs to have permission to perform this action.
-sp_addmessage @msgnum = 53120, @severity=1, @msgtext = 'test user defined error msg' 
+sp_addmessage @msgnum = 53120, @severity=1, @msgtext = 'test user defined error msg'
 GO
 
 --drop procedure [dbo].[TestProc2]
@@ -203,7 +203,7 @@ GO
 --GO
 --drop function [dbo].[ReturnUserTable_F]
 --GO
---drop procedure [dbo].[CalcLength_P] 
+--drop procedure [dbo].[CalcLength_P]
 --GO
 --drop function [dbo].[Multiply]
 --GO
@@ -217,3 +217,9 @@ begin
 set @copyOfInParam = @inParam
 set @constOutParam = 123.456;
 end
+
+create procedure [dbo].[MakeUser] AS
+begin
+	insert into Users (Name, UserName) values ('user1', 'fromproc');
+end
+GO

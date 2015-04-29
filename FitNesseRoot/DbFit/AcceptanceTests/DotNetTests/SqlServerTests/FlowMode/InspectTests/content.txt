@@ -4,13 +4,13 @@
 
 !3 Inspect Table prints table/view columns to be used for Insert/Update/Query procedure
  
-!|Inspect Table|users|
+!|Inspect Table|Users|
 
 !3 Inspect query prints columns and data
 
-|Insert|users|
+|Insert|Users|
 |name|username|
 |david haselhoff|dhoff|
 |arthur dent|adent|
 
-!|Inspect query|select * from users|
+!|Inspect query|select * from Users|
