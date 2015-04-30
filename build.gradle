@@ -68,6 +68,21 @@ task copyExtraLibs(dependsOn: [copyLocal]) << {
     }
 }
 
+task copyTestLibs(dependsOn: ':dbfit-java:derby:integrationTestJar') << {
+    copy {
+        from 'dbfit-java'
+        include '**/*integration-test*.jar'
+        exclude 'build/**/*.jar'
+		exclude proprietaryLibs()
+        exclude experimentalItems()
+        into 'dist/lib'
+        eachFile { details ->
+            details.path = flattenPath(details.path)
+        }
+        includeEmptyDirs = false 
+	}
+}
+
 task copyConnections(dependsOn: [copyLocal]) << {
     copy {
         from 'dbfit-java/oracle/TestDbConnectionDbFitOracle.properties.default'
@@ -142,7 +157,6 @@ task bundleFitsharp(dependsOn: copyLocal) << {
     file('dist/fitsharp/Runner.exe.config') << '<configuration><runtime><loadFromRemoteSources enabled="true"/></runtime></configuration>'
 }
 
-
 task bundle(type: Zip, dependsOn: [copyLocal, wikiDocs, bundleFitsharp]) {
     description = 'creates the zip file for distributing dbfit'
     from 'dist'
@@ -151,13 +165,13 @@ task bundle(type: Zip, dependsOn: [copyLocal, wikiDocs, bundleFitsharp]) {
     destinationDir new File('zips')
 }
 
-task start(type: Exec, dependsOn: [copyLocal, copyExtraLibs, copyConnections, wikiDocs, bundleFitsharp]) {
+task start(type: Exec, dependsOn: [copyLocal, copyExtraLibs, copyTestLibs, copyConnections, wikiDocs, bundleFitsharp]) {
     workingDir './dist'
     description = 'starts fitness with dbfit'
     executable onWindows() ? 'startFitnesse.bat' : './startFitnesse.sh'
 }
 
-task starthere(type: Exec, dependsOn: [copyLocal, copyExtraLibs, copyConnections]) {
+task starthere(type: Exec, dependsOn: [copyLocal, copyExtraLibs, copyTestLibs, copyConnections]) {
     workingDir './dist'
     description = 'starts fitness with dbfit on top of real tests sources'
     executable onWindows() ? 'startFitnesse.bat' : './startFitnesse.sh'
@@ -165,30 +179,30 @@ task starthere(type: Exec, dependsOn: [copyLocal, copyExtraLibs, copyConnections
 }
 
 task fastbuild(dependsOn: [
-    ':dbfit-java:core:check',
-    ':dbfit-java:db2:check',
-    ':dbfit-java:derby:check',
-    ':dbfit-java:hsqldb:check',
-    ':dbfit-java:mysql:check',
-    ':dbfit-java:netezza:check',
-    ':dbfit-java:oracle:check',
-    ':dbfit-java:postgres:check',
-    ':dbfit-java:sqlserver:check',
-    ':dbfit-java:teradata:check',
-    ':dbfit-java:derby:integrationTest',
-    ':dbfit-java:hsqldb:integrationTest'
+      ':dbfit-java:core:check'
+    , ':dbfit-java:db2:check'
+    , ':dbfit-java:derby:check'
+    , ':dbfit-java:hsqldb:check'
+    , ':dbfit-java:mysql:check'
+    , ':dbfit-java:netezza:check'
+    , ':dbfit-java:oracle:check'
+    , ':dbfit-java:postgres:check'
+    , ':dbfit-java:sqlserver:check'
+    , ':dbfit-java:teradata:check'
+    , ':dbfit-java:derby:integrationTest'
+    , ':dbfit-java:hsqldb:integrationTest'
     ])
 
 task integrationBuild(dependsOn: [
-    ':dbfit-java:db2:integrationTest',
-    ':dbfit-java:derby:integrationTest',
-    ':dbfit-java:hsqldb:integrationTest',
-    ':dbfit-java:mysql:integrationTest',
-    //':dbfit-java:netezza:integrationTest',
-    ':dbfit-java:oracle:integrationTest',
-    ':dbfit-java:postgres:integrationTest'
-    //':dbfit-java:sqlserver:integrationTest',
-    //':dbfit-java:teradata:integrationTest',
+      ':dbfit-java:db2:integrationTest',
+    , ':dbfit-java:derby:integrationTest'
+    , ':dbfit-java:hsqldb:integrationTest'
+    , ':dbfit-java:mysql:integrationTest'
+    //, ':dbfit-java:netezza:integrationTest'
+    , ':dbfit-java:oracle:integrationTest'
+    , ':dbfit-java:postgres:integrationTest'
+    //, ':dbfit-java:sqlserver:integrationTest'
+    //, ':dbfit-java:teradata:integrationTest'
     ])
 
 def onWindows() {
@@ -206,4 +220,3 @@ def experimentalItems() {
 def keepUncommitedTests() {
     project.hasProperty('keepTests') && keepTests != 'false'
 }
-

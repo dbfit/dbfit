@@ -8,9 +8,9 @@
 
 !3 Inspect query prints columns and data
 
-|Insert|users|
+|Insert|Users|
 |name|username|
 |david haselhoff|dhoff|
 |arthur dent|adent|
 
-!|Inspect query|select * from users|
+!|Inspect query|select * from Users|

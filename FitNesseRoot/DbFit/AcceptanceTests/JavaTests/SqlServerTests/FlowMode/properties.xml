@@ -8,13 +8,12 @@
 	<Search/>
 	<Suite/>
 	<SymbolicLinks>
-		<BulkInsert>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsert</BulkInsert>
 		<BulkInsertWithReturning>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsertWithReturning</BulkInsertWithReturning>
 		<BulkInsertWithSchemaName>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsertWithSchemaName</BulkInsertWithSchemaName>
 		<BulkInsertWithWeirdColumnNames>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsertWithWeirdColumnNames</BulkInsertWithWeirdColumnNames>
 		<CallingFunctions>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.CallingFunctions</CallingFunctions>
 		<ColumnMatching>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ColumnMatching</ColumnMatching>
-		<CommonSuite>.DbFit.AcceptanceTests.CoreTests.CommonSuite</CommonSuite>
+		<CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
 		<DataTypes>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.DataTypes</DataTypes>
 		<ExecutingStatements>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ExecutingStatements</ExecutingStatements>
 		<ExpectingErrors>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ExpectingErrors</ExpectingErrors>
@@ -31,7 +30,6 @@
 		<SequenceSelect>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.SequenceSelect</SequenceSelect>
 		<SimpleSelect>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.SimpleSelect</SimpleSelect>
 		<SimpleStoredProc>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.SimpleStoredProc</SimpleStoredProc>
-		<StoreAndCompareQueries>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.StoreAndCompareQueries</StoreAndCompareQueries>
 		<StoredProcReturningQuery>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.StoredProcReturningQuery</StoredProcReturningQuery>
 		<StoredProcedureWithException>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.StoredProcedureWithException</StoredProcedureWithException>
 		<TransactionsTest>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.TransactionsTest</TransactionsTest>

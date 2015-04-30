@@ -1,16 +1,16 @@
 !3 Update table handles the update command - specify fields to be updated with = on the end.
 
-|insert|users|
+|insert|Users|
 |name|username|
 |arthur dent|adent|
 |ford prefect|fpref|
 |zaphod beeblebrox|zaphod|
 
-|update|users|
+|update|Users|
 |username=|name|
 |adent2|arthur dent|
 
-|query|select * from users|
+|query|select * from Users|
 |name|username|
 |arthur dent|adent2|
 |ford prefect|fpref|
@@ -18,11 +18,11 @@
 
 !3 same column can be used in the selection and update part
 
-|update|users|
+|update|Users|
 |username=|username|
 |adent3|adent2|
 
-|query|select * from users|
+|query|select * from Users|
 |name|username|
 |arthur dent|adent3|
 |ford prefect|fpref|
@@ -30,17 +30,17 @@
 
 !3 symbols work with update part
 
-|query|select * from users|
+|query|select * from Users|
 |name|username|userid?|
 |arthur dent|adent3|>>ad|
 |ford prefect|fpref|>>fp|
 |zaphod beeblebrox|zaphod|>>z|
 
-|update|users|
+|update|Users|
 |username=|userid|
 |adent4|<<ad|
 
-|query|select * from users|
+|query|select * from Users|
 |name|username|
 |arthur dent|adent4|
 |ford prefect|fpref|
@@ -48,11 +48,11 @@
 
 !3 multiple columns on the update side
 
-|update|users|
+|update|Users|
 |name=|username=|userid|
 |trillian|tri|<<ad|
 
-|query|select * from users|
+|query|select * from Users|
 |name|username|
 |trillian|tri|
 |ford prefect|fpref|
@@ -60,11 +60,11 @@
 
 !3 multiple columns on the select side
 
-|update|users|
+|update|Users|
 |name=|username=|name|userid|
 |john travolta|jtrav|trillian|<<ad|
 
-|query|select * from users|
+|query|select * from Users|
 |name|username|
 |john travolta|jtrav|
 |ford prefect|fpref|
