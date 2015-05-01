@@ -6,6 +6,7 @@ import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessorsMapBuilder;
 import dbfit.util.Direction;
 import static dbfit.util.Direction.*;
+import static dbfit.util.LangUtils.enquoteAndJoin;
 import dbfit.util.TypeNormaliserFactory;
 import static dbfit.environment.SqlServerTypeNameNormaliser.normaliseTypeName;
 
@@ -79,16 +80,10 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
         DbParameterAccessorsMapBuilder params = new DbParameterAccessorsMapBuilder();
 
         objname = objname.replaceAll("[^a-zA-Z0-9_.#]", "");
-        String[] qualifiers = objname.split("\\.");
-        StringBuilder bracketedName = new StringBuilder();
-        String separator = "";
-        for (int i = 0; i < qualifiers.length; i++) {
-            bracketedName.append(separator + "[" + qualifiers[i] + "]");
-            separator = ".";
-        }
+        String bracketedName = enquoteAndJoin(objname.split("\\."), ".", "[", "]");
 
         try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
-            dc.setString(1, bracketedName.toString());
+            dc.setString(1, bracketedName);
             ResultSet rs = dc.executeQuery();
 
             while (rs.next()) {
