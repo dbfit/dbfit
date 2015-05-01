@@ -1,5 +1,5 @@
 ext {
-    fitNesseVersion = '20140903'
+    fitNesseVersion = '20150424'
     mockitoVersion = '1.10.19'
 }
 
