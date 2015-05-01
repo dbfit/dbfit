@@ -17,7 +17,7 @@
 
 |set parameter|userid|<<zeka|
 
-|Query|Select * from Users where userid=@userid|
+|Query|Select * from Users where !-UserId-!=@userid|
 |username|name|userid|
 |Zeka|Dusko Dugousko|<<zeka|
 

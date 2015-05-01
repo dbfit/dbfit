@@ -2,13 +2,14 @@
 <properties>
 	<Edit/>
 	<Files/>
-	<LastModified>20080330043718</LastModified>
 	<Properties/>
 	<RecentChanges/>
 	<Refactor/>
 	<Search/>
 	<Suite/>
-	<Suites/>
+	<SymbolicLinks>
+		<DisabledTests>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.DisabledTests</DisabledTests>
+	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>
 	<saveId>1206796425000</saveId>
