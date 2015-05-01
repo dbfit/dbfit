@@ -13,12 +13,22 @@ public class LangUtils {
     }
 
     public static String join(List<String> list, String separator) {
+        return enquoteAndJoin(list, separator, "", "");
+    }
+
+    public static String enquoteAndJoin(Iterable<String> list,
+            String separator, String prefix, String suffix) {
         StringBuilder s = new StringBuilder();
-        for (int i = 0; i < list.size(); i++) {
-            s.append(list.get(i));
-            if (i < list.size() - 1)
-                s.append(separator);
-        };
+        String sep = "";
+        for (String item: list) {
+            s.append(sep).append(prefix).append(item).append(suffix);
+            sep = separator;
+        }
         return s.toString();
+    }
+
+    public static String enquoteAndJoin(String[] list,
+            String separator, String prefix, String suffix) {
+        return enquoteAndJoin(java.util.Arrays.asList(list), separator, prefix, suffix);
     }
 }

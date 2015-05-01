@@ -13,4 +13,8 @@ public class LangUtilsTest {
     @Test public void join() {
         assertEquals("A,B,C", LangUtils.join(asList("A", "B", "C"), ","));
     }
+
+    @Test public void enquoteAndJoin() {
+        assertEquals("[A].[B].[C]", LangUtils.enquoteAndJoin(asList("A", "B", "C"), ".", "[", "]"));
+    }
 }
