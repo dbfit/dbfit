@@ -24,21 +24,27 @@ The quickest way to get feedback on your code changes is to run the fast build:
 
     $ ./gradlew clean fastbuild
 
-This is a pure-Java build that runs the `core` unit tests, the Derby integration tests (with Derby running embedded) and the HSQLDB integration tests (with HSQLDB running in-process, memory-only).
+This is a pure-Java build that runs the unit tests, the Derby integration tests (with Derby running embedded) and the HSQLDB integration tests (with HSQLDB running in-process, memory-only).
 
 #### Integration tests
 
 If you make changes to any database adapter, it's sufficient to make sure that the tests for only that adapter run eg if you make any changes to the Mysql adapter, you can run the Mysql integration tests:
 
-    $ ./gradlew :dbfit-java:mysql:test
+    $ ./gradlew :dbfit-java:mysql:integrationTest
 
-If you have to make changes to `core`, please run all integration tests (because `core` changes can affect any of the adapters). This is easiest done from the test virtual machine.
+If you have to make changes to `core`, please run all integration tests (because `core` changes can affect any of the adapters). You can run the integration tests with:
+
+    $ ./gradlew integrationBuild
+
+Note that this runs the integration tests for the adaptors listed under the `integrationBuild` task in the main Gradle build script (`build.gradle` in dbfit project root directory). You can edit this task to run the integration tests for the set of adaptors for which you have test databases available.
+
+Running the integration tests is most easily done from the test virtual machine.
 
 #### Integration tests without a VM
 
 You can set up an integration test environment without a VM by:
  *  installing the appropriate database locally
- *  executing the SQL scripts found in `src/test/resources` of the respective DB driver
+ *  executing the SQL scripts found in `src/integration-test/resources` of the respective DB driver
 
 However, unlike the VM, this approach doesn't necessarily create all the users and permissions needed for the tests.
 
@@ -55,6 +61,7 @@ The VM doesn't include:
  *  a working Oracle installation (however there is a shell script to help with the installation described below)
  *  a working SQL Server installation (obviously)
  *  a working Teradata installation (this can be created separately as a VMWare or EC2 installation)
+ *  a working Netezza installation (this can be created separately as a pair of VMWare machines)
 
 ### Setting up the test VM
 

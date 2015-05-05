@@ -13,7 +13,7 @@
 
 2. Install DB2 (this may take a while to complete)
 
-        sudo dbfit-java/db2/src/test/resources/install_db2.sh
+        sudo dbfit-java/db2/src/integration-test/resources/install_db2.sh
 
 3. Run integration tests to verify setup
 

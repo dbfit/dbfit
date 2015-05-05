@@ -1,4 +1,4 @@
-!path ../dbfit-java/teradata/src/test/resources
+!path ../dbfit-java/teradata/src/integration-test/resources
 
 !3 Functions are tested like procedures, with ? used for the result
 
