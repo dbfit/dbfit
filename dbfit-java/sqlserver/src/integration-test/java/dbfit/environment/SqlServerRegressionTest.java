@@ -12,7 +12,6 @@ public class SqlServerRegressionTest {
     @Suite("DbFit.AcceptanceTests.JavaTests.SqlServerTests.FlowMode")
     @FitnesseDir("../..")
     @OutputDir("../../tmp")
-    @Ignore
     public static class FlowModeTest {
         @Test public void dummy(){}
     }

@@ -5,7 +5,6 @@ import dbfit.util.DbParameterAccessor;
 import dbfit.environment.SqlServerEnvironment;
 import dbfit.util.Direction;
 import org.junit.Test;
-import org.junit.Ignore;
 import static org.junit.Assert.*;
 
 public class SqlServerDbEnvironmentUnitTests {
