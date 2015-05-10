@@ -192,7 +192,8 @@ project('sqlserver') {
 
     dependencies {
         compile project(':dbfit-java:core')
-        testCompile 'com.microsoft:sqljdbc:4.1.5605@jar'
+        testRuntime 'com.microsoft:sqljdbc:4.1.5605@jar'
+        integrationTestRuntime 'com.microsoft:sqljdbc:4.1.5605@jar'
     }
 }
 
