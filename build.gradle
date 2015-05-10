@@ -164,9 +164,32 @@ task starthere(type: Exec, dependsOn: [copyLocal, copyExtraLibs, copyConnections
     args '-d', '..', '-o', '-f', 'plugins.properties'
 }
 
-task fastbuild(dependsOn: [':dbfit-java:core:check', ':dbfit-java:db2:check', ':dbfit-java:derby:check', ':dbfit-java:hsqldb:check', ':dbfit-java:mysql:check', ':dbfit-java:netezza:check', ':dbfit-java:oracle:check', ':dbfit-java:postgres:check', ':dbfit-java:sqlserver:check', ':dbfit-java:teradata:check', ':dbfit-java:derby:integrationTest', ':dbfit-java:hsqldb:integrationTest'])
+task fastbuild(dependsOn: [
+    ':dbfit-java:core:check',
+    ':dbfit-java:db2:check',
+    ':dbfit-java:derby:check',
+    ':dbfit-java:hsqldb:check',
+    ':dbfit-java:mysql:check',
+    ':dbfit-java:netezza:check',
+    ':dbfit-java:oracle:check',
+    ':dbfit-java:postgres:check',
+    ':dbfit-java:sqlserver:check',
+    ':dbfit-java:teradata:check',
+    ':dbfit-java:derby:integrationTest',
+    ':dbfit-java:hsqldb:integrationTest'
+    ])
 
-task integrationBuild(dependsOn: [':dbfit-java:derby:integrationTest', ':dbfit-java:hsqldb:integrationTest', ':dbfit-java:mysql:integrationTest', ':dbfit-java:oracle:integrationTest', ':dbfit-java:postgres:integrationTest'])
+task integrationBuild(dependsOn: [
+    ':dbfit-java:db2:integrationTest',
+    ':dbfit-java:derby:integrationTest',
+    ':dbfit-java:hsqldb:integrationTest',
+    ':dbfit-java:mysql:integrationTest',
+    //':dbfit-java:netezza:integrationTest',
+    ':dbfit-java:oracle:integrationTest',
+    ':dbfit-java:postgres:integrationTest'
+    //':dbfit-java:sqlserver:integrationTest',
+    //':dbfit-java:teradata:integrationTest',
+    ])
 
 def onWindows() {
     System.properties['os.name'].toLowerCase().contains('windows')
