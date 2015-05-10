@@ -172,8 +172,8 @@ project('sqlserver') {
     description = 'DBFit sqlserver engine'
 
     dependencies {
-        compile group: 'net.sourceforge.jtds', name: 'jtds', version: '1.2.2'
         compile project(':dbfit-java:core')
+        testCompile 'com.microsoft:sqljdbc:4.1.5605@jar'
     }
 }
 
