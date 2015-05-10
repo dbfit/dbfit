@@ -46,11 +46,29 @@ subprojects {
         into "$buildDir/libs"
     }
 
+    sourceSets {
+        integrationTest {
+            java {
+                srcDir 'src/integration-test/java'
+            }
+            resources {
+                srcDir 'src/integration-test/resources'
+            }
+        }
+    }
+
     dependencies {
-        testRuntime 'com.dbdeploy:dbdeploy-ant:3.0M3'
         testCompile 'junit:junit:4.12'
         testCompile "org.hamcrest:java-hamcrest:2.0.0.0"
         testCompile "commons-io:commons-io:2.4"
+        testRuntime 'com.dbdeploy:dbdeploy-ant:3.0M3'
+        integrationTestCompile "dummy:fitnesse-standalone:${fitNesseVersion}@jar"
+    }
+
+    task integrationTest(type: Test) {
+        testClassesDir = sourceSets.integrationTest.output.classesDir
+        classpath = sourceSets.integrationTest.runtimeClasspath
+        classpath += sourceSets.main.runtimeClasspath
     }
 
     ext.dbdeploy = { dbDriver, url, userid, password, delimiterType = 'normal' ->
@@ -61,12 +79,12 @@ subprojects {
                 url: url,
                 userid: userid,
                 password: password,
-                dir: "$projectDir/src/test/resources",
+                dir: "$projectDir/src/integration-test/resources",
                 delimiterType: delimiterType,
         )
     }
 
-    test.inputs.dir file("$projectDir/../../FitNesseRoot/DbFit/AcceptanceTests/JavaTests")
+    integrationTest.inputs.dir file("$projectDir/../../FitNesseRoot/DbFit/AcceptanceTests/JavaTests")
 }
 
 
@@ -100,6 +118,7 @@ project('derby') {
     configurations {
         derby
         testRuntime.extendsFrom derby
+        integrationTestRuntime.extendsFrom derby
     }
     dependencies {
         compile project(':dbfit-java:core')
@@ -127,7 +146,7 @@ project('oracle') {
         testCompile "org.mockito:mockito-core:${mockitoVersion}"
     }
 
-    test.doFirst {
+    integrationTest.doFirst {
         copy {
             from 'TestDbConnectionDbFitOracle.properties.default'
             into '.'
@@ -150,7 +169,7 @@ project('mysql') {
         compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
     }
 
-    test.doFirst {
+    integrationTest.doFirst {
         dbdeploy('com.mysql.jdbc.Driver', 'jdbc:mysql://127.0.0.1/dbfit', 'dbfit_user', 'password')
     }
 }
@@ -163,7 +182,7 @@ project('postgres') {
         compile group: 'org.postgresql', name: 'postgresql', version: '9.3-1101-jdbc41'
     }
 
-    test.doFirst {
+    integrationTest.doFirst {
         dbdeploy('org.postgresql.Driver', 'jdbc:postgresql:dbfit', 'dbfit', 'dbfit', 'row')
     }
 }
@@ -173,7 +192,8 @@ project('sqlserver') {
 
     dependencies {
         compile project(':dbfit-java:core')
-        testCompile 'com.microsoft:sqljdbc:4.1.5605@jar'
+        testRuntime 'com.microsoft:sqljdbc:4.1.5605@jar'
+        integrationTestRuntime 'com.microsoft:sqljdbc:4.1.5605@jar'
     }
 }
 

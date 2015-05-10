@@ -24,7 +24,7 @@ There are two options for hosting the Teradata Express Edition (TDE) Linux VM:
 2. Log into the Teradata VM as the user `root` (password `root`) and start Teradata Studio Express from the desktop icon.
    Connect to Teradata (on `localhost`) as user `dbc` (password `dbc`) in Teradata transaction mode (`TMODE=TERA`).
 
-3. Open the Teradata acceptance tests database objects setup script from the host `dbfit-java/teradata/src/test/resources/acceptancescripts-teradata.sql`.
+3. Open the Teradata acceptance tests database objects setup script from the host `dbfit-java/teradata/src/integration-test/resources/acceptancescripts-teradata.sql`.
    
    Copy and paste the script into a Teradata Studio Express SQL Editor query window on the guest and run the script.
    
@@ -35,4 +35,4 @@ There are two options for hosting the Teradata Express Edition (TDE) Linux VM:
 
 4. Run integration tests to verify setup
 
-        ./gradlew :dbfit-java:teradata:test
+        ./gradlew :dbfit-java:teradata:integrationTest
