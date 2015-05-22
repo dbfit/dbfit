@@ -1,6 +1,6 @@
 !3 Use ? to mark columns that should return values
 
-!|Insert|users|
+!|Insert|Users|
 |username|name|userid?|
 |pera|Petar Detlic|>>pera|
 |Mika|Mitar Miric|>>mika|
@@ -9,7 +9,7 @@
 
 !3 Confirm that IDs are the same as in the database
 
-!|Ordered Query|Select * from users|
+!|Ordered Query|Select * from Users|
 |username|name|userid|
 |pera|Petar Detlic|<<pera|
 |Mika|Mitar Miric|<<mika|
@@ -18,6 +18,6 @@
 
 !3 Stored values can be used in queries directly
 
-|Query|Select * from users where userid=@zeka|
+|Query|Select * from Users where userid=@zeka|
 |username|name|userid|
 |Zeka|Dusko Dugousko|<<zeka|

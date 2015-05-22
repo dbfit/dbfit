@@ -71,6 +71,12 @@ subprojects {
         classpath += sourceSets.main.runtimeClasspath
     }
 
+    task integrationTestJar(type: Jar) {
+        from sourceSets.integrationTest.output
+		baseName = "dbfit-" + project.archivesBaseName + "-integration-test"
+		include('**/*Support*')
+    }
+
     ext.dbdeploy = { dbDriver, url, userid, password, delimiterType = 'normal' ->
         ant.taskdef(name: 'dbdeploy',
                 classname: 'com.dbdeploy.AntTarget',

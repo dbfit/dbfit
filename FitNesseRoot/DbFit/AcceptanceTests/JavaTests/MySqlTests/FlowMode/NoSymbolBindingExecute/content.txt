@@ -1,8 +1,7 @@
-
 |set option|bind symbols|false|
 
-|execute| insert into users (name, username) values ('@hey','uuu')|
+|execute|insert into Users (name, username) values ('@hey','uuu')|
 
-|query|select * from users|
+|query|select * from Users|
 |name|username|
 |@hey|uuu|

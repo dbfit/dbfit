@@ -15,4 +15,12 @@ public class SqlServerRegressionTest {
     public static class FlowModeTest {
         @Test public void dummy(){}
     }
+
+    @RunWith(FitNesseRunner.class)
+    @Suite("DbFit.AcceptanceTests.JavaTests.SqlServerTests.StandaloneFixtures")
+    @FitnesseDir("../..")
+    @OutputDir("../../tmp")
+    public static class StandaloneFixturesTest {
+        @Test public void dummy(){}
+    }
 }

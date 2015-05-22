@@ -1,15 +1,15 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <properties>
-	<Edit/>
-	<Files/>
-	<Properties/>
-	<RecentChanges/>
-	<Refactor/>
-	<Search/>
-	<Suite/>
-	<SymbolicLinks>
-		<CommonSuite>.DbFit.AcceptanceTests.CoreTests.CommonSuite</CommonSuite>
-	</SymbolicLinks>
-	<Versions/>
-	<WhereUsed/>
+<Edit/>
+<Files/>
+<Properties/>
+<RecentChanges/>
+<Refactor/>
+<Search/>
+<Suite/>
+<SymbolicLinks>
+<Core>.DbFit.AcceptanceTests.CoreTests</Core>
+</SymbolicLinks>
+<Versions/>
+<WhereUsed/>
 </properties>

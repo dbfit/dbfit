@@ -6,12 +6,7 @@
 <RecentChanges/>
 <Refactor/>
 <Search/>
-<Suite/>
-<SymbolicLinks>
-<CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
-</SymbolicLinks>
+<Test/>
 <Versions/>
 <WhereUsed/>
-<saveId>1211976567031</saveId>
-<ticketId>4781297850769370943</ticketId>
 </properties>

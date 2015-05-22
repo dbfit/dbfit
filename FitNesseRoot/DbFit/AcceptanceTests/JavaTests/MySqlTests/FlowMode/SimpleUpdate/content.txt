@@ -1,14 +1,14 @@
-|insert|users|
+|insert|Users|
 |name|username|
 |arthur dent|adent|
 |ford prefect|fpref|
 |zaphod beeblebrox|zaphod|
 
-|update|users|
+|update|Users|
 |username=|name|
 |adent2|arthur dent|
 
-|query|select * from users|
+|query|select * from Users|
 |name|username|
 |arthur dent|adent2|
 |ford prefect|fpref|

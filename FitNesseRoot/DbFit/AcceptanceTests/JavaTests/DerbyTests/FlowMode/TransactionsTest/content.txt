@@ -1,4 +1,9 @@
-|Execute|Create table Test_DBFit(name varchar(50), luckyNumber int)|
+Drop Users table before committing otherwise the common TearDown does not function as it should.
+|Execute Ddl|Drop table Users|
+
+|Execute Ddl|Drop procedure !-MakeUser-!|
+
+|Execute Ddl|Create table Test_DBFit(name varchar(50), luckyNumber int)|
 
 |Commit|
 
@@ -32,6 +37,11 @@
 |Darth Maul|10|
 |Obi Wan|80|
 
-|Execute|Drop table Test_DBFit|
+|Execute Ddl|Drop table Test_DBFit|
 
 |Commit|
+
+Recreate Users table before committing otherwise the common TearDown does not function as it should.
+|Execute Ddl|Create table Users (dummy char(1))|
+
+|Execute Ddl|CREATE PROCEDURE !-MakeUser-!() LANGUAGE JAVA PARAMETER STYLE JAVA EXTERNAL NAME 'dbfit.environment.!-DerbyRegressionSupportStoredProcs.MakeUser-!'|

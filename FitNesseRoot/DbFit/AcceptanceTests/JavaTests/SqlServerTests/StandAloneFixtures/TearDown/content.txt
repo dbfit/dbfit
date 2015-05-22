@@ -1,0 +1,5 @@
+|Database Environment|
+|rollback|
+
+!|dbfit.util.ExportFixture|
+|dbfit.fixture|

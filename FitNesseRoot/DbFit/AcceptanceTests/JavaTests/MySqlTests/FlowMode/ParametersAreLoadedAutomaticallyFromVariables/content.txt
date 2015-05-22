@@ -1,6 +1,6 @@
 Parameters are loaded automatically from variables, no need to set them explicitly with Set Parameter
 
-!|Insert|users|
+!|Insert|Users|
 |username|name|userid?|
 |pera|Petar Detlic|>>pera|
 |Mika|Mitar Miric|>>mika|
@@ -8,6 +8,6 @@ Parameters are loaded automatically from variables, no need to set them explicit
 |DevNull|null|>>nll|
 
 
-|Query|Select * from users where userid=@pera|
+|Query|Select * from Users where userid=@pera|
 |username|name|userid|
 |pera|Petar Detlic|<<pera|
