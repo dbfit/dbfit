@@ -141,9 +141,9 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Users]') AND type in (N'U'))
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[users]') AND type in (N'U'))
 BEGIN
-CREATE TABLE [dbo].[Users](
+CREATE TABLE [dbo].[users](
 	[Name] [varchar](50) NULL,
 	[UserName] [varchar](50) NULL,
 	[UserId] [int] IDENTITY(1,1) NOT NULL
@@ -158,7 +158,9 @@ GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[PopulateUserTable_P]') AND type in (N'P', N'PC'))
 BEGIN
 EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[PopulateUserTable_P]
-@howmuch INT
+(
+  @howmuch INT
+)
 AS
 BEGIN
 	-- Fill the table variable with the rows for your result set
@@ -167,7 +169,7 @@ BEGIN
 	WHILE (@i < @howmuch)
 	BEGIN
 		SET @i = @i + 1
-		INSERT [Users]([Name], [UserName])
+		INSERT [users]([Name], [UserName])
 			VALUES(''User '' + CAST(@i AS VARCHAR(10)), ''Username '' + CAST(@i AS VARCHAR(10)))
 	END
 END
@@ -182,13 +184,15 @@ GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[OpenCrsr_P]') AND type in (N'P', N'PC'))
 BEGIN
 EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[OpenCrsr_P]
-@howmuch INT,
-@OutCrsr CURSOR VARYING OUTPUT
+(
+  @howmuch INT
+, @OutCrsr CURSOR VARYING OUTPUT
+)
 AS
 BEGIN
 	SET @OutCrsr = CURSOR FOR
 	SELECT TOP (@howmuch) [Name], [UserName], [UserId]
-	FROM [Users];
+	FROM [users];
 
 	OPEN @OutCrsr;
 END
@@ -204,7 +208,7 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[De
 BEGIN
 EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[DeleteUserTable_P]
 AS
-DELETE [Users];
+DELETE [users];
 '
 END
 GO
@@ -226,10 +230,15 @@ end
 GO
 
 sp_addmessage @msgnum = 53120, @severity=1, @msgtext = 'test user defined error msg'
+GO
 
-CREATE procedure [dbo].[ListUsers_P] @howmuch int AS
+CREATE procedure [dbo].[ListUsers_P]
+(
+  @howmuch int
+)
+AS
 BEGIN
-select top (@howmuch) * from Users order by UserId
+select top (@howmuch) * from users order by UserId
 END;
 GO
 
@@ -252,6 +261,6 @@ GO
 
 create procedure [dbo].[MakeUser] AS
 begin
-	insert into Users (Name, UserName) values ('user1', 'fromproc');
+	insert into users (Name, UserName) values ('user1', 'fromproc');
 end
 GO

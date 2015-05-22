@@ -1,6 +1,6 @@
 !3 if a stored proc opens a cursor, it can be directly queried
 
-|insert|Users|
+|insert|users|
 |Name|!-UserName-!|
 |user1|user name 1|
 |user2|user name 2|
@@ -9,7 +9,6 @@
 |user5|user name 5|
 |user6|user name 6|
 |user7|user name 7|
-
 
 |query|ListUsers_P 3|
 |Name|!-UserName-!|
