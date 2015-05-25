@@ -1,5 +1,3 @@
-|execute|${CREATEUSERTABLE}|
-
 |insert|USERS|
 |NAME|USERNAME|
 |arthur dent|adent|
@@ -15,5 +13,3 @@
 |arthur dent|adent2|
 |ford prefect|fpref|
 |zaphod beeblebrox|zaphod|
-
-|execute|${DROPUSERTABLE}|
