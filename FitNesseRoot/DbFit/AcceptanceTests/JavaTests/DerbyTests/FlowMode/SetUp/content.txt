@@ -1,3 +1,9 @@
 !|dbfit.EmbeddedDerbyTest|
 
 !|Connect|jdbc:derby:memory:dbfitdb;create=true|
+
+|Execute Ddl|${CREATEUSERTABLE}|
+
+|Execute Ddl|${CREATEMAKEUSERPROC}|
+
+|Commit|

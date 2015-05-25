@@ -1,7 +1,5 @@
 !3 Update table handles the update command - specify fields to be updated with = on the end.
 
-|execute|${CREATEUSERTABLE}|
-
 |insert|USERS|
 |NAME|USERNAME|
 |arthur dent|adent|
@@ -72,4 +70,3 @@
 |ford prefect|fpref|
 |zaphod beeblebrox|zaphod|
 
-|execute|${DROPUSERTABLE}|
