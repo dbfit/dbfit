@@ -1,1 +1,4 @@
+!define CREATEUSERTABLE {CREATE TABLE users (name VARCHAR(20) NOT NULL, username VARCHAR(20) NOT NULL)}
+!define CREATEMAKEUSERPROC {CREATE PROCEDURE makeuser() MODIFIES SQL DATA INSERT INTO users (name, username) VALUES ('user1', 'fromproc')}
+
 !contents -R2 -g -p -f -h
