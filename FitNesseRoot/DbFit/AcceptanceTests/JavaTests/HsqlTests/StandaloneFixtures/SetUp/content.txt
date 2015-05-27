@@ -1,5 +1,7 @@
-|dbfit.HSQLDBTest|
+|Import Fixture|
+|dbfit.fixture|
 
+|Database Environment|HSQLDB|
 |Connect|jdbc:hsqldb:mem:dbfit|
 
 |Execute Ddl|${CREATEUSERTABLE}|
