@@ -65,6 +65,12 @@ subprojects {
         integrationTestCompile "dummy:fitnesse-standalone:${fitNesseVersion}@jar"
     }
 
+    task integrationTestJar(type: Jar) {
+        from sourceSets.integrationTest.output
+        baseName = "dbfit-" + project.archivesBaseName + "-integration-test"
+        include('**/*Support*')
+    }
+
     task integrationTest(type: Test) {
         testClassesDir = sourceSets.integrationTest.output.classesDir
         classpath = sourceSets.integrationTest.runtimeClasspath
