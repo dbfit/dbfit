@@ -12,6 +12,7 @@
 <BulkInsertWithReturning>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsertWithReturning</BulkInsertWithReturning>
 <BulkInsertWithSchemaName>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsertWithSchemaName</BulkInsertWithSchemaName>
 <BulkInsertWithWeirdColumnNames>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsertWithWeirdColumnNames</BulkInsertWithWeirdColumnNames>
+<BulkInsertWithWeirdTableNames>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsertWithWeirdTableNames</BulkInsertWithWeirdTableNames>
 <CallingFunctions>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.CallingFunctions</CallingFunctions>
 <ColumnMatching>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ColumnMatching</ColumnMatching>
 <CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
