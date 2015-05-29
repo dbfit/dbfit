@@ -1,0 +1,18 @@
+|Execute|Create table Test_$DBFit$(name varchar(50), [lucky Number] int)|
+
+|Insert|Test_$DBFit$|
+|name|lucky Number|
+|pera|1|
+
+|Insert|Test_$DBFit$|
+|name|[lucky Number]|
+|nuja|2|
+|nnn|3|
+
+|Query|Select * from Test_$DBFit$|
+|name|lucky Number|
+|pera|1|
+|nuja|2|
+|nnn|3|
+
+|Execute|Drop table Test_$DBFit$|

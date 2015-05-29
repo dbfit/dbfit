@@ -79,7 +79,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
             String query) throws SQLException {
         DbParameterAccessorsMapBuilder params = new DbParameterAccessorsMapBuilder();
 
-        objname = objname.replaceAll("[^a-zA-Z0-9_.#]", "");
+        objname = objname.replaceAll("[^a-zA-Z0-9_.#$]", "");
         String bracketedName = enquoteAndJoin(objname.split("\\."), ".", "[", "]");
 
         try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
