@@ -1,0 +1,27 @@
+|Execute Ddl|Create table FitNesseTestDB2.dbo.Test_DBFit2 (name varchar(50), luckyNumber int)|
+
+|Insert|FitNesseTestDB2.dbo.Test_DBFit2|
+|name|luckyNumber|
+|Darth Maul|3|
+
+|Update|FitNesseTestDB2.dbo.Test_DBFit2|
+|name|luckyNumber=|
+|Darth Maul|666|
+
+|Query|Select * from FitNesseTestDB2.dbo.Test_DBFit2|
+|name|luckyNumber|
+|Darth Maul|666|
+
+|Clean|
+|table|clean?|
+|FitNesseTestDB2.dbo.Test_DBFit2|true|
+
+|Query|Select Count(*) as c from FitNesseTestDB2.dbo.Test_DBFit2|
+|c|
+|0|
+
+|Execute Procedure|FitNesseTestDB2.dbo.MakeUser2|
+
+|Query|Select * from FitNesseTestDB2.dbo.Users2|
+|Name|!-UserName-!|
+|user1|fromproc|
