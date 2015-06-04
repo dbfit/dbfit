@@ -4,10 +4,19 @@ GO
 CREATE DATABASE [FitNesseTestDB]
 GO
 
+CREATE DATABASE [FitNesseTestDB2]
+GO
+
 /* Case sensitive collation - for additional required precision for testing */
 ALTER DATABASE [FitNesseTestDB] COLLATE Latin1_General_CS_AS
 /* Case insensitive collation
 ALTER DATABASE [FitNesseTestDB] COLLATE Latin1_General_CI_AS */
+GO
+
+/* Case sensitive collation - for additional required precision for testing */
+ALTER DATABASE [FitNesseTestDB2] COLLATE Latin1_General_CS_AS
+/* Case insensitive collation
+ALTER DATABASE [FitNesseTestDB2] COLLATE Latin1_General_CI_AS */
 GO
 
 CREATE LOGIN [FitNesseUser] WITH PASSWORD='FitNesseUser'
@@ -19,14 +28,28 @@ GO
 CREATE USER [FitNesseUser] FOR LOGIN [FitNesseUser] WITH DEFAULT_SCHEMA=[dbo]
 GO
 
+/* EXEC sp_addrolemember 'db_owner', 'FitNesseUser' */ /* SQL Server 2008 R2 or earlier */
+ALTER ROLE [db_owner] ADD MEMBER [FitNesseUser] /* SQL Server 2012 or later */
+GO
+
+ALTER DATABASE [FitNesseTestDB] SET READ_WRITE
+GO
+
+USE [FitNesseTestDB2]
+GO
+
+CREATE USER [FitNesseUser] FOR LOGIN [FitNesseUser] WITH DEFAULT_SCHEMA=[dbo]
+GO
+
+/* EXEC sp_addrolemember 'db_owner', 'FitNesseUser' */ /* SQL Server 2008 R2 or earlier */
 ALTER ROLE [db_owner] ADD MEMBER [FitNesseUser]
 GO
 
-ALTER DATABASE [FitNesseTestDB] SET  READ_WRITE
+ALTER DATABASE [FitNesseTestDB2] SET READ_WRITE
 GO
 
-
-
+USE [FitNesseTestDB]
+GO
 
 SET ANSI_NULLS ON
 GO
@@ -263,4 +286,31 @@ create procedure [dbo].[MakeUser] AS
 begin
 	insert into users (Name, UserName) values ('user1', 'fromproc');
 end
+GO
+
+USE FitNesseTestDB2
+GO
+
+CREATE TABLE [dbo].[Users2] (
+    Name     VARCHAR(50) NULL,
+    UserName VARCHAR(50) NULL,
+    UserId   INT IDENTITY(1,1) NOT NULL
+)
+GO
+
+CREATE PROCEDURE dbo.MakeUser2
+AS
+BEGIN
+    INSERT
+      INTO Users2
+           (
+           Name
+         , UserName
+           )
+    VALUES (
+           'user1'
+         , 'fromproc'
+           )
+    ;
+END
 GO

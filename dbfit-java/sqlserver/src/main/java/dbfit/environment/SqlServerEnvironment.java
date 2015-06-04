@@ -69,7 +69,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
             throws SQLException {
         String qry = " select c.[name], TYPE_NAME(c.system_type_id) as [Type], c.max_length, "
                 + " 0 As is_output, 0 As is_cursor_ref "
-                + " from sys.columns c "
+                + " from " + objectDatabasePrefix(tableOrViewName) + "sys.columns c "
                 + " where c.object_id = OBJECT_ID(?) "
                 + " order by column_id";
         return readIntoParams(tableOrViewName, qry);
@@ -132,6 +132,15 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
     // private static string[] BinaryTypes=new string[] {"BINARY","VARBINARY", "TIMESTAMP"};
     // private static string[] GuidTypes = new string[] { "UNIQUEIDENTIFIER" };
     // private static string[] VariantTypes = new string[] { "SQL_VARIANT" };
+
+    private String objectDatabasePrefix(String dbObjectName) {
+        String objectDatabasePrefix = "";
+        String[] objnameParts = dbObjectName.split("\\.");
+        if (objnameParts.length == 3) {
+        	objectDatabasePrefix = objnameParts[0] + ".";
+        }
+        return objectDatabasePrefix;
+    }
 
     private static Direction getParameterDirection(int isOutput, String name) {
         if (name.isEmpty()) {
@@ -216,12 +225,12 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
                     + "       p.[name], TYPE_NAME(p.system_type_id) as [Type], "
                     + "       p.max_length, p.is_output, p.is_cursor_ref, "
                     + "       p.parameter_id, 0 as set_id, p.object_id "
-                    + "   from sys.parameters p "
+                    + "   from " + objectDatabasePrefix(procName) + "sys.parameters p "
                     + "   union all select "
                     + "        '' as [name], 'int' as [Type], "
                     + "        4 as max_length, 1 as is_output, 0 as is_cursor_ref, "
                     + "        null as parameter_id, 1 as set_id, object_id "
-                    + "   from sys.objects where type in (N'P', N'PC') "
+                    + "   from " + objectDatabasePrefix(procName) + "sys.objects where type in (N'P', N'PC') "
                     + ") as u where object_id = OBJECT_ID(?) order by set_id, parameter_id");
     }
 
