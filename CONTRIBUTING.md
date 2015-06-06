@@ -164,6 +164,36 @@ An Eclipse project can be created using gradle.
 
     `Properties` -> `Java Compiler`
 
+##### Remote Debugging with Eclipse
+
+Modify the test page to set the variable `REMOTE_DEBUG_COMMAND`. E.g. include the following line at the start of the test page
+
+    !define REMOTE_DEBUG_COMMAND {java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m}
+
+Note the TCP port specified in the above example is 8000 (the default port number. Choose another value if required).
+
+Add breakpoints to the DbFit Java source files as required.
+
+Create a debug configuration in Eclipse:
+
+  `Run` -> `Debug Configurations...`
+
+* On the `Connect` tab
+  * Project: select any of the DbFit projects.
+  * Connection Type: select `Standard` (Socket Attach).
+  * Host: enter the host name/IP of the FitNesse server process (i.e. the host or guest VM depending upon how you are working).
+  * Port: enter the same TCP port number as specified for the `REMOTE_DEBUG_COMMAND` variable in the test page.
+
+Run the test page via the web browser address/URL by substituting the trailing:
+    `?test`
+
+with:
+    `?responder=test&remote_debug=true`.
+
+The test will suspend, awaiting connection by a remote debugger process.
+
+Start debugging in Eclipse using the debug configuration by clicking `Debug`.
+
 #### Building
 
 *  Clean, build, test and install to local maven repo
