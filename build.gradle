@@ -165,17 +165,20 @@ task bundle(type: Zip, dependsOn: [copyLocal, wikiDocs, bundleFitsharp]) {
     destinationDir new File('zips')
 }
 
+List cmdLine () {
+    onWindows() ? ['cmd', '/c', 'startFitnesse.bat'] : ['./startFitnesse.sh']
+}
+
 task start(type: Exec, dependsOn: [copyLocal, copyExtraLibs, copyTestLibs, copyConnections, wikiDocs, bundleFitsharp]) {
     workingDir './dist'
     description = 'starts fitness with dbfit'
-    executable onWindows() ? 'startFitnesse.bat' : './startFitnesse.sh'
+    commandLine = cmdLine()
 }
 
 task starthere(type: Exec, dependsOn: [copyLocal, copyExtraLibs, copyTestLibs, copyConnections]) {
     workingDir './dist'
     description = 'starts fitness with dbfit on top of real tests sources'
-    executable onWindows() ? 'startFitnesse.bat' : './startFitnesse.sh'
-    args '-d', '..', '-o', '-f', 'plugins.properties'
+    commandLine = cmdLine() + ['-d', '..', '-o', '-f', 'plugins.properties']
 }
 
 task fastbuild(dependsOn: [
