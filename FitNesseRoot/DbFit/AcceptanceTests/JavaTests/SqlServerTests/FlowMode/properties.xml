@@ -8,6 +8,7 @@
 <Search/>
 <Suite/>
 <SymbolicLinks>
+<AccessObjectsInNonDefaultDb>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.AccessObjectsInNonDefaultDb</AccessObjectsInNonDefaultDb>
 <BulkInsert>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsert</BulkInsert>
 <BulkInsertWithReturning>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsertWithReturning</BulkInsertWithReturning>
 <BulkInsertWithSchemaName>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsertWithSchemaName</BulkInsertWithSchemaName>

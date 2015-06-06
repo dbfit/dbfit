@@ -8,6 +8,7 @@
 <Search/>
 <Suite/>
 <SymbolicLinks>
+<AccessObjectsInNonDefaultDb>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.AccessObjectsInNonDefaultDb</AccessObjectsInNonDefaultDb>
 <CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
 </SymbolicLinks>
 <Versions/>
