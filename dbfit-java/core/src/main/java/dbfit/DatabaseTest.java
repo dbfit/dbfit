@@ -7,28 +7,22 @@ import java.sql.SQLException;
 import dbfit.api.DBEnvironment;
 import dbfit.util.*;
 import fit.Fixture;
-import fit.Parse;
 import fitlibrary.SequenceFixture;
 
-public class DatabaseTest extends Fixture {
+public class DatabaseTest extends SequenceFixture {
     protected DBEnvironment environment;
 
-    // ugly workaround since fitlibrary no longer allows this to be
-    // overridden; we create an inner sequence fixture and pass the
-    // execution to it, but this one is now a fixture to allow things to be overridden
-    public void interpretTables(Parse tables) {
+    @Override
+    public void setUp() {
         Options.reset();
-        SequenceFixture sf = new SequenceFixture();
-        sf.listener = listener;
-        sf.counts = counts;
-        sf.summary = summary;
-        sf.setSystemUnderTest(this);
-        sf.interpretTables(tables);
+    }
+
+    @Override
+    public void tearDown() {
         try {
             Log.log("Rolling back");
             if (environment != null) {
-                environment.rollback();
-                environment.closeConnection();
+                close();
             }
         } catch (Exception e) {
             Log.log(e);
