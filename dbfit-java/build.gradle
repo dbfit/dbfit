@@ -102,7 +102,7 @@ project('core') {
 
     dependencies {
         compile "dummy:fitnesse-standalone:${fitNesseVersion}@jar"
-        compile "dummy:fitlibrary:20081102@jar"
+        compile "dummy:fitlibrary:20091020@jar"
         compile "org.reflections:reflections:0.9.9"
         compile "commons-codec:commons-codec:1.10"
         compile "org.apache.commons:commons-lang3:3.4"
