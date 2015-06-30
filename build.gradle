@@ -1,6 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-ext.dbfitVersion = '3.1.0'
+ext.dbfitVersion = '3.2.0-SNAPSHOT'
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 task cleanFitnesseroot(type:Exec) {
     def gitArgs = ['clean', '-d', '-x', '-f', 'FitNesseRoot/']
