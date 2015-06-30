@@ -1,0 +1,6 @@
+signing.keyId=<publicKey>
+signing.password=<keyPassPhrase>
+signing.secretKeyRingFile=path/to/secret/keyring/file
+
+ossrhUsername=<Sonatype username>
+ossrhPassword=<Sonatype password>

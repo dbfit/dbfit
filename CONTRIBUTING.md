@@ -228,6 +228,31 @@ Please be aware that if you change any code whilst the `/.gradlew start` command
 
         dbfit$ ./gradlew starthere -PkeepTests
 
+#### Publishing to the Sonatype Central Repository (a.k.a. Maven Central)
+
+##### Uploading Development Version Snapshots
+
+* Create a new Sonatype user profile (`https://issues.sonatype.org/secure/Signup!default.jspa`).
+* Create a new support issue and register to upload DbFit (`com.github.dbfit`) artefacts.
+* Modify the DbFit version number string in the parent Gradle build script (in the DbFit development root directory). Ensure the version number string has the `-SNAPSHOT` suffix.
+* Upload the development version snapshot artefact to the Sonatype snapshots repository with:
+
+        dbfit$ ./gradlew uploadArchives
+
+##### Uploading Release Versions
+
+* Modify the DbFit version number string in the parent Gradle build script (in the DbFit development root directory). Ensure the version number string DOES NOT have the `-SNAPSHOT` suffix.
+* Create a public/private key pair for signing, cryptographically, of the build artefacts (i.e. DbFit JAR files). Follow the Sonatype guide (http://central.sonatype.org/pages/working-with-pgp-signatures.html).
+* Update `gradle.properties` in the DbFit development root directory with your public key, public key pass phrase and path to your secret keyring file.
+* Update `gradle.properties` in the DbFit development root directory with your Sonatype user name (`ossrhUsername`) and password (`ossrhPassword`).
+* Upload the release version artefact to the Sonatype staging repository:
+
+        dbfit$ ./gradlew uploadArchives
+
+##### Promoting Staged Release Versions
+
+* Log into the Sonatype dashboard, search for the DbFit project, and manually promote the staged artefacts.
+
 #### Using custom libraries
 
 If you need to use libraries which are not available on the public artifact repositories (e.g. proprietary JDBC drivers) - you may place them in `custom_libs` directory. This folder is configured as [flat directory repository](http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:flat_dir_resolver) in Gradle - the typical naming format of JARs inside is `<main_name>-<version>.jar`.
