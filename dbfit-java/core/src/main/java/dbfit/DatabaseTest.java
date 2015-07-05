@@ -42,22 +42,18 @@ public class DatabaseTest extends Fixture {
 
     public void connect(String dataSource, String username, String password, String database) throws SQLException {
         environment.connect(dataSource, username, password, database);
-        environment.getConnection().setAutoCommit(false);
     }
 
     public void connect(String dataSource, String username, String password) throws SQLException {
         environment.connect(dataSource, username, password);
-        environment.getConnection().setAutoCommit(false);
     }
 
     public void connect(String connectionString) throws SQLException {
         environment.connect(connectionString);
-        environment.getConnection().setAutoCommit(false);
     }
 
     public void connectUsingFile(String filePath) throws SQLException, IOException, FileNotFoundException {
         environment.connectUsingFile(filePath);
-        environment.getConnection().setAutoCommit(false);
     }
 
     public void close() throws SQLException {
@@ -121,12 +117,10 @@ public class DatabaseTest extends Fixture {
 
     public Fixture rollback() {
         return new dbfit.fixture.Rollback(environment);
-        environment.getConnection().setAutoCommit(false);
     }
 
     public Fixture commit() {
         return new dbfit.fixture.Commit(environment);
-        environment.getConnection().setAutoCommit(false);
     }
 
     public Fixture queryStats() {
