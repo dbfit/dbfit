@@ -7,6 +7,7 @@ public class Options {
     public static String OPTION_FIXED_LENGTH_STRING_PARSING = "fixedlengthstringparsing";
     public static String OPTION_BIND_SYMBOLS = "bindsymbols";
     public static String OPTION_DEBUG_LOG = "debuglog";
+    public static String OPTION_AUTO_COMMIT = "autocommit";
 
     private static Map<String, String> options = new HashMap<String, String>();
 
@@ -19,6 +20,7 @@ public class Options {
         setOption(OPTION_FIXED_LENGTH_STRING_PARSING, "false");
         setOption(OPTION_BIND_SYMBOLS, "true");
         setOption(OPTION_DEBUG_LOG, "false");
+        setOption(OPTION_AUTO_COMMIT, "false");
     }
 
     public static boolean isFixedLengthStringParsing() {
@@ -39,6 +41,10 @@ public class Options {
             return false;
         }
         return Boolean.parseBoolean(options.get(normalname));
+    }
+
+    public static String get(String option) {
+        return options.get(NameNormaliser.normaliseName(option));
     }
 
     public static void setOption(String name, String value) {
