@@ -155,8 +155,8 @@ public class DatabaseTest extends Fixture {
         return new dbfit.fixture.CompareStoredQueriesHideMatchingRows(environment, symbol1, symbol2);    	
     }
 
-    public void setOption(String option, String value) {
-        Options.setOption(option, value);
+    public Fixture setOption(String option, String value) {
+        return new dbfit.fixture.SetOption(environment, option, value);
     }
 }
 

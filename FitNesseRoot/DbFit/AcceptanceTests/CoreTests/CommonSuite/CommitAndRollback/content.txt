@@ -1,3 +1,5 @@
+!|set option|autocommit|false|
+
 !|Execute Ddl|create table TESTTBL(ID int, VAL int)|
 
 !|Commit|
@@ -10,6 +12,20 @@
 
 !|Query|select ID, VAL from TESTTBL|
 |ID    |VAL?|
+
+-----
+
+!|set option|autocommit|true|
+
+!|Insert|TESTTBL|
+|ID     |VAL    |
+|1      |2      |
+
+!|Rollback|
+
+!|Query|select ID, VAL from TESTTBL|
+|ID    |VAL?|
+|1     |2   |
 
 !|Execute Ddl|drop table TESTTBL|
 !|Commit|
