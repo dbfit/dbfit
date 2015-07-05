@@ -1,0 +1,15 @@
+!|Execute Ddl|create table TESTTBL(ID int, VAL int)|
+
+!|Commit|
+
+!|Insert|TESTTBL|
+|ID     |VAL    |
+|1      |2      |
+
+!|Rollback|
+
+!|Query|select ID, VAL from TESTTBL|
+|ID    |VAL?|
+
+!|Execute Ddl|drop table TESTTBL|
+!|Commit|

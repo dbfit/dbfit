@@ -119,15 +119,13 @@ public class DatabaseTest extends Fixture {
     //      return new TestData(environment, type);
     //  }
 
-    public void rollback() throws SQLException {
-        // System.out.println("Rolling back");
-        environment.rollback();
+    public Fixture rollback() {
+        return new dbfit.fixture.Rollback(environment);
         environment.getConnection().setAutoCommit(false);
     }
 
-    public void commit() throws SQLException {
-        // System.out.println("Committing");
-        environment.commit();
+    public Fixture commit() {
+        return new dbfit.fixture.Commit(environment);
         environment.getConnection().setAutoCommit(false);
     }
 
