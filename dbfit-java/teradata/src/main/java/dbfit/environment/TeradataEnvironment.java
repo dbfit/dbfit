@@ -167,7 +167,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         cols = cols + "WHEN c.columntype IN ('CF') THEN 'CHAR' ";
         cols = cols + "WHEN c.columntype IN ('CV') THEN 'VARCHAR' ";
         cols = cols + "WHEN c.columntype IN ('CO') THEN 'CLOB' ";
-        cols = cols + "WHEN c.columntype IN ('I8') THEN 'LONG' ";
+        cols = cols + "WHEN c.columntype IN ('I8') THEN 'BIGINT' ";
         cols = cols + "WHEN c.columntype IN ('I') THEN 'INTEGER' ";
         cols = cols + "WHEN c.columntype IN ('I2') THEN 'SMALLINT' ";
         cols = cols + "WHEN c.columntype IN ('I1') THEN 'BYTEINT' ";
