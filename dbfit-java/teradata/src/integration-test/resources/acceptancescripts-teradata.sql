@@ -32,7 +32,7 @@ collation invoker
 inline type 1
 	return firstString || ' ' || secondString;
 
-replace procedure CalcLength(in name varchar(100), out strlength numeric)
+replace procedure CalcLength(in name varchar(100), out strlength bigint)
 begin
 	set strlength=characters(name);
 end;
