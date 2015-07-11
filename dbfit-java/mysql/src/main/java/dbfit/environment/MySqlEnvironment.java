@@ -94,6 +94,8 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             "TINYINT", "SMALLINT", "MEDIUMINT", "INT", "INTEGER" });
     private static List<String> longTypes = Arrays.asList(new String[] {
             "BIGINT", "INTEGER UNSIGNED", "INT UNSIGNED" });
+    private static List<String> bigIntUnsignedTypes = Arrays.asList(new String[] {
+	    "BIGINT UNSIGNED" });
     private static List<String> floatTypes = Arrays
             .asList(new String[] { "FLOAT" });
     private static List<String> doubleTypes = Arrays
@@ -128,6 +130,8 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             return java.sql.Types.DOUBLE;
         if (longTypes.contains(dataType))
             return java.sql.Types.BIGINT;
+        if (bigIntUnsignedTypes.contains(dataType))
+            return java.sql.Types.BIGINT;
         if (timestampTypes.contains(dataType))
             return java.sql.Types.TIMESTAMP;
         if (dateTypes.contains(dataType))
@@ -158,6 +162,8 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             return Double.class;
         if (longTypes.contains(dataType))
             return Long.class;
+        if (bigIntUnsignedTypes.contains(dataType))
+            return java.math.BigInteger.class;
         if (timestampTypes.contains(dataType))
             return java.sql.Timestamp.class;
         if (timeTypes.contains(dataType))
