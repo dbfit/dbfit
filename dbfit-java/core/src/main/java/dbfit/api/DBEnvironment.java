@@ -125,6 +125,11 @@ public interface DBEnvironment {
     Connection getConnection() throws SQLException;
 
     /**
+     * Check if the database connection is open.
+     */
+    boolean isConnected() throws SQLException;
+
+    /**
      * Get the Java class that should be used to store objects of a DB specific
      * data type.
      * 
