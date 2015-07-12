@@ -61,8 +61,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
 
     private Map<String, DbParameterAccessor> readIntoParams(
             String tableOrViewName, String query) throws SQLException {
-        checkConnectionValid(currentConnection);
-        try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
+        try (PreparedStatement dc = getConnection().prepareStatement(query)) {
             dc.setString(1, tableOrViewName);
 
             ResultSet rs = dc.executeQuery();
