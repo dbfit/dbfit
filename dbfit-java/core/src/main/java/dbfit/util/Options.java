@@ -4,43 +4,44 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Options {
-	public static void reset() {
-		fixedLengthStringParsing = false;
-		bindSymbols = true;
-		debugLog = false;
-	}
+    public static String OPTION_FIXED_LENGTH_STRING_PARSING = "fixedlengthstringparsing";
+    public static String OPTION_BIND_SYMBOLS = "bindsymbols";
+    public static String OPTION_DEBUG_LOG = "debuglog";
 
-	private static boolean fixedLengthStringParsing = false;
-	private static boolean bindSymbols = true;
-	private static boolean debugLog = false;
+    private static Map<String, String> options = new HashMap<String, String>();
 
-	public static boolean isFixedLengthStringParsing() {
-		return fixedLengthStringParsing;
-	}
+    static {
+        reset();
+    }
 
-	public static boolean isBindSymbols() {
-		return bindSymbols;
-	}
+    public static void reset() {
+        options.clear();
+        setOption(OPTION_FIXED_LENGTH_STRING_PARSING, "false");
+        setOption(OPTION_BIND_SYMBOLS, "true");
+        setOption(OPTION_DEBUG_LOG, "false");
+    }
 
-	public static boolean isDebugLog() {
-		return debugLog;
-	}
-	private static Map<String,String> freeOptions=new HashMap<String,String>();
-	
-	public static boolean is(String option){
-		String normalname = NameNormaliser.normaliseName(option);
-		if (!freeOptions.containsKey(normalname)) return false;
-		return Boolean.parseBoolean(freeOptions.get(normalname));
-	}
-	public static void setOption(String name, String value) {
-		String normalname = NameNormaliser.normaliseName(name);
-		if ("fixedlengthstringparsing".equals(normalname)) {
-			fixedLengthStringParsing = Boolean.parseBoolean(value);
-		} else if ("bindsymbols".equals(normalname)) {
-			bindSymbols = Boolean.parseBoolean(value);
-		} else if ("debuglog".equals(normalname)) {
-			debugLog = Boolean.parseBoolean(value);
-		} else
-			freeOptions.put(normalname,value);
-	}
+    public static boolean isFixedLengthStringParsing() {
+        return is(OPTION_FIXED_LENGTH_STRING_PARSING);
+    }
+
+    public static boolean isBindSymbols() {
+        return is(OPTION_BIND_SYMBOLS);
+    }
+
+    public static boolean isDebugLog() {
+        return is(OPTION_DEBUG_LOG);
+    }
+
+    public static boolean is(String option) {
+        String normalname = NameNormaliser.normaliseName(option);
+        if (!options.containsKey(normalname)) {
+            return false;
+        }
+        return Boolean.parseBoolean(options.get(normalname));
+    }
+
+    public static void setOption(String name, String value) {
+        options.put(NameNormaliser.normaliseName(name), value);
+    }
 }
