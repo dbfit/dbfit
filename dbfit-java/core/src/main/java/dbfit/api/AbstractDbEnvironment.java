@@ -137,8 +137,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     public void rollback() throws SQLException {
-        checkConnectionValid(currentConnection);
-        currentConnection.rollback();
+        getConnection().rollback();
     }
 
     /*****/
@@ -222,11 +221,15 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     /** Check the validity of the supplied connection. */
     public static void checkConnectionValid(final Connection conn)
             throws SQLException {
-        if (conn == null || conn.isClosed()) {
+        if (! isConnected(conn)) {
             throw new IllegalArgumentException(
                     "No open connection to a database is available. "
                             + "Make sure your database is running and that you have connected before performing any queries.");
         }
+    }
+
+    private static boolean isConnected(final Connection conn) throws SQLException {
+        return (conn != null && !conn.isClosed());
     }
 
 }
