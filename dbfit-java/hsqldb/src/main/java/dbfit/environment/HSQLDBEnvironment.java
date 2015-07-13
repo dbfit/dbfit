@@ -72,8 +72,7 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
 
     private Map<String, DbParameterAccessor> readIntoParams(
             String tableOrViewName, String query) throws SQLException {
-        checkConnectionValid(currentConnection);
-        try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
+        try (PreparedStatement dc = getConnection().prepareStatement(query)) {
 
             String tvname;
             if (tableOrViewName.trim().startsWith("\"") && tableOrViewName.trim().endsWith("\"")) {
