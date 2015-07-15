@@ -10,8 +10,9 @@ IM="$MODNAME: INFO:"
 EM="$MODNAME: ERROR:"
 WM="$MODNAME: WARNING:"
 
-DB2_INST_ROOT=/var/dbfit
-DB2_SCRIPTS=$DB2_INST_ROOT/dbfit-java/db2/src/integration-test/resources
+DBFIT_ROOT=/var/dbfit
+DB2_INST_ROOT=/tmp
+DB2_SCRIPTS=$DBFIT_ROOT/dbfit-java/db2/src/integration-test/resources
 
 DOLIBS=true
 DODETECT=true
@@ -103,11 +104,11 @@ then
 	echo "$IM found installation directory"
 # Check for presence of zipped tarball installation package.
 # NOTE: the zipped tarball must have been renamed to the fixed name "db2_linuxx64_expc.tar.gz".
-elif [ -f db2_linuxx64_expc.tar.gz ]
+elif [ -f ${DBFIT_ROOT}/db2_linuxx64_expc.tar.gz ]
 then
 	DOSETUP=true
 	echo "$IM found gzipped installation tarball. Unpacking..."
-	tar --no-same-owner -zxf db2_linuxx64_expc.tar.gz
+	tar --no-same-owner -zxf ${DBFIT_ROOT}/db2_linuxx64_expc.tar.gz
 	if [ $? -ne 0 ]
 	then
 		echo "$EM unpacking gzipped installation tarball" 1>&2
@@ -125,7 +126,7 @@ then
 	fi
 	# Install DB2 using a response file.
 	echo "$IM running db2setup utility..."
-	./db2setup -r ${DB2_INST_ROOT}/dbfit-java/db2/src/integration-test/resources/db2expc_typical.rsp
+	./db2setup -r ${DBFIT_ROOT}/dbfit-java/db2/src/integration-test/resources/db2expc_typical.rsp
 	if [ $? -ne 0 ]
 	then
 		echo "$EM executing db2setup utility" 1>&2
