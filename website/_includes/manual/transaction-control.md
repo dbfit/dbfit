@@ -12,6 +12,11 @@ Or in order to commit:
 
     |Commit|
 
+For standaone mode only, an alternative syntax is also still supported:
+
+    !|DatabaseEnvironment|
+    |Rollback|
+
 ### Autocommit mode
 
 By default DbFit is using `autocommit=false` mode - which means that the database statements are executed in one transaction. In some special occasions, you may need to change that. It's possible to configure database connection's autocommit mode via:
