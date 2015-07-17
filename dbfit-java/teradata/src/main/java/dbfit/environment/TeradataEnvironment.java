@@ -190,12 +190,12 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                 + "CASE spparametertype WHEN 'I' THEN 'IN' WHEN 'O' THEN 'OUT' WHEN 'B' THEN 'IN/OUT' ";
         cols = cols + "END AS paramdirection";
 
-        String qry = "SELECT " + cols + "  FROM dbc.columns c " + "WHERE ";
+        String qry = "SELECT " + cols + "  FROM dbc.columnsv c " + "WHERE ";
         if (qualifiers.length == 2) {
             qry += "TRIM(TRAILING FROM c.databasename) = TRIM(TRAILING FROM ?) AND TRIM(TRAILING FROM c.tablename) = TRIM(TRAILING FROM ?)";
         } else {
             // User names are always stored as upper case. For ANSI mode this is significant.
-            qry += "TRIM(TRAILING FROM UPPER(c.databasename))= USER AND TRIM(TRAILING FROM c.tablename) = TRIM(TRAILING FROM ?)";
+            qry += "TRIM(TRAILING FROM UPPER(c.databasename)) = USER AND TRIM(TRAILING FROM c.tablename) = TRIM(TRAILING FROM ?)";
         }
 
         qry += " order by c.columnid";
@@ -235,7 +235,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         cols = cols + "columnlength, ";
         cols = cols + "'IN' AS paramdirection";
 
-        String qry = "SELECT " + cols + " FROM dbc.columns c " + "WHERE ";
+        String qry = "SELECT " + cols + " FROM dbc.columnsv c " + "WHERE ";
         if (qualifiers.length == 2) {
             qry += "TRIM(TRAILING FROM c.databasename) = TRIM(TRAILING FROM ?) AND TRIM(TRAILING FROM c.tablename) = TRIM(TRAILING FROM ?)";
         } else {
