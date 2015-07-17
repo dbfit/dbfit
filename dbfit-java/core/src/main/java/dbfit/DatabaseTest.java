@@ -42,22 +42,18 @@ public class DatabaseTest extends Fixture {
 
     public void connect(String dataSource, String username, String password, String database) throws SQLException {
         environment.connect(dataSource, username, password, database);
-        environment.getConnection().setAutoCommit(false);
     }
 
     public void connect(String dataSource, String username, String password) throws SQLException {
         environment.connect(dataSource, username, password);
-        environment.getConnection().setAutoCommit(false);
     }
 
     public void connect(String connectionString) throws SQLException {
         environment.connect(connectionString);
-        environment.getConnection().setAutoCommit(false);
     }
 
     public void connectUsingFile(String filePath) throws SQLException, IOException, FileNotFoundException {
         environment.connectUsingFile(filePath);
-        environment.getConnection().setAutoCommit(false);
     }
 
     public void close() throws SQLException {
@@ -119,16 +115,12 @@ public class DatabaseTest extends Fixture {
     //      return new TestData(environment, type);
     //  }
 
-    public void rollback() throws SQLException {
-        // System.out.println("Rolling back");
-        environment.rollback();
-        environment.getConnection().setAutoCommit(false);
+    public Fixture rollback() {
+        return new dbfit.fixture.Rollback(environment);
     }
 
-    public void commit() throws SQLException {
-        // System.out.println("Committing");
-        environment.commit();
-        environment.getConnection().setAutoCommit(false);
+    public Fixture commit() {
+        return new dbfit.fixture.Commit(environment);
     }
 
     public Fixture queryStats() {
@@ -163,8 +155,8 @@ public class DatabaseTest extends Fixture {
         return new dbfit.fixture.CompareStoredQueriesHideMatchingRows(environment, symbol1, symbol2);    	
     }
 
-    public void setOption(String option, String value) {
-        Options.setOption(option, value);
+    public Fixture setOption(String option, String value) {
+        return new dbfit.fixture.SetOption(environment, option, value);
     }
 }
 

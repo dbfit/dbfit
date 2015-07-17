@@ -119,6 +119,12 @@ public interface DBEnvironment {
     void rollback() throws SQLException;
 
     /**
+     * Set autocommit of the current connection to the mode configured
+     * via "autocommit" option (dbfit.util.Options)
+     */
+    void setAutoCommit() throws SQLException;
+
+    /**
      * Retrieve current connection. Could be used by 3rd party classes to
      * execute database commands in the same session.
      */

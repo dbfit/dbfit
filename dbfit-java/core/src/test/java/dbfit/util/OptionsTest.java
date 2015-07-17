@@ -28,6 +28,11 @@ public class OptionsTest {
     }
 
     @Test
+    public void autoCommitDefaultIsFalse() {
+        assertThat(Options.get(Options.OPTION_AUTO_COMMIT), is("false"));
+    }
+
+    @Test
     public void canSetPredefinedOption() {
         Options.setOption(Options.OPTION_DEBUG_LOG, "true");
         assertThat(Options.isDebugLog(), is(true));

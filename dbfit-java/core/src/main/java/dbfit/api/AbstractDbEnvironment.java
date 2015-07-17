@@ -1,6 +1,7 @@
 package dbfit.api;
 
 import dbfit.util.*;
+import static dbfit.util.Options.OPTION_AUTO_COMMIT;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -42,7 +43,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
      * Intended to be overriden for post-connect activities
      */
     protected void afterConnectionEstablished() throws SQLException {
-        currentConnection.setAutoCommit(false);
+        setAutoCommit();
     }
 
     public void connect(String connectionString, Properties info) throws SQLException {
@@ -133,11 +134,18 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
 
     public void commit() throws SQLException {
         currentConnection.commit();
-        currentConnection.setAutoCommit(false);
     }
 
     public void rollback() throws SQLException {
         getConnection().rollback();
+    }
+
+    @Override
+    public void setAutoCommit() throws SQLException {
+        String autoCommitMode = Options.get(OPTION_AUTO_COMMIT);
+        if (!"auto".equals(autoCommitMode) && isConnected(currentConnection)) {
+            currentConnection.setAutoCommit(Options.is(OPTION_AUTO_COMMIT));
+        }
     }
 
     /*****/
