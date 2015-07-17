@@ -1,21 +1,22 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <properties>
-	<Edit/>
-	<Files/>
-	<Help>(Shared Tests)</Help>
-	<LastModifyingUser>mpatrick</LastModifyingUser>
-	<Properties/>
-	<RecentChanges/>
-	<Refactor/>
-	<Search/>
-	<Suite/>
-	<Suites>(Shared Tests)</Suites>
-	<SymbolicLinks>
-		<CommonSuite>.DbFit.AcceptanceTests.CoreTests.CommonSuite</CommonSuite>
-		<StoredProcNoParams>.DbFit.AcceptanceTests.CoreTests.StoredProcNoParams</StoredProcNoParams>
-	</SymbolicLinks>
-	<Versions/>
-	<WhereUsed/>
-	<saveId>1208652118171</saveId>
-	<ticketId>778780122649681989</ticketId>
+<Edit/>
+<Files/>
+<Help>(Shared Tests)</Help>
+<LastModifyingUser>mpatrick</LastModifyingUser>
+<Properties/>
+<RecentChanges/>
+<Refactor/>
+<Search/>
+<Suite/>
+<Suites>(Shared Tests)</Suites>
+<SymbolicLinks>
+<CommonSuite>.DbFit.AcceptanceTests.CoreTests.CommonSuite</CommonSuite>
+<ObjectNames>.DbFit.AcceptanceTests.CoreTests.ObjectNames</ObjectNames>
+<StoredProcNoParams>.DbFit.AcceptanceTests.CoreTests.StoredProcNoParams</StoredProcNoParams>
+</SymbolicLinks>
+<Versions/>
+<WhereUsed/>
+<saveId>1208652118171</saveId>
+<ticketId>778780122649681989</ticketId>
 </properties>
