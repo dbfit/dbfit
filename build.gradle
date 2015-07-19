@@ -196,17 +196,23 @@ task fastbuild(dependsOn: [
     ':dbfit-java:hsqldb:integrationTest'
     ])
 
-task integrationBuild(dependsOn: [
-    ':dbfit-java:db2:integrationTest',
-    ':dbfit-java:derby:integrationTest',
-    ':dbfit-java:hsqldb:integrationTest',
-    ':dbfit-java:mysql:integrationTest',
-    //':dbfit-java:netezza:integrationTest',
-    ':dbfit-java:oracle:integrationTest',
-    ':dbfit-java:postgres:integrationTest'
-    //':dbfit-java:sqlserver:integrationTest',
-    //':dbfit-java:teradata:integrationTest',
-    ])
+if (!project.hasProperty('excludeIntegrationTests')) {
+    project.ext.set('excludeIntegrationTests', '')
+}
+
+Set excludedIntegrationBuildDbTypes() {
+    (["dbfit-java", "core"] + project.excludeIntegrationTests.tokenize(",").collect { it.trim() })
+}
+
+assert (excludedIntegrationBuildDbTypes() - subprojects.collect { it.name }).empty
+
+def integrationBuildTasks() {
+    (subprojects.collect { it.name } - excludedIntegrationBuildDbTypes()).collect {
+        ":dbfit-java:${it}:integrationTest"
+    }
+}
+
+task integrationBuild(dependsOn: [integrationBuildTasks()])
 
 def onWindows() {
     System.properties['os.name'].toLowerCase().contains('windows')
