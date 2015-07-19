@@ -1,15 +1,17 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <properties>
-	<Edit/>
-	<Files/>
-	<LastModified>20070531033133</LastModified>
-	<Properties/>
-	<RecentChanges/>
-	<Refactor/>
-	<Search/>
-	<Suite/>
-	<Versions/>
-	<WhereUsed/>
-	<saveId>1180578664406</saveId>
-	<ticketId>-6700603202119823952</ticketId>
+<Edit/>
+<Files/>
+<Properties/>
+<RecentChanges/>
+<Refactor/>
+<Search/>
+<Suite/>
+<SymbolicLinks>
+<ObjectNames>.DbFit.AcceptanceTests.CoreTests.ObjectNames</ObjectNames>
+</SymbolicLinks>
+<Versions/>
+<WhereUsed/>
+<saveId>1180578664406</saveId>
+<ticketId>-6700603202119823952</ticketId>
 </properties>
