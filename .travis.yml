@@ -18,3 +18,4 @@ after_success:
   - "gem install --version 0.8.9 faraday"
   - "gem install travis-artifacts"
   - "travis-artifacts upload --path zips --target-path artifacts/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID"
+#DM
