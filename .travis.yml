@@ -1,9 +1,9 @@
 env:
  global:
-   - "ARTIFACTS_AWS_REGION=Oregon"
-   - "ARTIFACTS_S3_BUCKET=auguronomics"
-   - "ARTIFACTS_AWS_ACCESS_KEY_ID=AKIAJLON7XK2LUHMV3ZA"
-   - "ARTIFACTS_AWS_SECRET_ACCESS_KEY=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"
+   - "ARTIFACTS_AWS_REGION=us-east-1"
+   - "ARTIFACTS_S3_BUCKET=dbfit"
+   - secure: "NLAj1hPcTlzBO6hEbZ3X6AOfXUVeFl0oSytrd02m+UaXzbNA9PZ6ZjYBwCGA\nvpNdVd5YVNMaUWBX5IN336mscvJswg+9lyt3y8cgBzOUWNE/UXDRXYoL8xwx\nxXnMnBatW2+0M4QtuXyLZpWyPxKa+1AYuCVJXHaANrkjufuXm04="
+   - secure: "li8rtIJ0NxvXPn2o1TltT+CaiMyfN0neFoBBA7CXCRWOt0Gjs6ytzP89Hclu\nbdPuZsCXXKckW3UIIzqR6YDU0NhLZxkZuOz0u3+dD1856jqa2umXJi3MnQ6j\nlulUkNwfmE+ul0Hly0Hia4nNivHQ3f4I7BNSQlNM0GVYy+ZL4Oo="
 language: java
 before_install:
   - "./gradlew -version"
