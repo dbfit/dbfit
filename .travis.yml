@@ -2,8 +2,8 @@ env:
  global:
    - "ARTIFACTS_AWS_REGION=Oregon"
    - "ARTIFACTS_S3_BUCKET=auguronomics"
-   - "aws_access_key_id=AKIAJLON7XK2LUHMV3ZA"
-   - "aws_secret_access_key=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"
+   - "ARTIFACTS_AWS_ACCESS_KEY_ID=AKIAJLON7XK2LUHMV3ZA"
+   - "ARTIFACTS_AWS_SECRET_ACCESS_KEY=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"
 language: java
 before_install:
   - "./gradlew -version"
