@@ -390,7 +390,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     // map types
     private static List<String> stringTypes = Arrays.asList(new String[] {
             "VARCHAR", "VARCHAR2", "NVARCHAR2", "CHAR", "NCHAR", "CLOB",
-            "NCLOB", "ROWID", "BOOLEAN","RAW"
+            "NCLOB", "ROWID", "BOOLEAN", "RAW"
         });
     private static List<String> decimalTypes = Arrays.asList(new String[] {
             "BINARY_INTEGER", "NUMBER", "FLOAT" });
