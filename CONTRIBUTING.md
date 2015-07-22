@@ -36,7 +36,8 @@ If you have to make changes to `core`, please run all integration tests (because
 
     $ ./gradlew integrationBuild
 
-Note that this runs the integration tests for the adaptors listed under the `integrationBuild` task in the main Gradle build script (`build.gradle` in dbfit project root directory). You can edit this task to run the integration tests for the set of adaptors for which you have test databases available.
+Note that this runs the integration tests for the adaptors listed under the `integrationBuild` task in the main Gradle build script (`build.gradle` in dbfit project root directory). 
+To exclude certain integration tests, during execution of this task, configure the Gradle property `excludeIntegrationTests` (in your `gradle.properties` in the DbFit project root directory) by giving it a value of a comma separated, lower case, list of DB type names to exclude. E.g. `excludeIntegrationTests=db2,sqlserver`.
 
 Running the integration tests is most easily done from the test virtual machine.
 

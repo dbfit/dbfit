@@ -39,6 +39,7 @@ FitNesseRoot/RecentChanges
 # The build tool
 build
 .gradle
+gradle.properties
 target
 dbfit-complete-*.zip
 dbfit-java/oracle/TestDbConnectionDbFitOracle.properties
