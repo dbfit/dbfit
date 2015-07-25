@@ -189,7 +189,7 @@ project('oracle') {
 }
 
 def publicMysqlCompileDeps = [
-    'mysql:mysql-connector-java:5.1.6'
+    'mysql:mysql-connector-java:5.1.36'
 ]
 
 project('mysql') {
