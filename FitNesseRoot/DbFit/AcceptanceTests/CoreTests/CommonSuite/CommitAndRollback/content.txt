@@ -1,3 +1,5 @@
+!|Rollback|
+
 !|set option|autocommit|false|
 
 !|Execute Ddl|create table TESTTBL(ID int, VAL int)|
@@ -29,3 +31,5 @@
 
 !|Execute Ddl|drop table TESTTBL|
 !|Commit|
+
+!|set option|autocommit|false|

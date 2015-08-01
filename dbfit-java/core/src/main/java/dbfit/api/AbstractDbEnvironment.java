@@ -133,11 +133,15 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     public void commit() throws SQLException {
-        currentConnection.commit();
+        if (!getConnection().getAutoCommit()) {
+            currentConnection.commit();
+        }
     }
 
     public void rollback() throws SQLException {
-        getConnection().rollback();
+        if (!getConnection().getAutoCommit()) {
+            currentConnection.rollback();
+        }
     }
 
     @Override
