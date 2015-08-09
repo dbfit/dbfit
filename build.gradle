@@ -1,6 +1,6 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-ext.dbfitVersion = '3.2.0-SNAPSHOT'
+ext.dbfitVersion = '3.2.0'
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 task cleanFitnesseroot(type:Exec) {
