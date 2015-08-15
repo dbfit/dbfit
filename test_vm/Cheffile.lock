@@ -6,17 +6,17 @@ SITE
     chef-sugar (3.1.1)
     chef_handler (1.2.0)
     dmg (2.2.2)
-    git (4.2.2)
+    git (4.3.3)
       build-essential (>= 0.0.0)
       dmg (>= 0.0.0)
       windows (>= 0.0.0)
       yum-epel (>= 0.0.0)
-    java (1.31.0)
-    mariadb (0.3.0)
+    java (1.35.0)
+    mariadb (0.3.1)
       apt (>= 0.0.0)
       yum (>= 0.0.0)
       yum-epel (>= 0.0.0)
-    mysql (6.0.28)
+    mysql (6.1.0)
       smf (>= 0.0.0)
       yum-mysql-community (>= 0.0.0)
     mysql2_chef_gem (1.0.2)
@@ -25,16 +25,12 @@ SITE
       mysql (~> 6.0)
     openssl (4.0.0)
       chef-sugar (>= 0.0.0)
-    postgresql (3.4.20)
-      apt (>= 1.9.0)
-      build-essential (>= 0.0.0)
-      openssl (~> 4.0.0)
     rbac (1.0.3)
     smf (2.2.7)
       rbac (>= 1.0.1)
-    windows (1.37.0)
+    windows (1.38.1)
       chef_handler (>= 0.0.0)
-    yum (3.6.1)
+    yum (3.6.3)
     yum-epel (0.6.2)
       yum (~> 3.2)
     yum-mysql-community (0.1.17)
@@ -47,6 +43,16 @@ GIT
   specs:
     database (4.0.5)
       postgresql (>= 1.0.0)
+
+GIT
+  remote: https://github.com/dbfit/postgresql
+  ref: develop
+  sha: 8c6a3847478f1723700858816c8b78fa8e4cf2d9
+  specs:
+    postgresql (3.4.21)
+      apt (>= 1.9.0)
+      build-essential (>= 0.0.0)
+      openssl (~> 4.0.0)
 
 GIT
   remote: https://github.com/dbfit/swap
@@ -70,5 +76,6 @@ PATH
 DEPENDENCIES
   database (>= 0)
   dbfit_test (>= 0)
+  postgresql (>= 0)
   swap (>= 0)
 
