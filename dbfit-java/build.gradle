@@ -338,6 +338,18 @@ uploadArchives {
                 }
 
                 developers {
+                    developer {
+                        id "benilovj"
+                        name "Jake Benilov"
+                    }
+                    developer {
+                        id "javornikolov"
+                        name "Yavor Nikolov"
+                    }
+                    developer {
+                        id "mmatten"
+                        name "Mark Matten"
+                    }
                 }
             }
         }
