@@ -34,7 +34,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         "password" => {
           "postgres" => "postgres"
         },
-        "version" => "9.3",
+        "version" => "9.4",
         "enable_pgdg_yum" => true
       },
       "java" => {
