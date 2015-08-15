@@ -6,7 +6,7 @@ S3_BASE_URL = "https://s3.amazonaws.com/dbfit"
 
 def artefact_url_from_last_successful_job
   job = last_successful_jdk7_job
-  relative_url = job.log.clean_body.scan(/Uploading file .*? to (.*?), public: true/).flatten.first
+  relative_url = job.log.colorized_body.scan(/Uploading file .*? to (.*?), public: true/).flatten.first
   commit = job.commit
   { url: "#{S3_BASE_URL}/#{relative_url}", commit_message: "#{commit.author_name} - #{commit.subject}" }
 end
