@@ -71,14 +71,6 @@ then
 		exit 1
 	fi
 	
-	# But v10.5 requires 32-bit PAM, even on 64-bit Linux.
-	yum -y install pam.i686
-	if [ $? -ne 0 ]
-	then
-		echo "$EM installing 32-bit Pluggable Authentication Module libraries" 1>&2
-		exit 1
-	fi
-	
 	yum -y install numactl
 	if [ $? -ne 0 ]
 	then
