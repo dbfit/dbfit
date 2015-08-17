@@ -7,7 +7,7 @@
 ###############################################################################
 #CONFIG['memory'] = "2048"
 #CONFIG['synced_folder_options'] = nil
-
+#CONFIG['additional_disk1_file'] = "./disk1.vdi"
 
 ###############################################################################
 ## Advanced customization

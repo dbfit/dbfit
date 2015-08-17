@@ -4,4 +4,4 @@ unix_synced_folder_defaults =
 # Default options
 CONFIG['memory'] = "1100"
 CONFIG['synced_folder_options'] = windows? ? nil : unix_synced_folder_defaults
-
+CONFIG['additional_disk1_file'] = "./disk1.vdi"
