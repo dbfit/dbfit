@@ -44,7 +44,7 @@ fi
 echo SELECT name FROM sysmaster:sysdatabases | $INFORMIX_INST_TARG_ROOT/bin/dbaccess sysmaster - 2>/dev/null | grep dbfit
 if [ $? -ne 0 ]
 then
-	echo "$IM database DBFIT not detected"
+	echo "$IM database 'dbfit' not detected"
 	exit 2
 fi
 
