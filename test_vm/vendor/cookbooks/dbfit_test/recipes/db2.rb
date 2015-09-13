@@ -1,9 +1,6 @@
 include_recipe "dbfit_test::2gb_swapfile"
 
 package "libaio"
-#package "pam.i686" - fails with: ERROR: package[pam.i686] (dbfit_test::db2 line 4) had an error: NoMethodError: undefined method `arch' for Chef::Resource::Package
-# So we use:
-yum_package "pam.i686"
 package "numactl"
 package "libstdc++.i686"
 
