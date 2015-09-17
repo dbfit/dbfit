@@ -1,31 +1,31 @@
 !3 Strings
 
-Following types map to string: "VARCHAR", "CHAR", "TEXT"
-|Execute|Create table datatypetest (s1 varchar(20), s2 char(4), s3 TEXT)|
+Following types map to string: "VARCHAR", "CHAR", "TEXT", "TINYTEXT", "MEDIUMTEXT", "LONGTEXT".
+|Execute|Create table datatypetest (s1 varchar(20), s2 char(4), s3 TEXT, s4 TINYTEXT, s5 MEDIUMTEXT, s6 LONGTEXT)|
 
 |Insert|datatypetest|
-|s1|s2|s3|
-|VARCHAR|CHAR|TEXT|
+|s1|s2|s3|s4|s5|s6|
+|VARCHAR|CHAR|TEXT|TXT|TEEXT|TEEEXT|
 
 |Ordered Query|Select * from datatypetest|
-|s1?|s2?|s3?|
-|VARCHAR|CHAR|TEXT|
+|s1?|s2?|s3?|s4?|s5?|s6?|
+|VARCHAR|CHAR|TEXT|TXT|TEEXT|TEEEXT|
 
 !3 should accept fail[null]
 
 |Ordered Query|Select * from datatypetest|
-|s1?|s2?|s3?|
-|fail[null]|fail[null]|fail[null]|
+|s1?|s2?|s3?|s4?|s5?|s6?|
+|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|fail[null]|
 
 |execute|delete from datatypetest|
 
 |Insert|datatypetest|
-|s1|s2|s3|
-|null|null|null|
+|s1|s2|s3|s4|s5|s6|
+|null|null|null|null|null|null|
 
 |Ordered Query|Select * from datatypetest|
-|s1?|s2?|s3?|
-|null|null|null|
+|s1?|s2?|s3?|s4?|s5?|s6?|
+|null|null|null|null|null|null|
 
 |execute|delete from datatypetest|
 
