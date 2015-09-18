@@ -8,6 +8,7 @@ SITE
     database (4.0.9)
       postgresql (>= 1.0.0)
     dmg (2.2.2)
+    firewalld (1.1.1)
     git (4.3.4)
       build-essential (>= 0.0.0)
       dmg (>= 0.0.0)
@@ -61,6 +62,7 @@ PATH
   specs:
     dbfit_test (0.2.0)
       database (>= 0.0.0)
+      firewalld (>= 0.0.0)
       git (>= 0.0.0)
       java (>= 0.0.0)
       lvm (>= 0.0.0)
