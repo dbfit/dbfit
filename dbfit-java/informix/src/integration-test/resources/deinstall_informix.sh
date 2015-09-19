@@ -8,6 +8,7 @@ IM="$MODNAME: INFO:"
 EM="$MODNAME: ERROR:"
 WM="$MODNAME: WARNING:"
 
+DBFIT_ROOT=/var/dbfit
 INFORMIXDIR=/informix
 INFORMIX_SCRIPTS=$DBFIT_ROOT/dbfit-java/informix/src/integration-test/resources
 
@@ -17,7 +18,14 @@ then
 	exit 1
 fi
 
-$INFORMIXDIR/uninstall/uninstall_server/uninstallserver -i silent -f $INFORMIX_SCRIPTS/informix_deinstall.properties
+. $INFORMIXDIR/dbfitserver.ksh
+if [ $? -ne 0 ]
+then
+	echo "$EM sourcing environment from script '$INFORMIXDIR/dbfitserver.ksh'" >&2
+	exit 1
+fi
+
+$INFORMIXDIR/uninstall/uninstall_ids/uninstallids
 if [ $? -ne 0 ]
 then
 	echo "$EM running Informix deinstaller" >&2

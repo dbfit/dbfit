@@ -57,6 +57,7 @@ The fully-built VM includes:
  *  working installs of Gradle, MySQL, PostgreSQL, Derby and HSQLDB
  *  the pre-requisites to easily install Oracle
  *  the pre-requisites to easily install DB2
+ *  the pre-requisites to easily install Informix
 
 The VM doesn't include:
  *  a working Oracle installation (however there is a shell script to help with the installation described below)
@@ -84,12 +85,15 @@ The VM doesn't include:
 
 5. If you want to provision DB2 database - download the setup package as
    described in 1st bullet of [DB2 file](DB2.md).
-   
-6. Run every subsequent command from the `test_vm` folder:
+
+6. If you want to provision Informix database - download the setup package as
+   described in 1st bullet of [Informix file](INFORMIX.md).
+
+7. Run every subsequent command from the `test_vm` folder:
 
         cd test_vm
 
-6. Provision and start the vagrant VM:
+8. Provision and start the vagrant VM:
 
         vagrant up
 
@@ -277,6 +281,12 @@ If you need to use libraries which are not available on the public artifact repo
 
         sudo su - db2inst1
         db2
+
+ *  Logging in as the `informix` superuser for `informix`:
+
+        sudo su - informix
+        . /informix/dbfitserver.ksh
+        /informix/bin/dbaccess dbfit
 
 ### Installing Teradata Express Edition
 
