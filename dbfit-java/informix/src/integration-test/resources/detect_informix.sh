@@ -41,11 +41,13 @@ fi
 
 # Check for the DBFIT database.
 . $INFORMIX_INST_TARG_ROOT/dbfitserver.ksh
-echo SELECT name FROM sysmaster:sysdatabases | $INFORMIX_INST_TARG_ROOT/bin/dbaccess sysmaster - 2>/dev/null | grep dbfit
+echo SELECT name FROM sysmaster:sysdatabases | $INFORMIX_INST_TARG_ROOT/bin/dbaccess sysmaster - 2>/dev/null | grep dbfit >/dev/null 2>&1
 if [ $? -ne 0 ]
 then
 	echo "$IM database 'dbfit' not detected"
 	exit 2
+else
+	echo "$IM database 'dbfit' detected"
 fi
 
 exit 0
