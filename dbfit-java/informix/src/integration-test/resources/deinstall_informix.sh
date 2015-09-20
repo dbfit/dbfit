@@ -18,10 +18,10 @@ then
 	exit 1
 fi
 
-. $INFORMIXDIR/dbfitserver.ksh
+. $INFORMIXDIR/dbfitifserver.ksh
 if [ $? -ne 0 ]
 then
-	echo "$EM sourcing environment from script '$INFORMIXDIR/dbfitserver.ksh'" >&2
+	echo "$EM sourcing environment from script '$INFORMIXDIR/dbfitifserver.ksh'" >&2
 	exit 1
 fi
 
@@ -32,7 +32,7 @@ then
 	exit 1
 fi
 
-userdel -fr informix
+userdel -f informix
 if [ $? -ne 0 ]
 then
 	echo "$EM dropping informix OS user" >&2
@@ -46,7 +46,7 @@ then
 	exit 1
 fi
 
-grep -v "^informix_dbfit " /etc/services > /etc/services
+grep -v "^dbfitifserver" /etc/services > /etc/services
 if [ $? -ge 2 ]
 then
 	echo "$EM removing Informix services from /etc/services" >&2
