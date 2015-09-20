@@ -173,7 +173,7 @@ fi
 
 # Create the DBFIT database.
 echo "$IM setting environment for dbacccess..."
-. $INFORMIX_INST_TARG_ROOT/dbfitserver.ksh
+. $INFORMIX_INST_TARG_ROOT/dbfitifserver.ksh
 if [ $? -ne 0 ]
 then
 	echo "$EM setting environment for dbacccess" 1>&2
@@ -181,7 +181,7 @@ then
 fi
 
 echo "$IM creating database 'dbfit'..."
-echo CREATE DATABASE dbfit | $INFORMIX_INST_TARG_ROOT/bin/dbaccess sysmaster - ############# 2>/dev/null
+echo CREATE DATABASE dbfit | $INFORMIX_INST_TARG_ROOT/bin/dbaccess sysmaster -
 if [ $? -ne 0 ]
 then
 	echo "$EM creating database 'dbfit'" 1>&2

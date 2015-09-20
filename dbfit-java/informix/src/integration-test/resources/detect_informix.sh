@@ -40,7 +40,7 @@ else
 fi
 
 # Check for the DBFIT database.
-. $INFORMIX_INST_TARG_ROOT/dbfitserver.ksh
+. $INFORMIX_INST_TARG_ROOT/dbfitifserver.ksh
 echo SELECT name FROM sysmaster:sysdatabases | $INFORMIX_INST_TARG_ROOT/bin/dbaccess sysmaster - 2>/dev/null | grep dbfit >/dev/null 2>&1
 if [ $? -ne 0 ]
 then
