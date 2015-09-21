@@ -14,9 +14,6 @@ import java.util.regex.Pattern;
 
 import static dbfit.util.Direction.*;
 
-/**
- * Created by muppana on 12/18/2014.
- */
 @DatabaseEnvironment(name="Informix", driver="com.informix.jdbc.IfxDriver")
 public class InformixEnvironment extends AbstractDbEnvironment  {
 
