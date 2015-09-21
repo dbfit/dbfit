@@ -138,6 +138,9 @@ then
 		echo "$EM executing ids_install utility" 1>&2
 		exit 1
 	fi
+else
+	echo "$IM no Informix installer package files found. Exiting..."
+	exit 3
 fi
 
 echo "$IM removing Informix installer package files..."
