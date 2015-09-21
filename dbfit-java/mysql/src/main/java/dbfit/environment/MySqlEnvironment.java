@@ -89,7 +89,7 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
     // List interface has sequential search, so using list instead of array to
     // map types
     private static List<String> stringTypes = Arrays.asList(new String[] {
-            "VARCHAR", "CHAR", "TEXT" });
+            "VARCHAR", "CHAR", "TEXT", "TINYTEXT", "MEDIUMTEXT", "LONGTEXT" });
     private static List<String> intTypes = Arrays.asList(new String[] {
             "TINYINT", "SMALLINT", "MEDIUMINT", "INT", "INTEGER" });
     private static List<String> longTypes = Arrays.asList(new String[] {
