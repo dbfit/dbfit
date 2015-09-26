@@ -164,7 +164,11 @@ project('informix') {
 
     dependencies {
         compile project(':dbfit-java:core')
-        compile 'com.informix.jdbc:ifxjdbc:3.70@jar'
+        compile 'com.informix:ifxjdbc:4.10.JC4W1@jar'
+    }
+
+    integrationTest.doFirst {
+        dbdeploy('com.informix.jdbc.IfxDriver', 'jdbc:informix-sqli://localhost:16466/dbfit:INFORMIXSERVER=dbfitifserver', 'dbfit', 'DBFIT', 'row')
     }
 }
 

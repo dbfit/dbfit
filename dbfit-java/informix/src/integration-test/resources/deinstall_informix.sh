@@ -32,7 +32,14 @@ then
 	exit 1
 fi
 
-userdel -f informix
+rm -fr /informix
+if [ $? -ne 0 ]
+then
+	echo "$EM removing Informix installation directory tree /informix" >&2
+	exit 1
+fi
+
+userdel informix
 if [ $? -ne 0 ]
 then
 	echo "$EM dropping informix OS user" >&2
@@ -46,17 +53,11 @@ then
 	exit 1
 fi
 
-grep -v "^dbfitifserver" /etc/services > /etc/services
+# grep won't overwrite the input file with stdout, hence go via cat.
+grep -v "^dbfitifserver" /etc/services | cat > /etc/services
 if [ $? -ge 2 ]
 then
 	echo "$EM removing Informix services from /etc/services" >&2
-	exit 1
-fi
-
-rm -fr /informix
-if [ $? -ne 0 ]
-then
-	echo "$EM removing Informix installation directory tree /informix" >&2
 	exit 1
 fi
 

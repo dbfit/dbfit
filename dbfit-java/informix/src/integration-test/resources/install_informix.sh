@@ -174,7 +174,6 @@ then
 	exit 1
 fi
 
-# Create the DBFIT database.
 echo "$IM setting environment for dbacccess..."
 . $INFORMIX_INST_TARG_ROOT/dbfitifserver.ksh
 if [ $? -ne 0 ]
@@ -183,11 +182,21 @@ then
 	exit 1
 fi
 
-echo "$IM creating database 'dbfit'..."
-echo CREATE DATABASE dbfit | $INFORMIX_INST_TARG_ROOT/bin/dbaccess sysmaster -
+# Run as Informix super user.
+echo "$IM creating 'DBFIT' database..."
+runuser dbfit -c "dbaccess sysmaster '$INFORMIX_SCRIPTS/create-db-informix.sql'"
 if [ $? -ne 0 ]
 then
-	echo "$EM creating database 'dbfit'" 1>&2
+	echo "$EM creating Informix 'DBFIT' DB" 1>&2
+	exit 1
+fi
+
+# Run as dbfit (Informix) user.
+echo "$IM creating dbdeploy changelog table..."
+runuser dbfit -c "dbaccess dbfit '$INFORMIX_SCRIPTS/create-dbdeploy-changelog.sql'"
+if [ $? -ne 0 ]
+then
+	echo "$EM creating dbdeploy changelog table" 1>&2
 	exit 1
 fi
 

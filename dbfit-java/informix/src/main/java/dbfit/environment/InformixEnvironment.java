@@ -144,7 +144,7 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
           qry1+= " WHEN 280 THEN 'rowdef'";                                         
           qry1+= " ELSE CAST(coltype AS CHAR(10))";                                          
           qry1+= " END data_type ,'P' as direction, c.colno as position ";                                                                
-          qry1+= " FROM systables t, syscolumns c";                                                  
+          qry1+= " FROM informix.systables t, informix.syscolumns c";                                                  
           qry1+= " WHERE  t.tabid = c.tabid and ";                                                           
            
         if (qualifiers.length == 2) {
@@ -398,7 +398,7 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
         qry1+= " WHEN 279 THEN 'collection'";                                     
         qry1+= " WHEN 280 THEN 'rowdef'";                                         
         qry1+= " ELSE CAST(paramtype AS CHAR(10))";                                          
-        qry1+= " END  data_type, spc.paramattr  as direction, spc.paramid as position  from sysprocedures sp,sysproccolumns spc where sp.procid=spc.procid and";
+        qry1+= " END  data_type, spc.paramattr  as direction, spc.paramid as position  from informix.sysprocedures sp, informix.sysproccolumns spc where sp.procid=spc.procid and";
         if (qualifiers.length == 2) {
             qry1 += " lower(sp.owner)=? and lower(sp.procname)=? ";
         } else {

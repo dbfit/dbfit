@@ -1,0 +1,5 @@
+|Import Fixture|
+|dbfit.fixture|
+
+|Database Environment|Informix|
+|Connect|localhost:16466|dbfit|DBFIT|dbfit|
