@@ -1,0 +1,4 @@
+|Execute|SHUTDOWN|
+
+!|dbfit.util.ExportFixture|
+|dbfit.fixture|
