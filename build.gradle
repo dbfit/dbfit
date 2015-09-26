@@ -187,6 +187,7 @@ task fastbuild(dependsOn: [
     ':dbfit-java:db2:check',
     ':dbfit-java:derby:check',
     ':dbfit-java:hsqldb:check',
+    ':dbfit-java:informix:check',
     ':dbfit-java:mysql:check',
     ':dbfit-java:netezza:check',
     ':dbfit-java:oracle:check',
@@ -194,7 +195,7 @@ task fastbuild(dependsOn: [
     ':dbfit-java:sqlserver:check',
     ':dbfit-java:teradata:check',
     ':dbfit-java:derby:integrationTest',
-    ':dbfit-java:hsqldb:integrationTest'
+    ':dbfit-java:hsqldb:integrationTest',
     ])
 
 if (!project.hasProperty('excludeIntegrationTests')) {
@@ -220,7 +221,14 @@ def onWindows() {
 }
 
 def proprietaryLibs() {
-    ['**/ojdbc*.jar', '**/db2jcc4*.jar', '**/terajdbc*.jar', '**/tdgssconfig*.jar', '**/nzjdbc*.jar', '**/sqljdbc*.jar'] as Set
+    ['**/ojdbc*.jar',
+     '**/db2jcc4*.jar',
+     '**/terajdbc*.jar',
+     '**/tdgssconfig*.jar',
+     '**/nzjdbc*.jar',
+     '**/sqljdbc*.jar',
+     '**/ifx*.jar'
+    ] as Set
 }
 
 def experimentalItems() {
