@@ -285,7 +285,7 @@ If you need to use libraries which are not available on the public artifact repo
  *  Logging in as the `informix` superuser for `informix`:
 
         sudo su - informix
-        . /informix/dbfitserver.ksh
+        . /informix/dbfitifserver.ksh
         /informix/bin/dbaccess dbfit
 
 ### Installing Teradata Express Edition
