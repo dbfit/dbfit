@@ -14,7 +14,7 @@ public class InformixDateNormalizer implements TypeNormaliser {
             throw new UnsupportedOperationException(
                     "InformixDataNormalizer cannot work with " + o.getClass());
         }
-        com.informix.jdbc.IfxDate ts = ( com.informix.jdbc.IfxDate) o;
+        com.informix.jdbc.IfxDate ts = (com.informix.jdbc.IfxDate) o;
         return ts.value();
     }
 }
