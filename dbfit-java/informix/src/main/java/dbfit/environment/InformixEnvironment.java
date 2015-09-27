@@ -75,7 +75,8 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
                 .split("\\.");
         
         
-          String qry1=" SELECT  c.colname[1,20] column_name ,";                          
+          //String qry1=" SELECT  c.colname[1,20] column_name ,";                          
+          String qry1=" SELECT  c.colname column_name ,";                          
           qry1+= " CASE coltype   ";                                                             
           qry1+= " WHEN 0 THEN 'char' ";      
           qry1+= " WHEN 1 THEN 'smallint'  ";                                                
