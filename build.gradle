@@ -195,7 +195,7 @@ task fastbuild(dependsOn: [
     ':dbfit-java:sqlserver:check',
     ':dbfit-java:teradata:check',
     ':dbfit-java:derby:integrationTest',
-    ':dbfit-java:hsqldb:integrationTest',
+    ':dbfit-java:hsqldb:integrationTest'
     ])
 
 if (!project.hasProperty('excludeIntegrationTests')) {
