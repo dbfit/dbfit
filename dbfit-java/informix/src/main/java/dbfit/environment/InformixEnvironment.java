@@ -17,35 +17,25 @@ import static dbfit.util.Direction.*;
 @DatabaseEnvironment(name="Informix", driver="com.informix.jdbc.IfxDriver")
 public class InformixEnvironment extends AbstractDbEnvironment  {
 
-   @Override
-     public void afterConnectionEstablished() throws SQLException {
-          if(currentConnection.getTransactionIsolation()==0){
-        	  System.out.println("afterConnectionEstablished method");
-        	currentConnection.setAutoCommit(true);
-          }else{
-              currentConnection.setAutoCommit(false);
-          }
-    }
     @Override
-     public void connect(String connectionString, Properties info) throws SQLException {
-        // registerDriver();
-         currentConnection = DriverManager.getConnection(connectionString, info);
-         //currentConnection.setAutoCommit(false);
-         System.out.println("connect method");
-         afterConnectionEstablished();
-     }  
-
-
-    public  InformixEnvironment(String driverClassName) {
-        super(driverClassName);
-//        TypeNormaliserFactory.setNormaliser( com.informix.jdbc.IfxDateTime.class,
-//                new OracleTimestampNormaliser());
-        TypeNormaliserFactory.setNormaliser( com.informix.jdbc.IfxDate.class,
-                new InformixDateNormalizer());
-//        TypeNormaliserFactory.setNormaliser(java.sql.Date.class,
-//                new SqlDateNormaliser());
+    public void afterConnectionEstablished() throws SQLException {
+        if (currentConnection.getTransactionIsolation() == 0) {
+            currentConnection.setAutoCommit(true);
+        } else {
+            currentConnection.setAutoCommit(false);
+        }
     }
 
+    @Override
+    public void connect(String connectionString, Properties info) throws SQLException {
+        currentConnection = DriverManager.getConnection(connectionString, info);
+        afterConnectionEstablished();
+    }
+
+    public InformixEnvironment(String driverClassName) {
+        super(driverClassName);
+        TypeNormaliserFactory.setNormaliser(com.informix.jdbc.IfxDate.class, new InformixDateNormalizer());
+    }
 
     protected String parseCommandText(String commandText) {
         commandText = commandText.replaceAll(paramNamePattern, "?");
@@ -60,130 +50,115 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
     }
 
     protected String getConnectionString(String dataSource) {
-      //  System.out.println("getConnection="+dataSource);
         return "jdbc:informix-sqli://" + dataSource;
     }
 
     protected String getConnectionString(String dataSource, String database) {
-       // System.out.println("getConnection=" + dataSource + "/" + database);
         return "jdbc:informix-sqli://" + dataSource + "/" + database;
     }
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
-        String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
-                .split("\\.");
-        
-        
-          //String qry1=" SELECT  c.colname[1,20] column_name ,";                          
-          String qry1=" SELECT  c.colname column_name ,";                          
-          qry1+= " CASE coltype   ";                                                             
-          qry1+= " WHEN 0 THEN 'char' ";      
-          qry1+= " WHEN 1 THEN 'smallint'  ";                                                
-          qry1+= " WHEN 2 THEN 'integer'  ";                                                 
-          qry1+= " WHEN 3 THEN 'float'      ";                                               
-          qry1+= " WHEN 4 THEN 'smallfloat'  ";  
-         // qry1+= " WHEN 5 THEN 'decimal' "; 
-          qry1+= "  WHEN 5 THEN 'decimal(' ||  ";                                             
-          qry1+= "     TRIM(CAST(TRUNC(c.collength/256) AS VARCHAR(8)) || ',' ||    ";       
-          qry1+= "     CAST(c.collength - TRUNC(c.collength/256)*256 AS VARCHAR(8))) || ')'";
-          qry1+= " WHEN 6 THEN 'serial'  ";                                                  
-          qry1+= " WHEN 7 THEN 'date'    ";                                                  
-          qry1+= " WHEN 8 THEN 'money(' ||  ";                                               
-          qry1+= " TRIM(CAST(TRUNC(c.collength/256) AS VARCHAR(8)) || ',' ||  ";         
-          qry1+= " CAST(c.collength - TRUNC(c.collength/256)*256 AS VARCHAR(8))) || ')'";
-          qry1+= " WHEN 9 THEN 'null'  ";                                                    
-          qry1+= " WHEN 10 THEN 'datetime'  ";                                               
-          qry1+= " WHEN 11 THEN 'byte'        ";                                             
-          qry1+= " WHEN 12 THEN 'text'          ";                                           
-          qry1+= " WHEN 13 THEN 'varchar'";    
-          qry1+= " WHEN 14 THEN 'interval' ";                                                
-          qry1+= " WHEN 15 THEN 'nchar(' || TRIM(CAST(c.collength AS CHAR(5))) || ')'";      
-          qry1+= " WHEN 16 THEN 'nvarchar(' || TRIM(CAST(c.collength AS CHAR(5))) || ')'";   
-          qry1+= " WHEN 17 THEN 'int8'";                                                     
-          qry1+= " WHEN 18 THEN 'serial8'";                                                  
-          qry1+= " WHEN 19 THEN 'set'";                                                      
-          qry1+= " WHEN 20 THEN 'multiset'";                                                 
-          qry1+= " WHEN 21 THEN 'list'";                                                     
-          qry1+= " WHEN 22 THEN 'row'";                                                      
-          qry1+= " WHEN 23 THEN 'collection'";                                               
-          qry1+= " WHEN 24 THEN 'rowdef'";                                                   
-          qry1+= " WHEN 256 THEN 'char(' || TRIM(CAST(c.collength AS CHAR(5))) ||";          
-          qry1+= " ')'";                                                        
-          qry1+= " WHEN 257 THEN 'smallint'";                                       
-          qry1+= " WHEN 258 THEN 'integer'";                                        
-          qry1+= " WHEN 259 THEN 'float'";                                          
-          qry1+= " WHEN 260 THEN 'smallfloat'"; 
-          //qry1+= " WHEN 5 THEN 'decimal not null' "; 
-          qry1+= "  WHEN 261 THEN 'decimal('||";                                              
-          qry1+= "      TRIM(CAST(TRUNC(c.collength/256) AS VARCHAR(8)) || ',' ||";           
-          qry1+= "      CAST(c.collength - TRUNC(c.collength/256)*256 AS VARCHAR(8))) ||";    
-          qry1+= "      ')'";                                                        
-          qry1+= " WHEN 262 THEN 'serial'";                                         
-          qry1+= " WHEN 263 THEN 'date'";                                           
-          qry1+= " WHEN 264 THEN 'money(' ||";                                               
-          qry1+= " TRIM(CAST(TRUNC(c.collength/256) AS VARCHAR(8)) || ',' ||";           
-          qry1+= " CAST(c.collength - TRUNC(c.collength/256)*256 AS VARCHAR(8))) ||";    
-          qry1+= " ')'";                                                        
-          qry1+= " WHEN 265 THEN 'null'";                                           
-          qry1+= " WHEN 266 THEN 'datetime'";                                       
-          qry1+= " WHEN 267 THEN 'byte'";                                           
-          qry1+= " WHEN 268 THEN 'text'";                                           
-          qry1+= " WHEN 269 THEN 'varchar'";                                                        
-          qry1+= " WHEN 270 THEN 'interval'";                                       
-          qry1+= " WHEN 271 THEN 'nchar(' || TRIM(CAST(c.collength AS CHAR(5))) ||";         
-          qry1+= " ')'";                                                        
-          qry1+= " WHEN 272 THEN 'nvarchar(' || TRIM(CAST(c.collength AS CHAR(5))) ||";      
-          qry1+= " ')'";                                                        
-          qry1+= " WHEN 273 THEN 'int8'";                                           
-          qry1+= " WHEN 274 THEN 'serial8'";                                        
-          qry1+= " WHEN 275 THEN 'set'";                                            
-          qry1+= " WHEN 276 THEN 'multiset'";                                       
-          qry1+= " WHEN 277 THEN 'list'";                                           
-          qry1+= " WHEN 278 THEN 'row'";                                            
-          qry1+= " WHEN 279 THEN 'collection'";                                     
-          qry1+= " WHEN 280 THEN 'rowdef'";                                         
-          qry1+= " ELSE CAST(coltype AS CHAR(10))";                                          
-          qry1+= " END data_type ,'P' as direction, c.colno as position ";                                                                
-          qry1+= " FROM informix.systables t, informix.syscolumns c";                                                  
-          qry1+= " WHERE  t.tabid = c.tabid and ";                                                           
-           
+        String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName).split("\\.");
+
+        String qry1 = "";
+        qry1 += "SELECT c.colname AS column_name";
+        qry1 += "     , CASE coltype";
+        qry1 += "            WHEN   0 THEN 'char'";
+        qry1 += "            WHEN   1 THEN 'smallint'";
+        qry1 += "            WHEN   2 THEN 'integer'";
+        qry1 += "            WHEN   3 THEN 'float'";
+        qry1 += "            WHEN   4 THEN 'smallfloat'";
+        qry1 += "            WHEN   5 THEN 'decimal('";
+        qry1 += "                       || TRIM(CAST(TRUNC(c.collength / 256) AS VARCHAR(8)) || ','";
+        qry1 += "                       || CAST(c.collength - TRUNC(c.collength / 256) * 256 AS VARCHAR(8))) || ')'";
+        qry1 += "            WHEN   6 THEN 'serial'";
+        qry1 += "            WHEN   7 THEN 'date'";
+        qry1 += "            WHEN   8 THEN 'money('";
+        qry1 += "                       || TRIM(CAST(TRUNC(c.collength/256) AS VARCHAR(8)) || ','";
+        qry1 += "                       || CAST(c.collength - TRUNC(c.collength / 256) * 256 AS VARCHAR(8))) || ')'";
+        qry1 += "            WHEN   9 THEN 'null'";
+        qry1 += "            WHEN  10 THEN 'datetime'";
+        qry1 += "            WHEN  11 THEN 'byte'";
+        qry1 += "            WHEN  12 THEN 'text'";
+        qry1 += "            WHEN  13 THEN 'varchar'";
+        qry1 += "            WHEN  14 THEN 'interval'";
+        qry1 += "            WHEN  15 THEN 'nchar(' || TRIM(CAST(c.collength AS CHAR(5))) || ')'";
+        qry1 += "            WHEN  16 THEN 'nvarchar(' || TRIM(CAST(c.collength AS CHAR(5))) || ')'";
+        qry1 += "            WHEN  17 THEN 'int8'";
+        qry1 += "            WHEN  18 THEN 'serial8'";
+        qry1 += "            WHEN  19 THEN 'set'";
+        qry1 += "            WHEN  20 THEN 'multiset'";
+        qry1 += "            WHEN  21 THEN 'list'";
+        qry1 += "            WHEN  22 THEN 'row'";
+        qry1 += "            WHEN  23 THEN 'collection'";
+        qry1 += "            WHEN  24 THEN 'rowdef'";
+        qry1 += "            WHEN 256 THEN 'char(' || TRIM(CAST(c.collength AS CHAR(5))) || ')'";
+        qry1 += "            WHEN 257 THEN 'smallint'";
+        qry1 += "            WHEN 258 THEN 'integer'";
+        qry1 += "            WHEN 259 THEN 'float'";
+        qry1 += "            WHEN 260 THEN 'smallfloat'";
+        qry1 += "            WHEN 261 THEN 'decimal('";
+        qry1 += "                       || TRIM(CAST(TRUNC(c.collength / 256) AS VARCHAR(8)) || ','";
+        qry1 += "                       || CAST(c.collength - TRUNC(c.collength / 256) * 256 AS VARCHAR(8))) || ')'";
+        qry1 += "            WHEN 262 THEN 'serial'";
+        qry1 += "            WHEN 263 THEN 'date'";
+        qry1 += "            WHEN 264 THEN 'money('";
+        qry1 += "                       || TRIM(CAST(TRUNC(c.collength / 256) AS VARCHAR(8)) || ','";
+        qry1 += "                       || CAST(c.collength - TRUNC(c.collength / 256) * 256 AS VARCHAR(8))) || ')'";
+        qry1 += "            WHEN 265 THEN 'null'";
+        qry1 += "            WHEN 266 THEN 'datetime'";
+        qry1 += "            WHEN 267 THEN 'byte'";
+        qry1 += "            WHEN 268 THEN 'text'";
+        qry1 += "            WHEN 269 THEN 'varchar'";
+        qry1 += "            WHEN 270 THEN 'interval'";
+        qry1 += "            WHEN 271 THEN 'nchar(' || TRIM(CAST(c.collength AS CHAR(5))) || ')'";
+        qry1 += "            WHEN 272 THEN 'nvarchar(' || TRIM(CAST(c.collength AS CHAR(5))) || ')'";
+        qry1 += "            WHEN 273 THEN 'int8'";
+        qry1 += "            WHEN 274 THEN 'serial8'";
+        qry1 += "            WHEN 275 THEN 'set'";
+        qry1 += "            WHEN 276 THEN 'multiset'";
+        qry1 += "            WHEN 277 THEN 'list'";
+        qry1 += "            WHEN 278 THEN 'row'";
+        qry1 += "            WHEN 279 THEN 'collection'";
+        qry1 += "            WHEN 280 THEN 'rowdef'";
+        qry1 += "            ELSE CAST(coltype AS CHAR(10))";
+        qry1 += "        END AS data_type";
+        qry1 += "     , 'P' AS direction";
+        qry1 += "     , c.colno AS position ";
+        qry1 += "  FROM informix.systables t";
+        qry1 += "     , informix.syscolumns c";
+        qry1 += " WHERE t.tabid = c.tabid";
+        qry1 += "   AND ";
+
         if (qualifiers.length == 2) {
-            qry1 += " lower(t.owner)=? and lower(t.tabname)=? ";
+            qry1 += "LOWER(t.owner) = ? AND LOWER(t.tabname)= ?";
         } else {
-            qry1 += " (lower(t.tabname)=?)";
+            qry1 += "LOWER(t.tabname) = ?";
         }
-        qry1 += " order by t.owner";
-        
-        System.out.println("Query="+qry1);
-        return readIntoParams(qualifiers, qry1); 
+        qry1 += " ORDER BY t.owner";
+
+        return readIntoParams(qualifiers, qry1);
     }
-    
-    private Map<String, DbParameterAccessor> readIntoParams(
-            String[] queryParameters, String query) throws SQLException {
-    	System.out.println("query="+query);
+
+    private Map<String, DbParameterAccessor> readIntoParams(String[] queryParameters, String query) throws SQLException {
+System.out.println("GOT QUERY: " + query);
         PreparedStatement dc = currentConnection.prepareStatement(query);
         try {
             for (int i = 0; i < queryParameters.length; i++) {
-            	
-            	if(queryParameters[i].length()==0)
-            		queryParameters[i]="return_value";
-            		
-                dc.setString(i + 1,
-                        NameNormaliser.normaliseName(queryParameters[i]));
-                	System.out.println("parameters are ="+queryParameters[i]+"and length is "+queryParameters[i].length());
+                if(queryParameters[i].length()==0)
+                    queryParameters[i] = "return_value";
+                dc.setString(i + 1, NameNormaliser.normaliseName(queryParameters[i]));
             }
 
             ResultSet rs = dc.executeQuery();
             Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-            
+
             while (rs.next()) {
                 String paramName = rs.getString(1);
                 if (paramName == null)
                     paramName = "";
                 String dataType = rs.getString(2);
-                // int length=rs.getInt(3);
-                // System.out.println("length="+length);
                 String direction = rs.getString(3);
                 int position = rs.getInt(4);
                 Direction paramDirection = getParameterDirection(direction);
@@ -193,45 +168,35 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
                         paramDirection == RETURN_VALUE ? -1
                                 : position);
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
-
-
             }
             rs.close();
             Iterator it = allParams.values().iterator();
             while(it.hasNext()) {
-            	DbParameterAccessor dbp = (DbParameterAccessor)it.next();
-            	System.out.println("----dbp.getName()----"+dbp.getName());
-            	System.out.println("----dbp.getPosition()----"+dbp.getPosition());
+                DbParameterAccessor dbp = (DbParameterAccessor)it.next();
             }
-            
+
             return allParams;
         } finally {
             dc.close();
         }
-    } 
-    
-    
+    }
 
-    
     private static Direction getParameterDirection(int isOutput, String name) {
         if (name.isEmpty()) {
             return RETURN_VALUE;
         }
-
         return (isOutput == 1) ? OUTPUT : INPUT;
     }
+
     private static Direction getParameterDirection(String direction) {
-    	/* 
-            
-            0 = Parameter is of unknown type 
-            1 = Parameter is INPUT mode 
-            2 = Parameter is INOUT mode 
-            3 = Parameter is multiple return value 
-            4 = Parameter is OUT mode 
+        /*  0 = Parameter is of unknown type
+            1 = Parameter is INPUT mode
+            2 = Parameter is INOUT mode
+            3 = Parameter is multiple return value
+            4 = Parameter is OUT mode
             5 = Parameter is a return value
-            */
-        
-    	if ("P".equals(direction))
+        */
+        if ("P".equals(direction))
             return INPUT;
         if ("P".equals(direction))
             return OUTPUT;
@@ -239,7 +204,7 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
             return INPUT_OUTPUT;
         if ("C".equals(direction))
             return RETURN_VALUE;
-    	if ("1".equals(direction))
+        if ("1".equals(direction))
             return INPUT;
         if ("4".equals(direction))
             return OUTPUT;
@@ -251,8 +216,7 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
                 + " is not supported");
     }
 
-    // List interface has sequential search, so using list instead of array to
-    // map types
+    // List interface has sequential search, so using list instead of array to map types.
     private static List<String> stringTypes = Arrays.asList(new String[] {
             "VARCHAR","VARCHAR(257)","VARCHAR2","LVARCHAR", "CHAR", "CHARACTER", "GRAPHIC", "VARGRAPHIC","BYTE" });
     private static List<String> intTypes = Arrays.asList(new String[] {
@@ -295,13 +259,8 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
             return java.sql.Types.TIMESTAMP;
         if (dateTypes.contains(dataType))
             return java.sql.Types.DATE;
-        
-        //java.sql.Types.CLOB;
-        //java.sql.Types.BLOB;
-        //java.sql.Types.NCLOB;
-        //java.sql.Types.
-        throw new UnsupportedOperationException("Type " + dataType
-                + " is not supported");
+
+        throw new UnsupportedOperationException("Type " + dataType + " is not supported");
     }
 
     public Class<?> getJavaClass(String dataType) {
@@ -328,89 +287,85 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
 
     public Map<String, DbParameterAccessor> getAllProcedureParameters(
             String procName) throws SQLException {
-        String[] qualifiers = NameNormaliser.normaliseName(procName).split(
-                "\\.");
-       // String qry = " select spi.paramname as column_name,'VARCHAR' as data_type,spi.direction as direction from sysprocedures sp ,storedprocinfo333 spi where sp.procname=spi.procname and ";
-        String qry1 ="select spc.paramname as column_name," ;
-        qry1+= " CASE paramtype   ";                                                             
-        qry1+= " WHEN 0 THEN 'char' ";      
-        qry1+= " WHEN 1 THEN 'smallint'  ";                                                
-        qry1+= " WHEN 2 THEN 'integer'  ";                                                 
-        qry1+= " WHEN 3 THEN 'float'      ";                                               
-        qry1+= " WHEN 4 THEN 'smallfloat'  ";  
-       // qry1+= " WHEN 5 THEN 'decimal' "; 
-        qry1+= "  WHEN 5 THEN 'decimal(' ||  ";                                             
-        qry1+= "     TRIM(CAST(TRUNC(spc.paramlen/256) AS VARCHAR(8)) || ',' ||    ";       
-        qry1+= "     CAST(spc.paramlen - TRUNC(spc.paramlen/256)*256 AS VARCHAR(8))) || ')'";
-        qry1+= " WHEN 6 THEN 'serial'  ";                                                  
-        qry1+= " WHEN 7 THEN 'date'    ";                                                  
-        qry1+= " WHEN 8 THEN 'money(' ||  ";                                               
-        qry1+= " TRIM(CAST(TRUNC(spc.paramlen/256) AS VARCHAR(8)) || ',' ||  ";         
-        qry1+= " CAST(spc.paramlen - TRUNC(spc.paramlen/256)*256 AS VARCHAR(8))) || ')'";
-        qry1+= " WHEN 9 THEN 'null'  ";                                                    
-        qry1+= " WHEN 10 THEN 'datetime'  ";                                               
-        qry1+= " WHEN 11 THEN 'byte'        ";                                             
-        qry1+= " WHEN 12 THEN 'text'          ";                                           
-        qry1+= " WHEN 13 THEN 'varchar'";    
-        qry1+= " WHEN 14 THEN 'interval' ";                                                
-        qry1+= " WHEN 15 THEN 'nchar(' || TRIM(CAST(spc.paramlen AS CHAR(5))) || ')'";      
-        qry1+= " WHEN 16 THEN 'nvarchar(' || TRIM(CAST(spc.paramlen AS CHAR(5))) || ')'";   
-        qry1+= " WHEN 17 THEN 'int8'";                                                     
-        qry1+= " WHEN 18 THEN 'serial8'";                                                  
-        qry1+= " WHEN 19 THEN 'set'";                                                      
-        qry1+= " WHEN 20 THEN 'multiset'";                                                 
-        qry1+= " WHEN 21 THEN 'list'";                                                     
-        qry1+= " WHEN 22 THEN 'row'";                                                      
-        qry1+= " WHEN 23 THEN 'collection'";                                               
-        qry1+= " WHEN 24 THEN 'rowdef'";                                                   
-        qry1+= " WHEN 256 THEN 'char(' || TRIM(CAST(spc.paramlen AS CHAR(5))) ||";          
-        qry1+= " ')'";                                                        
-        qry1+= " WHEN 257 THEN 'smallint'";                                       
-        qry1+= " WHEN 258 THEN 'integer'";                                        
-        qry1+= " WHEN 259 THEN 'float'";                                          
-        qry1+= " WHEN 260 THEN 'smallfloat'"; 
-        //qry1+= " WHEN 5 THEN 'decimal not null' "; 
-        qry1+= "  WHEN 261 THEN 'decimal('||";                                              
-        qry1+= "      TRIM(CAST(TRUNC(spc.paramlen/256) AS VARCHAR(8)) || ',' ||";           
-        qry1+= "      CAST(spc.paramlen - TRUNC(spc.paramlen/256)*256 AS VARCHAR(8))) ||";    
-        qry1+= "      ')'";                                                        
-        qry1+= " WHEN 262 THEN 'serial'";                                         
-        qry1+= " WHEN 263 THEN 'date'";                                           
-        qry1+= " WHEN 264 THEN 'money(' ||";                                               
-        qry1+= " TRIM(CAST(TRUNC(spc.paramlen/256) AS VARCHAR(8)) || ',' ||";           
-        qry1+= " CAST(spc.paramlen - TRUNC(spc.paramlen/256)*256 AS VARCHAR(8))) ||";    
-        qry1+= " ')'";                                                        
-        qry1+= " WHEN 265 THEN 'null'";                                           
-        qry1+= " WHEN 266 THEN 'datetime'";                                       
-        qry1+= " WHEN 267 THEN 'byte'";                                           
-        qry1+= " WHEN 268 THEN 'text'";                                           
-        qry1+= " WHEN 269 THEN 'varchar'";                                                        
-        qry1+= " WHEN 270 THEN 'interval'";                                       
-        qry1+= " WHEN 271 THEN 'nchar(' || TRIM(CAST(spc.paramlen AS CHAR(5))) ||";         
-        qry1+= " ')'";                                                        
-        qry1+= " WHEN 272 THEN 'nvarchar(' || TRIM(CAST(spc.paramlen AS CHAR(5))) ||";      
-        qry1+= " ')'";                                                        
-        qry1+= " WHEN 273 THEN 'int8'";                                           
-        qry1+= " WHEN 274 THEN 'serial8'";                                        
-        qry1+= " WHEN 275 THEN 'set'";                                            
-        qry1+= " WHEN 276 THEN 'multiset'";                                       
-        qry1+= " WHEN 277 THEN 'list'";                                           
-        qry1+= " WHEN 278 THEN 'row'";                                            
-        qry1+= " WHEN 279 THEN 'collection'";                                     
-        qry1+= " WHEN 280 THEN 'rowdef'";                                         
-        qry1+= " ELSE CAST(paramtype AS CHAR(10))";                                          
-        qry1+= " END  data_type, spc.paramattr  as direction, spc.paramid as position  from informix.sysprocedures sp, informix.sysproccolumns spc where sp.procid=spc.procid and";
+        String[] qualifiers = NameNormaliser.normaliseName(procName).split("\\.");
+
+        String qry1 = "";
+        qry1 += "SELECT spc.paramname AS column_name";
+        qry1 += "     , CASE paramtype";
+        qry1 += "            WHEN   0 THEN 'char'";
+        qry1 += "            WHEN   1 THEN 'smallint'";
+        qry1 += "            WHEN   2 THEN 'integer'";
+        qry1 += "            WHEN   3 THEN 'float'";
+        qry1 += "            WHEN   4 THEN 'smallfloat'";
+        qry1 += "            WHEN   5 THEN 'decimal('";
+        qry1 += "                       || TRIM(CAST(TRUNC(spc.paramlen/256) AS VARCHAR(8)) || ','";
+        qry1 += "                       || CAST(spc.paramlen - TRUNC(spc.paramlen / 256) * 256 AS VARCHAR(8))) || ')'";
+        qry1 += "            WHEN   6 THEN 'serial'";
+        qry1 += "            WHEN   7 THEN 'date'";
+        qry1 += "            WHEN   8 THEN 'money('";
+        qry1 += "                       || TRIM(CAST(TRUNC(spc.paramlen/256) AS VARCHAR(8)) || ','";
+        qry1 += "                       || CAST(spc.paramlen - TRUNC(spc.paramlen/256)*256 AS VARCHAR(8))) || ')'";
+        qry1 += "            WHEN   9 THEN 'null'";
+        qry1 += "            WHEN  10 THEN 'datetime'";
+        qry1 += "            WHEN  11 THEN 'byte'";
+        qry1 += "            WHEN  12 THEN 'text'";
+        qry1 += "            WHEN  13 THEN 'varchar'";
+        qry1 += "            WHEN  14 THEN 'interval'";
+        qry1 += "            WHEN  15 THEN 'nchar(' || TRIM(CAST(spc.paramlen AS CHAR(5))) || ')'";
+        qry1 += "            WHEN  16 THEN 'nvarchar(' || TRIM(CAST(spc.paramlen AS CHAR(5))) || ')'";
+        qry1 += "            WHEN  17 THEN 'int8'";
+        qry1 += "            WHEN  18 THEN 'serial8'";
+        qry1 += "            WHEN  19 THEN 'set'";
+        qry1 += "            WHEN  20 THEN 'multiset'";
+        qry1 += "            WHEN  21 THEN 'list'";
+        qry1 += "            WHEN  22 THEN 'row'";
+        qry1 += "            WHEN  23 THEN 'collection'";
+        qry1 += "            WHEN  24 THEN 'rowdef'";
+        qry1 += "            WHEN 256 THEN 'char(' || TRIM(CAST(spc.paramlen AS CHAR(5))) || ')'";
+        qry1 += "            WHEN 257 THEN 'smallint'";
+        qry1 += "            WHEN 258 THEN 'integer'";
+        qry1 += "            WHEN 259 THEN 'float'";
+        qry1 += "            WHEN 260 THEN 'smallfloat'";
+        qry1 += "            WHEN 261 THEN 'decimal('";
+        qry1 += "                       || TRIM(CAST(TRUNC(spc.paramlen/256) AS VARCHAR(8)) || ','";
+        qry1 += "                       || CAST(spc.paramlen - TRUNC(spc.paramlen/256)*256 AS VARCHAR(8))) || ')'";
+        qry1 += "            WHEN 262 THEN 'serial'";
+        qry1 += "            WHEN 263 THEN 'date'";
+        qry1 += "            WHEN 264 THEN 'money('";
+        qry1 += "                       || TRIM(CAST(TRUNC(spc.paramlen/256) AS VARCHAR(8)) || ','";
+        qry1 += "                       || CAST(spc.paramlen - TRUNC(spc.paramlen/256)*256 AS VARCHAR(8))) || ')'";
+        qry1 += "            WHEN 265 THEN 'null'";
+        qry1 += "            WHEN 266 THEN 'datetime'";
+        qry1 += "            WHEN 267 THEN 'byte'";
+        qry1 += "            WHEN 268 THEN 'text'";
+        qry1 += "            WHEN 269 THEN 'varchar'";
+        qry1 += "            WHEN 270 THEN 'interval'";
+        qry1 += "            WHEN 271 THEN 'nchar(' || TRIM(CAST(spc.paramlen AS CHAR(5))) || ')'";
+        qry1 += "            WHEN 272 THEN 'nvarchar(' || TRIM(CAST(spc.paramlen AS CHAR(5))) || ')'";
+        qry1 += "            WHEN 273 THEN 'int8'";
+        qry1 += "            WHEN 274 THEN 'serial8'";
+        qry1 += "            WHEN 275 THEN 'set'";
+        qry1 += "            WHEN 276 THEN 'multiset'";
+        qry1 += "            WHEN 277 THEN 'list'";
+        qry1 += "            WHEN 278 THEN 'row'";
+        qry1 += "            WHEN 279 THEN 'collection'";
+        qry1 += "            WHEN 280 THEN 'rowdef'";
+        qry1 += "            ELSE CAST(paramtype AS CHAR(10))";
+        qry1 += "        END data_type";
+        qry1 += "     , spc.paramattr AS direction";
+        qry1 += "     , spc.paramid AS position";
+        qry1 += "  FROM informix.sysprocedures sp";
+        qry1 += "     , informix.sysproccolumns spc";
+        qry1 += " WHERE sp.procid = spc.procid";
+        qry1 += "   AND ";
+
         if (qualifiers.length == 2) {
-            qry1 += " lower(sp.owner)=? and lower(sp.procname)=? ";
+            qry1 += "LOWER(sp.owner) = ? AND LOWER(sp.procname)= ?";
         } else {
-            qry1 += " (lower(sp.procname)=?)";
+            qry1 += "LOWER(sp.procname) = ?";
         }
-        qry1 += " order by sp.owner";
-        
-        System.out.println("Procedure is ="+qry1);
-      
+        qry1 += " ORDER BY sp.owner";
+
         return readIntoParams(qualifiers, qry1);
     }
-//select sc.colname as column_name, 'VARCHAR'  as data_type    //,'P' as direction from systables st,syscolumns sc where //st.tabid=sc.tabid and lower(st.tabname)='test_dbfit'
-    
 }
