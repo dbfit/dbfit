@@ -1,4 +1,5 @@
-|Execute|SHUTDOWN|
+|Database Environment|
+|Rollback|
 
 !|dbfit.util.ExportFixture|
 |dbfit.fixture|
