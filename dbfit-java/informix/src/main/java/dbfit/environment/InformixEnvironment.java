@@ -142,7 +142,6 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
     }
 
     private Map<String, DbParameterAccessor> readIntoParams(String[] queryParameters, String query) throws SQLException {
-System.out.println("GOT QUERY: " + query);
         PreparedStatement dc = currentConnection.prepareStatement(query);
         try {
             for (int i = 0; i < queryParameters.length; i++) {
