@@ -227,7 +227,7 @@ def proprietaryLibs() {
      '**/tdgssconfig*.jar',
      '**/nzjdbc*.jar',
      '**/sqljdbc*.jar',
-     '**/ifx*.jar'
+     '**/ifxjdbc*.jar'
     ] as Set
 }
 
