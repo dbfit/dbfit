@@ -125,7 +125,7 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
         qry1 += "            ELSE CAST(coltype AS CHAR(10))";
         qry1 += "        END AS data_type";
         qry1 += "     , 'P' AS direction";
-        qry1 += "     , c.colno AS position ";
+        qry1 += "     , c.colno AS position";
         qry1 += "  FROM informix.systables t";
         qry1 += "     , informix.syscolumns c";
         qry1 += " WHERE t.tabid = c.tabid";
