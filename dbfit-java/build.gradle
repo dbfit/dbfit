@@ -169,6 +169,18 @@ project('informix') {
 
     integrationTest.doFirst {
         dbdeploy('com.informix.jdbc.IfxDriver', 'jdbc:informix-sqli://localhost:16466/dbfit:INFORMIXSERVER=dbfitifserver', 'dbfit', 'DBFIT', 'row')
+
+        copy {
+            from 'TestDbConnectionDbFitInformix.properties.default'
+            into '.'
+            rename '(.*).default', '$1'
+        }
+
+        copy {
+            from 'TestDbConnectionDbFitInformix.properties.custom'
+            into '.'
+            rename '(.*).custom', '$1'
+        }
     }
 }
 
