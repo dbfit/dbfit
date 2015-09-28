@@ -18,3 +18,15 @@
 3. Run integration tests to verify setup
 
         ./gradlew clean :dbfit-java:informix:integrationTest
+
+#### Manually stopping the Informix server
+
+        su -
+        . /informix/dbfitifserver.ksh
+        onmode -yuk
+
+#### Manually starting the Informix server
+
+        su -
+        . /informix/dbfitifserver.ksh
+        oninit
