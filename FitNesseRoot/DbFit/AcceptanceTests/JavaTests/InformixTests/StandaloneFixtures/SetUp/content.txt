@@ -2,4 +2,4 @@
 |dbfit.fixture|
 
 |Database Environment|Informix|
-|Connect|localhost:16466|dbfit|DBFIT|dbfit|
+|Connect Using File|!-TestDbConnectionDbFitInformix.properties-!|
