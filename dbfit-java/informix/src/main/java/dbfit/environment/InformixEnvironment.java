@@ -5,6 +5,7 @@ import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
+import dbfit.util.Options;
 import dbfit.util.TypeNormaliserFactory;
 
 import java.math.BigDecimal;
@@ -19,9 +20,8 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
 
     @Override
     public void afterConnectionEstablished() throws SQLException {
-        if (currentConnection.getTransactionIsolation() == 0) {
-            currentConnection.setAutoCommit(true);
-        } else {
+        if (!(currentConnection.getMetaData().supportsTransactions())) {
+            Options.setOption(Options.OPTION_AUTO_COMMIT, "false");
             currentConnection.setAutoCommit(false);
         }
     }

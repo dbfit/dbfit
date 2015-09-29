@@ -192,19 +192,12 @@ then
 fi
 
 # Run as dbfit (Informix) user.
-echo "$IM creating dbdeploy changelog table in 'dbfit_ansi' database..."
-runuser dbfit -c "dbaccess dbfit_ansi '$INFORMIX_SCRIPTS/create-dbdeploy-changelog.sql'"
+echo "$IM creating dbdeploy changelog table..."
+runuser dbfit -c "dbaccess dbfit '$INFORMIX_SCRIPTS/create-dbdeploy-changelog.sql'"
 if [ $? -ne 0 ]
 then
-	echo "$EM creating dbdeploy changelog table in 'dbfit_ansi' database" 1>&2
+	echo "$EM creating dbdeploy changelog table" 1>&2
 	exit 1
 fi
 
-echo "$IM creating dbdeploy changelog table in 'dbfit_ifx' database..."
-runuser dbfit -c "dbaccess dbfit_ansi '$INFORMIX_SCRIPTS/create-dbdeploy-changelog.sql'"
-if [ $? -ne 0 ]
-then
-	echo "$EM creating dbdeploy changelog table in 'dbfit_ifx' database" 1>&2
-	exit 1
-fi
-exit
+exit 0
