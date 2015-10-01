@@ -20,7 +20,9 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
 
     @Override
     public void afterConnectionEstablished() throws SQLException {
-        if (!(currentConnection.getMetaData().supportsTransactions())) {
+        System.out.println("currentConnection.getMetaData().supportsTransactions(): " + currentConnection.getMetaData().supportsTransactions());
+        System.out.println("currentConnection.getTransactionIsolation(): " + currentConnection.getTransactionIsolation());
+        if (currentConnection.getMetaData().supportsTransactions()) {
             Options.setOption(Options.OPTION_AUTO_COMMIT, "false");
             currentConnection.setAutoCommit(false);
         }

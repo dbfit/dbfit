@@ -1,5 +1,9 @@
 !3 If there are no parameters, Execute Procedure needs just one row
 
+|Clean|
+|table|clean?|
+|users|true|
+
 !|Execute Procedure|MakeUser|
 
 |Query|select * from users|

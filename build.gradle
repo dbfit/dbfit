@@ -86,15 +86,15 @@ task copyTestLibs(dependsOn: ':dbfit-java:derby:integrationTestJar') << {
 
 task copyConnections(dependsOn: [copyLocal]) << {
     copy {
-        from 'dbfit-java/informix/TestDbConnectionDbFitInformix.properties.default'
+        from 'dbfit-java/informix/TestDbConnectionDbFitInformixANSI.properties.default'
         into 'dist'
         rename '(.*).default', '$1'
     }
 
     copy {
-        from 'dbfit-java/informix/TestDbConnectionDbFitInformix.properties.custom'
+        from 'dbfit-java/informix/TestDbConnectionDbFitInformixINFORMIX.properties.default'
         into 'dist'
-        rename '(.*).custom', '$1'
+        rename '(.*).default', '$1'
     }
 
     copy {
