@@ -1,5 +1,0 @@
-|Import Fixture|
-|dbfit.fixture|
-
-|Database Environment|Informix|
-|Connect Using File|!-TestDbConnectionDbFitInformix.properties-!|
