@@ -9,6 +9,7 @@
 <Suite/>
 <Suites/>
 <SymbolicLinks>
+<CommitAndRollback>.DbFit.AcceptanceTests.LibraryTests.CommitAndRollback</CommitAndRollback>
 <CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
 </SymbolicLinks>
 <Versions/>
