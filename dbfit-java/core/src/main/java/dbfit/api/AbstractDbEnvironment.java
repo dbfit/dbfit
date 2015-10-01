@@ -126,7 +126,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
 
     public void closeConnection() throws SQLException {
         if (currentConnection != null) {
-            currentConnection.rollback();
+            rollback();
             currentConnection.close();
             currentConnection = null;
         }
@@ -148,7 +148,9 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     public void setAutoCommit() throws SQLException {
         String autoCommitMode = Options.get(OPTION_AUTO_COMMIT);
         if (!"auto".equals(autoCommitMode) && isConnected(currentConnection)) {
-            currentConnection.setAutoCommit(Options.is(OPTION_AUTO_COMMIT));
+            if (currentConnection.getMetaData().supportsTransactions()) {
+                currentConnection.setAutoCommit(Options.is(OPTION_AUTO_COMMIT));
+            }
         }
     }
 
