@@ -1,18 +1,19 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <properties>
-	<Edit/>
-	<Files/>
-	<Properties/>
-	<RecentChanges/>
-	<Refactor/>
-	<Search/>
-	<Suite/>
-	<Suites/>
-	<SymbolicLinks>
-		<CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
-	</SymbolicLinks>
-	<Versions/>
-	<WhereUsed/>
-	<saveId>1185178825007</saveId>
-	<ticketId>-2210587439976022050</ticketId>
+<Edit/>
+<Files/>
+<Properties/>
+<RecentChanges/>
+<Refactor/>
+<Search/>
+<Suite/>
+<Suites/>
+<SymbolicLinks>
+<CommitAndRollback>.DbFit.AcceptanceTests.LibraryTests.CommitAndRollback</CommitAndRollback>
+<CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
+</SymbolicLinks>
+<Versions/>
+<WhereUsed/>
+<saveId>1185178825007</saveId>
+<ticketId>-2210587439976022050</ticketId>
 </properties>

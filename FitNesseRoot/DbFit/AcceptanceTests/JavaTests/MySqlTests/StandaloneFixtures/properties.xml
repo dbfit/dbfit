@@ -1,20 +1,21 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <properties>
-	<Edit/>
-	<Files/>
-	<Help/>
-	<Properties/>
-	<RecentChanges/>
-	<Refactor/>
-	<Search/>
-	<Suite/>
-	<Suites/>
-	<SymbolicLinks>
-		<OrderedQuery>.DbFit.AcceptanceTests.JavaTests.MySqlTests.FlowMode.OrderedQuery</OrderedQuery>
-		<CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
-	</SymbolicLinks>
-	<Versions/>
-	<WhereUsed/>
-	<saveId>1186735591564</saveId>
-	<ticketId>-8989150350196239075</ticketId>
+<Edit/>
+<Files/>
+<Help/>
+<Properties/>
+<RecentChanges/>
+<Refactor/>
+<Search/>
+<Suite/>
+<Suites/>
+<SymbolicLinks>
+<CommitAndRollback>.DbFit.AcceptanceTests.LibraryTests.CommitAndRollback</CommitAndRollback>
+<CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
+<OrderedQuery>.DbFit.AcceptanceTests.JavaTests.MySqlTests.FlowMode.OrderedQuery</OrderedQuery>
+</SymbolicLinks>
+<Versions/>
+<WhereUsed/>
+<saveId>1186735591564</saveId>
+<ticketId>-8989150350196239075</ticketId>
 </properties>
