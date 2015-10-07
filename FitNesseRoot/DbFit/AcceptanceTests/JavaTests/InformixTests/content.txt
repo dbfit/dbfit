@@ -1,1 +1,5 @@
+!define DBMSTYPE {Informix}
+!define DataTypesTests {!include .DbFit.AcceptanceTests.JavaTests.${DBMSTYPE}Tests.DataTypes}
+!define DataTypesTests {!include .DbFit.AcceptanceTests.JavaTests.InformixTests.DataTypes}
+
 !contents -R2 -g -p -f -h
