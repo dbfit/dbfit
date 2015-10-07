@@ -82,7 +82,34 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
         qry += "            WHEN    7 THEN 'DATE'";
         qry += "            WHEN    8 THEN 'MONEY'";
         qry += "            WHEN    9 THEN 'NULL'";
-        qry += "            WHEN   10 THEN 'DATETIME'";
+        //qry += "            WHEN   10 THEN 'DATETIME";
+        qry += "            WHEN   10 THEN 'DATETIME ' || CASE BITAND(c." + (forProcedureParameters ? "paramtype" : "coltype") + ", 240)";
+        qry += "                                               WHEN  0 THEN 'YEAR'";
+        qry += "                                               WHEN  2 THEN 'MONTH'";
+        qry += "                                               WHEN  4 THEN 'DAY'";
+        qry += "                                               WHEN  6 THEN 'HOUR'";
+        qry += "                                               WHEN  8 THEN 'MINUTE'";
+        qry += "                                               WHEN 10 THEN 'SECOND'";
+        qry += "                                               WHEN 11 THEN 'FRACTION(1)'";
+        qry += "                                               WHEN 12 THEN 'FRACTION(2)'";
+        qry += "                                               WHEN 13 THEN 'FRACTION(3)'";
+        qry += "                                               WHEN 14 THEN 'FRACTION(4)'";
+        qry += "                                               WHEN 15 THEN 'FRACTION(5)'";
+        qry += "                                           END";
+        qry += "                                       || ' TO '";
+        qry += "                                       || CASE BITAND(c." + (forProcedureParameters ? "paramtype" : "coltype") + ", 15)";
+        qry += "                                               WHEN  0 THEN 'YEAR'";
+        qry += "                                               WHEN  2 THEN 'MONTH'";
+        qry += "                                               WHEN  4 THEN 'DAY'";
+        qry += "                                               WHEN  6 THEN 'HOUR'";
+        qry += "                                               WHEN  8 THEN 'MINUTE'";
+        qry += "                                               WHEN 10 THEN 'SECOND'";
+        qry += "                                               WHEN 11 THEN 'FRACTION(1)'";
+        qry += "                                               WHEN 12 THEN 'FRACTION(2)'";
+        qry += "                                               WHEN 13 THEN 'FRACTION(3)'";
+        qry += "                                               WHEN 14 THEN 'FRACTION(4)'";
+        qry += "                                               WHEN 15 THEN 'FRACTION(5)'";
+        qry += "                                           END";
         qry += "            WHEN   11 THEN 'BYTE'";
         qry += "            WHEN   12 THEN 'TEXT'";
         qry += "            WHEN   13 THEN 'VARCHAR'";
@@ -98,12 +125,11 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
         qry += "            WHEN   23 THEN 'COLLECTION'";
         qry += "            WHEN   24 THEN 'ROWDEF'";
         qry += "            WHEN   40 THEN 'LVARCHAR'";
-        qry += "            WHEN   41 THEN 'BLOB/BOOLEAN/CLOB'";
         qry += "            WHEN   43 THEN 'LVARCHAR'";
-        qry += "            WHEN   43 THEN 'BOOLEAN'";
-        qry += "            WHEN   43 THEN 'BIGINT'";
+        qry += "            WHEN   45 THEN 'BOOLEAN'";
+        qry += "            WHEN   52 THEN 'BIGINT'";
         qry += "            WHEN   53 THEN 'BIGSERIAL'";
-        qry += "            WHEN   53 THEN 'IDSSECURITYLABEL'";
+        qry += "            WHEN 2061 THEN 'IDSSECURITYLABEL'";
         qry += "            WHEN 4118 THEN 'ROW'";
         qry += "        END";
         qry += "           AS data_type";
@@ -121,7 +147,7 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
         } else {
             qry += "LOWER(p." + (forProcedureParameters ? "procname" : "tabname") + ") = ?";
         }
-System.out.println("created query: " + qry);
+
         return qry;
     }
 
@@ -200,24 +226,37 @@ System.out.println("created query: " + qry);
     // List interface has sequential search, so using list instead of array to map types.
     private static List<String> stringTypes = Arrays.asList(new String[] {
             "VARCHAR", "LVARCHAR", "CHAR", "TEXT", "NCHAR", "NVARCHAR" });
+    private static List<String> shortTypes = Arrays.asList(new String[] {
+            "SMALLINT" });
     private static List<String> intTypes = Arrays.asList(new String[] {
-            "SMALLINT", "INT", "INTEGER", "SERIAL" });
+            "INT", "INTEGER", "SERIAL" });
     private static List<String> longTypes = Arrays.asList(new String[] {
-            "INT8", "SERIAL8" });
+            "BIGINT", "INT8", "BIGSERIAL", "SERIAL8" });
     private static List<String> floatTypes = Arrays.asList(new String[] {
-            "FLOAT", "SMALLFLOAT" });
+            "SMALLFLOAT" });
     private static List<String> doubleTypes = Arrays.asList(new String[] {
-            "DOUBLE" });
+            "FLOAT" });
     private static List<String> decimalTypes = Arrays.asList(new String[] {
             "DECIMAL", "MONEY" });
     private static List<String> dateTypes = Arrays.asList(new String[] {
             "DATE" });
     private static List<String> timestampTypes = Arrays.asList(new String[] {
-            "DATETIME"});
+            "DATETIME YEAR TO YEAR", "DATETIME YEAR TO MONTH", "DATETIME YEAR TO DAY", "DATETIME YEAR TO HOUR",
+            "DATETIME YEAR TO MINUTE", "DATETIME YEAR TO SECOND",
+            "DATETIME YEAR TO FRACTION(1)", "DATETIME YEAR TO FRACTION(2)", "DATETIME YEAR TO FRACTION(3)",
+            "DATETIME YEAR TO FRACTION(4)","DATETIME YEAR TO FRACTION(5)",
+            "DATETIME MONTH TO MONTH", "DATETIME MONTH TO DAY", "DATETIME MONTH TO HOUR",
+            "DATETIME MONTH TO MINUTE", "DATETIME MONTH TO SECOND",
+            "DATETIME MONTH TO FRACTION(1)", "DATETIME MONTH TO FRACTION(2)", "DATETIME MONTH TO FRACTION(3)",
+            "DATETIME MONTH TO FRACTION(4)", "DATETIME MONTH TO FRACTION(5)",
+            "DATETIME DAY TO DAY", "DATETIME DAY TO HOUR", "DATETIME DAY TO MINUTE", "DATETIME DAY TO SECOND",
+            "DATETIME DAY TO FRACTION(1)", "DATETIME DAY TO FRACTION(2)", "DATETIME DAY TO FRACTION(3)",
+            "DATETIME DAY TO FRACTION(4)", "DATETIME DAY TO FRACTION(5)" });
     private static List<String> binaryTypes = Arrays.asList(new String[] {
             "BYTE" });
 
     private static String NormaliseTypeName(String dataType) {
+System.out.println("InformixEnvironment: NormaliseTypeName: dataType: " + dataType);
         dataType = dataType.toUpperCase().trim();
         return dataType;
     }
@@ -230,6 +269,8 @@ System.out.println("created query: " + qry);
             return java.sql.Types.VARCHAR;
         if (decimalTypes.contains(dataType))
             return java.sql.Types.NUMERIC;
+        if (shortTypes.contains(dataType))
+            return java.sql.Types.SMALLINT;
         if (intTypes.contains(dataType))
             return java.sql.Types.INTEGER;
         if (floatTypes.contains(dataType))
@@ -242,6 +283,8 @@ System.out.println("created query: " + qry);
             return java.sql.Types.TIMESTAMP;
         if (dateTypes.contains(dataType))
             return java.sql.Types.DATE;
+        if (binaryTypes.contains(dataType))
+            return java.sql.Types.BINARY;
 
         throw new UnsupportedOperationException("Type " + dataType + " is not supported");
     }
@@ -254,16 +297,23 @@ System.out.println("created query: " + qry);
             return BigDecimal.class;
         if (intTypes.contains(dataType))
             return Integer.class;
+        if (shortTypes.contains(dataType))
+            return Short.class;
         if (floatTypes.contains(dataType))
             return Float.class;
         if (dateTypes.contains(dataType))
             return java.sql.Date.class;
+            //return com.informix.jdbc.IfxDate.class;
         if (doubleTypes.contains(dataType))
             return Double.class;
         if (longTypes.contains(dataType))
             return Long.class;
         if (timestampTypes.contains(dataType))
             return java.sql.Timestamp.class;
+            //return com.informix.jdbc.IfxDateTime.class;
+        if (binaryTypes.contains(dataType))
+            return byte.class;
+
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
     }

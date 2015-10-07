@@ -1,0 +1,1 @@
+|Execute Ddl|DROP TABLE datatypetest|

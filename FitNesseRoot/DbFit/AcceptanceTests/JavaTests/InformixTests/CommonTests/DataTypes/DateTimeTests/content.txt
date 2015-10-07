@@ -1,0 +1,33 @@
+!3 Dates
+
+|Execute Ddl|CREATE TABLE datatypetest (d1 DATE)|
+
+|Query|SELECT TODAY AS d FROM informix.systables WHERE tabid = 1|
+|d?|
+|>>d|
+
+|Insert|datatypetest|
+|d1|
+|<<d|
+
+|Query|SELECT * FROM datatypetest|
+|d1?|
+|<<d|
+
+|Execute Ddl|DROP TABLE datatypetest|
+
+!3 Dates/Times
+
+|Execute Ddl|CREATE TABLE datatypetest (dt1 DATETIME YEAR TO YEAR, dt2 DATETIME YEAR TO MONTH, dt3 DATETIME YEAR TO DAY, dt4 DATETIME YEAR TO HOUR, dt5 DATETIME YEAR TO MINUTE, dt6 DATETIME YEAR TO SECOND, dt7 DATETIME YEAR TO FRACTION(1), dt8 DATETIME YEAR TO FRACTION(2), dt9 DATETIME YEAR TO FRACTION(3), dt10 DATETIME YEAR TO FRACTION(4), dt11 DATETIME YEAR TO FRACTION(5))|
+
+|Query|SELECT CURRENT YEAR TO YEAR AS dt1, CURRENT YEAR TO MONTH AS dt2, CURRENT YEAR TO DAY AS dt3, CURRENT YEAR TO HOUR AS dt4, CURRENT YEAR TO MINUTE AS dt5, CURRENT YEAR TO SECOND AS dt6, CURRENT YEAR TO FRACTION(1) AS dt7, CURRENT YEAR TO FRACTION(2) AS dt8, CURRENT YEAR TO FRACTION(3) AS dt9, CURRENT YEAR TO FRACTION(4) AS dt10, CURRENT YEAR TO FRACTION(5) AS dt11 FROM informix.systables WHERE tabid = 1|
+|dt1?|dt2?|dt3?|dt4?|dt5?|dt6?|dt7?|dt8?|dt9?|dt10?|dt11?|
+|>>dt1|>>dt2|>>dt3|>>dt4|>>dt5|>>dt6|>>dt7|>>dt8|>>dt9|>>dt10|>>dt11|
+
+|Insert|datatypetest|
+|dt1|dt2|dt3|dt4|dt5|dt6|dt7|dt8|dt9|dt10|dt11|
+|<<dt1|<<dt2|<<dt3|<<dt4|<<dt5|<<dt6|<<dt7|<<dt8|<<dt9|<<dt10|<<dt11|
+
+|Query|SELECT * FROM datatypetest|
+|dt1|dt2|dt3|dt4|dt5|dt6|dt7|dt8|dt9|dt10|dt11|
+|<<dt1|<<dt2|<<dt3|<<dt4|<<dt5|<<dt6|<<dt7|<<dt8|<<dt9|<<dt10|<<dt11|

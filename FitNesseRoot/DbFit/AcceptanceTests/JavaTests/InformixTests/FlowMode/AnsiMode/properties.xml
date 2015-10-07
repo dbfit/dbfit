@@ -9,6 +9,7 @@
 <Suite/>
 <SymbolicLinks>
 <CommitAndRollback>.DbFit.AcceptanceTests.LibraryTests.CommitAndRollback</CommitAndRollback>
+<CommonTests>.DbFit.AcceptanceTests.JavaTests.InformixTests.CommonTests</CommonTests>
 <CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
 </SymbolicLinks>
 <Versions/>
