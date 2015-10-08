@@ -20,8 +20,37 @@
 
 |Insert|datatypetest|
 |f1|f2|
-|-1.0|-1.0|
+|-1234567890.123456789|987654321.0123456789|
 
 |Query|SELECT * FROM datatypetest|
-|f1|f2|
-|-1.0|-1.0|
+|f1?|f2?|
+|-1234567890.123456789|987654321.0123456789|
+
+!4 Decimal Types
+
+|Execute Ddl|DROP TABLE datatypetest|
+
+|Execute Ddl|CREATE TABLE datatypetest (d1 DECIMAL(20,10), d2 MONEY(20,10))|
+
+|Execute|INSERT INTO datatypetest (d1, d2) VALUES (-1.2, 1.2)|
+
+|Insert|datatypetest|
+|d1|d2|
+|-1.2|1.2|
+
+|Insert|datatypetest|
+|d1|
+|-1.2|
+
+|Insert|datatypetest|
+|d2|
+|1.2|
+
+rem |-1234567890123456.7890123456789012|1234567890123456.7890123456789012|
+
+rem |Query|SELECT * FROM datatypetest|
+rem |d1|d2|
+rem |-1.2|1.2|
+
+!4 Serial Types
+
