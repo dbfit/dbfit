@@ -79,3 +79,5 @@
 |s1|
 |1|
 |2|
+
+|Execute Ddl|DROP TABLE datatypetest|

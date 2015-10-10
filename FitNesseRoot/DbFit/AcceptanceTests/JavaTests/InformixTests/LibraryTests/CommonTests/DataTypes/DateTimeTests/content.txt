@@ -81,3 +81,5 @@
 |Query|SELECT * FROM datatypetest|
 |dt1|dt2|dt3|dt4|dt5|dt6|dt7|dt8|
 |<<dt1|<<dt2|<<dt3|<<dt4|<<dt5|<<dt6|<<dt7|<<dt8|
+
+|Execute Ddl|DROP TABLE datatypetest|
