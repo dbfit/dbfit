@@ -8,6 +8,7 @@
 <Search/>
 <Suite/>
 <SymbolicLinks>
+<CommonTests>.DbFit.AcceptanceTests.JavaTests.InformixTests.CommonTests</CommonTests>
 <CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
 </SymbolicLinks>
 <Versions/>

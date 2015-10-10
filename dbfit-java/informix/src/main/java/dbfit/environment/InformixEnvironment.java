@@ -7,6 +7,7 @@ import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
 import dbfit.util.Options;
 import dbfit.util.TypeNormaliserFactory;
+import fit.TypeAdapter;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -20,6 +21,7 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
 
     @Override
     public void afterConnectionEstablished() throws SQLException {
+        TypeAdapter.registerParseDelegate(java.math.BigDecimal.class, new dbfit.util.BigDecimalParseDelegate());
         if (currentConnection.getMetaData().supportsTransactions()) {
             Options.setOption(Options.OPTION_AUTO_COMMIT, "false");
             currentConnection.setAutoCommit(false);
@@ -37,7 +39,7 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
 
     public InformixEnvironment(String driverClassName) {
         super(driverClassName);
-        TypeNormaliserFactory.setNormaliser(com.informix.jdbc.IfxDate.class, new InformixDateNormalizer());
+        //TypeNormaliserFactory.setNormaliser(com.informix.jdbc.IfxDate.class, new InformixDateNormalizer());
     }
 
     protected String parseCommandText(String commandText) {
@@ -82,7 +84,6 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
         qry += "            WHEN    7 THEN 'DATE'";
         qry += "            WHEN    8 THEN 'MONEY'";
         qry += "            WHEN    9 THEN 'NULL'";
-        //qry += "            WHEN   10 THEN 'DATETIME";
         qry += "            WHEN   10 THEN 'DATETIME ' || CASE BITAND(c." + (forProcedureParameters ? "paramtype" : "coltype") + ", 240)";
         qry += "                                               WHEN  0 THEN 'YEAR'";
         qry += "                                               WHEN  2 THEN 'MONTH'";
@@ -172,12 +173,15 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
 
             while (rs.next()) {
                 String paramName = rs.getString(1);
+System.out.println("InformixEnvironment: readIntoParams: paramName: " + paramName);
                 if (paramName == null)
                     paramName = "";
                 String dataType = rs.getString(2);
+System.out.println("InformixEnvironment: readIntoParams: dataType: " + dataType);
                 String direction = rs.getString(3);
                 int position = rs.getInt(4);
                 Direction paramDirection = getParameterDirection(direction);
+System.out.println("InformixEnvironment: readIntoParams: getJavaClass(dataType): " + getJavaClass(dataType).getName()); 
                 DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                         paramDirection, getSqlType(dataType),
                         getJavaClass(dataType),
@@ -251,9 +255,18 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
             "DATETIME MONTH TO FRACTION(4)", "DATETIME MONTH TO FRACTION(5)",
             "DATETIME DAY TO DAY", "DATETIME DAY TO HOUR", "DATETIME DAY TO MINUTE", "DATETIME DAY TO SECOND",
             "DATETIME DAY TO FRACTION(1)", "DATETIME DAY TO FRACTION(2)", "DATETIME DAY TO FRACTION(3)",
-            "DATETIME DAY TO FRACTION(4)", "DATETIME DAY TO FRACTION(5)" });
+            "DATETIME DAY TO FRACTION(4)", "DATETIME DAY TO FRACTION(5)", 
+            "DATETIME HOUR TO FRACTION(1)", "DATETIME HOUR TO FRACTION(2)", "DATETIME HOUR TO FRACTION(3)", "DATETIME HOUR TO FRACTION(4)", "DATETIME HOUR TO FRACTION(5)",
+            "DATETIME MINUTE TO FRACTION(1)", "DATETIME MINUTE TO FRACTION(2)", "DATETIME MINUTE TO FRACTION(3)", "DATETIME MINUTE TO FRACTION(4)", "DATETIME HOUR TO FRACTION(5)",
+            "DATETIME SECOND TO FRACTION(1)", "DATETIME SECOND TO FRACTION(2)", "DATETIME SECOND TO FRACTION(3)", "DATETIME SECOND TO FRACTION(4)", "DATETIME SECOND TO FRACTION(5)" });
+    private static List<String> timeTypes = Arrays.asList(new String[] {
+            "DATETIME HOUR TO HOUR", "DATETIME HOUR TO MINUTE", "DATETIME HOUR TO SECOND",
+            "DATETIME MINUTE TO MINUTE", "DATETIME MINUTE TO SECOND", 
+            "DATETIME SECOND TO SECOND",  });
     private static List<String> binaryTypes = Arrays.asList(new String[] {
             "BYTE" });
+    private static List<String> booleanTypes = Arrays.asList(new String[] {
+            "BOOLEAN" });
 
     private static String NormaliseTypeName(String dataType) {
 System.out.println("InformixEnvironment: NormaliseTypeName: dataType: " + dataType);
@@ -268,7 +281,7 @@ System.out.println("InformixEnvironment: NormaliseTypeName: dataType: " + dataTy
         if (stringTypes.contains(dataType))
             return java.sql.Types.VARCHAR;
         if (decimalTypes.contains(dataType))
-            return java.sql.Types.NUMERIC;
+            return java.sql.Types.DECIMAL;
         if (shortTypes.contains(dataType))
             return java.sql.Types.SMALLINT;
         if (intTypes.contains(dataType))
@@ -281,11 +294,14 @@ System.out.println("InformixEnvironment: NormaliseTypeName: dataType: " + dataTy
             return java.sql.Types.BIGINT;
         if (timestampTypes.contains(dataType))
             return java.sql.Types.TIMESTAMP;
+        if (timeTypes.contains(dataType))
+            return java.sql.Types.TIME;
         if (dateTypes.contains(dataType))
             return java.sql.Types.DATE;
         if (binaryTypes.contains(dataType))
             return java.sql.Types.BINARY;
-
+        if (booleanTypes.contains(dataType))
+            return java.sql.Types.BOOLEAN;
         throw new UnsupportedOperationException("Type " + dataType + " is not supported");
     }
 
@@ -303,16 +319,18 @@ System.out.println("InformixEnvironment: NormaliseTypeName: dataType: " + dataTy
             return Float.class;
         if (dateTypes.contains(dataType))
             return java.sql.Date.class;
-            //return com.informix.jdbc.IfxDate.class;
+        if (timestampTypes.contains(dataType))
+            return java.sql.Timestamp.class;
+        if (timeTypes.contains(dataType))
+            return java.sql.Time.class;
         if (doubleTypes.contains(dataType))
             return Double.class;
         if (longTypes.contains(dataType))
             return Long.class;
-        if (timestampTypes.contains(dataType))
-            return java.sql.Timestamp.class;
-            //return com.informix.jdbc.IfxDateTime.class;
         if (binaryTypes.contains(dataType))
             return byte.class;
+        if (booleanTypes.contains(dataType))
+            return Boolean.class;
 
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
