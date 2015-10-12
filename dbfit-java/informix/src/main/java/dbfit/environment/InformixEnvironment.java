@@ -21,7 +21,6 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
 
     @Override
     public void afterConnectionEstablished() throws SQLException {
-        TypeAdapter.registerParseDelegate(java.math.BigDecimal.class, new dbfit.util.BigDecimalParseDelegate());
         if (currentConnection.getMetaData().supportsTransactions()) {
             Options.setOption(Options.OPTION_AUTO_COMMIT, "false");
             currentConnection.setAutoCommit(false);
@@ -39,7 +38,6 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
 
     public InformixEnvironment(String driverClassName) {
         super(driverClassName);
-        //TypeNormaliserFactory.setNormaliser(com.informix.jdbc.IfxDate.class, new InformixDateNormalizer());
     }
 
     protected String parseCommandText(String commandText) {
@@ -162,9 +160,6 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
         PreparedStatement dc = currentConnection.prepareStatement(query);
         try {
             for (int i = 0; i < queryParameters.length; i++) {
-                if (queryParameters[i].length() == 0) {
-                    queryParameters[i] = "return_value";
-                }
                 dc.setString(i + 1, NameNormaliser.normaliseName(queryParameters[i]));
             }
 
@@ -173,15 +168,12 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
 
             while (rs.next()) {
                 String paramName = rs.getString(1);
-System.out.println("InformixEnvironment: readIntoParams: paramName: " + paramName);
                 if (paramName == null)
                     paramName = "";
                 String dataType = rs.getString(2);
-System.out.println("InformixEnvironment: readIntoParams: dataType: " + dataType);
                 String direction = rs.getString(3);
                 int position = rs.getInt(4);
                 Direction paramDirection = getParameterDirection(direction);
-System.out.println("InformixEnvironment: readIntoParams: getJavaClass(dataType): " + getJavaClass(dataType).getName()); 
                 DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                         paramDirection, getSqlType(dataType),
                         getJavaClass(dataType),
@@ -190,10 +182,6 @@ System.out.println("InformixEnvironment: readIntoParams: getJavaClass(dataType):
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }
             rs.close();
-            Iterator it = allParams.values().iterator();
-            while(it.hasNext()) {
-                DbParameterAccessor dbp = (DbParameterAccessor)it.next();
-            }
             return allParams;
         } finally {
             dc.close();
