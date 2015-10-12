@@ -219,6 +219,8 @@ System.out.println("InformixEnvironment: readIntoParams: getJavaClass(dataType):
             return INPUT;
         if ("2".equals(direction))
             return INPUT_OUTPUT;
+        if ("3".equals(direction))
+            return RETURN_VALUE;
         if ("4".equals(direction))
             return OUTPUT;
         if ("5".equals(direction))
