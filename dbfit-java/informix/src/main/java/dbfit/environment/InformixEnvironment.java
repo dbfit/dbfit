@@ -38,6 +38,7 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
 
     public InformixEnvironment(String driverClassName) {
         super(driverClassName);
+        TypeNormaliserFactory.setNormaliser(dbfit.util.NormalisedBigDecimal.class, new InformixBigDecimalNormaliser());
     }
 
     protected String parseCommandText(String commandText) {
