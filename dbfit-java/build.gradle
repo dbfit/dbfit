@@ -87,7 +87,7 @@ subprojects {
         classpath += sourceSets.main.runtimeClasspath
     }
 
-    ext.dbdeploy = { dbDriver, url, userid, password, delimiterType = 'normal' ->
+    ext.dbdeploy = { dbDriver, url, userid, password, delimiterType = 'normal', lineending = 'crlf' ->
         ant.taskdef(name: 'dbdeploy',
                 classname: 'com.dbdeploy.AntTarget',
                 classpath: configurations.testRuntime.asPath)
@@ -97,6 +97,7 @@ subprojects {
                 password: password,
                 dir: "$projectDir/src/integration-test/resources",
                 delimiterType: delimiterType,
+                lineending: lineending
         )
     }
 
@@ -168,9 +169,6 @@ project('informix') {
     }
 
     integrationTest.doFirst {
-        dbdeploy('com.informix.jdbc.IfxDriver', 'jdbc:informix-sqli://localhost:16466/dbfit_ansi:INFORMIXSERVER=dbfitifserver', 'dbfit', 'DBFIT', 'row')
-        dbdeploy('com.informix.jdbc.IfxDriver', 'jdbc:informix-sqli://localhost:16466/dbfit_ifx:INFORMIXSERVER=dbfitifserver', 'dbfit', 'DBFIT', 'row')
-
         copy {
             from 'TestDbConnectionDbFitInformixANSI.properties.default'
             into '.'
