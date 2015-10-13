@@ -192,19 +192,19 @@ then
 fi
 
 # Run as dbfit (Informix) user.
-echo "$IM creating dbdeploy changelog table in 'dbfit_ansi' database..."
-runuser dbfit -c "dbaccess dbfit_ansi '$INFORMIX_SCRIPTS/create-dbdeploy-changelog.sql'"
+echo "$IM creating DbFit acceptance testing DB objects in 'dbfit_ansi' database..."
+runuser dbfit -c "dbaccess dbfit_ansi '$INFORMIX_SCRIPTS/create-acceptance-test-objects-informix.sql'"
 if [ $? -ne 0 ]
 then
-	echo "$EM creating dbdeploy changelog table in 'dbfit_ansi' database" 1>&2
+	echo "$EM creating acceptance testing DB objects in 'dbfit_ansi' database" 1>&2
 	exit 1
 fi
 
-echo "$IM creating dbdeploy changelog table in 'dbfit_ifx' database..."
-runuser dbfit -c "dbaccess dbfit_ansi '$INFORMIX_SCRIPTS/create-dbdeploy-changelog.sql'"
+echo "$IM creating DbFit acceptance testing DB objects in 'dbfit_ifx' database..."
+runuser dbfit -c "dbaccess dbfit_ansi '$INFORMIX_SCRIPTS/create-acceptance-test-objects-informix.sql'"
 if [ $? -ne 0 ]
 then
-	echo "$EM creating dbdeploy changelog table in 'dbfit_ifx' database" 1>&2
+	echo "$EM creating acceptance testing DB objects in 'dbfit_ifx' database" 1>&2
 	exit 1
 fi
 exit
