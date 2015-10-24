@@ -201,7 +201,7 @@ then
 fi
 
 echo "$IM creating DbFit acceptance testing DB objects in 'dbfit_ifx' database..."
-runuser dbfit -c "dbaccess dbfit_ansi '$INFORMIX_SCRIPTS/create-acceptance-test-objects-informix.sql'"
+runuser dbfit -c "dbaccess dbfit_ifx '$INFORMIX_SCRIPTS/create-acceptance-test-objects-informix.sql'"
 if [ $? -ne 0 ]
 then
 	echo "$EM creating acceptance testing DB objects in 'dbfit_ifx' database" 1>&2
