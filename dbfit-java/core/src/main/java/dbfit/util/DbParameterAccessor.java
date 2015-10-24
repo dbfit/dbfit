@@ -78,7 +78,7 @@ public class DbParameterAccessor {
         this.cs=cs;
         this.index=ind;    
         if (direction != INPUT){
-            cs.registerOutParameter(ind, getSqlType());
+            cs.registerOutParameter(ind, getSqlType(), direction == RETURN_VALUE);
         }
     }
 
@@ -98,7 +98,7 @@ public class DbParameterAccessor {
     public Object get() throws IllegalAccessException, InvocationTargetException {
         try{
             if (direction.equals(INPUT))
-                throw new UnsupportedOperationException("Trying to get value of input parameter "+name);            
+                throw new UnsupportedOperationException("Trying to get value of input parameter "+name);
             return normaliseValue(cs.getObject(index));
         }
         catch (SQLException sqle){

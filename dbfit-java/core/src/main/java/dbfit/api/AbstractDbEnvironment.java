@@ -107,7 +107,6 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         String command = Options.isBindSymbols() ? parseCommandText(commandText) : commandText;
         PreparedStatement cs = getConnection().prepareStatement(
                 command);
-
         if (Options.isBindSymbols()) {
             String paramNames[] = extractParamNames(commandText);
             for (int i = 0; i < paramNames.length; i++) {
@@ -246,5 +245,12 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return (conn != null && !conn.isClosed());
     }
 
+    public boolean functionReturnValueViaResultSet() {
+        return false;
+    }
+
+    public boolean discountFunctionReturnValueParameter() {
+        return false;
+    }
 }
 
