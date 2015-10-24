@@ -332,4 +332,14 @@ System.out.println("InformixEnvironment: NormaliseTypeName: dataType: " + dataTy
         String[] qualifiers = NameNormaliser.normaliseName(procName).split("\\.");
         return readIntoParams(qualifiers, columnsOrParamtersQueryText(true, procName));
     }
+
+    @Override
+    public boolean functionReturnValueViaResultSet() {
+        return true;
+    }
+
+    @Override
+    public boolean discountFunctionReturnValueParameter() {
+        return true;
+    }
 }

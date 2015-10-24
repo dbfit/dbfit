@@ -179,5 +179,16 @@ public interface DBEnvironment {
             FileNotFoundException;
 
     DbStoredProcedureCall newStoredProcedureCall(String name, DbParameterAccessor[] accessors);
+
+    /**
+     * Indicates whether function return values are retrieved via a ResultSet or not.
+     */
+    boolean functionReturnValueViaResultSet();
+
+    /**
+     * Indicates whether function return value parameters should be disregarded when calculating
+     * indices of input and output parameters.
+     */
+    boolean discountFunctionReturnValueParameter();
 }
 
