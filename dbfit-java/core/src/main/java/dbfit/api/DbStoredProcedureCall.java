@@ -51,7 +51,6 @@ public class DbStoredProcedureCall {
     }
 
     public StatementExecution toStatementExecution() throws SQLException {
-System.out.println("DbStoredProcedureCall: toStatementExecution");
         StatementExecution cs = new StatementExecution(
                                               this.environment.getConnection().prepareCall(toSqlString()),
                                               isFunction() ? this.environment.functionReturnValueViaResultSet() : false,
