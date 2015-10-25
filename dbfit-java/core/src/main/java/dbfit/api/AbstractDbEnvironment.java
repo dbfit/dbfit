@@ -1,6 +1,8 @@
 package dbfit.api;
 
 import dbfit.util.*;
+import dbfit.fixture.StatementExecution;
+
 import static dbfit.util.Options.OPTION_AUTO_COMMIT;
 
 import java.io.FileNotFoundException;
@@ -123,6 +125,16 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return new DdlStatementExecution(getConnection().createStatement(), ddl);
     }
 
+    @Override
+    public StatementExecution createStatementExecution(PreparedStatement statement, boolean clearParameters) {
+        return new StatementExecution(statement, clearParameters);
+    }
+
+    @Override
+    public StatementExecution createFunctionStatementExecution(PreparedStatement statement, boolean clearParameters) {
+        return new StatementExecution(statement, clearParameters);
+    }
+
     public void closeConnection() throws SQLException {
         if (currentConnection != null) {
             rollback();
@@ -243,14 +255,6 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
 
     private static boolean isConnected(final Connection conn) throws SQLException {
         return (conn != null && !conn.isClosed());
-    }
-
-    public boolean functionReturnValueViaResultSet() {
-        return false;
-    }
-
-    public boolean discountFunctionReturnValueParameter() {
-        return false;
     }
 }
 
