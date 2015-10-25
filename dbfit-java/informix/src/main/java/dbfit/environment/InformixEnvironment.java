@@ -2,7 +2,9 @@ package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
+import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
+import dbfit.util.DdlStatementExecution;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
 import dbfit.util.Options;
@@ -334,12 +336,7 @@ System.out.println("InformixEnvironment: NormaliseTypeName: dataType: " + dataTy
     }
 
     @Override
-    public boolean functionReturnValueViaResultSet() {
-        return true;
-    }
-
-    @Override
-    public boolean discountFunctionReturnValueParameter() {
-        return true;
+    public StatementExecution createFunctionStatementExecution(PreparedStatement statement, boolean clearParameters) {
+        return new InformixFunctionStatementExecution(statement, clearParameters);
     }
 }
