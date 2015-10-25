@@ -51,10 +51,12 @@ public class DbStoredProcedureCall {
     }
 
     public StatementExecution toStatementExecution() throws SQLException {
-        StatementExecution cs = new StatementExecution(
-                                              this.environment.getConnection().prepareCall(toSqlString()),
-                                              isFunction() ? this.environment.functionReturnValueViaResultSet() : false,
-                                              isFunction() ? this.environment.discountFunctionReturnValueParameter() : false);
+        StatementExecution cs;
+        if (isFunction()) {
+            cs = environment.createFunctionStatementExecution(this.environment.getConnection().prepareCall(toSqlString()), true);
+        } else {
+            cs = environment.createStatementExecution(this.environment.getConnection().prepareCall(toSqlString()), true);
+        }
         bindParametersTo(cs);
         return cs;
     }

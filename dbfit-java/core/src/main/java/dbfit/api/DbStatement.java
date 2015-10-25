@@ -1,8 +1,8 @@
 package dbfit.api;
 
-import dbfit.fixture.StatementExecution;
-
 import java.sql.SQLException;
+
+import dbfit.fixture.StatementExecution;
 
 public class DbStatement {
     private DBEnvironment environment;
@@ -20,6 +20,6 @@ public class DbStatement {
     }
 
     public StatementExecution buildPreparedStatement() throws SQLException {
-        return new StatementExecution(environment.createStatementWithBoundFixtureSymbols(testHost, statementText), false, false, false);
+        return environment.createStatementExecution(environment.createStatementWithBoundFixtureSymbols(testHost, statementText), false);
     }
 }

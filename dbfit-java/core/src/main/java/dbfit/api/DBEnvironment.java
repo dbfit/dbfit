@@ -1,5 +1,6 @@
 package dbfit.api;
 
+import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
 import dbfit.util.DdlStatementExecution;
@@ -63,6 +64,16 @@ public interface DBEnvironment {
      */
     PreparedStatement createStatementWithBoundFixtureSymbols(TestHost th, String commandText)
             throws SQLException;
+
+    /**
+     * Create a procedure statement execution object for the given command text.
+     */
+    StatementExecution createStatementExecution(PreparedStatement statement, boolean clearParameters);
+
+    /**
+     * Create a function statement execution object for the given command text.
+     */
+    StatementExecution createFunctionStatementExecution(PreparedStatement statement, boolean clearParameters);
 
     /**
      * Create a statement execution object for the given DDL text. Bind variables
@@ -179,16 +190,4 @@ public interface DBEnvironment {
             FileNotFoundException;
 
     DbStoredProcedureCall newStoredProcedureCall(String name, DbParameterAccessor[] accessors);
-
-    /**
-     * Indicates whether function return values are retrieved via a ResultSet or not.
-     */
-    boolean functionReturnValueViaResultSet();
-
-    /**
-     * Indicates whether function return value parameters should be disregarded when calculating
-     * indices of input and output parameters.
-     */
-    boolean discountFunctionReturnValueParameter();
 }
-
