@@ -1,8 +1,8 @@
 package dbfit.api;
 
-import java.sql.SQLException;
-
 import dbfit.fixture.StatementExecution;
+
+import java.sql.SQLException;
 
 public class DbStatement {
     private DBEnvironment environment;
