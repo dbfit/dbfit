@@ -262,7 +262,6 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
             "BOOLEAN" });
 
     private static String NormaliseTypeName(String dataType) {
-System.out.println("InformixEnvironment: NormaliseTypeName: dataType: " + dataType);
         dataType = dataType.toUpperCase().trim();
         return dataType;
     }
