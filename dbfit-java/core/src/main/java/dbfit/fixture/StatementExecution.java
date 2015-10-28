@@ -43,7 +43,7 @@ public class StatementExecution implements AutoCloseable {
     }
 
     //really ugly, but a hack to support mysql, because it will not execute inserts with a callable statement
-    public CallableStatement convertStatementToCallable() throws SQLException {
+    protected CallableStatement convertStatementToCallable() throws SQLException {
         if (statement instanceof CallableStatement) return (CallableStatement) statement;
         throw new SQLException("This operation requires a callable statement instead of "+ statement.getClass().getName());
     }
