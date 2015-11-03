@@ -5,7 +5,7 @@ import java.sql.*;
 import dbfit.fixture.StatementExecution;
 
 public class InformixFunctionStatementExecution extends StatementExecution {
-    private ResultSet rs;
+    private Object returnValue;
 
     public InformixFunctionStatementExecution(PreparedStatement statement, boolean clearParameters) {
         super(statement, clearParameters);
@@ -13,7 +13,10 @@ public class InformixFunctionStatementExecution extends StatementExecution {
 
     @Override
     public void run() throws SQLException {
-        rs = statement.executeQuery();
+        ResultSet rs = statement.executeQuery();
+        rs.next();
+        returnValue = rs.getObject(1);
+        rs.close();
     }
 
     @Override
@@ -36,20 +39,9 @@ public class InformixFunctionStatementExecution extends StatementExecution {
     public Object getObject(int index) throws SQLException {
         int realIndex = index - 1; // Ignore the "?" for the return value.
         if (returnValueInd == index) {
-            return getReturnValue();
+            return returnValue;
         } else {
             return convertStatementToCallable().getObject(realIndex);
-        }
-    }
-
-    private Object getReturnValue() throws SQLException {
-        if (returnValueInd > -1) {
-            rs.next();
-            Object o = rs.getObject(1);
-            rs.close();
-            return o;
-        } else {
-            return getObject(returnValueInd);
         }
     }
 }

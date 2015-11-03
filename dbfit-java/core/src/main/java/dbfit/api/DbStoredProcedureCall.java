@@ -4,6 +4,7 @@ import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessors;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -51,11 +52,13 @@ public class DbStoredProcedureCall {
     }
 
     public StatementExecution toStatementExecution() throws SQLException {
+        String sql = toSqlString();
+        PreparedStatement ps = environment.getConnection().prepareCall(sql);
         StatementExecution cs;
         if (isFunction()) {
-            cs = environment.createFunctionStatementExecution(this.environment.getConnection().prepareCall(toSqlString()), true);
+            cs = environment.createFunctionStatementExecution(ps, true);
         } else {
-            cs = environment.createStatementExecution(this.environment.getConnection().prepareCall(toSqlString()), true);
+            cs = environment.createStatementExecution(ps, true);
         }
         bindParametersTo(cs);
         return cs;
