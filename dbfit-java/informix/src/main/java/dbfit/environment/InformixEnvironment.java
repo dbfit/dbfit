@@ -160,8 +160,7 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
     }
 
     private Map<String, DbParameterAccessor> readIntoParams(String[] queryParameters, String query) throws SQLException {
-        PreparedStatement dc = currentConnection.prepareStatement(query);
-        try {
+        try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
             for (int i = 0; i < queryParameters.length; i++) {
                 dc.setString(i + 1, NameNormaliser.normaliseName(queryParameters[i]));
             }
@@ -186,8 +185,6 @@ public class InformixEnvironment extends AbstractDbEnvironment  {
             }
             rs.close();
             return allParams;
-        } finally {
-            dc.close();
         }
     }
 
