@@ -66,83 +66,82 @@ public class InformixEnvironment extends AbstractDbEnvironment {
     private String columnsOrParamtersQueryText(Boolean forProcedureParameters, String objectName) {
         String[] qualifiers = NameNormaliser.normaliseName(objectName).split("\\.");
 
-        String qry = "";
-        qry += "SELECT c." + (forProcedureParameters ? "paramname" : "colname");
-        qry += "           AS object_name";
-        qry += "     , CASE (";
-        qry += "            CASE WHEN c." + (forProcedureParameters ? "paramtype" : "coltype") + " >= 256";
-        qry += "                 THEN c." + (forProcedureParameters ? "paramtype" : "coltype") + " - 256";
-        qry += "                 ELSE c." + (forProcedureParameters ? "paramtype" : "coltype");
-        qry += "             END";
-        qry += "            )";
-        qry += "            WHEN    0 THEN 'CHAR'";
-        qry += "            WHEN    1 THEN 'SMALLINT'";
-        qry += "            WHEN    2 THEN 'INTEGER'";
-        qry += "            WHEN    3 THEN 'FLOAT'";
-        qry += "            WHEN    4 THEN 'SMALLFLOAT'";
-        qry += "            WHEN    5 THEN 'DECIMAL'";
-        qry += "            WHEN    6 THEN 'SERIAL'";
-        qry += "            WHEN    7 THEN 'DATE'";
-        qry += "            WHEN    8 THEN 'MONEY'";
-        qry += "            WHEN    9 THEN 'NULL'";
-        qry += "            WHEN   10 THEN 'DATETIME ' || CASE BITAND(c." + (forProcedureParameters ? "paramtype" : "coltype") + ", 240)";
-        qry += "                                               WHEN  0 THEN 'YEAR'";
-        qry += "                                               WHEN  2 THEN 'MONTH'";
-        qry += "                                               WHEN  4 THEN 'DAY'";
-        qry += "                                               WHEN  6 THEN 'HOUR'";
-        qry += "                                               WHEN  8 THEN 'MINUTE'";
-        qry += "                                               WHEN 10 THEN 'SECOND'";
-        qry += "                                               WHEN 11 THEN 'FRACTION(1)'";
-        qry += "                                               WHEN 12 THEN 'FRACTION(2)'";
-        qry += "                                               WHEN 13 THEN 'FRACTION(3)'";
-        qry += "                                               WHEN 14 THEN 'FRACTION(4)'";
-        qry += "                                               WHEN 15 THEN 'FRACTION(5)'";
-        qry += "                                           END";
-        qry += "                                       || ' TO '";
-        qry += "                                       || CASE BITAND(c." + (forProcedureParameters ? "paramtype" : "coltype") + ", 15)";
-        qry += "                                               WHEN  0 THEN 'YEAR'";
-        qry += "                                               WHEN  2 THEN 'MONTH'";
-        qry += "                                               WHEN  4 THEN 'DAY'";
-        qry += "                                               WHEN  6 THEN 'HOUR'";
-        qry += "                                               WHEN  8 THEN 'MINUTE'";
-        qry += "                                               WHEN 10 THEN 'SECOND'";
-        qry += "                                               WHEN 11 THEN 'FRACTION(1)'";
-        qry += "                                               WHEN 12 THEN 'FRACTION(2)'";
-        qry += "                                               WHEN 13 THEN 'FRACTION(3)'";
-        qry += "                                               WHEN 14 THEN 'FRACTION(4)'";
-        qry += "                                               WHEN 15 THEN 'FRACTION(5)'";
-        qry += "                                           END";
-        qry += "            WHEN   11 THEN 'BYTE'";
-        qry += "            WHEN   12 THEN 'TEXT'";
-        qry += "            WHEN   13 THEN 'VARCHAR'";
-        qry += "            WHEN   14 THEN 'INTERVAL'";
-        qry += "            WHEN   15 THEN 'NCHAR'";
-        qry += "            WHEN   16 THEN 'NVARCHAR'";
-        qry += "            WHEN   17 THEN 'INT8'";
-        qry += "            WHEN   18 THEN 'SERIAL8'";
-        qry += "            WHEN   19 THEN 'SET'";
-        qry += "            WHEN   20 THEN 'MULTISET'";
-        qry += "            WHEN   21 THEN 'LIST'";
-        qry += "            WHEN   22 THEN 'ROW'";
-        qry += "            WHEN   23 THEN 'COLLECTION'";
-        qry += "            WHEN   24 THEN 'ROWDEF'";
-        qry += "            WHEN   40 THEN 'LVARCHAR'";
-        qry += "            WHEN   43 THEN 'LVARCHAR'";
-        qry += "            WHEN   45 THEN 'BOOLEAN'";
-        qry += "            WHEN   52 THEN 'BIGINT'";
-        qry += "            WHEN   53 THEN 'BIGSERIAL'";
-        qry += "            WHEN 2061 THEN 'IDSSECURITYLABEL'";
-        qry += "            WHEN 4118 THEN 'ROW'";
-        qry += "        END";
-        qry += "           AS data_type";
-        qry += "     , " + (forProcedureParameters ? "c.paramattr" : "1"); // Dummy value for table/view columns.
-        qry += "           AS direction";
-        qry += "     , c." + (forProcedureParameters ? "paramid" : "colno");
-        qry += "           AS position";
-        qry += "  FROM informix." + (forProcedureParameters ? "sysprocedures p" : "systables p");
-        qry += "     , informix." + (forProcedureParameters ? "sysproccolumns c" : "syscolumns c");
-        qry += " WHERE p." + (forProcedureParameters ? "procid" : "tabid") + " = c." + (forProcedureParameters ? "procid" : "tabid");
-        qry += "   AND ";
+        String qry = "SELECT c." + (forProcedureParameters ? "paramname" : "colname")
+                   + "           AS object_name"
+                   + "     , CASE ("
+                   + "            CASE WHEN c." + (forProcedureParameters ? "paramtype" : "coltype") + " >= 256"
+                   + "                 THEN c." + (forProcedureParameters ? "paramtype" : "coltype") + " - 256"
+                   + "                 ELSE c." + (forProcedureParameters ? "paramtype" : "coltype")
+                   + "             END"
+                   + "            )"
+                   + "            WHEN    0 THEN 'CHAR'"
+                   + "            WHEN    1 THEN 'SMALLINT'"
+                   + "            WHEN    2 THEN 'INTEGER'"
+                   + "            WHEN    3 THEN 'FLOAT'"
+                   + "            WHEN    4 THEN 'SMALLFLOAT'"
+                   + "            WHEN    5 THEN 'DECIMAL'"
+                   + "            WHEN    6 THEN 'SERIAL'"
+                   + "            WHEN    7 THEN 'DATE'"
+                   + "            WHEN    8 THEN 'MONEY'"
+                   + "            WHEN    9 THEN 'NULL'"
+                   + "            WHEN   10 THEN 'DATETIME ' || CASE BITAND(c." + (forProcedureParameters ? "paramtype" : "coltype") + ", 240)"
+                   + "                                               WHEN  0 THEN 'YEAR'"
+                   + "                                               WHEN  2 THEN 'MONTH'"
+                   + "                                               WHEN  4 THEN 'DAY'"
+                   + "                                               WHEN  6 THEN 'HOUR'"
+                   + "                                               WHEN  8 THEN 'MINUTE'"
+                   + "                                               WHEN 10 THEN 'SECOND'"
+                   + "                                               WHEN 11 THEN 'FRACTION(1)'"
+                   + "                                               WHEN 12 THEN 'FRACTION(2)'"
+                   + "                                               WHEN 13 THEN 'FRACTION(3)'"
+                   + "                                               WHEN 14 THEN 'FRACTION(4)'"
+                   + "                                               WHEN 15 THEN 'FRACTION(5)'"
+                   + "                                           END"
+                   + "                                       || ' TO '"
+                   + "                                       || CASE BITAND(c." + (forProcedureParameters ? "paramtype" : "coltype") + ", 15)"
+                   + "                                               WHEN  0 THEN 'YEAR'"
+                   + "                                               WHEN  2 THEN 'MONTH'"
+                   + "                                               WHEN  4 THEN 'DAY'"
+                   + "                                               WHEN  6 THEN 'HOUR'"
+                   + "                                               WHEN  8 THEN 'MINUTE'"
+                   + "                                               WHEN 10 THEN 'SECOND'"
+                   + "                                               WHEN 11 THEN 'FRACTION(1)'"
+                   + "                                               WHEN 12 THEN 'FRACTION(2)'"
+                   + "                                               WHEN 13 THEN 'FRACTION(3)'"
+                   + "                                               WHEN 14 THEN 'FRACTION(4)'"
+                   + "                                               WHEN 15 THEN 'FRACTION(5)'"
+                   + "                                           END"
+                   + "            WHEN   11 THEN 'BYTE'"
+                   + "            WHEN   12 THEN 'TEXT'"
+                   + "            WHEN   13 THEN 'VARCHAR'"
+                   + "            WHEN   14 THEN 'INTERVAL'"
+                   + "            WHEN   15 THEN 'NCHAR'"
+                   + "            WHEN   16 THEN 'NVARCHAR'"
+                   + "            WHEN   17 THEN 'INT8'"
+                   + "            WHEN   18 THEN 'SERIAL8'"
+                   + "            WHEN   19 THEN 'SET'"
+                   + "            WHEN   20 THEN 'MULTISET'"
+                   + "            WHEN   21 THEN 'LIST'"
+                   + "            WHEN   22 THEN 'ROW'"
+                   + "            WHEN   23 THEN 'COLLECTION'"
+                   + "            WHEN   24 THEN 'ROWDEF'"
+                   + "            WHEN   40 THEN 'LVARCHAR'"
+                   + "            WHEN   43 THEN 'LVARCHAR'"
+                   + "            WHEN   45 THEN 'BOOLEAN'"
+                   + "            WHEN   52 THEN 'BIGINT'"
+                   + "            WHEN   53 THEN 'BIGSERIAL'"
+                   + "            WHEN 2061 THEN 'IDSSECURITYLABEL'"
+                   + "            WHEN 4118 THEN 'ROW'"
+                   + "        END"
+                   + "           AS data_type"
+                   + "     , " + (forProcedureParameters ? "c.paramattr" : "1") // Dummy value for table/view columns.
+                   + "           AS direction"
+                   + "     , c." + (forProcedureParameters ? "paramid" : "colno")
+                   + "           AS position"
+                   + "  FROM informix." + (forProcedureParameters ? "sysprocedures p" : "systables p")
+                   + "     , informix." + (forProcedureParameters ? "sysproccolumns c" : "syscolumns c")
+                   + " WHERE p." + (forProcedureParameters ? "procid" : "tabid") + " = c." + (forProcedureParameters ? "procid" : "tabid")
+                   + "   AND ";
 
         if (qualifiers.length == 2) {
             qry += "LOWER(p.owner) = ? AND LOWER(p." + (forProcedureParameters ? "procname" : "tabname") + ") = ?";
