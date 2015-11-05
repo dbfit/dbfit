@@ -32,12 +32,6 @@ public class InformixEnvironment extends AbstractDbEnvironment {
         }
     }
 
-    @Override
-    public void connect(String connectionString, Properties info) throws SQLException {
-        currentConnection = DriverManager.getConnection(connectionString, info);
-        afterConnectionEstablished();
-    }
-
     public InformixEnvironment(String driverClassName) {
         super(driverClassName);
         TypeNormaliserFactory.setNormaliser(dbfit.util.NormalisedBigDecimal.class, new InformixBigDecimalNormaliser());
