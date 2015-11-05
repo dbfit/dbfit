@@ -87,10 +87,10 @@ public class DbParameterAccessor {
             throw new UnsupportedOperationException("Trying to set value of output parameter "+name);
 
         if (value != null) {
-        	TypeNormaliser tn = TypeNormaliserFactory.getNormaliser(value.getClass());
-        	if (tn != null) {
-        		value = tn.normalise(value);
-        	}
+            TypeNormaliser tn = TypeNormaliserFactory.getNormaliser(value.getClass());
+            if (tn != null) {
+                value = tn.normalise(value);
+            }
         }
         cs.setObject(index, value, sqlType, userDefinedTypeName);
     }    

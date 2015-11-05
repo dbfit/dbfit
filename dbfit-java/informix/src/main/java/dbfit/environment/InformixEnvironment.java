@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import static dbfit.util.Direction.*;
 
 @DatabaseEnvironment(name="Informix", driver="com.informix.jdbc.IfxDriver")
-public class InformixEnvironment extends AbstractDbEnvironment  {
+public class InformixEnvironment extends AbstractDbEnvironment {
 
     @Override
     public void afterConnectionEstablished() throws SQLException {
