@@ -87,7 +87,7 @@ subprojects {
         classpath += sourceSets.main.runtimeClasspath
     }
 
-    ext.dbdeploy = { dbDriver, url, userid, password, delimiterType = 'normal', lineending = 'crlf' ->
+    ext.dbdeploy = { dbDriver, url, userid, password, delimiterType = 'normal' ->
         ant.taskdef(name: 'dbdeploy',
                 classname: 'com.dbdeploy.AntTarget',
                 classpath: configurations.testRuntime.asPath)
