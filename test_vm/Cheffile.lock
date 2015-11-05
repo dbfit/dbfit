@@ -34,7 +34,7 @@ SITE
       rbac (>= 1.0.1)
     windows (1.38.1)
       chef_handler (>= 0.0.0)
-    yum (3.6.3)
+    yum (3.7.1)
     yum-epel (0.6.2)
       yum (~> 3.2)
     yum-mysql-community (0.1.17)
