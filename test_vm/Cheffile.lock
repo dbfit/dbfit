@@ -5,6 +5,8 @@ SITE
     build-essential (2.2.3)
     chef-sugar (3.1.1)
     chef_handler (1.2.0)
+    database (4.0.9)
+      postgresql (>= 1.0.0)
     dmg (2.2.2)
     firewalld (1.1.1)
     git (4.3.4)
@@ -13,6 +15,7 @@ SITE
       windows (>= 0.0.0)
       yum-epel (>= 0.0.0)
     java (1.35.0)
+    lvm (1.3.7)
     mariadb (0.3.1)
       apt (>= 0.0.0)
       yum (>= 0.0.0)
@@ -31,26 +34,11 @@ SITE
       rbac (>= 1.0.1)
     windows (1.38.1)
       chef_handler (>= 0.0.0)
-    yum (3.6.3)
+    yum (3.7.1)
     yum-epel (0.6.2)
       yum (~> 3.2)
     yum-mysql-community (0.1.17)
       yum (>= 3.0)
-
-GIT
-  remote: http://github.com/opscode-cookbooks/lvm
-  ref: master
-  sha: e8cbb9dd66f9739411bf14bf477728045988d5f1
-  specs:
-    lvm (1.3.7)
-
-GIT
-  remote: https://github.com/dbfit/database
-  ref: master
-  sha: a9a8627c2aea466f4ecd9911d755648dd85fdf28
-  specs:
-    database (4.0.5)
-      postgresql (>= 1.0.0)
 
 GIT
   remote: https://github.com/dbfit/postgresql
@@ -84,11 +72,7 @@ PATH
       swap (>= 0.0.0)
 
 DEPENDENCIES
-  database (>= 0)
   dbfit_test (>= 0)
   postgresql (>= 0)
-  lvm (>= 0)
-  postgresql (>= 0)
   swap (>= 0)
-
 
