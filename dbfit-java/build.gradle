@@ -96,8 +96,7 @@ subprojects {
                 userid: userid,
                 password: password,
                 dir: "$projectDir/src/integration-test/resources",
-                delimiterType: delimiterType,
-                lineending: lineending
+                delimiterType: delimiterType
         )
     }
 
