@@ -22,17 +22,6 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 @DatabaseEnvironment(name="Informix", driver="com.informix.jdbc.IfxDriver")
 public class InformixEnvironment extends AbstractDbEnvironment {
 
-    @Override
-    public void afterConnectionEstablished() throws SQLException {
-        if (currentConnection.getMetaData().supportsTransactions()) {
-            Options.setOption(Options.OPTION_AUTO_COMMIT, "false");
-            currentConnection.setAutoCommit(false);
-        } else {
-            Options.setOption(Options.OPTION_AUTO_COMMIT, "true");
-            currentConnection.setAutoCommit(true);
-        }
-    }
-
     public InformixEnvironment(String driverClassName) {
         super(driverClassName);
         TypeNormaliserFactory.setNormaliser(dbfit.util.NormalisedBigDecimal.class, new InformixBigDecimalNormaliser());
@@ -167,7 +156,7 @@ public class InformixEnvironment extends AbstractDbEnvironment {
                 String direction = rs.getString(3);
                 int position = rs.getInt(4);
                 Direction paramDirection = getParameterDirection(direction);
-                if (paramDirection != RETURN_VALUE && paramName == "") {
+                if (paramDirection != RETURN_VALUE && paramName.equals("")) {
                     throw new SQLException("Missing column or procedure parameter name");
                 }
                 DbParameterAccessor dbp = new DbParameterAccessor(paramName,
