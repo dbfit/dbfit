@@ -138,10 +138,9 @@ public class InformixEnvironment extends AbstractDbEnvironment {
                    + "   AND ";
 
         if (qualifiers.length == 2) {
-            qry += "LOWER(p.owner) = ? AND LOWER(p." + (forProcedureParameters ? "procname" : "tabname") + ") = ?";
-        } else {
-            qry += "LOWER(p." + (forProcedureParameters ? "procname" : "tabname") + ") = ?";
+            qry += "LOWER(p.owner) = ? AND ";
         }
+        qry += "LOWER(p." + (forProcedureParameters ? "procname" : "tabname") + ") = ?";
 
         return qry;
     }
