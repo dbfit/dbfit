@@ -156,7 +156,7 @@ public class InformixEnvironment extends AbstractDbEnvironment {
                 String direction = rs.getString(3);
                 int position = rs.getInt(4);
                 Direction paramDirection = getParameterDirection(direction);
-                if (paramDirection != RETURN_VALUE && paramName.isEmpty()) {
+                if (paramDirection != RETURN_VALUE && paramName.equals("")) {
                     throw new SQLException("Missing column or procedure parameter name");
                 }
                 DbParameterAccessor dbp = new DbParameterAccessor(paramName,
