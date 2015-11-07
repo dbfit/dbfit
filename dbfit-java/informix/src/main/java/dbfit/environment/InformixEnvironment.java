@@ -195,28 +195,27 @@ public class InformixEnvironment extends AbstractDbEnvironment {
             return OUTPUT;
         if ("5".equals(direction))
             return RETURN_VALUE;
-        throw new UnsupportedOperationException("Direction " + direction
-                + " is not supported");
+        throw new UnsupportedOperationException("Direction " + direction + " is not supported");
     }
 
     // List interface has sequential search, so using list instead of array to map types.
-    private static List<String> stringTypes = Arrays.asList(new String[] {
-            "VARCHAR", "LVARCHAR", "CHAR", "TEXT", "NCHAR", "NVARCHAR" });
-    private static List<String> shortTypes = Arrays.asList(new String[] {
-            "SMALLINT" });
-    private static List<String> intTypes = Arrays.asList(new String[] {
-            "INT", "INTEGER", "SERIAL" });
-    private static List<String> longTypes = Arrays.asList(new String[] {
-            "BIGINT", "INT8", "BIGSERIAL", "SERIAL8" });
-    private static List<String> floatTypes = Arrays.asList(new String[] {
-            "SMALLFLOAT" });
-    private static List<String> doubleTypes = Arrays.asList(new String[] {
-            "FLOAT" });
-    private static List<String> decimalTypes = Arrays.asList(new String[] {
-            "DECIMAL", "MONEY" });
-    private static List<String> dateTypes = Arrays.asList(new String[] {
-            "DATE" });
-    private static List<String> timestampTypes = Arrays.asList(new String[] {
+    private static List<String> stringTypes = Arrays.asList(
+            "VARCHAR", "LVARCHAR", "CHAR", "TEXT", "NCHAR", "NVARCHAR");
+    private static List<String> shortTypes = Arrays.asList(
+            "SMALLINT");
+    private static List<String> intTypes = Arrays.asList(
+            "INT", "INTEGER", "SERIAL");
+    private static List<String> longTypes = Arrays.asList(
+            "BIGINT", "INT8", "BIGSERIAL", "SERIAL8");
+    private static List<String> floatTypes = Arrays.asList(
+            "SMALLFLOAT");
+    private static List<String> doubleTypes = Arrays.asList(
+            "FLOAT");
+    private static List<String> decimalTypes = Arrays.asList(
+            "DECIMAL", "MONEY");
+    private static List<String> dateTypes = Arrays.asList(
+            "DATE");
+    private static List<String> timestampTypes = Arrays.asList(
             "DATETIME YEAR TO YEAR", "DATETIME YEAR TO MONTH", "DATETIME YEAR TO DAY", "DATETIME YEAR TO HOUR",
             "DATETIME YEAR TO MINUTE", "DATETIME YEAR TO SECOND",
             "DATETIME YEAR TO FRACTION(1)", "DATETIME YEAR TO FRACTION(2)", "DATETIME YEAR TO FRACTION(3)",
@@ -230,15 +229,15 @@ public class InformixEnvironment extends AbstractDbEnvironment {
             "DATETIME DAY TO FRACTION(4)", "DATETIME DAY TO FRACTION(5)", 
             "DATETIME HOUR TO FRACTION(1)", "DATETIME HOUR TO FRACTION(2)", "DATETIME HOUR TO FRACTION(3)", "DATETIME HOUR TO FRACTION(4)", "DATETIME HOUR TO FRACTION(5)",
             "DATETIME MINUTE TO FRACTION(1)", "DATETIME MINUTE TO FRACTION(2)", "DATETIME MINUTE TO FRACTION(3)", "DATETIME MINUTE TO FRACTION(4)", "DATETIME HOUR TO FRACTION(5)",
-            "DATETIME SECOND TO FRACTION(1)", "DATETIME SECOND TO FRACTION(2)", "DATETIME SECOND TO FRACTION(3)", "DATETIME SECOND TO FRACTION(4)", "DATETIME SECOND TO FRACTION(5)" });
-    private static List<String> timeTypes = Arrays.asList(new String[] {
+            "DATETIME SECOND TO FRACTION(1)", "DATETIME SECOND TO FRACTION(2)", "DATETIME SECOND TO FRACTION(3)", "DATETIME SECOND TO FRACTION(4)", "DATETIME SECOND TO FRACTION(5)");
+    private static List<String> timeTypes = Arrays.asList(
             "DATETIME HOUR TO HOUR", "DATETIME HOUR TO MINUTE", "DATETIME HOUR TO SECOND",
             "DATETIME MINUTE TO MINUTE", "DATETIME MINUTE TO SECOND", 
-            "DATETIME SECOND TO SECOND",  });
-    private static List<String> binaryTypes = Arrays.asList(new String[] {
-            "BYTE" });
-    private static List<String> booleanTypes = Arrays.asList(new String[] {
-            "BOOLEAN" });
+            "DATETIME SECOND TO SECOND");
+    private static List<String> binaryTypes = Arrays.asList(
+            "BYTE");
+    private static List<String> booleanTypes = Arrays.asList(
+            "BOOLEAN");
 
     private static String normaliseTypeName(String dataType) {
         dataType = dataType.toUpperCase().trim();
