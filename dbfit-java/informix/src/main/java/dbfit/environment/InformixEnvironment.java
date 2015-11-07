@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import static dbfit.util.Direction.*;
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 @DatabaseEnvironment(name="Informix", driver="com.informix.jdbc.IfxDriver")
 public class InformixEnvironment extends AbstractDbEnvironment {
@@ -161,9 +162,7 @@ public class InformixEnvironment extends AbstractDbEnvironment {
             Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
 
             while (rs.next()) {
-                String paramName = rs.getString(1);
-                if (paramName == null)
-                    paramName = "";
+                String paramName = defaultIfNull(rs.getString(1), "");
                 String dataType = rs.getString(2);
                 String direction = rs.getString(3);
                 int position = rs.getInt(4);
