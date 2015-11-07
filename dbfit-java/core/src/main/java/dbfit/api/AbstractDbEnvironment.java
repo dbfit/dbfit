@@ -257,5 +257,6 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     private static boolean isConnected(final Connection conn) throws SQLException {
         return (conn != null && !conn.isClosed());
     }
+
 }
 
