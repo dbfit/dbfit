@@ -251,14 +251,14 @@ public class InformixEnvironment extends AbstractDbEnvironment {
     private static List<String> booleanTypes = Arrays.asList(new String[] {
             "BOOLEAN" });
 
-    private static String NormaliseTypeName(String dataType) {
+    private static String normaliseTypeName(String dataType) {
         dataType = dataType.toUpperCase().trim();
         return dataType;
     }
 
     private static int getSqlType(String dataType) {
         // todo:strip everything from first blank
-        dataType = NormaliseTypeName(dataType);
+        dataType = normaliseTypeName(dataType);
 
         if (stringTypes.contains(dataType))
             return java.sql.Types.VARCHAR;
@@ -288,7 +288,7 @@ public class InformixEnvironment extends AbstractDbEnvironment {
     }
 
     public Class<?> getJavaClass(String dataType) {
-        dataType = NormaliseTypeName(dataType);
+        dataType = normaliseTypeName(dataType);
         if (stringTypes.contains(dataType))
             return String.class;
         if (decimalTypes.contains(dataType))
