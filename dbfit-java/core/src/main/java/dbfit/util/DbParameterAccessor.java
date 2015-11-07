@@ -94,7 +94,7 @@ public class DbParameterAccessor {
     public Object get() throws IllegalAccessException, InvocationTargetException {
         try{
             if (direction.equals(INPUT))
-                throw new UnsupportedOperationException("Trying to get value of input parameter "+name);
+                throw new UnsupportedOperationException("Trying to get value of input parameter "+name);            
             return normaliseValue(cs.getObject(index));
         }
         catch (SQLException sqle){
