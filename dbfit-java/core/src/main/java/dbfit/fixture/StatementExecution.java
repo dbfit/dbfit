@@ -1,16 +1,20 @@
 package dbfit.fixture;
 
 import java.sql.*;
+import dbfit.api.DBEnvironment;
+import dbfit.util.TypeSpecifier;
 
 public class StatementExecution implements AutoCloseable {
     private PreparedStatement statement;
+    private DBEnvironment environment;
 
-    public StatementExecution(PreparedStatement statement) {
-        this(statement, true);
+    public StatementExecution(PreparedStatement statement, DBEnvironment env) {
+        this(statement, true, env);
     }
 
-    public StatementExecution(PreparedStatement statement, boolean clearParameters) {
+    public StatementExecution(PreparedStatement statement, boolean clearParameters, DBEnvironment env) {
         this.statement = statement;
+        this.environment = env;
         if (clearParameters) {
             try {
                 statement.clearParameters();
@@ -32,9 +36,16 @@ public class StatementExecution implements AutoCloseable {
         if (value == null) {
             statement.setNull(index, sqlType, userDefinedTypeName);
         } else {
+            TypeSpecifier ts = environment.getTypeSpecifier(value.getClass());
+            Object newValue;
+            if (ts != null) {
+            	newValue = ts.specify(value);
+            } else {
+            	newValue = value;
+            }
             // Don't use the variant that takes sqlType.
             // Derby (at least) assumes no decimal places for Types.DECIMAL and truncates the source data.
-            statement.setObject(index, value);
+            statement.setObject(index, newValue);
         }
     }
 

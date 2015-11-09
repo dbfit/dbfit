@@ -2,6 +2,7 @@ package dbfit.api;
 
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
+import dbfit.util.TypeSpecifier;
 import dbfit.util.DdlStatementExecution;
 
 import java.io.FileNotFoundException;
@@ -179,5 +180,17 @@ public interface DBEnvironment {
             FileNotFoundException;
 
     DbStoredProcedureCall newStoredProcedureCall(String name, DbParameterAccessor[] accessors);
+
+    /**
+     * Get the TypeSpecifier factory object, for the given class, used to create a DB adapter-specific
+     * variant of an object of the given class.    
+     */
+    public TypeSpecifier getTypeSpecifier(Class<?> targetClass);
+
+    /**
+     * Set the TypeSpecifier factory object, for the given class, used to create a DB adapter-specific
+     * variant of an object of the given class.    
+     */
+    public void setTypeSpecifier(Class<?> targetClass, TypeSpecifier specifier);
 }
 
