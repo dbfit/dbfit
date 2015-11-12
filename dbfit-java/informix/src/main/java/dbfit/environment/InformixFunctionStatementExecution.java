@@ -1,14 +1,16 @@
 package dbfit.environment;
 
 import java.sql.*;
+import java.util.Map;
 
 import dbfit.fixture.StatementExecution;
+import dbfit.util.TypeSpecifier;
 
 public class InformixFunctionStatementExecution extends StatementExecution {
     private Object returnValue = null;
 
-    public InformixFunctionStatementExecution(PreparedStatement statement, boolean clearParameters) {
-        super(statement, clearParameters);
+    public InformixFunctionStatementExecution(PreparedStatement statement, boolean clearParameters, Map<Class<?>, TypeSpecifier> ts) {
+        super(statement, clearParameters, ts);
     }
 
     @Override

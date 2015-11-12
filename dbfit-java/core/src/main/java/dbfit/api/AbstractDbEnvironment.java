@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Properties;
+import java.util.Map;
+import java.util.HashMap;
 
 public abstract class AbstractDbEnvironment implements DBEnvironment {
 
@@ -128,13 +130,15 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
 
     @Override
     public StatementExecution createStatementExecution(PreparedStatement statement, boolean clearParameters) {
-        return new StatementExecution(statement, clearParameters);
+        return new StatementExecution(statement, clearParameters, typeSpecifiers);
     }
 
     @Override
     public StatementExecution createFunctionStatementExecution(PreparedStatement statement, boolean clearParameters) {
-        return new StatementExecution(statement, clearParameters);
+        return new StatementExecution(statement, clearParameters, typeSpecifiers);
     }
+
+    protected Map<Class<?>, TypeSpecifier> typeSpecifiers = new HashMap<Class<?>, TypeSpecifier>();
 
     public void closeConnection() throws SQLException {
         if (currentConnection != null) {
