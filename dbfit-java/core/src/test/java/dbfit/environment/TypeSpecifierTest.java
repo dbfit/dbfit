@@ -4,6 +4,8 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 import java.sql.SQLException;
+import java.util.Map;
+
 import dbfit.api.DBEnvironment;
 
 import dbfit.util.TypeSpecifier;
@@ -17,18 +19,11 @@ public class TypeSpecifierTest {
     }
 
     @Test
-    public void setAndGetTypeSpecifierTest() {
-        DBEnvironment env = dbfit.api.DbEnvironmentFactory.newEnvironmentInstance("Dummy");
-        env.setTypeSpecifier(Integer.class, new DummyTypeSpecifier());
-        TypeSpecifier ts = env.getTypeSpecifier(Integer.class);
-        assertNotNull(ts);
-    }
-
-    @Test
     public void castTypeTest() {
         DBEnvironment env = dbfit.api.DbEnvironmentFactory.newEnvironmentInstance("Dummy");
         env.setTypeSpecifier(java.util.Date.class, new DummyTypeSpecifier());
-        TypeSpecifier ts = env.getTypeSpecifier(java.util.Date.class);
+        Map<Class<?>, TypeSpecifier> tsm = env.getTypeSpecifierMap();
+        TypeSpecifier ts = tsm.get(java.util.Date.class);
         String s = null;
         try {
             s = (String) ts.specify(new java.util.Date());
