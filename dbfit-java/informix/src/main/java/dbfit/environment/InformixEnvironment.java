@@ -24,7 +24,7 @@ public class InformixEnvironment extends AbstractDbEnvironment {
 
     public InformixEnvironment(String driverClassName) {
         super(driverClassName);
-        TypeNormaliserFactory.setNormaliser(dbfit.util.NormalisedBigDecimal.class, new InformixBigDecimalNormaliser());
+        typeSpecifiers.put(dbfit.util.NormalisedBigDecimal.class, new InformixBigDecimalSpecifier());
     }
 
     protected String parseCommandText(String commandText) {
@@ -314,6 +314,6 @@ public class InformixEnvironment extends AbstractDbEnvironment {
 
     @Override
     public StatementExecution createFunctionStatementExecution(PreparedStatement statement, boolean clearParameters) {
-        return new InformixFunctionStatementExecution(statement, clearParameters);
+        return new InformixFunctionStatementExecution(statement, clearParameters, typeSpecifiers);
     }
 }

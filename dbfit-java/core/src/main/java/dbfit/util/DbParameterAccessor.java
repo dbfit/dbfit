@@ -81,13 +81,6 @@ public class DbParameterAccessor {
     public void set(Object value) throws Exception {
         if (direction == OUTPUT|| direction == RETURN_VALUE)
             throw new UnsupportedOperationException("Trying to set value of output parameter "+name);
-
-        if (value != null) {
-            TypeNormaliser tn = TypeNormaliserFactory.getNormaliser(value.getClass());
-            if (tn != null) {
-                value = tn.normalise(value);
-            }
-        }
         cs.setObject(index, value, sqlType, userDefinedTypeName);
     }    
 
