@@ -41,9 +41,9 @@ public class StatementExecution implements AutoCloseable {
             TypeSpecifier ts = typeMap.get(value.getClass());
             Object newValue;
             if (ts != null) {
-            	newValue = ts.specify(value);
+                newValue = ts.specify(value);
             } else {
-            	newValue = value;
+                newValue = value;
             }
             // Don't use the variant that takes sqlType.
             // Derby (at least) assumes no decimal places for Types.DECIMAL and truncates the source data.
