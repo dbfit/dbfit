@@ -192,5 +192,11 @@ public interface DBEnvironment {
      * variant of an object of the given class.    
      */
     public void setTypeSpecifier(Class<?> targetClass, TypeSpecifier specifier);
+    
+    /**
+     * Return the collection of TypeSpecifier objects, used to create DB adaptor specific variants of object
+     * of the given classes. 
+     */
+    public Map<Class<?>, TypeSpecifier> getTypeSpecifierMap();
 }
 

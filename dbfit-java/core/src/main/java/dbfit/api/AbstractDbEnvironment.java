@@ -257,5 +257,9 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     public void setTypeSpecifier(Class<?> targetClass, TypeSpecifier specifier) {
         typeSpecifiers.put(targetClass, specifier);
     }
+    
+    public Map<Class<?>, TypeSpecifier> getTypeSpecifierMap() {
+        return typeSpecifiers;
+    }
 }
 

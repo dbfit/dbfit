@@ -1,20 +1,22 @@
 package dbfit.fixture;
 
 import java.sql.*;
-import dbfit.api.DBEnvironment;
+import java.util.HashMap;
+import java.util.Map;
+
 import dbfit.util.TypeSpecifier;
 
 public class StatementExecution implements AutoCloseable {
     private PreparedStatement statement;
-    private DBEnvironment environment;
+    private Map<Class<?>, TypeSpecifier> typeMap;
 
-    public StatementExecution(PreparedStatement statement, DBEnvironment env) {
-        this(statement, true, env);
+    public StatementExecution(PreparedStatement statement, Map<Class<?>, TypeSpecifier> ts) {
+        this(statement, true, ts);
     }
 
-    public StatementExecution(PreparedStatement statement, boolean clearParameters, DBEnvironment env) {
+    public StatementExecution(PreparedStatement statement, boolean clearParameters, Map<Class<?>, TypeSpecifier> ts) {
         this.statement = statement;
-        this.environment = env;
+        this.typeMap = ts;
         if (clearParameters) {
             try {
                 statement.clearParameters();
@@ -36,7 +38,7 @@ public class StatementExecution implements AutoCloseable {
         if (value == null) {
             statement.setNull(index, sqlType, userDefinedTypeName);
         } else {
-            TypeSpecifier ts = environment.getTypeSpecifier(value.getClass());
+            TypeSpecifier ts = typeMap.get(value.getClass());
             Object newValue;
             if (ts != null) {
             	newValue = ts.specify(value);
