@@ -13,7 +13,6 @@ public class StatementExecution implements AutoCloseable {
     public StatementExecution(PreparedStatement statement, boolean clearParameters, Map<Class<?>, TypeSpecifier> ts) {
         this.statement = statement;
         this.typeSpecifiers = ts;
-System.out.println("StatementExecution: ts.keySet().size: " + ts.keySet().size());
         if (clearParameters) {
             try {
                 statement.clearParameters();
