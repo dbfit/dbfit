@@ -1,13 +1,13 @@
 package dbfit.environment;
 
-import dbfit.util.TypeNormaliser;
+import dbfit.util.TypeTransformer;
 
 import java.sql.Time;
 
-public class MillisecondTimeNormaliser implements TypeNormaliser {
+public class MillisecondTimeNormaliser implements TypeTransformer {
 
     @Override
-    public Object normalise(Object o) {
+    public Object transform(Object o) {
         return (o == null) ? null : new MillisecondTime((Time) o);
     }
 }

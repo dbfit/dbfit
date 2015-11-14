@@ -12,7 +12,7 @@ public class MillisecondTimeNormaliserTest {
 
     @Test
     public void toStringExposesTimeUpToMilliseconds() {
-        Time normalisedTime = (Time) normaliser.normalise(millisTime);
+        Time normalisedTime = (Time) normaliser.transform(millisTime);
         String[] timeParts = normalisedTime.toString().split("\\.");
 
         assertEquals("13:12:05", timeParts[0]);

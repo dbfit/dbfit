@@ -10,11 +10,11 @@ import java.util.AbstractList;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 
-public class TypeNormaliserFactoryTest {
-    private static TypeNormaliser createTypeNormaliserFake(final String tag) {
-        return new TypeNormaliser() {
+public class TypeTransformerFactoryTest {
+    private static TypeTransformer createTypeTransformerFake(final String tag) {
+        return new TypeTransformer() {
             @Override
-            public Object normalise(Object o) {
+            public Object transform(Object o) {
                 return null;
             }
 
@@ -29,33 +29,35 @@ public class TypeNormaliserFactoryTest {
     private final Class cmid = AbstractList.class;
     private final Class clow = ArrayList.class;
 
-    private final TypeNormaliser normaliserTop = createTypeNormaliserFake("normaliser Top");
-    private final TypeNormaliser normaliserMid = createTypeNormaliserFake("normaliser Mid");
-    private final TypeNormaliser normaliserLow = createTypeNormaliserFake("normaliser Low");
+    private final TypeTransformer normaliserTop = createTypeTransformerFake("normaliser Top");
+    private final TypeTransformer normaliserMid = createTypeTransformerFake("normaliser Mid");
+    private final TypeTransformer normaliserLow = createTypeTransformerFake("normaliser Low");
+
+    private TypeTransformerFactory ttf = new TypeTransformerFactory(); 
 
     @Before
     public void init() {
-        TypeNormaliserFactory.setNormaliser(ctop, normaliserTop);
-        TypeNormaliserFactory.setNormaliser(cmid, normaliserMid);
+        ttf.setTransformer(ctop, normaliserTop);
+        ttf.setTransformer(cmid, normaliserMid);
     }
 
     @Test
     public void normaliserLookupReturnsClosestParentIfNoExactMatch() {
-        TypeNormaliser normaliser = TypeNormaliserFactory.getNormaliser(clow);
+        TypeTransformer normaliser = ttf.getTransformer(clow);
         assertEquals(normaliserMid, normaliser);
     }
 
     @Test
     public void normaliserLookupReturnsExactMatchIfAny() {
-        TypeNormaliser normaliser = TypeNormaliserFactory.getNormaliser(cmid);
+        TypeTransformer normaliser = ttf.getTransformer(cmid);
         assertEquals(normaliserMid, normaliser);
-        normaliser = TypeNormaliserFactory.getNormaliser(ctop);
+        normaliser = ttf.getTransformer(ctop);
         assertEquals(normaliserTop, normaliser);
     }
 
     @Test
     public void normaliserLookupReturnsNullWhenNolExactMatchNorParents() {
-        TypeNormaliser normaliser = TypeNormaliserFactory.getNormaliser(String.class);
+        TypeTransformer normaliser = ttf.getTransformer(String.class);
         assertNull(normaliser);
     }
 

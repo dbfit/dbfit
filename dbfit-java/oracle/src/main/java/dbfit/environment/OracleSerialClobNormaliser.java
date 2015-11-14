@@ -2,14 +2,14 @@ package dbfit.environment;
 
 import java.sql.SQLException;
 
-import dbfit.util.TypeNormaliser;
+import dbfit.util.TypeTransformer;
 
-public class OracleSerialClobNormaliser implements TypeNormaliser {
+public class OracleSerialClobNormaliser implements TypeTransformer {
 
     private static final int MAX_CLOB_LENGTH = 10000;
 
     @Override
-    public Object normalise(Object o) throws SQLException {
+    public Object transform(Object o) throws SQLException {
         if (o == null)
             return null;
         if (!(o instanceof oracle.jdbc.rowset.OracleSerialClob)) {

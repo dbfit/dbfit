@@ -21,14 +21,14 @@ public class OracleClobNormaliserTest {
 
     @Test
     public void shouldReturnNullIfGivenNull() throws SQLException {
-        assertNull(new OracleClobNormaliser().normalise(null));
+        assertNull(new OracleClobNormaliser().transform(null));
     }
 
     @Test
     public void shouldThrowCorrectExceptionIfNotGivenACLOB() throws SQLException {
         expectedEx.expect(UnsupportedOperationException.class);
         expectedEx.expectMessage("OracleClobNormaliser cannot work with class java.lang.String");
-        new OracleClobNormaliser().normalise("Any Old Object");
+        new OracleClobNormaliser().transform("Any Old Object");
     }
 
     @Test
@@ -39,7 +39,7 @@ public class OracleClobNormaliserTest {
         expectedEx.expect(UnsupportedOperationException.class);
         expectedEx.expectMessage("Clobs larger than 10000 bytes are not supported by DBFIT");
         
-        new OracleClobNormaliser().normalise(clob);
+        new OracleClobNormaliser().transform(clob);
     }
 
     @Test
@@ -51,7 +51,7 @@ public class OracleClobNormaliserTest {
 
         // can't do this as we don't fill up the passed buffer
         //assertEquals("CLOB contents", new OracleClobNormaliser().normalise(clob));
-        new OracleClobNormaliser().normalise(clob);
+        new OracleClobNormaliser().transform(clob);
     }
 
 

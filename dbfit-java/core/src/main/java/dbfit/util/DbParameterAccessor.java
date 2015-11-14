@@ -20,8 +20,8 @@ public class DbParameterAccessor {
 
     public static Object normaliseValue(Object currVal) throws SQLException {        
         if (currVal==null) return null;
-        TypeNormaliser tn=TypeNormaliserFactory.getNormaliser(currVal.getClass());
-        if (tn!=null) currVal=tn.normalise(currVal);
+        TypeTransformer tn=TypeNormaliserFactory.getNormaliser(currVal.getClass());
+        if (tn!=null) currVal=tn.transform(currVal);
         return currVal;
     }
 

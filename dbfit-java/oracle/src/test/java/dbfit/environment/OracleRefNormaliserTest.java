@@ -15,14 +15,14 @@ public class OracleRefNormaliserTest {
 
     @Test
     public void shouldReturnNullIfGivenNull() throws SQLException {
-        assertNull(new OracleRefNormaliser().normalise(null));
+        assertNull(new OracleRefNormaliser().transform(null));
     }
 
     @Test
     public void shouldThrowCorrectExceptionIfNotGivenAResultSet() throws SQLException {
         expectedEx.expect(UnsupportedOperationException.class);
         expectedEx.expectMessage("OracleRefNormaliser cannot work with class java.lang.String");
-        new OracleRefNormaliser().normalise("Any Old Object");
+        new OracleRefNormaliser().transform("Any Old Object");
     }
 
 }
