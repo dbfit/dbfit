@@ -5,12 +5,12 @@ import java.sql.SQLException;
 
 import oracle.jdbc.rowset.OracleCachedRowSet;
 
-import dbfit.util.TypeNormaliser;
+import dbfit.util.TypeTransformer;
 
-public class OracleRefNormaliser implements TypeNormaliser {
+public class OracleRefNormaliser implements TypeTransformer {
 
     @Override
-    public Object normalise(Object o) throws SQLException {
+    public Object transform(Object o) throws SQLException {
         if (o == null)
             return null;
         if (!(o instanceof ResultSet))

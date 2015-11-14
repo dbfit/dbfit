@@ -19,11 +19,11 @@ import java.util.regex.Pattern;
 @DatabaseEnvironment(name="Teradata", driver="com.teradata.jdbc.TeraDriver")
 public class TeradataEnvironment extends AbstractDbEnvironment {
 
-    public static class TeradataClobNormaliser implements TypeNormaliser {
+    public static class TeradataClobNormaliser implements TypeTransformer {
 
         private static final int MAX_CLOB_LENGTH = 10000;
 
-        public Object normalise(Object o) throws SQLException {
+        public Object transform(Object o) throws SQLException {
 
             if (o == null)
                 return null;
@@ -41,9 +41,9 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         }
     }
 
-    public static class TeradataPeriodNormaliser implements TypeNormaliser {
+    public static class TeradataPeriodNormaliser implements TypeTransformer {
 
-        public Object normalise(Object o) throws SQLException {
+        public Object transform(Object o) throws SQLException {
 
             if (o == null)
                 return null;

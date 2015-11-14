@@ -2,10 +2,10 @@ package dbfit.util;
 
 import java.math.BigDecimal;
 
-public class BigDecimalNormaliser implements TypeNormaliser {
+public class BigDecimalNormaliser implements TypeTransformer {
 
     @Override
-    public Object normalise(final Object o) {
+    public Object transform(final Object o) {
         return (o == null) ? null : new NormalisedBigDecimal((BigDecimal) o);
     }
 }

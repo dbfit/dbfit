@@ -21,21 +21,21 @@ public class OracleDateNormaliserTest {
 
     @Test
     public void shouldReturnNullIfGivenNull() throws SQLException {
-        assertNull(new OracleDateNormaliser().normalise(null));
+        assertNull(new OracleDateNormaliser().transform(null));
     }
 
     @Test
     public void shouldThrowCorrectExceptionIfNotGivenAnOracleDATE() throws SQLException {
         expectedEx.expect(UnsupportedOperationException.class);
         expectedEx.expectMessage("OracleDateNormaliser cannot work with class java.lang.String");
-        new OracleDateNormaliser().normalise("Any Old Object");
+        new OracleDateNormaliser().transform("Any Old Object");
     }
 
     @Test
     public void shouldReturnContentsOfDateIfAllOkay() throws SQLException {
         DATE dt = mock(DATE.class);
         when(dt.timestampValue()).thenReturn(new Timestamp(0l));
-        assertEquals(new Timestamp(0l), new OracleDateNormaliser().normalise(dt));
+        assertEquals(new Timestamp(0l), new OracleDateNormaliser().transform(dt));
     }
 
 }

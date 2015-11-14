@@ -20,21 +20,21 @@ public class SqlDateNormaliserTest {
 
     @Test
     public void shouldReturnNullIfGivenNull() throws SQLException {
-        assertNull(new SqlDateNormaliser().normalise(null));
+        assertNull(new SqlDateNormaliser().transform(null));
     }
 
     @Test
     public void shouldThrowCorrectExceptionIfNotGivenADate() throws SQLException {
         expectedEx.expect(UnsupportedOperationException.class);
         expectedEx.expectMessage("SqlDateNormaliser cannot work with class java.lang.String");
-        new SqlDateNormaliser().normalise("Any Old Object");
+        new SqlDateNormaliser().transform("Any Old Object");
     }
 
     @Test
     public void shouldReturnContentsOfDateIfAllOkay() throws SQLException {
         Date dt = mock(Date.class);
         when(dt.getTime()).thenReturn(103340l);
-        assertEquals(new Timestamp(103340l), new SqlDateNormaliser().normalise(dt));
+        assertEquals(new Timestamp(103340l), new SqlDateNormaliser().transform(dt));
     }
 
 }
