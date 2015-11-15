@@ -1,16 +1,22 @@
 package dbfit.fixture;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import dbfit.util.TypeSpecifier;
 
 public class StatementExecution implements AutoCloseable {
     private PreparedStatement statement;
+    private Map<Class<?>, TypeSpecifier> typeMap;
 
-    public StatementExecution(PreparedStatement statement) {
-        this(statement, true);
+    public StatementExecution(PreparedStatement statement, Map<Class<?>, TypeSpecifier> ts) {
+        this(statement, true, ts);
     }
 
-    public StatementExecution(PreparedStatement statement, boolean clearParameters) {
+    public StatementExecution(PreparedStatement statement, boolean clearParameters, Map<Class<?>, TypeSpecifier> ts) {
         this.statement = statement;
+        this.typeMap = ts;
         if (clearParameters) {
             try {
                 statement.clearParameters();
@@ -32,9 +38,16 @@ public class StatementExecution implements AutoCloseable {
         if (value == null) {
             statement.setNull(index, sqlType, userDefinedTypeName);
         } else {
+            TypeSpecifier ts = typeMap.get(value.getClass());
+            Object newValue;
+            if (ts != null) {
+                newValue = ts.specify(value);
+            } else {
+                newValue = value;
+            }
             // Don't use the variant that takes sqlType.
             // Derby (at least) assumes no decimal places for Types.DECIMAL and truncates the source data.
-            statement.setObject(index, value);
+            statement.setObject(index, newValue);
         }
     }
 

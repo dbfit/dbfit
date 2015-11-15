@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Properties;
@@ -246,5 +248,18 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return (conn != null && !conn.isClosed());
     }
 
+    private Map<Class<?>, TypeSpecifier> typeSpecifiers = new HashMap<Class<?>, TypeSpecifier>();
+
+    public TypeSpecifier getTypeSpecifier(Class<?> targetClass) {
+    	return typeSpecifiers.get(targetClass);
+    }
+
+    public void setTypeSpecifier(Class<?> targetClass, TypeSpecifier specifier) {
+        typeSpecifiers.put(targetClass, specifier);
+    }
+    
+    public Map<Class<?>, TypeSpecifier> getTypeSpecifierMap() {
+        return typeSpecifiers;
+    }
 }
 
