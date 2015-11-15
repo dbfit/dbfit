@@ -2,12 +2,12 @@ package dbfit.environment;
 
 import java.sql.SQLException;
 
-import dbfit.util.TypeNormaliser;
+import dbfit.util.TypeTransformer;
 
-public class OracleTimestampNormaliser implements TypeNormaliser {
+public class OracleTimestampNormaliser implements TypeTransformer {
 
     @Override
-    public Object normalise(Object o) throws SQLException {
+    public Object transform(Object o) throws SQLException {
         if (o == null)
             return null;
         if (!(o instanceof oracle.sql.TIMESTAMP)) {

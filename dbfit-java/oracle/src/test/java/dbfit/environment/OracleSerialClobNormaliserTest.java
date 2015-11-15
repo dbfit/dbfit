@@ -19,14 +19,14 @@ public class OracleSerialClobNormaliserTest {
 
     @Test
     public void shouldReturnNullIfGivenNull() throws SQLException {
-        assertNull(new OracleSerialClobNormaliser().normalise(null));
+        assertNull(new OracleSerialClobNormaliser().transform(null));
     }
 
     @Test
     public void shouldThrowCorrectExceptionIfNotGivenAnOracleSerialClob() throws SQLException {
         expectedEx.expect(UnsupportedOperationException.class);
         expectedEx.expectMessage("OracleSerialClobNormaliser cannot work with class java.lang.String");
-        new OracleSerialClobNormaliser().normalise("Any Old Object");
+        new OracleSerialClobNormaliser().transform("Any Old Object");
     }
 
     @Test
@@ -37,7 +37,7 @@ public class OracleSerialClobNormaliserTest {
         expectedEx.expect(UnsupportedOperationException.class);
         expectedEx.expectMessage("Clobs larger than 10000 bytes are not supported by DBFIT");
         
-        new OracleSerialClobNormaliser().normalise(clob);
+        new OracleSerialClobNormaliser().transform(clob);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class OracleSerialClobNormaliserTest {
         when(clob.length()).thenReturn(Long.valueOf("CLOB contents".length()));
         when(clob.getSubString(1l, "CLOB contents".length())).thenReturn("CLOB contents");
 
-        assertEquals("CLOB contents", new OracleSerialClobNormaliser().normalise(clob));
+        assertEquals("CLOB contents", new OracleSerialClobNormaliser().transform(clob));
     }
 
 }

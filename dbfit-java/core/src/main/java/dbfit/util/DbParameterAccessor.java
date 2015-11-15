@@ -18,10 +18,14 @@ public class DbParameterAccessor {
     private int position; //zero-based index of parameter in procedure or column in table
     protected StatementExecution cs;
 
-    public static Object normaliseValue(Object currVal) throws SQLException {        
-        if (currVal==null) return null;
-        TypeNormaliser tn=TypeNormaliserFactory.getNormaliser(currVal.getClass());
-        if (tn!=null) currVal=tn.normalise(currVal);
+    public static Object normaliseValue(Object currVal) throws SQLException {
+        if (currVal == null) {
+            return null;
+        }
+        TypeTransformer tn = TypeNormaliserFactory.getNormaliser(currVal.getClass());
+        if (tn != null) {
+            currVal = tn.transform(currVal);
+        }
         return currVal;
     }
 
