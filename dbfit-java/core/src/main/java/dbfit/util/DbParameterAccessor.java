@@ -18,7 +18,7 @@ public class DbParameterAccessor {
     private Class<?> javaType;
     private int position; //zero-based index of parameter in procedure or column in table
     protected StatementExecution cs;
-    private Map<Class<?>, TypeTransformer> typeSpecifiers;
+    private TypeTransformerFactory typeSpecifiers;
 
     public static Object normaliseValue(Object currVal) throws SQLException {
         if (currVal == null) {
@@ -42,11 +42,11 @@ public class DbParameterAccessor {
     }
 
     @SuppressWarnings("unchecked")
-    public DbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position, Map<Class<?>, TypeTransformer> typeSpecifers) {
+    public DbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position, TypeTransformerFactory typeSpecifers) {
         this(name, direction, sqlType, null, javaType, position, typeSpecifers);
     }
 
-    public DbParameterAccessor(String name, Direction direction, int sqlType, String userDefinedTypeName, Class javaType, int position, Map<Class<?>, TypeTransformer> typeSpecifs) {
+    public DbParameterAccessor(String name, Direction direction, int sqlType, String userDefinedTypeName, Class javaType, int position, TypeTransformerFactory typeSpecifs) {
         this.name = name;
         this.direction = direction;
         this.sqlType = sqlType;
@@ -91,7 +91,7 @@ public class DbParameterAccessor {
         TypeTransformer typeSpecifier = null;
         Object newValue;
         if (value != null) {
-            typeSpecifier = typeSpecifiers.get(value.getClass());
+            typeSpecifier = typeSpecifiers.getTransformer(value.getClass());
         }
         if (typeSpecifier != null) {
             newValue = typeSpecifier.transform(value);
@@ -123,7 +123,7 @@ public class DbParameterAccessor {
         return javaType;
     }
 
-    public Map<Class<?>, TypeTransformer> getTypeSpecifiers() {
+    protected TypeTransformerFactory getTypeSpecifiers() {
         return typeSpecifiers;
     }
 

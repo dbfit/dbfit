@@ -8,12 +8,13 @@ import dbfit.util.TypeTransformer;
 import dbfit.util.DbParameterAccessor;
 import dbfit.environment.SqlServerEnvironment;
 import dbfit.util.Direction;
+import dbfit.util.TypeTransformerFactory;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class SqlServerDbEnvironmentUnitTests {
 
-    private Map<Class<?>, TypeTransformer> typeSpecifiers = new HashMap<Class<?>, TypeTransformer>();
+    private TypeTransformerFactory typeSpecifiers = new TypeTransformerFactory();
 
     @Test
     public void buildInsertCommand_AllInputParameters() throws Exception {

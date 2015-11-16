@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class DbParameterAccessorsMapBuilderTest {
     private int sqlType = java.sql.Types.VARCHAR;
     private Class<?> javaType = String.class;
-    private Map<Class<?>, TypeTransformer> typeSpecifiers = new HashMap<Class<?>, TypeTransformer>();
+    private TypeTransformerFactory typeSpecifiers = new TypeTransformerFactory();
     private DbParameterAccessorsMapBuilder params =
         new DbParameterAccessorsMapBuilder();
 

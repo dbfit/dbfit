@@ -4,6 +4,7 @@ import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.api.DbStoredProcedureCall;
 import dbfit.util.*;
+import dbfit.util.OracleDbParameterAccessor;
 import oracle.jdbc.OracleTypes;
 
 import java.math.BigDecimal;
@@ -344,11 +345,28 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             paramDirection = getParameterDirection(direction);
         }
 
-        DbParameterAccessor dbp = new OracleDbParameterAccessor(paramName,
-                paramDirection, getSqlType(dataType), getJavaClass(dataType),
-                paramPosition, typeSpecifiers, normaliseTypeName(dataType), userTypeName);
+        DbParameterAccessor dbp = createOracleDbParameterAcccessor(paramName,
+                                                                   paramDirection,
+                                                                   getSqlType(dataType),
+                                                                   getJavaClass(dataType),
+                                                                   paramPosition,
+                                                                   normaliseTypeName(dataType),
+                                                                   userTypeName);
 
         return dbp;
+    }
+
+    private OracleDbParameterAccessor createOracleDbParameterAcccessor(String name, Direction direction,
+                                                                        int sqlType, Class<?> javaType, int position,
+                                                                        String originalTypeName, String userTypeName) {
+        return new OracleDbParameterAccessor(name,
+                                             direction,
+                                             sqlType,
+                                             javaType,
+                                             position,
+                                             dbfitToJDBCTransformers,
+                                             originalTypeName,
+                                             userTypeName);
     }
 
     private Map<String, DbParameterAccessor> readIntoParams(

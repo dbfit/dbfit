@@ -6,7 +6,7 @@ public class OracleDbParameterAccessor extends DbParameterAccessor {
     private String originalTypeName;
 
     public OracleDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position,
-                                     Map<Class<?>, TypeTransformer> typeSpecifiers, String originalTypeName, String userTypeName) {
+                                     TypeTransformerFactory typeSpecifiers, String originalTypeName, String userTypeName) {
         super(name, direction, sqlType, userTypeName, javaType, position, typeSpecifiers);
         setOriginalTypeName(originalTypeName);
     }

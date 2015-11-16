@@ -73,10 +73,11 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
                 if (paramName == null)
                     paramName = "";
                 String dataType = rs.getString(2);
-                DbParameterAccessor dbp = new DbParameterAccessor(paramName,
-                        Direction.INPUT, getSqlType(dataType),
-                        getJavaClass(dataType), position++,
-                        typeSpecifiers);
+                DbParameterAccessor dbp = createDbParameterAccessor(paramName,
+                                                                    Direction.INPUT,
+                                                                    getSqlType(dataType),
+                                                                    getJavaClass(dataType),
+                                                                    position++);
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }
             rs.close();
@@ -232,10 +233,11 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
                 dataType = token;
             }
 
-            DbParameterAccessor dbp = new DbParameterAccessor(paramName,
-                    direction, getSqlType(dataType), getJavaClass(dataType),
-                    position++,
-                    typeSpecifiers);
+            DbParameterAccessor dbp = createDbParameterAccessor(paramName,
+                                                                direction,
+                                                                getSqlType(dataType),
+                                                                getJavaClass(dataType),
+                                                                position++);
             allParams.put(NameNormaliser.normaliseName(paramName), dbp);
         }
 
@@ -248,7 +250,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
                 allParams.put("", new DbParameterAccessor("",
                         Direction.RETURN_VALUE, getSqlType(dataType),
                         getJavaClass(dataType), -1,
-                        typeSpecifiers));
+                        dbfitToJDBCTransformers));
             }
         }
 

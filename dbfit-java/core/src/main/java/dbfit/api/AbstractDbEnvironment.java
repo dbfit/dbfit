@@ -138,7 +138,12 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return new StatementExecution(statement, clearParameters);
     }
 
-    protected Map<Class<?>, TypeTransformer> typeSpecifiers = new HashMap<Class<?>, TypeTransformer>();
+    protected TypeTransformerFactory dbfitToJDBCTransformers = new TypeTransformerFactory();
+
+    protected DbParameterAccessor createDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {
+        return new DbParameterAccessor(name, direction, sqlType, javaType, position, dbfitToJDBCTransformers);
+        
+    }
 
     public void closeConnection() throws SQLException {
         if (currentConnection != null) {

@@ -24,7 +24,7 @@ public class InformixEnvironment extends AbstractDbEnvironment {
 
     public InformixEnvironment(String driverClassName) {
         super(driverClassName);
-        typeSpecifiers.put(dbfit.util.NormalisedBigDecimal.class, new InformixBigDecimalSpecifier());
+        dbfitToJDBCTransformers.setTransformer(dbfit.util.NormalisedBigDecimal.class, new InformixBigDecimalSpecifier());
     }
 
     protected String parseCommandText(String commandText) {
@@ -159,11 +159,11 @@ public class InformixEnvironment extends AbstractDbEnvironment {
                 if (paramDirection != RETURN_VALUE && paramName.isEmpty()) {
                     throw new SQLException("Missing column or procedure parameter name");
                 }
-                DbParameterAccessor dbp = new DbParameterAccessor(paramName,
-                                                                  paramDirection, getSqlType(dataType),
-                                                                  getJavaClass(dataType),
-                                                                  paramDirection == RETURN_VALUE ? -1 : position,
-                                                                  typeSpecifiers);
+                DbParameterAccessor dbp = createDbParameterAccessor(paramName,
+                                                                    paramDirection,
+                                                                    getSqlType(dataType),
+                                                                    getJavaClass(dataType),
+                                                                    paramDirection == RETURN_VALUE ? -1 : position);
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }
             rs.close();
