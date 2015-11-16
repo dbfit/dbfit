@@ -3,14 +3,14 @@ package dbfit.fixture;
 import java.sql.*;
 import java.util.Map;
 
-import dbfit.util.TypeSpecifier;
+import dbfit.util.TypeTransformer;
 
 public class StatementExecution implements AutoCloseable {
     protected PreparedStatement statement;
     protected int returnValueInd = -1;
-    Map<Class<?>, TypeSpecifier> typeSpecifiers;
+    Map<Class<?>, TypeTransformer> typeSpecifiers;
 
-    public StatementExecution(PreparedStatement statement, boolean clearParameters, Map<Class<?>, TypeSpecifier> ts) {
+    public StatementExecution(PreparedStatement statement, boolean clearParameters, Map<Class<?>, TypeTransformer> ts) {
         this.statement = statement;
         this.typeSpecifiers = ts;
         if (clearParameters) {
@@ -38,9 +38,9 @@ public class StatementExecution implements AutoCloseable {
             statement.setNull(index, sqlType, userDefinedTypeName);
         } else {
             Object newValue;
-            TypeSpecifier ts = typeSpecifiers.get(value.getClass());
+            TypeTransformer ts = typeSpecifiers.get(value.getClass());
             if (ts != null) {
-                newValue = ts.specify(value);
+                newValue = ts.transform(value);
             } else {
                 newValue = value;
             }

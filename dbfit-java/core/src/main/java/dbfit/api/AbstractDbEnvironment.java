@@ -138,7 +138,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return new StatementExecution(statement, clearParameters, typeSpecifiers);
     }
 
-    protected Map<Class<?>, TypeSpecifier> typeSpecifiers = new HashMap<Class<?>, TypeSpecifier>();
+    protected Map<Class<?>, TypeTransformer> typeSpecifiers = new HashMap<Class<?>, TypeTransformer>();
 
     public void closeConnection() throws SQLException {
         if (currentConnection != null) {

@@ -4,12 +4,12 @@ import java.sql.*;
 import java.util.Map;
 
 import dbfit.fixture.StatementExecution;
-import dbfit.util.TypeSpecifier;
+import dbfit.util.TypeTransformer;
 
 public class InformixFunctionStatementExecution extends StatementExecution {
     private Object returnValue = null;
 
-    public InformixFunctionStatementExecution(PreparedStatement statement, boolean clearParameters, Map<Class<?>, TypeSpecifier> ts) {
+    public InformixFunctionStatementExecution(PreparedStatement statement, boolean clearParameters, Map<Class<?>, TypeTransformer> ts) {
         super(statement, clearParameters, ts);
     }
 

@@ -2,12 +2,12 @@ package dbfit.environment;
 
 import java.sql.SQLException;
 
-import dbfit.util.TypeSpecifier;
+import dbfit.util.TypeTransformer;
 
-public class InformixBigDecimalSpecifier implements TypeSpecifier {
+public class InformixBigDecimalSpecifier implements TypeTransformer {
 
     @Override
-    public Object specify(Object o) throws SQLException {
+    public Object transform(Object o) throws SQLException {
         if (o == null) {
             return null;
         }
