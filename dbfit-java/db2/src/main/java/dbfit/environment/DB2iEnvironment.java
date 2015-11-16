@@ -82,8 +82,8 @@ public class DB2iEnvironment extends AbstractDbEnvironment {
                 DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                         paramDirection, getSqlType(dataType),
                         getJavaClass(dataType),
-                        paramDirection == RETURN_VALUE ? -1
-                                : position++);
+                        paramDirection == RETURN_VALUE ? -1 : position++,
+                        typeSpecifiers);
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }
             rs.close();

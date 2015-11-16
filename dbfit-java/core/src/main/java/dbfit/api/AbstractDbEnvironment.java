@@ -130,12 +130,12 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
 
     @Override
     public StatementExecution createStatementExecution(PreparedStatement statement, boolean clearParameters) {
-        return new StatementExecution(statement, clearParameters, typeSpecifiers);
+        return new StatementExecution(statement, clearParameters);
     }
 
     @Override
     public StatementExecution createFunctionStatementExecution(PreparedStatement statement, boolean clearParameters) {
-        return new StatementExecution(statement, clearParameters, typeSpecifiers);
+        return new StatementExecution(statement, clearParameters);
     }
 
     protected Map<Class<?>, TypeTransformer> typeSpecifiers = new HashMap<Class<?>, TypeTransformer>();

@@ -75,7 +75,8 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
                 String dataType = rs.getString(2);
                 DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                         Direction.INPUT, getSqlType(dataType),
-                        getJavaClass(dataType), position++);
+                        getJavaClass(dataType), position++,
+                        typeSpecifiers);
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }
             rs.close();
@@ -233,7 +234,8 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 
             DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                     direction, getSqlType(dataType), getJavaClass(dataType),
-                    position++);
+                    position++,
+                    typeSpecifiers);
             allParams.put(NameNormaliser.normaliseName(paramName), dbp);
         }
 
@@ -245,7 +247,8 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
             if (!dataType.equals("void")) {
                 allParams.put("", new DbParameterAccessor("",
                         Direction.RETURN_VALUE, getSqlType(dataType),
-                        getJavaClass(dataType), -1));
+                        getJavaClass(dataType), -1,
+                        typeSpecifiers));
             }
         }
 

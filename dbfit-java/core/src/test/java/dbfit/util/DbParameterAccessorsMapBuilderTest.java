@@ -1,5 +1,6 @@
 package dbfit.util;
 
+import dbfit.util.TypeTransformer;
 import static dbfit.util.Direction.*;
 
 import org.junit.Test;
@@ -7,10 +8,12 @@ import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import java.util.Map;
+import java.util.HashMap;
 
 public class DbParameterAccessorsMapBuilderTest {
     private int sqlType = java.sql.Types.VARCHAR;
     private Class<?> javaType = String.class;
+    private Map<Class<?>, TypeTransformer> typeSpecifiers = new HashMap<Class<?>, TypeTransformer>();
     private DbParameterAccessorsMapBuilder params =
         new DbParameterAccessorsMapBuilder();
 
@@ -65,7 +68,7 @@ public class DbParameterAccessorsMapBuilderTest {
     }
 
     private void createParameterAccessor(String name, Direction direction) {
-        params.add(name, direction, sqlType, javaType);
+        params.add(name, direction, sqlType, javaType, typeSpecifiers);
     }
 
     private int getPositionOf(String name) {

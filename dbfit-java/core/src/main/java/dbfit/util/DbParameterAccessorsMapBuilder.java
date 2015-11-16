@@ -2,6 +2,7 @@ package dbfit.util;
 
 import static dbfit.util.Direction.*;
 import static dbfit.util.NameNormaliser.*;
+import dbfit.util.TypeTransformer;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -14,9 +15,9 @@ public class DbParameterAccessorsMapBuilder {
         return parameterAccessors;
     }
 
-    public void add(String name, Direction direction, int sqlType, Class javaType) {
+    public void add(String name, Direction direction, int sqlType, Class javaType, Map<Class<?>, TypeTransformer> typeSpecifiers) {
         int position = (direction == RETURN_VALUE) ? -1 : nextPosition++;
         parameterAccessors.put(normaliseName(name), new DbParameterAccessor(
-                    name, direction,sqlType, javaType, position));
+                    name, direction,sqlType, javaType, position, typeSpecifiers));
     }
 }

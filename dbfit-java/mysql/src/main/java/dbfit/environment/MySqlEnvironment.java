@@ -78,7 +78,8 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
                 String dataType = rs.getString(2);
                 DbParameterAccessor dbp = new DbParameterAccessor(columnName,
                         Direction.INPUT, getSqlType(dataType),
-                        getJavaClass(dataType), position++);
+                        getJavaClass(dataType), position++,
+                        typeSpecifiers);
                 columns.put(NameNormaliser.normaliseName(columnName), dbp);
             }
             rs.close();
@@ -211,7 +212,8 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             DbParameterAccessor dbp = new DbParameterAccessor(
                     pd.name, pd.direction,
                     getSqlType(pd.type), getJavaClass(pd.type),
-                    position++);
+                    position++,
+                    typeSpecifiers);
             allParams.put(NameNormaliser.normaliseName(pd.name), dbp);
         }
 
@@ -219,7 +221,7 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             ParamDescriptor rd = parser.parseReturnType(returns);
             allParams.put("", new DbParameterAccessor("",
                     Direction.RETURN_VALUE, getSqlType(rd.type),
-                    getJavaClass(rd.type), -1));
+                    getJavaClass(rd.type), -1, typeSpecifiers));
         }
 
         return allParams;

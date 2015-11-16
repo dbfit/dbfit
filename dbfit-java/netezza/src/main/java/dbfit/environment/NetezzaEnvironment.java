@@ -82,7 +82,8 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
                 String dataType = rs.getString(2);
                 DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                         Direction.INPUT, getSqlType(dataType),
-                        getJavaClass(dataType), position++);
+                        getJavaClass(dataType), position++,
+                        typeSpecifiers);
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }
             rs.close();
@@ -238,7 +239,8 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
 
                 DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                         direction, getSqlType(dataType), getJavaClass(dataType),
-                        position++);
+                        position++,
+                        typeSpecifiers);
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }
         }

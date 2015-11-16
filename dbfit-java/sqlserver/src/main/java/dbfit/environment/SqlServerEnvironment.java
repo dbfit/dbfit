@@ -91,7 +91,8 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
                 params.add(paramName,
                            getParameterDirection(rs.getInt(4), paramName),
                            getSqlType(rs.getString(2)),
-                           getJavaClass(rs.getString(2)));
+                           getJavaClass(rs.getString(2)),
+                           typeSpecifiers);
             }
         }
 

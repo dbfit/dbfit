@@ -94,7 +94,8 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
                 DbParameterAccessor dbp = new DbParameterAccessor(columnName,
                         INPUT,
                         typeMapper.getJDBCSQLTypeForDBType(dataType),
-                        getJavaClass(dataType), position++);
+                        getJavaClass(dataType), position++,
+                        typeSpecifiers);
                 allParams.put(NameNormaliser.normaliseName(columnName), dbp);
             }
             rs.close();

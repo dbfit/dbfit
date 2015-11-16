@@ -1,18 +1,13 @@
 package dbfit.fixture;
 
 import java.sql.*;
-import java.util.Map;
-
-import dbfit.util.TypeTransformer;
 
 public class StatementExecution implements AutoCloseable {
     protected PreparedStatement statement;
     protected int returnValueInd = -1;
-    Map<Class<?>, TypeTransformer> typeSpecifiers;
 
-    public StatementExecution(PreparedStatement statement, boolean clearParameters, Map<Class<?>, TypeTransformer> ts) {
+    public StatementExecution(PreparedStatement statement, boolean clearParameters) {
         this.statement = statement;
-        this.typeSpecifiers = ts;
         if (clearParameters) {
             try {
                 statement.clearParameters();
@@ -37,16 +32,9 @@ public class StatementExecution implements AutoCloseable {
         if (value == null) {
             statement.setNull(index, sqlType, userDefinedTypeName);
         } else {
-            Object newValue;
-            TypeTransformer ts = typeSpecifiers.get(value.getClass());
-            if (ts != null) {
-                newValue = ts.transform(value);
-            } else {
-                newValue = value;
-            }
             // Don't use the variant that takes sqlType.
             // Derby (at least) assumes no decimal places for Types.DECIMAL and truncates the source data.
-            statement.setObject(index, newValue);
+            statement.setObject(index, value);
         }
     }
 

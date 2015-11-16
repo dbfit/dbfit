@@ -162,7 +162,8 @@ public class InformixEnvironment extends AbstractDbEnvironment {
                 DbParameterAccessor dbp = new DbParameterAccessor(paramName,
                                                                   paramDirection, getSqlType(dataType),
                                                                   getJavaClass(dataType),
-                                                                  paramDirection == RETURN_VALUE ? -1 : position);
+                                                                  paramDirection == RETURN_VALUE ? -1 : position,
+                                                                  typeSpecifiers);
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }
             rs.close();
@@ -314,6 +315,6 @@ public class InformixEnvironment extends AbstractDbEnvironment {
 
     @Override
     public StatementExecution createFunctionStatementExecution(PreparedStatement statement, boolean clearParameters) {
-        return new InformixFunctionStatementExecution(statement, clearParameters, typeSpecifiers);
+        return new InformixFunctionStatementExecution(statement, clearParameters);
     }
 }
