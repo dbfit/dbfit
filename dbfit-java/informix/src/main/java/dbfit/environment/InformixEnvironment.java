@@ -159,11 +159,11 @@ public class InformixEnvironment extends AbstractDbEnvironment {
                 if (paramDirection != RETURN_VALUE && paramName.isEmpty()) {
                     throw new SQLException("Missing column or procedure parameter name");
                 }
-                DbParameterAccessor dbp = createDbParameterAccessor(paramName,
-                                                                    paramDirection,
-                                                                    getSqlType(dataType),
-                                                                    getJavaClass(dataType),
-                                                                    paramDirection == RETURN_VALUE ? -1 : position);
+                DbParameterAccessor dbp = createDbParameterAccessor(
+                        paramName,
+                        paramDirection, getSqlType(dataType),
+                        getJavaClass(dataType),
+                        paramDirection == RETURN_VALUE ? -1 : position);
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }
             rs.close();

@@ -282,11 +282,10 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
                 int intSqlType = getSqlType(dataType);
                 Class<?> clsJavaClass = getJavaClass(dataType);
-                DbParameterAccessor dbp = createDbParameterAccessor(paramName,
-                                                                    paramDirection,
-                                                                    intSqlType,
-                                                                    clsJavaClass,
-                                                                    paramDirection == Direction.RETURN_VALUE ? -1 : position++);
+                DbParameterAccessor dbp = createDbParameterAccessor(
+                        paramName,
+                        paramDirection, intSqlType, clsJavaClass,
+                        paramDirection == Direction.RETURN_VALUE ? -1 : position++);
                 // Note that the HashMap key case must match the normalised name access by DbTable.getDbParameterAccessor.
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }

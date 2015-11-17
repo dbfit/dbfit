@@ -70,11 +70,11 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
             while (rs.next()) {
                 String columnName = rs.getString(1);
                 String dataType = rs.getString(2);
-                DbParameterAccessor dbp = createDbParameterAccessor(columnName,
-                                                                    Direction.INPUT,
-                                                                    typeMapper.getJDBCSQLTypeForDBType(dataType),
-                                                                    getJavaClass(dataType),
-                                                                    position++);
+                DbParameterAccessor dbp = createDbParameterAccessor(
+                        columnName,
+                        Direction.INPUT,
+                        typeMapper.getJDBCSQLTypeForDBType(dataType),
+                        getJavaClass(dataType), position++);
                 allParams.put(NameNormaliser.normaliseName(columnName), dbp);
             }
             rs.close();

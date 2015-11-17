@@ -76,11 +76,10 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
                 if (columnName == null)
                     columnName = "";
                 String dataType = rs.getString(2);
-                DbParameterAccessor dbp = createDbParameterAccessor(columnName,
-                                                                    Direction.INPUT,
-                                                                    getSqlType(dataType),
-                                                                    getJavaClass(dataType),
-                                                                    position++);
+                DbParameterAccessor dbp = createDbParameterAccessor(
+                        columnName,
+                        Direction.INPUT, getSqlType(dataType),
+                        getJavaClass(dataType), position++);
                 columns.put(NameNormaliser.normaliseName(columnName), dbp);
             }
             rs.close();
@@ -210,11 +209,10 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
 
         int position = 0;
         for (ParamDescriptor pd: parser.parseParameters(paramList)) {
-            DbParameterAccessor dbp = createDbParameterAccessor(pd.name,
-                                                                pd.direction,
-                                                                getSqlType(pd.type),
-                                                                getJavaClass(pd.type),
-                                                                position++);
+            DbParameterAccessor dbp = createDbParameterAccessor(
+                    pd.name, pd.direction,
+                    getSqlType(pd.type), getJavaClass(pd.type),
+                    position++);
             allParams.put(NameNormaliser.normaliseName(pd.name), dbp);
         }
 

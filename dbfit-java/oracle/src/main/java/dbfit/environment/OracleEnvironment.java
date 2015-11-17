@@ -345,28 +345,22 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             paramDirection = getParameterDirection(direction);
         }
 
-        DbParameterAccessor dbp = createOracleDbParameterAcccessor(paramName,
-                                                                   paramDirection,
-                                                                   getSqlType(dataType),
-                                                                   getJavaClass(dataType),
-                                                                   paramPosition,
-                                                                   normaliseTypeName(dataType),
-                                                                   userTypeName);
+        DbParameterAccessor dbp = createOracleDbParameterAcccessor(
+                paramName,
+                paramDirection, getSqlType(dataType), getJavaClass(dataType),
+                paramPosition, normaliseTypeName(dataType), userTypeName);
 
         return dbp;
     }
 
-    private OracleDbParameterAccessor createOracleDbParameterAcccessor(String name, Direction direction,
-                                                                        int sqlType, Class<?> javaType, int position,
-                                                                        String originalTypeName, String userTypeName) {
-        return new OracleDbParameterAccessor(name,
-                                             direction,
-                                             sqlType,
-                                             javaType,
-                                             position,
-                                             dbfitToJDBCTransformers,
-                                             originalTypeName,
-                                             userTypeName);
+    private OracleDbParameterAccessor createOracleDbParameterAcccessor(
+            String name, Direction direction,
+            int sqlType, Class<?> javaType, int position,
+            String originalTypeName, String userTypeName) {
+        return new OracleDbParameterAccessor(
+                name, direction,
+                sqlType, javaType, position,
+                dbfitToJDBCTransformers, originalTypeName, userTypeName);
     }
 
     private Map<String, DbParameterAccessor> readIntoParams(

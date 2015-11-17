@@ -6,8 +6,8 @@ public class OracleDbParameterAccessor extends DbParameterAccessor {
     private String originalTypeName;
 
     public OracleDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position,
-                                     TypeTransformerFactory typeSpecifiers, String originalTypeName, String userTypeName) {
-        super(name, direction, sqlType, userTypeName, javaType, position, typeSpecifiers);
+                                     TypeTransformerFactory dbfitToJdbcXformFactory, String originalTypeName, String userTypeName) {
+        super(name, direction, sqlType, userTypeName, javaType, position, dbfitToJdbcXformFactory);
         setOriginalTypeName(originalTypeName);
     }
 
@@ -27,7 +27,7 @@ public class OracleDbParameterAccessor extends DbParameterAccessor {
     public OracleDbParameterAccessor clone() {
         OracleDbParameterAccessor copy = new OracleDbParameterAccessor(
                 getName(), getDirection(), getSqlType(), getJavaType(), getPosition(),
-                getTypeSpecifiers(), originalTypeName, getUserDefinedTypeName());
+                getDbfitToJdbcXformFactory(), originalTypeName, getUserDefinedTypeName());
         copy.cs = null;
 
         return copy;

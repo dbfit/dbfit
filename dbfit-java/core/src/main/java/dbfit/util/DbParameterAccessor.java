@@ -18,7 +18,7 @@ public class DbParameterAccessor {
     private Class<?> javaType;
     private int position; //zero-based index of parameter in procedure or column in table
     protected StatementExecution cs;
-    private TypeTransformerFactory typeSpecifiers;
+    private TypeTransformerFactory dbfitToJdbcXformFactory;
 
     public static Object normaliseValue(Object currVal) throws SQLException {
         if (currVal == null) {
@@ -34,7 +34,7 @@ public class DbParameterAccessor {
     @Override
     public DbParameterAccessor clone() {
         DbParameterAccessor copy = new DbParameterAccessor(name, direction,
-                sqlType, javaType, position, typeSpecifiers);
+                sqlType, javaType, position, dbfitToJdbcXformFactory);
 
         copy.cs = null;
 
@@ -46,14 +46,14 @@ public class DbParameterAccessor {
         this(name, direction, sqlType, null, javaType, position, typeSpecifers);
     }
 
-    public DbParameterAccessor(String name, Direction direction, int sqlType, String userDefinedTypeName, Class javaType, int position, TypeTransformerFactory typeSpecifs) {
+    public DbParameterAccessor(String name, Direction direction, int sqlType, String userDefinedTypeName, Class javaType, int position, TypeTransformerFactory dbfitToJdbcXformFactory) {
         this.name = name;
         this.direction = direction;
         this.sqlType = sqlType;
         this.userDefinedTypeName = userDefinedTypeName;
         this.javaType = javaType;
         this.position=position;
-        this.typeSpecifiers = typeSpecifs;
+        this.dbfitToJdbcXformFactory = dbfitToJdbcXformFactory;
     }
 
     protected int getSqlType() {
@@ -91,7 +91,7 @@ public class DbParameterAccessor {
         TypeTransformer typeSpecifier = null;
         Object newValue;
         if (value != null) {
-            typeSpecifier = typeSpecifiers.getTransformer(value.getClass());
+            typeSpecifier = dbfitToJdbcXformFactory.getTransformer(value.getClass());
         }
         if (typeSpecifier != null) {
             newValue = typeSpecifier.transform(value);
@@ -123,8 +123,8 @@ public class DbParameterAccessor {
         return javaType;
     }
 
-    protected TypeTransformerFactory getTypeSpecifiers() {
-        return typeSpecifiers;
+    protected TypeTransformerFactory getDbfitToJdbcXformFactory() {
+        return dbfitToJdbcXformFactory;
     }
 
     public boolean isReturnValueAccessor() {
