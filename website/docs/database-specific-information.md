@@ -9,6 +9,7 @@ show_comments: true
 *   [MS SQL Server](#microsoft-sql-server)
 *   [Teradata](#teradata)
 *   [Netezza](#netezza)
+*   [Informx](#informix)
 
 ---
 
