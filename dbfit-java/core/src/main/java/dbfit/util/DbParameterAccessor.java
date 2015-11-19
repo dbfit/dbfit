@@ -93,7 +93,7 @@ public class DbParameterAccessor {
         TypeTransformer dbfitToJDBCTransformer = null;
         Object newValue;
         if (value != null) {
-        	dbfitToJDBCTransformer = dbfitToJDBCTransformerFactory.getTransformer(value.getClass());
+            dbfitToJDBCTransformer = dbfitToJDBCTransformerFactory.getTransformer(value.getClass());
         }
         if (dbfitToJDBCTransformer != null) {
             newValue = dbfitToJDBCTransformer.transform(value);
