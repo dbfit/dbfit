@@ -8,7 +8,6 @@ import dbfit.util.DdlStatementExecution;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
 import dbfit.util.Options;
-import dbfit.util.TypeNormaliserFactory;
 import fit.TypeAdapter;
 
 import java.math.BigDecimal;
@@ -24,7 +23,7 @@ public class InformixEnvironment extends AbstractDbEnvironment {
 
     public InformixEnvironment(String driverClassName) {
         super(driverClassName);
-        dbfitToJDBCTransformers.setTransformer(dbfit.util.NormalisedBigDecimal.class, new InformixBigDecimalSpecifier());
+        dbfitToJDBCTransformerFactory.setTransformer(dbfit.util.NormalisedBigDecimal.class, new InformixBigDecimalSpecifier());
     }
 
     protected String parseCommandText(String commandText) {

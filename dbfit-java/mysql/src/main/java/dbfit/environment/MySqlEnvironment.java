@@ -220,7 +220,7 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             ParamDescriptor rd = parser.parseReturnType(returns);
             allParams.put("", new DbParameterAccessor("",
                     Direction.RETURN_VALUE, getSqlType(rd.type),
-                    getJavaClass(rd.type), -1, dbfitToJDBCTransformers));
+                    getJavaClass(rd.type), -1, dbfitToJDBCTransformerFactory));
         }
 
         return allParams;

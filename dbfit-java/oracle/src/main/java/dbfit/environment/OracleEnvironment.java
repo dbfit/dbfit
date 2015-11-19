@@ -360,7 +360,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         return new OracleDbParameterAccessor(
                 name, direction,
                 sqlType, javaType, position,
-                dbfitToJDBCTransformers, originalTypeName, userTypeName);
+                dbfitToJDBCTransformerFactory, originalTypeName, userTypeName);
     }
 
     private Map<String, DbParameterAccessor> readIntoParams(
