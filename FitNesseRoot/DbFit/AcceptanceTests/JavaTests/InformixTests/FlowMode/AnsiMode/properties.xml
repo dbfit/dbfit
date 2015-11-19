@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<properties>
+<Edit/>
+<Files/>
+<Properties/>
+<RecentChanges/>
+<Refactor/>
+<Search/>
+<Suite/>
+<SymbolicLinks>
+<CommitAndRollback>.DbFit.AcceptanceTests.LibraryTests.CommitAndRollback</CommitAndRollback>
+<CommonTests>.DbFit.AcceptanceTests.JavaTests.InformixTests.LibraryTests.CommonTests</CommonTests>
+<CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
+</SymbolicLinks>
+<Versions/>
+<WhereUsed/>
+</properties>

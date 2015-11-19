@@ -11,6 +11,6 @@ public class PreparedStatements {
 
     public static String buildFunctionCall(String procName, int numberOfInputParameters) {
         String inputs = join(repeat("?", numberOfInputParameters), ",");
-        return "{ ? =call " + procName + "(" + inputs + ")}";
+        return "{ ? = call " + procName + "(" + inputs + ")}";
     }
 }

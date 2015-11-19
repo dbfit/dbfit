@@ -78,20 +78,27 @@ public class DbParameterAccessor {
         this.cs=cs;
         this.index=ind;    
         if (direction != INPUT){
-            cs.registerOutParameter(ind, getSqlType());
+            cs.registerOutParameter(ind, getSqlType(), direction == RETURN_VALUE);
         }
     }
 
     public void set(Object value) throws Exception {
         if (direction == OUTPUT|| direction == RETURN_VALUE)
             throw new UnsupportedOperationException("Trying to set value of output parameter "+name);
+
+        if (value != null) {
+        	TypeNormaliser tn = TypeNormaliserFactory.getNormaliser(value.getClass());
+        	if (tn != null) {
+        		value = tn.normalise(value);
+        	}
+        }
         cs.setObject(index, value, sqlType, userDefinedTypeName);
     }    
 
     public Object get() throws IllegalAccessException, InvocationTargetException {
         try{
             if (direction.equals(INPUT))
-                throw new UnsupportedOperationException("Trying to get value of input parameter "+name);            
+                throw new UnsupportedOperationException("Trying to get value of input parameter "+name);
             return normaliseValue(cs.getObject(index));
         }
         catch (SQLException sqle){

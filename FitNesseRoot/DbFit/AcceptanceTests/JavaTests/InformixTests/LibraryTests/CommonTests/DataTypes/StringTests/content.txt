@@ -1,0 +1,17 @@
+!3 Strings
+
+|Execute Ddl|CREATE TABLE datatypetest (s1 VARCHAR(20), s2 CHAR(20), s3 LVARCHAR(20), s4 TEXT, s5 NVARCHAR(20), s6 NCHAR(20))|
+
+|Insert|datatypetest|
+|s1|s2|s3|s4|s5|s6|
+|VARCHAR|CHAR|LVARCHAR|TEXT|NVARCHAR|NCHAR|
+|null|null|null|null|null|null|
+
+|Set Option|Fixed Length String Parsing|True|
+
+|Query|!-Select s1, s2, s3, s4, s5, s6 from datatypetest-!|
+|s1|s2?|s3?|s4?|s5?|s6?|
+|VARCHAR|'CHAR                '|LVARCHAR|TEXT|NVARCHAR|'NCHAR               '|
+|null|null|null|null|null|null|
+
+|Execute Ddl|DROP TABLE datatypetest|
