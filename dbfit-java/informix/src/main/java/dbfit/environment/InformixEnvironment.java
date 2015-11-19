@@ -23,7 +23,7 @@ public class InformixEnvironment extends AbstractDbEnvironment {
 
     public InformixEnvironment(String driverClassName) {
         super(driverClassName);
-        dbfitToJDBCTransformerFactory.setTransformer(dbfit.util.NormalisedBigDecimal.class, new InformixBigDecimalSpecifier());
+        dbfitToJDBCTransformerFactory.setTransformer(dbfit.util.NormalisedBigDecimal.class, new InformixBigDecimalTransformer());
     }
 
     protected String parseCommandText(String commandText) {
