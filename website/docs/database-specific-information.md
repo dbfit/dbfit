@@ -204,3 +204,26 @@ There are two ways around this:
 * Using Netezza Emulator default IP address and port, user name, password and test database
 
 `!|Connect|192.168.85.128:5480|admin|password|NETEZZATEST|`
+
+----
+
+## Informix
+
+1. [Download the Informix driver from the IBM site] (http://www-03.ibm.com/software/products/en/infjdbc).
+2. Deploy `ifxjdbc.<major>-<minor>-<tag>.jar` (e.g. `ifxjdbc-4.10.JC4W1.jar`) in DbFit's `lib` folder - the same folder as dbfit-XXX.jar.
+
+### Connection string to an Informix database
+
+* Check DbFit reference documentation: [ConnectUsingFile](/dbfit/docs/reference.html#connect-using-file) and [Connect](/dbfit/docs/reference.html#connect).
+* Refer to the [Informix JDBC Driver Reference](http://www-01.ibm.com/support/knowledgecenter/SSGU8G_12.1.0/com.ibm.jdbc_pg.doc/jdbc.htm) for details about JDBC url syntax.
+
+#### Examples
+
+* Using the Informix server host name, user name, password and default database
+
+`!|Connect|<myHost>:<myTcpPortNumber>|<myUserName>|<myPassword>|<myDbName>|`
+
+* Using a raw JDBC URL (note that a default database, a logon authentication source and a transaction mode can all be specified with this method)
+
+`!|Connect|jdbc:informix-sqli://<myHost>:<myTcpPortNumber>/<myDbName>:INFORMIXSERVER=<myServer>;user=<myUserName>;password=<myPassword>|`
+
