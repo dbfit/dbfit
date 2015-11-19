@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Properties;
-import java.util.Map;
-import java.util.HashMap;
 
 public abstract class AbstractDbEnvironment implements DBEnvironment {
 
