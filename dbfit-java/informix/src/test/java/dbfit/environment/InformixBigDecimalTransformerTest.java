@@ -39,7 +39,7 @@ public class InformixBigDecimalTransformerTest {
         if (caught) {
             assertTrue(expectedMsg.equals(actualMsg));
         } else {
-            fail("InformixBigDecimalTransformer did not throw SQLException transforming NormalisedBigDecimal input");
+            fail("InformixBigDecimalTransformer did not throw SQLException transforming java.math.BigDecimal input");
         }
     }
 }
