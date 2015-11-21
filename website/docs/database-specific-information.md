@@ -220,11 +220,11 @@ There are two ways around this:
 
 #### Examples
 
-* Using the Informix server host name, user name, password and default database
+* Using the Informix server host name, user name, password and database name
 
 `!|Connect|<myHost>:<myTcpPortNumber>|<myUserName>|<myPassword>|<myDbName>|`
 
-* Using a raw JDBC URL (note that a default database, a logon authentication source and a transaction mode can all be specified with this method)
+* Using a raw JDBC URL
 
 `!|Connect|jdbc:informix-sqli://<myHost>:<myTcpPortNumber>/<myDbName>:INFORMIXSERVER=<myServer>;user=<myUserName>;password=<myPassword>|`
 
