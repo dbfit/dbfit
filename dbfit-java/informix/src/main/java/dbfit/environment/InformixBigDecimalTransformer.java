@@ -11,7 +11,7 @@ public class InformixBigDecimalTransformer implements TypeTransformer {
         if (o == null) {
             return null;
         }
-        if (!(o instanceof dbfit.util.NormalisedBigDecimal)) {
+        if (!(o instanceof java.math.BigDecimal)) {
             throw new SQLException(this.getClass().getSimpleName() +
                     " cannot transform objects of type " + o.getClass().getName());
         }
