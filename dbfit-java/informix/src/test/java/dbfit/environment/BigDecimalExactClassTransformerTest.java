@@ -11,9 +11,9 @@ import java.sql.SQLException;
 
 import dbfit.util.NormalisedBigDecimal;
 
-public class InformixBigDecimalTransformerTest {
+public class BigDecimalExactClassTransformerTest {
 
-    private final InformixBigDecimalTransformer bdt = new InformixBigDecimalTransformer();
+    private final BigDecimalExactClassTransformer bdt = new BigDecimalExactClassTransformer();
     private final BigDecimal inBigDec = new BigDecimal("123.45");
 
     @Rule
@@ -37,7 +37,7 @@ public class InformixBigDecimalTransformerTest {
     public void rejectsNonBigDecimalInputTest() throws SQLException {
         Double notABigBecimal = 1.0;
         exception.expect(UnsupportedOperationException.class);
-        exception.expectMessage("InformixBigDecimalTransformer cannot transform objects of type java.lang.Double");
+        exception.expectMessage("BigDecimalExactClassTransformer cannot transform objects of type java.lang.Double");
         bdt.transform(notABigBecimal);
     }
 }

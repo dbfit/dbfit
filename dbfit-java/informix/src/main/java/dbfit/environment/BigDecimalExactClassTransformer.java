@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 import dbfit.util.TypeTransformer;
 
-public class InformixBigDecimalTransformer implements TypeTransformer {
+public class BigDecimalExactClassTransformer implements TypeTransformer {
 
     @Override
     public Object transform(Object o) throws SQLException {
