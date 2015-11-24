@@ -16,6 +16,9 @@ public class InformixBigDecimalTransformerTest {
     private final InformixBigDecimalTransformer bdt = new InformixBigDecimalTransformer();
     private final BigDecimal inBigDec = new BigDecimal("123.45");
 
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
     @Test
     public void transformsBigDecimaltoBigDecimalTest() throws SQLException {
         BigDecimal bd = new BigDecimal(inBigDec.toString());
@@ -30,17 +33,11 @@ public class InformixBigDecimalTransformerTest {
         assertEquals(outBigDec, inBigDec);
     }
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Test
-    public void rejectsNonBigDecimalInputTest() {
+    public void rejectsNonBigDecimalInputTest() throws SQLException {
         Double notABigBecimal = 1.0;
         exception.expect(UnsupportedOperationException.class);
         exception.expectMessage("InformixBigDecimalTransformer cannot transform objects of type java.lang.Double");
-        try {
-            bdt.transform(notABigBecimal);
-        } catch (java.sql.SQLException e) {
-        }
+        bdt.transform(notABigBecimal);
     }
 }
