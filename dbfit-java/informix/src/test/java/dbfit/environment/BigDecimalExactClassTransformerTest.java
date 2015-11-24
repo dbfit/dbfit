@@ -44,7 +44,7 @@ public class BigDecimalExactClassTransformerTest {
     @Test
     public void transformsToExactlyBigDecimalTest() throws SQLException {
         NormalisedBigDecimal nbd = new NormalisedBigDecimal(inBigDec);
-        BigDecimal outBigDec = (BigDecimal) bdt.transform(nbd);
+        Object outBigDec = bdt.transform(nbd);
         assertEquals(outBigDec.getClass(), BigDecimal.class);
     }
 }
