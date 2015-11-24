@@ -40,4 +40,11 @@ public class BigDecimalExactClassTransformerTest {
         exception.expectMessage("BigDecimalExactClassTransformer cannot transform objects of type java.lang.Double");
         bdt.transform(notABigBecimal);
     }
+
+    @Test
+    public void transformsToExactlyBigDecimalTest() throws SQLException {
+        NormalisedBigDecimal nbd = new NormalisedBigDecimal(inBigDec);
+        BigDecimal outBigDec = (BigDecimal) bdt.transform(nbd);
+        assertEquals(outBigDec.getClass(), BigDecimal.class);
+    }
 }
