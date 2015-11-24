@@ -2,6 +2,8 @@ package dbfit.environment;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
 import java.math.BigDecimal;
 import java.lang.Double;
@@ -28,15 +30,17 @@ public class InformixBigDecimalTransformerTest {
         assertEquals(outBigDec, inBigDec);
     }
 
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
     @Test
-    public void rejectsNonNormalisedBigDecimalInputTest() {
+    public void rejectsNonBigDecimalInputTest() {
         Double notABigBecimal = 1.0;
-        String expectedMsg = "InformixBigDecimalTransformer cannot transform objects of type java.lang.Double";
+        exception.expect(UnsupportedOperationException.class);
+        exception.expectMessage("InformixBigDecimalTransformer cannot transform objects of type java.lang.Double");
         try {
             bdt.transform(notABigBecimal);
-            fail("InformixBigDecimalTransformer did not throw SQLException transforming java.lang.Double input");
-        } catch (SQLException e) {
-            assertTrue(e.getMessage().equals(expectedMsg));
+        } catch (java.sql.SQLException e) {
         }
     }
 }

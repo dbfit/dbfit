@@ -12,7 +12,7 @@ public class InformixBigDecimalTransformer implements TypeTransformer {
             return null;
         }
         if (!(o instanceof java.math.BigDecimal)) {
-            throw new SQLException(this.getClass().getSimpleName() +
+            throw new UnsupportedOperationException(this.getClass().getSimpleName() +
                     " cannot transform objects of type " + o.getClass().getName());
         }
         java.math.BigDecimal bd = new java.math.BigDecimal(((java.math.BigDecimal) o).toString());
