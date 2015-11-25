@@ -1,5 +1,7 @@
 package dbfit.util;
 
+import java.sql.SQLException;
+
 public class TypeNormaliserFactory {
     private static TypeTransformerFactory normaliserFactory = new TypeTransformerFactory();
 
@@ -7,7 +9,7 @@ public class TypeNormaliserFactory {
         normaliserFactory.setTransformer(targetClass, normaliser);
     }
 
-    public static TypeTransformer getNormaliser(Class<?> targetClass) {
-        return normaliserFactory.getTransformer(targetClass);
+    public static Object transform(Object value) throws SQLException {
+        return normaliserFactory.transform(value);
     }
 }
