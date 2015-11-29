@@ -19,11 +19,7 @@ public class DbParameterAccessor {
     protected StatementExecution cs;
 
     public static Object normaliseValue(Object currVal) throws SQLException {
-        Object newValue = null;
-        if (currVal != null) {
-            newValue = TypeNormaliserFactory.transform(currVal);
-        }
-        return newValue;
+        return TypeNormaliserFactory.transform(currVal);
     }
 
     @Override
