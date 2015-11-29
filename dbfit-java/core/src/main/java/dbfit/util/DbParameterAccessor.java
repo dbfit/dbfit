@@ -87,21 +87,25 @@ public class DbParameterAccessor {
         }
     }
 
-    public void set(Object value) throws Exception {
-        if (direction == OUTPUT|| direction == RETURN_VALUE)
-            throw new UnsupportedOperationException("Trying to set value of output parameter "+name);
+    private Object transformValue(Object value) throws SQLException {
         TypeTransformer dbfitToJDBCTransformer = null;
-        Object newValue;
+        Object transformedValue;
         if (value != null) {
             dbfitToJDBCTransformer = dbfitToJDBCTransformerFactory.getTransformer(value.getClass());
         }
         if (dbfitToJDBCTransformer != null) {
-            newValue = dbfitToJDBCTransformer.transform(value);
+            transformedValue = dbfitToJDBCTransformer.transform(value);
         } else {
-            newValue = value;
+            transformedValue = value;
         }
-        cs.setObject(index, newValue, sqlType, userDefinedTypeName);
-    }    
+        return transformedValue;
+    }
+
+    public void set(Object value) throws Exception {
+        if (direction == OUTPUT|| direction == RETURN_VALUE)
+            throw new UnsupportedOperationException("Trying to set value of output parameter "+name);
+        cs.setObject(index, transformValue(value), sqlType, userDefinedTypeName);
+    }
 
     public Object get() throws IllegalAccessException, InvocationTargetException {
         try{
