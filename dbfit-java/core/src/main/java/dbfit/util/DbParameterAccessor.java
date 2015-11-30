@@ -18,7 +18,7 @@ public class DbParameterAccessor {
     private Class<?> javaType;
     private int position; //zero-based index of parameter in procedure or column in table
     protected StatementExecution cs;
-    private TypeTransformerFactory toJdbcCompatibleValue;
+    private TypeTransformerFactory dbfitToJdbcTransformerFactory;
 
     public static Object normaliseValue(Object currVal) throws SQLException {
         if (currVal == null) {
@@ -34,7 +34,7 @@ public class DbParameterAccessor {
     @Override
     public DbParameterAccessor clone() {
         DbParameterAccessor copy = new DbParameterAccessor(name, direction,
-                sqlType, javaType, position, toJdbcCompatibleValue);
+                sqlType, javaType, position, dbfitToJdbcTransformerFactory);
 
         copy.cs = null;
 
@@ -43,19 +43,19 @@ public class DbParameterAccessor {
 
     @SuppressWarnings("unchecked")
     public DbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position,
-                               TypeTransformerFactory toJdbcCompatibleValue) {
-        this(name, direction, sqlType, null, javaType, position, toJdbcCompatibleValue);
+                               TypeTransformerFactory dbfitToJdbcTransformerFactory) {
+        this(name, direction, sqlType, null, javaType, position, dbfitToJdbcTransformerFactory);
     }
 
     public DbParameterAccessor(String name, Direction direction, int sqlType, String userDefinedTypeName, Class javaType, int position,
-                               TypeTransformerFactory toJdbcCompatibleValue) {
+                               TypeTransformerFactory dbfitToJdbcTransformerFactory) {
         this.name = name;
         this.direction = direction;
         this.sqlType = sqlType;
         this.userDefinedTypeName = userDefinedTypeName;
         this.javaType = javaType;
         this.position=position;
-        this.toJdbcCompatibleValue = toJdbcCompatibleValue;
+        this.dbfitToJdbcTransformerFactory = dbfitToJdbcTransformerFactory;
     }
 
     protected int getSqlType() {
@@ -91,7 +91,7 @@ public class DbParameterAccessor {
         TypeTransformer toJdbcCompatibleValueTransformer = null;
         Object transformedValue;
         if (value != null) {
-            toJdbcCompatibleValueTransformer = toJdbcCompatibleValue.getTransformer(value.getClass());
+            toJdbcCompatibleValueTransformer = dbfitToJdbcTransformerFactory.getTransformer(value.getClass());
         }
         if (toJdbcCompatibleValueTransformer != null) {
             transformedValue = toJdbcCompatibleValueTransformer.transform(value);
@@ -130,7 +130,7 @@ public class DbParameterAccessor {
     }
 
     protected TypeTransformerFactory getToJdbcCompatibleValueTransformerFactory() {
-        return toJdbcCompatibleValue;
+        return dbfitToJdbcTransformerFactory;
     }
 
     public boolean isReturnValueAccessor() {
