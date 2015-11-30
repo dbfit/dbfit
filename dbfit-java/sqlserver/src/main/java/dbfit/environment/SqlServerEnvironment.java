@@ -92,7 +92,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
                            getParameterDirection(rs.getInt(4), paramName),
                            getSqlType(rs.getString(2)),
                            getJavaClass(rs.getString(2)),
-                           dbfitToJDBCTransformerFactory);
+                           toJdbcCompatibleValue);
             }
         }
 

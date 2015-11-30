@@ -15,9 +15,9 @@ public class DbParameterAccessorsMapBuilder {
         return parameterAccessors;
     }
 
-    public void add(String name, Direction direction, int sqlType, Class javaType, TypeTransformerFactory dbfitToJDBCTransformerFactory) {
+    public void add(String name, Direction direction, int sqlType, Class javaType, TypeTransformerFactory toJdbcCompatibleValueTransformerFactory) {
         int position = (direction == RETURN_VALUE) ? -1 : nextPosition++;
         parameterAccessors.put(normaliseName(name), new DbParameterAccessor(
-                    name, direction,sqlType, javaType, position, dbfitToJDBCTransformerFactory));
+                    name, direction,sqlType, javaType, position, toJdbcCompatibleValueTransformerFactory));
     }
 }

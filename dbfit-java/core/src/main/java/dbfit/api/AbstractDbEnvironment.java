@@ -136,10 +136,10 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return new StatementExecution(statement, clearParameters);
     }
 
-    protected TypeTransformerFactory dbfitToJDBCTransformerFactory = new TypeTransformerFactory();
+    protected TypeTransformerFactory toJdbcCompatibleValue = new TypeTransformerFactory();
 
     protected DbParameterAccessor createDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {
-        return new DbParameterAccessor(name, direction, sqlType, javaType, position, dbfitToJDBCTransformerFactory);
+        return new DbParameterAccessor(name, direction, sqlType, javaType, position, toJdbcCompatibleValue);
         
     }
 

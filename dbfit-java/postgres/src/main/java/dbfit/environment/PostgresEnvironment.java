@@ -248,7 +248,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
                 allParams.put("", new DbParameterAccessor("",
                         Direction.RETURN_VALUE, getSqlType(dataType),
                         getJavaClass(dataType), -1,
-                        dbfitToJDBCTransformerFactory));
+                        toJdbcCompatibleValue));
             }
         }
 
