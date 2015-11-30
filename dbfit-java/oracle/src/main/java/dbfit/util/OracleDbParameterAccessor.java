@@ -27,7 +27,7 @@ public class OracleDbParameterAccessor extends DbParameterAccessor {
     public OracleDbParameterAccessor clone() {
         OracleDbParameterAccessor copy = new OracleDbParameterAccessor(
                 getName(), getDirection(), getSqlType(), getJavaType(), getPosition(),
-                getToJdbcCompatibleValueTransformerFactory(), originalTypeName, getUserDefinedTypeName());
+                getDbfitToJdbcTransformerFactory(), originalTypeName, getUserDefinedTypeName());
         copy.cs = null;
 
         return copy;

@@ -129,7 +129,7 @@ public class DbParameterAccessor {
         return javaType;
     }
 
-    protected TypeTransformerFactory getToJdbcCompatibleValueTransformerFactory() {
+    protected TypeTransformerFactory getDbfitToJdbcTransformerFactory() {
         return dbfitToJdbcTransformerFactory;
     }
 
