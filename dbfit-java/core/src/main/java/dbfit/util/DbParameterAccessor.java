@@ -88,13 +88,13 @@ public class DbParameterAccessor {
     }
 
     private Object toJdbcCompatibleValue(Object value) throws SQLException {
-        TypeTransformer toJdbcCompatibleValueTransformer = null;
+        TypeTransformer dbfitToJdbcTransformer = null;
         Object transformedValue;
         if (value != null) {
-            toJdbcCompatibleValueTransformer = dbfitToJdbcTransformerFactory.getTransformer(value.getClass());
+            dbfitToJdbcTransformer = dbfitToJdbcTransformerFactory.getTransformer(value.getClass());
         }
-        if (toJdbcCompatibleValueTransformer != null) {
-            transformedValue = toJdbcCompatibleValueTransformer.transform(value);
+        if (dbfitToJdbcTransformer != null) {
+            transformedValue = dbfitToJdbcTransformer.transform(value);
         } else {
             transformedValue = value;
         }

@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class DbParameterAccessorsMapBuilderTest {
     private int sqlType = java.sql.Types.VARCHAR;
     private Class<?> javaType = String.class;
-    private TypeTransformerFactory toJdbcCompatibleValue = new TypeTransformerFactory();
+    private TypeTransformerFactory dbfitToJdbcTransformerFactory = new TypeTransformerFactory();
     private DbParameterAccessorsMapBuilder params =
         new DbParameterAccessorsMapBuilder();
 
@@ -68,7 +68,7 @@ public class DbParameterAccessorsMapBuilderTest {
     }
 
     private void createParameterAccessor(String name, Direction direction) {
-        params.add(name, direction, sqlType, javaType, toJdbcCompatibleValue);
+        params.add(name, direction, sqlType, javaType, dbfitToJdbcTransformerFactory);
     }
 
     private int getPositionOf(String name) {

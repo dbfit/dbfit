@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 
 public class SqlServerDbEnvironmentUnitTests {
 
-    private TypeTransformerFactory toJdbcCompatibleValue = new TypeTransformerFactory();
+    private TypeTransformerFactory dbfitToJdbcTransformerFactory = new TypeTransformerFactory();
 
     @Test
     public void buildInsertCommand_AllInputParameters() throws Exception {
@@ -23,9 +23,9 @@ public class SqlServerDbEnvironmentUnitTests {
         String expectedResult = "insert into DummyTable([Column1],[Column Two],[ColumnThree]) values (?,?,?)";
         DbParameterAccessor[] parameters = new DbParameterAccessor[3];
 
-        parameters[0] = new DbParameterAccessor("Column1", Direction.INPUT, 0, null, 0, toJdbcCompatibleValue);
-        parameters[1] = new DbParameterAccessor("Column Two", Direction.INPUT, 0, null, 1, toJdbcCompatibleValue);
-        parameters[2] = new DbParameterAccessor("ColumnThree", Direction.INPUT, 0, null, 2, toJdbcCompatibleValue);
+        parameters[0] = new DbParameterAccessor("Column1", Direction.INPUT, 0, null, 0, dbfitToJdbcTransformerFactory);
+        parameters[1] = new DbParameterAccessor("Column Two", Direction.INPUT, 0, null, 1, dbfitToJdbcTransformerFactory);
+        parameters[2] = new DbParameterAccessor("ColumnThree", Direction.INPUT, 0, null, 2, dbfitToJdbcTransformerFactory);
 
         String actualResult = env.buildInsertCommand("DummyTable", parameters);
 
@@ -39,8 +39,8 @@ public class SqlServerDbEnvironmentUnitTests {
         String expectedResult = "insert into DummyTable([Column1]) values (?)";
         DbParameterAccessor[] parameters = new DbParameterAccessor[2];
 
-        parameters[0] = new DbParameterAccessor("Column1", Direction.INPUT, 0, null, 0, toJdbcCompatibleValue);
-        parameters[1] = new DbParameterAccessor("Column2", Direction.OUTPUT, 0, null, 0, toJdbcCompatibleValue);
+        parameters[0] = new DbParameterAccessor("Column1", Direction.INPUT, 0, null, 0, dbfitToJdbcTransformerFactory);
+        parameters[1] = new DbParameterAccessor("Column2", Direction.OUTPUT, 0, null, 0, dbfitToJdbcTransformerFactory);
 
         String actualResult = env.buildInsertCommand("DummyTable", parameters);
 

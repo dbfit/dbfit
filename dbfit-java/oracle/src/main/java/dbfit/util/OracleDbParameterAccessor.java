@@ -6,8 +6,8 @@ public class OracleDbParameterAccessor extends DbParameterAccessor {
     private String originalTypeName;
 
     public OracleDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position,
-                                     TypeTransformerFactory toJdbcCompatibleValue, String originalTypeName, String userTypeName) {
-        super(name, direction, sqlType, userTypeName, javaType, position, toJdbcCompatibleValue);
+                                     TypeTransformerFactory dbfitToJdbcTransformerFactory, String originalTypeName, String userTypeName) {
+        super(name, direction, sqlType, userTypeName, javaType, position, dbfitToJdbcTransformerFactory);
         setOriginalTypeName(originalTypeName);
     }
 
