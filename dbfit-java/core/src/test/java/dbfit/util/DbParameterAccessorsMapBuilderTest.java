@@ -1,6 +1,5 @@
 package dbfit.util;
 
-import dbfit.util.TypeTransformer;
 import static dbfit.util.Direction.*;
 
 import org.junit.Test;
