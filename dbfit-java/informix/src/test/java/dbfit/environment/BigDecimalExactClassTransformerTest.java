@@ -6,7 +6,6 @@ import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
 import java.math.BigDecimal;
-import java.lang.Double;
 import java.sql.SQLException;
 
 import dbfit.util.NormalisedBigDecimal;
