@@ -2,7 +2,6 @@ package dbfit.util;
 
 import static dbfit.util.Direction.*;
 import static dbfit.util.NameNormaliser.*;
-import dbfit.util.TypeTransformer;
 
 import java.util.Map;
 import java.util.HashMap;
