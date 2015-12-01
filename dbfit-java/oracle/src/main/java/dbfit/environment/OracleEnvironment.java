@@ -345,7 +345,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             paramDirection = getParameterDirection(direction);
         }
 
-        DbParameterAccessor dbp = createOracleDbParameterAcccessor(
+        DbParameterAccessor dbp = createDbParameterAcccessor(
                 paramName,
                 paramDirection, getSqlType(dataType), getJavaClass(dataType),
                 paramPosition, normaliseTypeName(dataType), userTypeName);
@@ -353,7 +353,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         return dbp;
     }
 
-    private OracleDbParameterAccessor createOracleDbParameterAcccessor(
+    private DbParameterAccessor createDbParameterAcccessor(
             String name, Direction direction,
             int sqlType, Class<?> javaType, int position,
             String originalTypeName, String userTypeName) {
