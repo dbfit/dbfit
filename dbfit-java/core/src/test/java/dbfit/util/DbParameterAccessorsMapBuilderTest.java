@@ -7,9 +7,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-import java.util.Map;
-import java.util.HashMap;
-
 public class DbParameterAccessorsMapBuilderTest {
     private int sqlType = java.sql.Types.VARCHAR;
     private Class<?> javaType = String.class;
