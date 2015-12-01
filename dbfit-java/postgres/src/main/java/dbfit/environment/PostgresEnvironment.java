@@ -245,10 +245,10 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
             dataType = s.nextToken();
 
             if (!dataType.equals("void")) {
-                allParams.put("", new DbParameterAccessor("",
+                allParams.put("", createDbParameterAccessor(
+                        "",
                         Direction.RETURN_VALUE, getSqlType(dataType),
-                        getJavaClass(dataType), -1,
-                        dbfitToJdbcTransformerFactory));
+                        getJavaClass(dataType), -1));
             }
         }
 
