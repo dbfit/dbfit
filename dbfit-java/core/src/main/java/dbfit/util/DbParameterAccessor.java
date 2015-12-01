@@ -4,7 +4,6 @@ import dbfit.fixture.StatementExecution;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
-import java.util.Map;
 
 import static dbfit.util.Direction.*;
 
