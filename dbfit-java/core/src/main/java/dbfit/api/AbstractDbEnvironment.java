@@ -17,6 +17,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
 
     protected Connection currentConnection;
     protected String driverClassName;
+    protected TypeTransformerFactory dbfitToJdbcTransformerFactory = new TypeTransformerFactory();
 
     protected String getDriverClassName() {
         return driverClassName;
@@ -135,8 +136,6 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     public StatementExecution createFunctionStatementExecution(PreparedStatement statement, boolean clearParameters) {
         return new StatementExecution(statement, clearParameters);
     }
-
-    protected TypeTransformerFactory dbfitToJdbcTransformerFactory = new TypeTransformerFactory();
 
     protected DbParameterAccessor createDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {
         return new DbParameterAccessor(name, direction, sqlType, javaType, position, dbfitToJdbcTransformerFactory);
