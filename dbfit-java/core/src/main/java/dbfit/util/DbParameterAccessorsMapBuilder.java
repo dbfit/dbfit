@@ -9,12 +9,17 @@ import java.util.HashMap;
 public class DbParameterAccessorsMapBuilder {
     private Map<String, DbParameterAccessor> parameterAccessors = new HashMap<>();
     private int nextPosition = 0;
+    private TypeTransformerFactory dbfitToJdbcTransformerFactory;
+
+    public DbParameterAccessorsMapBuilder(TypeTransformerFactory dbfitToJdbcTransformerFactory) {
+        this.dbfitToJdbcTransformerFactory = dbfitToJdbcTransformerFactory;
+    }
 
     public Map<String, DbParameterAccessor> toMap() {
         return parameterAccessors;
     }
 
-    public void add(String name, Direction direction, int sqlType, Class javaType, TypeTransformerFactory dbfitToJdbcTransformerFactory) {
+    public void add(String name, Direction direction, int sqlType, Class javaType) {
         int position = (direction == RETURN_VALUE) ? -1 : nextPosition++;
         parameterAccessors.put(normaliseName(name), new DbParameterAccessor(
                     name, direction,sqlType, javaType, position, dbfitToJdbcTransformerFactory));

@@ -77,7 +77,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
 
     private Map<String, DbParameterAccessor> readIntoParams(String objname,
             String query) throws SQLException {
-        DbParameterAccessorsMapBuilder params = new DbParameterAccessorsMapBuilder();
+        DbParameterAccessorsMapBuilder params = new DbParameterAccessorsMapBuilder(dbfitToJdbcTransformerFactory);
 
         objname = objname.replaceAll("[^a-zA-Z0-9_.#$]", "");
         String bracketedName = enquoteAndJoin(objname.split("\\."), ".", "[", "]");
@@ -91,8 +91,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
                 params.add(paramName,
                            getParameterDirection(rs.getInt(4), paramName),
                            getSqlType(rs.getString(2)),
-                           getJavaClass(rs.getString(2)),
-                           dbfitToJdbcTransformerFactory);
+                           getJavaClass(rs.getString(2)));
             }
         }
 

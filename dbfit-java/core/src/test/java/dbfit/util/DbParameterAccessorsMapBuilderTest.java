@@ -11,7 +11,7 @@ public class DbParameterAccessorsMapBuilderTest {
     private Class<?> javaType = String.class;
     private TypeTransformerFactory dbfitToJdbcTransformerFactory = new TypeTransformerFactory();
     private DbParameterAccessorsMapBuilder params =
-        new DbParameterAccessorsMapBuilder();
+        new DbParameterAccessorsMapBuilder(dbfitToJdbcTransformerFactory);
 
     @Test
     public void normalParametersAreCreatedOnProperPositions() {
@@ -64,7 +64,7 @@ public class DbParameterAccessorsMapBuilderTest {
     }
 
     private void createParameterAccessor(String name, Direction direction) {
-        params.add(name, direction, sqlType, javaType, dbfitToJdbcTransformerFactory);
+        params.add(name, direction, sqlType, javaType);
     }
 
     private int getPositionOf(String name) {
