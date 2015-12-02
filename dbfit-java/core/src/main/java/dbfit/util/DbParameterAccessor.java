@@ -17,6 +17,7 @@ public class DbParameterAccessor {
     private Class<?> javaType;
     private int position; //zero-based index of parameter in procedure or column in table
     protected StatementExecution cs;
+    private TypeTransformerFactory dbfitToJdbcTransformerFactory;
 
     public static Object normaliseValue(Object currVal) throws SQLException {
         if (currVal == null) {
@@ -32,7 +33,7 @@ public class DbParameterAccessor {
     @Override
     public DbParameterAccessor clone() {
         DbParameterAccessor copy = new DbParameterAccessor(name, direction,
-                sqlType, javaType, position);
+                sqlType, javaType, position, dbfitToJdbcTransformerFactory);
 
         copy.cs = null;
 
@@ -40,17 +41,20 @@ public class DbParameterAccessor {
     }
 
     @SuppressWarnings("unchecked")
-    public DbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {
-        this(name, direction, sqlType, null, javaType, position);
+    public DbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position,
+                               TypeTransformerFactory dbfitToJdbcTransformerFactory) {
+        this(name, direction, sqlType, null, javaType, position, dbfitToJdbcTransformerFactory);
     }
 
-    public DbParameterAccessor(String name, Direction direction, int sqlType, String userDefinedTypeName, Class javaType, int position) {
+    public DbParameterAccessor(String name, Direction direction, int sqlType, String userDefinedTypeName, Class javaType, int position,
+                               TypeTransformerFactory dbfitToJdbcTransformerFactory) {
         this.name = name;
         this.direction = direction;
         this.sqlType = sqlType;
         this.userDefinedTypeName = userDefinedTypeName;
         this.javaType = javaType;
         this.position=position;
+        this.dbfitToJdbcTransformerFactory = dbfitToJdbcTransformerFactory;
     }
 
     protected int getSqlType() {
@@ -82,11 +86,25 @@ public class DbParameterAccessor {
         }
     }
 
+    private Object toJdbcCompatibleValue(Object value) throws SQLException {
+        TypeTransformer dbfitToJdbcTransformer = null;
+        Object transformedValue;
+        if (value != null) {
+            dbfitToJdbcTransformer = dbfitToJdbcTransformerFactory.getTransformer(value.getClass());
+        }
+        if (dbfitToJdbcTransformer != null) {
+            transformedValue = dbfitToJdbcTransformer.transform(value);
+        } else {
+            transformedValue = value;
+        }
+        return transformedValue;
+    }
+
     public void set(Object value) throws Exception {
         if (direction == OUTPUT|| direction == RETURN_VALUE)
             throw new UnsupportedOperationException("Trying to set value of output parameter "+name);
-        cs.setObject(index, value, sqlType, userDefinedTypeName);
-    }    
+        cs.setObject(index, toJdbcCompatibleValue(value), sqlType, userDefinedTypeName);
+    }
 
     public Object get() throws IllegalAccessException, InvocationTargetException {
         try{
@@ -108,6 +126,10 @@ public class DbParameterAccessor {
 
     public Class<?> getJavaType() {
         return javaType;
+    }
+
+    protected TypeTransformerFactory getDbfitToJdbcTransformerFactory() {
+        return dbfitToJdbcTransformerFactory;
     }
 
     public boolean isReturnValueAccessor() {

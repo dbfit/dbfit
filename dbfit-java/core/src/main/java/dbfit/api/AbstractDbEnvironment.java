@@ -15,6 +15,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
 
     protected Connection currentConnection;
     protected String driverClassName;
+    protected TypeTransformerFactory dbfitToJdbcTransformerFactory = new TypeTransformerFactory();
 
     protected String getDriverClassName() {
         return driverClassName;
@@ -122,6 +123,10 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     public DdlStatementExecution createDdlStatementExecution(String ddl)
             throws SQLException {
         return new DdlStatementExecution(getConnection().createStatement(), ddl);
+    }
+
+    protected DbParameterAccessor createDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {
+        return new DbParameterAccessor(name, direction, sqlType, javaType, position, dbfitToJdbcTransformerFactory);
     }
 
     public void closeConnection() throws SQLException {
