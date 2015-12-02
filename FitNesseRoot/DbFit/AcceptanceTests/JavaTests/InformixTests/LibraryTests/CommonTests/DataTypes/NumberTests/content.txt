@@ -1,0 +1,83 @@
+!3 Numbers
+
+!4 Integer Types
+
+|Execute Ddl|CREATE TABLE datatypetest (i1 SMALLINT, i2 INT, i3 INTEGER, i4 BIGINT, i5 INT8)|
+
+|Insert|datatypetest|
+|i1|i2|i3|i4|i5|
+|1|2|3|4|5|
+
+|Query|SELECT * FROM datatypetest|
+|i1|i2|i3|i4|i5|
+|1|2|3|4|5|
+
+!4 Floating Point Types
+
+|Execute Ddl|DROP TABLE datatypetest|
+
+|Execute Ddl|CREATE TABLE datatypetest (f1 SMALLFLOAT, f2 FLOAT)|
+
+|Insert|datatypetest|
+|f1|f2|
+|-1234567890.123456789|987654321.0123456789|
+
+|Query|SELECT * FROM datatypetest|
+|f1?|f2?|
+|-1234567890.123456789|987654321.0123456789|
+
+!4 Decimal Types
+
+|Execute Ddl|DROP TABLE datatypetest|
+
+|Execute Ddl|CREATE TABLE datatypetest (d1 DECIMAL(20,10), d2 MONEY(20,10))|
+
+|Insert|datatypetest|
+|d1|d2|
+|-1.2|1.2|
+
+!4 Serial Types
+
+|Execute Ddl|DROP TABLE datatypetest|
+
+|Execute Ddl|CREATE TABLE datatypetest (s1 SERIAL)|
+
+|Insert|datatypetest|
+|s1|
+|0|
+|0|
+
+|Query|SELECT * FROM datatypetest|
+|s1|
+|1|
+|2|
+
+|Execute Ddl|DROP TABLE datatypetest|
+
+|Execute Ddl|CREATE TABLE datatypetest (s1 SERIAL)|
+
+|Insert|datatypetest|
+|s1|
+|0|
+|0|
+
+|Query|SELECT * FROM datatypetest|
+|s1|
+|1|
+|2|
+
+|Execute Ddl|DROP TABLE datatypetest|
+
+|Execute Ddl|CREATE TABLE datatypetest (s1 SERIAL8)|
+
+|Insert|datatypetest|
+|s1|
+|0|
+|0|
+
+|Query|SELECT * FROM datatypetest|
+|s1|
+|1|
+|2|
+
+|Execute Ddl|DROP TABLE datatypetest|

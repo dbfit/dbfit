@@ -1,13 +1,11 @@
 package dbfit.fixture;
 
 import java.sql.*;
+import java.util.Map;
 
 public class StatementExecution implements AutoCloseable {
-    private PreparedStatement statement;
-
-    public StatementExecution(PreparedStatement statement) {
-        this(statement, true);
-    }
+    protected PreparedStatement statement;
+    protected int returnValueInd = -1;
 
     public StatementExecution(PreparedStatement statement, boolean clearParameters) {
         this.statement = statement;
@@ -24,7 +22,10 @@ public class StatementExecution implements AutoCloseable {
         statement.execute();
     }
 
-    public void registerOutParameter(int index, int sqlType) throws SQLException {
+    public void registerOutParameter(int index, int sqlType, boolean isReturnValue) throws SQLException {
+        if (isReturnValue) {
+            returnValueInd = index;
+        }
         convertStatementToCallable().registerOutParameter(index, sqlType);
     }
 
@@ -43,7 +44,7 @@ public class StatementExecution implements AutoCloseable {
     }
 
     //really ugly, but a hack to support mysql, because it will not execute inserts with a callable statement
-    private CallableStatement convertStatementToCallable() throws SQLException {
+    protected CallableStatement convertStatementToCallable() throws SQLException {
         if (statement instanceof CallableStatement) return (CallableStatement) statement;
         throw new SQLException("This operation requires a callable statement instead of "+ statement.getClass().getName());
     }

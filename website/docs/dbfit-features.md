@@ -35,6 +35,8 @@ There are two ways to run DbFit - through Java or through .NET. As a database de
 | Sybase     |            | x              |
 | DB2        | x          |                |
 | Teradata   | x          |                |
+| Netezza    | x          |                |
+| Informix   | x          |                |
 {: class="table table-bordered"}
 
 ----

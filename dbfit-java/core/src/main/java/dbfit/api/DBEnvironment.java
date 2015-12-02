@@ -1,5 +1,6 @@
 package dbfit.api;
 
+import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
 import dbfit.util.DdlStatementExecution;
@@ -63,6 +64,16 @@ public interface DBEnvironment {
      */
     PreparedStatement createStatementWithBoundFixtureSymbols(TestHost th, String commandText)
             throws SQLException;
+
+    /**
+     * Create a procedure statement execution object for the given command text.
+     */
+    StatementExecution createStatementExecution(PreparedStatement statement, boolean clearParameters);
+
+    /**
+     * Create a function statement execution object for the given command text.
+     */
+    StatementExecution createFunctionStatementExecution(PreparedStatement statement, boolean clearParameters);
 
     /**
      * Create a statement execution object for the given DDL text. Bind variables
@@ -180,4 +191,3 @@ public interface DBEnvironment {
 
     DbStoredProcedureCall newStoredProcedureCall(String name, DbParameterAccessor[] accessors);
 }
-
