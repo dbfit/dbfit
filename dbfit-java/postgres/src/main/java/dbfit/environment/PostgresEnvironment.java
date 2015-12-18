@@ -2,6 +2,7 @@ package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
+import dbfit.environment.postgres.NameNormaliserPostgres;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
@@ -44,15 +45,14 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
-        String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
-                .split("\\.");
+        String[] qualifiers = tableOrViewName.split("\\.");
         String qry = " select column_name, data_type, character_maximum_length "
                 + "	as direction from information_schema.columns where ";
 
         if (qualifiers.length == 2) {
-            qry += " lower(table_schema)=? and lower(table_name)=? ";
+            qry += " table_schema=? and table_name=? ";
         } else {
-            qry += " (table_schema=current_schema() and lower(table_name)=?)";
+            qry += " (table_schema=current_schema() and table_name=?)";
         }
         qry += " order by ordinal_position";
         return readIntoParams(qualifiers, qry);
@@ -63,7 +63,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
         try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
             for (int i = 0; i < queryParameters.length; i++) {
                 dc.setString(i + 1,
-                        NameNormaliser.normaliseName(queryParameters[i]));
+                        NameNormaliserPostgres.normaliseName(queryParameters[i]));
             }
             ResultSet rs = dc.executeQuery();
             Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
@@ -72,9 +72,11 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
                 String paramName = rs.getString(1);
                 if (paramName == null)
                     paramName = "";
+                //fix escaping
+                paramName = paramName.replace("\"","\"\"");
                 String dataType = rs.getString(2);
                 DbParameterAccessor dbp = createDbParameterAccessor(
-                        paramName,
+                        '"' + paramName + '"',
                         Direction.INPUT, getSqlType(dataType),
                         getJavaClass(dataType), position++);
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
