@@ -5,10 +5,6 @@ import java.sql.*;
 public class StatementExecution implements AutoCloseable {
     private PreparedStatement statement;
 
-    public StatementExecution(PreparedStatement statement) {
-        this(statement, true);
-    }
-
     public StatementExecution(PreparedStatement statement, boolean clearParameters) {
         this.statement = statement;
         if (clearParameters) {
