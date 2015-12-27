@@ -1,6 +1,7 @@
 package dbfit.api;
 
 import dbfit.util.*;
+import dbfit.fixture.StatementExecution;
 import static dbfit.util.Options.OPTION_AUTO_COMMIT;
 
 import java.io.FileNotFoundException;
@@ -123,6 +124,16 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     public DdlStatementExecution createDdlStatementExecution(String ddl)
             throws SQLException {
         return new DdlStatementExecution(getConnection().createStatement(), ddl);
+    }
+
+    @Override
+    public StatementExecution createStatementExecution(PreparedStatement statement, boolean clearParameters) {
+        return new StatementExecution(statement, clearParameters);
+    }
+
+    @Override
+    public StatementExecution createFunctionStatementExecution(PreparedStatement statement, boolean clearParameters) {
+        return new StatementExecution(statement, clearParameters);
     }
 
     protected DbParameterAccessor createDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {
