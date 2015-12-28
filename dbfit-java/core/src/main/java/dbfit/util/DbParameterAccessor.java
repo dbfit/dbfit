@@ -82,7 +82,7 @@ public class DbParameterAccessor {
         this.cs=cs;
         this.index=ind;    
         if (direction != INPUT){
-            cs.registerOutParameter(ind, getSqlType());
+            cs.registerOutParameter(ind, getSqlType(), direction == RETURN_VALUE);
         }
     }
 
