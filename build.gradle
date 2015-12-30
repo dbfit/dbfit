@@ -86,6 +86,30 @@ task copyTestLibs(dependsOn: ':dbfit-java:derby:integrationTestJar') << {
 
 task copyConnections(dependsOn: [copyLocal]) << {
     copy {
+        from 'dbfit-java/informix/TestDbConnectionDbFitInformixANSI.properties.default'
+        into 'dist'
+        rename '(.*).default', '$1'
+    }
+
+    copy {
+        from 'dbfit-java/informix/TestDbConnectionDbFitInformixANSI.properties.custom'
+        into 'dist'
+        rename '(.*).custom', '$1'
+    }
+
+    copy {
+        from 'dbfit-java/informix/TestDbConnectionDbFitInformixINFORMIX.properties.default'
+        into 'dist'
+        rename '(.*).default', '$1'
+    }
+
+    copy {
+        from 'dbfit-java/informix/TestDbConnectionDbFitInformixINFORMIX.properties.custom'
+        into 'dist'
+        rename '(.*).custom', '$1'
+    }
+
+    copy {
         from 'dbfit-java/oracle/TestDbConnectionDbFitOracle.properties.default'
         into 'dist'
         rename '(.*).default', '$1'
@@ -187,6 +211,7 @@ task fastbuild(dependsOn: [
     ':dbfit-java:db2:check',
     ':dbfit-java:derby:check',
     ':dbfit-java:hsqldb:check',
+    ':dbfit-java:informix:check',
     ':dbfit-java:mysql:check',
     ':dbfit-java:netezza:check',
     ':dbfit-java:oracle:check',
@@ -220,7 +245,14 @@ def onWindows() {
 }
 
 def proprietaryLibs() {
-    ['**/ojdbc*.jar', '**/db2jcc4*.jar', '**/terajdbc*.jar', '**/tdgssconfig*.jar', '**/nzjdbc*.jar', '**/sqljdbc*.jar'] as Set
+    ['**/ojdbc*.jar',
+     '**/db2jcc4*.jar',
+     '**/terajdbc*.jar',
+     '**/tdgssconfig*.jar',
+     '**/nzjdbc*.jar',
+     '**/sqljdbc*.jar',
+     '**/ifxjdbc*.jar'
+    ] as Set
 }
 
 def experimentalItems() {
