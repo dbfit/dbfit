@@ -1,0 +1,15 @@
+!3 Functions are tested like procedures, with ? used for the result
+
+!4 Functions with only input parameters
+
+!|Execute Procedure|ConcatenateF|
+|FirstString|SecondString|?|
+|Dar|th Maul|Darth Maul|
+|See-Th|reepio|See-Threepio|
+
+!4 Functions with input and output parameters
+
+!|Execute Procedure|FuncWithOutParams|
+|InString|OutString?|?|
+|Darth Maul|Darth Maul returned via OUT param|Darth Maul returned via RETURNS|
+|See-Threepio|See-Threepio returned via OUT param|See-Threepio returned via RETURNS|
