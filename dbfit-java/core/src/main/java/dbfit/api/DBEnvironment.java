@@ -18,7 +18,7 @@ public interface DBEnvironment {
      * stored procedure or function name. The name may contain a schema
      * qualifier.
      * 
-     * While implementing, use {@link NameNormaliser} to make sure parameters
+     * While implementing, use {@link dbfit.util.NameNormaliser} to make sure parameters
      * are mapped properly.
      * 
      * Parameters that map to return values should have an empty string for the
