@@ -110,7 +110,7 @@ task assembleAll(dependsOn: subprojects.assemble) { }
 task libs(dependsOn: subprojects.libs) { }
 
 def publicCoreCompileDeps = [
-    'org.reflections:reflections:0.9.9',
+    'org.reflections:reflections:0.9.10',
     'commons-codec:commons-codec:1.10',
     'org.apache.commons:commons-lang3:3.4',
     'com.github.dbfit:fitlibrary:20091020'
