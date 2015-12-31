@@ -143,8 +143,8 @@ project('derby') {
     }
     dependencies {
         compile project(':dbfit-java:core')
-        derby group: 'org.apache.derby', name: 'derby', version: '10.10.1.1'
-        derby group: 'org.apache.derby', name: 'derbyclient', version: '10.10.1.1'
+        derby group: 'org.apache.derby', name: 'derby', version: '10.12.1.1'
+        derby group: 'org.apache.derby', name: 'derbyclient', version: '10.12.1.1'
     }
 }
 
