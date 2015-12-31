@@ -1,10 +1,9 @@
 package dbfit.environment;
 
-import dbfit.api.DBEnvironment;
 import dbfit.util.DbParameterAccessor;
-import dbfit.environment.SqlServerEnvironment;
 import dbfit.util.Direction;
 import dbfit.util.TypeTransformerFactory;
+
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -14,7 +13,7 @@ public class SqlServerDbEnvironmentUnitTests {
 
     @Test
     public void buildInsertCommand_AllInputParameters() throws Exception {
-        dbfit.environment.SqlServerEnvironment env = new SqlServerEnvironment("SqlServer");
+        SqlServerEnvironment env = new SqlServerEnvironment("SqlServer");
 
         String expectedResult = "insert into DummyTable([Column1],[Column Two],[ColumnThree]) values (?,?,?)";
         DbParameterAccessor[] parameters = new DbParameterAccessor[3];
@@ -30,7 +29,7 @@ public class SqlServerDbEnvironmentUnitTests {
 
     @Test
     public void buildInsertCommand_SpiceItUpWithAnOutputParameter() throws Exception {
-        dbfit.environment.SqlServerEnvironment env = new SqlServerEnvironment("SqlServer");
+        SqlServerEnvironment env = new SqlServerEnvironment("SqlServer");
 
         String expectedResult = "insert into DummyTable([Column1]) values (?)";
         DbParameterAccessor[] parameters = new DbParameterAccessor[2];

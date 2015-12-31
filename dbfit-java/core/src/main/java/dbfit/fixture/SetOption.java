@@ -9,7 +9,6 @@ import static dbfit.util.Options.OPTION_AUTO_COMMIT;
 import fit.Fixture;
 import fit.Parse;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class SetOption extends Fixture {

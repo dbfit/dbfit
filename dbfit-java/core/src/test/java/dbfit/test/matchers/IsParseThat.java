@@ -4,7 +4,6 @@ import fit.Parse;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.Factory;
-import static org.hamcrest.Matchers.anything;
 
 public class IsParseThat extends TraversingParseMatcher {
     protected boolean recursiveChildren = false;

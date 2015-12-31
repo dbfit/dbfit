@@ -1,6 +1,5 @@
 package dbfit.util.crypto;
 
-import java.security.KeyStore;
 import java.io.File;
 
 public interface CryptoKeyStore extends CryptoKeyAccessor {
