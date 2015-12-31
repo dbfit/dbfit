@@ -4,7 +4,6 @@ import dbfit.util.MatchResult;
 import dbfit.util.DiffListener;
 import dbfit.util.DataRow;
 import dbfit.util.DataCell;
-import dbfit.util.MatchStatus;
 import static dbfit.util.MatchStatus.*;
 
 import static dbfit.util.DiffTestUtils.createDataRowBuilder;

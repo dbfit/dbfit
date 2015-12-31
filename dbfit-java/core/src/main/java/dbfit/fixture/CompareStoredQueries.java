@@ -11,10 +11,8 @@ import dbfit.util.MatchResult;
 import dbfit.util.NoOpDiffListenerAdapter;
 import dbfit.util.SymbolUtil;
 import static dbfit.util.RowStructureLoader.loadRowStructure;
-import static dbfit.util.DataCell.createDataCell;
 import static dbfit.util.MatchStatus.*;
 
-import fit.Fixture;
 import fit.Parse;
 
 public class CompareStoredQueries extends fit.Fixture {
