@@ -149,7 +149,7 @@ project('derby') {
 }
 
 def publicHsqldbRuntimeDeps = [
-    'org.hsqldb:hsqldb:2.3.2@jar'
+    'org.hsqldb:hsqldb:2.3.3@jar'
 ]
 
 project('hsqldb') {
