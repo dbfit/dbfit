@@ -2,7 +2,6 @@ package dbfit.api;
 
 import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
-import dbfit.util.NameNormaliser;
 import dbfit.util.DdlStatementExecution;
 
 import java.io.FileNotFoundException;

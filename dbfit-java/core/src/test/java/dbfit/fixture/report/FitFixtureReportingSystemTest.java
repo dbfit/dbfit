@@ -26,7 +26,6 @@ import static org.hamcrest.Matchers.*;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
 

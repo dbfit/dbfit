@@ -1,13 +1,10 @@
 package dbfit.util;
 
 import dbfit.util.crypto.CryptoTestsConfig;
-import static dbfit.util.crypto.CryptoTestsConfig.getFakeCryptoService;
 import static dbfit.util.PropertiesTestsSetUp.prepareEncryptedSettings;
 import static dbfit.util.PropertiesTestsSetUp.prepareNonEncryptedSettings;
 
 import dbfit.util.crypto.CryptoService;
-import dbfit.util.crypto.CryptoServiceFactory;
-import dbfit.util.crypto.CryptoFactories;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -15,7 +12,6 @@ import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 import static org.hamcrest.CoreMatchers.*;
 
