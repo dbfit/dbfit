@@ -1,0 +1,3 @@
+!|dbfit.InformixTest|
+
+|Connect|localhost:16466|dbfit|DBFIT|dbfit_ansi|

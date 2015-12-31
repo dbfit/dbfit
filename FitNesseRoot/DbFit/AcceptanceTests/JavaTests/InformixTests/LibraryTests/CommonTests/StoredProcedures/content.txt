@@ -1,0 +1,27 @@
+!3 IN and OUT params
+
+!|Execute Procedure|CalcLength|
+|In String|Str Length?|
+|mika|4|
+|paradajz|8|
+|saeiluhrweurhfi7fhi7rhgf|24|
+
+!|Execute Procedure|ConcatenateStrings|
+|FirstString|SecondString|Concatenated?|
+|Darth|Vader|Darth Vader|
+|Senator|Palpatine|Senator Palpatine|
+|Bib|Fortuna|Bib Fortuna|
+
+!3 IN/OUT params should be split into two columns - one for in, one for out
+
+|Execute Procedure|Multiply|
+|Factor|Val|Val?|
+|10|5|50|
+|2|8|16|
+
+!3 Order of parameters in table should not be important (does not have to match DB order)
+
+|Execute procedure|Multiply|
+|Factor|Val?|Val|
+|15|150|10|
+|8|16|2|

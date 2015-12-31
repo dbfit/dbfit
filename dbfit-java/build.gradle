@@ -96,7 +96,7 @@ subprojects {
                 userid: userid,
                 password: password,
                 dir: "$projectDir/src/integration-test/resources",
-                delimiterType: delimiterType,
+                delimiterType: delimiterType
         )
     }
 
@@ -156,6 +156,41 @@ project('hsqldb') {
     dependencies {
         compile project(':dbfit-java:core')
         runtime publicHsqldbRuntimeDeps
+    }
+}
+
+project('informix') {
+    description = 'DBFit Informix engine'
+
+    dependencies {
+        compile project(':dbfit-java:core')
+        compile 'com.informix:ifxjdbc:4.10.JC4W1@jar'
+    }
+
+    integrationTest.doFirst {
+        copy {
+            from 'TestDbConnectionDbFitInformixANSI.properties.default'
+            into '.'
+            rename '(.*).default', '$1'
+        }
+
+        copy {
+            from 'TestDbConnectionDbFitInformixANSI.properties.custom'
+            into '.'
+            rename '(.*).custom', '$1'
+        }
+
+        copy {
+            from 'TestDbConnectionDbFitInformixINFORMIX.properties.default'
+            into '.'
+            rename '(.*).default', '$1'
+        }
+
+        copy {
+            from 'TestDbConnectionDbFitInformixINFORMIX.properties.custom'
+            into '.'
+            rename '(.*).custom', '$1'
+        }
     }
 }
 
@@ -353,5 +388,6 @@ uploadArchives {
                 }
             }
         }
-     }
+    }
 }
+

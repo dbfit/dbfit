@@ -1,0 +1,23 @@
+!|Insert|Users|
+|Username|Name|!-UserId-!?|
+|pera|Petar Detlic|>>pera|
+|Mika|Mitar Miric|>>mika|
+|Zeka|Dusko Dugousko|>>zeka|
+|DevNull|null|>>nll|
+
+!|Query|SELECT * FROM Users|
+|Username|Name|!-UserId-!|
+|pera|Petar Detlic|<<pera|
+|Mika|Mitar Miric|<<mika|
+|Zeka|Dusko Dugousko|<<zeka|
+|DevNull|null|<<nll|
+
+|Set Parameter|userid|<<zeka|
+
+|Query|SELECT * FROM Users WHERE !-UserId-! = :userid|
+|Username|Name|!-UserId-!|
+|Zeka|Dusko Dugousko|<<zeka|
+
+|Clean|
+|table|clean?|
+|Users|true|

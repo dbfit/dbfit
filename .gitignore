@@ -42,5 +42,9 @@ build
 gradle.properties
 target
 dbfit-complete-*.zip
+dbfit-java/oracle/TestDbConnectionDbFitInformixINFORMIX.properties
+dbfit-java/oracle/TestDbConnectionDbFitInformixINFORMIX.properties.custom
+dbfit-java/oracle/TestDbConnectionDbFitInformixANSI.properties
+dbfit-java/oracle/TestDbConnectionDbFitInformixANSI.properties.custom
 dbfit-java/oracle/TestDbConnectionDbFitOracle.properties
 dbfit-java/oracle/TestDbConnectionDbFitOracle.properties.custom
