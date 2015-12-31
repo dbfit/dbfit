@@ -5,5 +5,7 @@
 <module name="Checker">
   <module name="TreeWalker">
     <module name="PackageDeclaration"/>
+    <module name="RedundantImport"/>
+    <module name="UnusedImports"/>
   </module>
 </module>
