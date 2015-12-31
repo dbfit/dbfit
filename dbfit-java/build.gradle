@@ -1,6 +1,7 @@
 ext {
     fitNesseVersion = '20151230'
     mockitoVersion = '1.10.19'
+    junitVersion = '4.12'
 }
 
 allprojects {
@@ -68,10 +69,11 @@ subprojects {
     }
 
     dependencies {
-        testCompile 'junit:junit:4.12'
+        testCompile "junit:junit:${junitVersion}"
         testCompile "org.hamcrest:java-hamcrest:2.0.0.0"
         testCompile "commons-io:commons-io:2.4"
         testRuntime 'com.dbdeploy:dbdeploy-ant:3.0M3'
+        integrationTestCompile "junit:junit:${junitVersion}"
         integrationTestCompile "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
     }
 
