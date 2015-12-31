@@ -20,14 +20,7 @@ public class DbParameterAccessor {
     private TypeTransformerFactory dbfitToJdbcTransformerFactory;
 
     public static Object normaliseValue(Object currVal) throws SQLException {
-        if (currVal == null) {
-            return null;
-        }
-        TypeTransformer tn = TypeNormaliserFactory.getNormaliser(currVal.getClass());
-        if (tn != null) {
-            currVal = tn.transform(currVal);
-        }
-        return currVal;
+        return TypeNormaliserFactory.transform(currVal);
     }
 
     @Override

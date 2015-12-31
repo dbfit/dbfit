@@ -1,5 +1,6 @@
 package dbfit.util;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class TypeTransformerFactory {
         transformers.put(targetClass, normaliser);
     }
 
-    public TypeTransformer getTransformer(Class<?> targetClass) {
+    private TypeTransformer getTransformer(Class<?> targetClass) {
         TypeTransformer normaliser = transformers.get(targetClass);
 
         if (normaliser == null) {
@@ -45,5 +46,19 @@ public class TypeTransformerFactory {
         }
 
         return normaliser;
+    }
+
+    public Object transform(Object inValue) throws SQLException {
+        if (inValue == null) {
+            return null;
+        }
+        Object newValue = null;
+        TypeTransformer typeTrans = getTransformer(inValue.getClass());
+        if (typeTrans != null) {
+            newValue = typeTrans.transform(inValue);
+        } else {
+            newValue = inValue;
+        }
+        return newValue;
     }
 }
