@@ -7,7 +7,6 @@ import dbfit.util.FitNesseTestHost;
 import fit.Fixture;
 import fit.Parse;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -77,8 +76,8 @@ public class Inspect extends fit.Fixture {
     }
 
     private void inspectQuery(Parse table) throws SQLException {
-        try (PreparedStatement st =
-                environment.createStatementWithBoundFixtureSymbols(
+        try (StatementExecution st =
+                environment.createStatementExecutionWithBoundFixtureSymbols(
                     FitNesseTestHost.getInstance(), objectName)) {
             ResultSet rs = st.executeQuery();
             Parse newRow = getHeaderFromRS(rs);

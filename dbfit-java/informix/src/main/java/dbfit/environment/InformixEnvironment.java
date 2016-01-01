@@ -292,7 +292,7 @@ public class InformixEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
-    public StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
+    protected StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
         return new InformixFunctionStatementExecution(statement);
     }
 }

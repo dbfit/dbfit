@@ -60,8 +60,7 @@ public class Update extends fit.Fixture {
             s.append(selectAccessors[i].getName()).append("=").append("?");
         }
 
-        StatementExecution cs =
-            environment.createStatementExecution(environment.getConnection().prepareStatement(s.toString()));
+        StatementExecution cs = environment.createStatementExecution(s.toString());
 
         for (int i = 0; i < updateAccessors.length; i++) {
             updateAccessors[i].bindTo(cs, i + 1);

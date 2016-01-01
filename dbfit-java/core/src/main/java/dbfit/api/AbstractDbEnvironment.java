@@ -122,19 +122,44 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     @Override
+    public final StatementExecution createStatementExecutionWithBoundFixtureSymbols(TestHost th, String commandText)
+            throws SQLException {
+        return createStatementExecution(createStatementWithBoundFixtureSymbols(th, commandText));
+    }
+
+    @Override
     public DdlStatementExecution createDdlStatementExecution(String ddl)
             throws SQLException {
         return new DdlStatementExecution(getConnection().createStatement(), ddl);
     }
 
-    @Override
-    public StatementExecution createStatementExecution(PreparedStatement statement) {
+    /**
+     * Create a procedure statement execution object for the given prepared statement
+     */
+    protected StatementExecution createStatementExecution(PreparedStatement statement) {
+        return new StatementExecution(statement);
+    }
+
+    /**
+     * Create a function statement execution object for the given prepared statement
+     */
+    protected StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
         return new StatementExecution(statement);
     }
 
     @Override
-    public StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
-        return new StatementExecution(statement);
+    public final StatementExecution createStatementExecution(String commandText) throws SQLException {
+        return createStatementExecution(getConnection().prepareStatement(commandText));
+    }
+
+    @Override
+    public final StatementExecution createCallExecution(String commandText) throws SQLException {
+        return createStatementExecution(getConnection().prepareCall(commandText));
+    }
+
+    @Override
+    public final StatementExecution createFunctionCallExecution(String commandText) throws SQLException {
+        return createFunctionStatementExecution(getConnection().prepareCall(commandText));
     }
 
     protected DbParameterAccessor createDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {
@@ -208,6 +233,12 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return getConnection().prepareStatement(
                 buildInsertCommand(tableName, accessors),
                 Statement.RETURN_GENERATED_KEYS);
+    }
+
+    @Override
+    public final StatementExecution buildInsertStatementExecution(String tableName, DbParameterAccessor[] accessors)
+            throws SQLException {
+        return createStatementExecution(buildInsertPreparedStatement(tableName, accessors));
     }
 
     /**

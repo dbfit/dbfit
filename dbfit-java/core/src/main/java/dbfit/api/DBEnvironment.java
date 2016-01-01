@@ -7,7 +7,6 @@ import dbfit.util.DdlStatementExecution;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -35,10 +34,9 @@ public interface DBEnvironment {
             throws SQLException;
 
     /**
-     * This method creates an insert command that will be used to populate new
-     * rows in a table.
+     * Create an insert command that will be used to populate new rows in a table
      */
-    PreparedStatement buildInsertPreparedStatement(String tableName, DbParameterAccessor[] accessors)
+    StatementExecution buildInsertStatementExecution(String tableName, DbParameterAccessor[] accessors)
             throws SQLException;
 
     /**
@@ -58,21 +56,26 @@ public interface DBEnvironment {
      */
 
     /**
-     * Create a {@link PreparedStatement} object and binds fixture symbols to
+     * Create a {@link StatementExecution} and binds fixture symbols to
      * SQL statement parameters with matching names.
      */
-    PreparedStatement createStatementWithBoundFixtureSymbols(TestHost th, String commandText)
+    StatementExecution createStatementExecutionWithBoundFixtureSymbols(TestHost th, String commandText)
             throws SQLException;
 
     /**
-     * Create a procedure statement execution object for the given command text.
+     * Create a PreparedStatement statement execution for the given command text
      */
-    StatementExecution createStatementExecution(PreparedStatement statement);
+    StatementExecution createStatementExecution(String commandText) throws SQLException;
 
     /**
-     * Create a function statement execution object for the given command text.
+     * Create a CallableStatement statement execution for the given command text
      */
-    StatementExecution createFunctionStatementExecution(PreparedStatement statement);
+    StatementExecution createCallExecution(String commandText) throws SQLException;
+
+    /**
+     * Create a CallableStatement statement execution for the given command text
+     */
+    StatementExecution createFunctionCallExecution(String commandText) throws SQLException;
 
     /**
      * Create a statement execution object for the given DDL text. Bind variables

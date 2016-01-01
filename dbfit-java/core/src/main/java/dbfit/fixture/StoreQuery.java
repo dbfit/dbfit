@@ -6,7 +6,6 @@ import dbfit.util.DataTable;
 import dbfit.util.FitNesseTestHost;
 import fit.Parse;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -37,8 +36,8 @@ public class StoreQuery extends fit.Fixture {
         }
 
         try (
-            PreparedStatement st =
-                dbEnvironment.createStatementWithBoundFixtureSymbols(
+            StatementExecution st =
+                dbEnvironment.createStatementExecutionWithBoundFixtureSymbols(
                     FitNesseTestHost.getInstance(), query)
         ) {
             ResultSet rs = st.executeQuery();

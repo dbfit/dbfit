@@ -6,7 +6,6 @@ import dbfit.util.FitNesseTestHost;
 import fit.Parse;
 
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,10 +80,10 @@ public class Clean extends fit.ColumnFixture {
         }
 
         private void executeQuery(SQLQuery q) throws SQLException {
-            try (PreparedStatement st =
-                    environment.createStatementWithBoundFixtureSymbols(
+            try (StatementExecution st =
+                    environment.createStatementExecutionWithBoundFixtureSymbols(
                         FitNesseTestHost.getInstance(), q.toString())) {
-                st.execute();
+                st.run();
             }
         }
     }

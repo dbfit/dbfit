@@ -13,6 +13,10 @@ public class StatementExecution implements AutoCloseable {
         statement.execute();
     }
 
+    public ResultSet executeQuery() throws SQLException {
+        return statement.executeQuery();
+    }
+
     public void registerOutParameter(int index, int sqlType, boolean isReturnValue) throws SQLException {
         convertStatementToCallable().registerOutParameter(index, sqlType);
     }

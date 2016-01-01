@@ -6,7 +6,6 @@ import dbfit.util.DbParameterAccessors;
 import static dbfit.util.sql.PreparedStatements.buildFunctionCall;
 import static dbfit.util.sql.PreparedStatements.buildStoredProcedureCall;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DbStoredProcedureCall {
@@ -49,13 +48,11 @@ public class DbStoredProcedureCall {
     }
 
     public StatementExecution toStatementExecution() throws SQLException {
-        String sql = toSqlString();
-        PreparedStatement ps = environment.getConnection().prepareCall(sql);
         StatementExecution cs;
         if (isFunction()) {
-            cs = environment.createFunctionStatementExecution(ps);
+            cs = environment.createFunctionCallExecution(toSqlString());
         } else {
-            cs = environment.createStatementExecution(ps);
+            cs = environment.createCallExecution(toSqlString());
         }
         bindParametersTo(cs);
         return cs;
