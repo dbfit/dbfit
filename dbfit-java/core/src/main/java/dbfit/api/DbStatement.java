@@ -20,6 +20,6 @@ public class DbStatement {
     }
 
     public StatementExecution buildPreparedStatement() throws SQLException {
-        return environment.createStatementExecution(environment.createStatementWithBoundFixtureSymbols(testHost, statementText), false);
+        return environment.createStatementExecution(environment.createStatementWithBoundFixtureSymbols(testHost, statementText));
     }
 }
