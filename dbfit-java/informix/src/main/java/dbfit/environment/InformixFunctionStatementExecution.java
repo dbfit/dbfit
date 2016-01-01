@@ -7,8 +7,8 @@ import dbfit.fixture.StatementExecution;
 public class InformixFunctionStatementExecution extends StatementExecution {
     private Object returnValue = null;
 
-    public InformixFunctionStatementExecution(PreparedStatement statement, boolean clearParameters) {
-        super(statement, clearParameters);
+    public InformixFunctionStatementExecution(PreparedStatement statement) {
+        super(statement);
     }
 
     @Override

@@ -31,7 +31,7 @@ public class DbTable implements DbObject {
     public StatementExecution buildPreparedStatement(
             DbParameterAccessor[] accessors) throws SQLException {
         StatementExecution statement = dbEnvironment.createStatementExecution(dbEnvironment
-                .buildInsertPreparedStatement(tableOrViewName, accessors), false);
+                .buildInsertPreparedStatement(tableOrViewName, accessors));
 
         for (int i = 0; i < accessors.length; i++) {
             accessors[i].bindTo(statement, i + 1);
