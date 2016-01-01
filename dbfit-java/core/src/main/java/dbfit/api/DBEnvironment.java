@@ -70,12 +70,7 @@ public interface DBEnvironment {
     /**
      * Create a CallableStatement statement execution for the given command text
      */
-    StatementExecution createCallExecution(String commandText) throws SQLException;
-
-    /**
-     * Create a CallableStatement statement execution for the given command text
-     */
-    StatementExecution createFunctionCallExecution(String commandText) throws SQLException;
+    StatementExecution createCallExecution(String commandText, boolean isFunction) throws SQLException;
 
     /**
      * Create a statement execution object for the given DDL text. Bind variables

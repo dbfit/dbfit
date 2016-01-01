@@ -140,26 +140,19 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return new StatementExecution(statement);
     }
 
-    /**
-     * Create a function statement execution object for the given prepared statement
-     */
-    protected StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
-        return new StatementExecution(statement);
-    }
-
     @Override
     public final StatementExecution createStatementExecution(String commandText) throws SQLException {
         return createStatementExecution(getConnection().prepareStatement(commandText));
     }
 
-    @Override
-    public final StatementExecution createCallExecution(String commandText) throws SQLException {
-        return createStatementExecution(getConnection().prepareCall(commandText));
+    protected StatementExecution createCallExecution(PreparedStatement statement, boolean isFunction)
+            throws SQLException {
+        return new StatementExecution(statement);
     }
 
     @Override
-    public final StatementExecution createFunctionCallExecution(String commandText) throws SQLException {
-        return createFunctionStatementExecution(getConnection().prepareCall(commandText));
+    public final StatementExecution createCallExecution(String commandText, boolean isFunction) throws SQLException {
+        return createCallExecution(getConnection().prepareCall(commandText), isFunction);
     }
 
     protected DbParameterAccessor createDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {

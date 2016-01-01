@@ -48,12 +48,8 @@ public class DbStoredProcedureCall {
     }
 
     public StatementExecution toStatementExecution() throws SQLException {
-        StatementExecution cs;
-        if (isFunction()) {
-            cs = environment.createFunctionCallExecution(toSqlString());
-        } else {
-            cs = environment.createCallExecution(toSqlString());
-        }
+        StatementExecution cs =
+            environment.createCallExecution(toSqlString(), isFunction());
         bindParametersTo(cs);
         return cs;
     }

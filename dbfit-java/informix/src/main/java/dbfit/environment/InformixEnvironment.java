@@ -292,7 +292,12 @@ public class InformixEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
-    protected StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
-        return new InformixFunctionStatementExecution(statement);
+    public StatementExecution createCallExecution(
+            PreparedStatement statement, boolean isFunction) throws SQLException {
+        if (isFunction) {
+            return new InformixFunctionStatementExecution(statement);
+        } else {
+            return super.createCallExecution(statement, isFunction);
+        }
     }
 }
