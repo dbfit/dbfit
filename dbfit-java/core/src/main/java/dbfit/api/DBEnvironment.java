@@ -59,7 +59,7 @@ public interface DBEnvironment {
      * Create a {@link StatementExecution} and binds fixture symbols to
      * SQL statement parameters with matching names.
      */
-    StatementExecution createStatementExecutionWithBoundFixtureSymbols(TestHost th, String commandText)
+    StatementExecution createStatementExecutionWithBoundFixtureSymbols(TestHost testHost, String commandText)
             throws SQLException;
 
     /**
