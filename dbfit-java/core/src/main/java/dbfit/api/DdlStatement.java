@@ -1,13 +1,13 @@
-package dbfit.util;
+package dbfit.api;
 
 import java.sql.Statement;
 import java.sql.SQLException;
 
-public class DdlStatementExecution implements AutoCloseable {
+public class DdlStatement implements AutoCloseable {
     private Statement statement;
     private String commandText;
 
-    public DdlStatementExecution(Statement statement, String commandText) {
+    public DdlStatement(Statement statement, String commandText) {
         this.statement = statement;
         this.commandText = commandText;
     }

@@ -1,15 +1,13 @@
 package dbfit.api;
 
-import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
-import dbfit.util.DdlStatementExecution;
+import dbfit.util.PreparedDbStatement;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
-
 
 public interface DBEnvironment {
     /**
@@ -36,7 +34,7 @@ public interface DBEnvironment {
     /**
      * Create an insert command that will be used to populate new rows in a table
      */
-    StatementExecution buildInsertStatementExecution(String tableName, DbParameterAccessor[] accessors)
+    PreparedDbStatement buildInsertStatement(String tableName, DbParameterAccessor[] accessors)
             throws SQLException;
 
     /**
@@ -56,27 +54,27 @@ public interface DBEnvironment {
      */
 
     /**
-     * Create a {@link StatementExecution} and binds fixture symbols to
+     * Create a {@link PreparedDbStatement} and binds fixture symbols to
      * SQL statement parameters with matching names.
      */
-    StatementExecution createStatementExecutionWithBoundFixtureSymbols(TestHost testHost, String commandText)
+    PreparedDbStatement createStatementWithBoundFixtureSymbols(TestHost testHost, String commandText)
             throws SQLException;
 
     /**
-     * Create a PreparedStatement statement execution for the given command text
+     * Create a prepared statement for the given command text
      */
-    StatementExecution createStatementExecution(String commandText) throws SQLException;
+    PreparedDbStatement createPreparedStatement(String commandText) throws SQLException;
 
     /**
-     * Create a CallableStatement statement execution for the given command text
+     * Create a stored procedure call statement for the given command text
      */
-    StatementExecution createCallExecution(String commandText, boolean isFunction) throws SQLException;
+    PreparedDbStatement createCallableStatement(String commandText, boolean isFunction) throws SQLException;
 
     /**
      * Create a statement execution object for the given DDL text. Bind variables
      * are not supported.
      */
-    DdlStatementExecution createDdlStatementExecution(String ddl) throws SQLException;
+    DdlStatement createDdlStatement(String ddl) throws SQLException;
 
     /**
      * Closes the current connection and rolls back any active transactions. The

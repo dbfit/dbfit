@@ -1,6 +1,7 @@
 package dbfit.fixture;
 
 import dbfit.api.DbObject;
+import dbfit.util.PreparedDbStatement;
 import dbfit.util.*;
 import fit.Binding;
 import fit.Fixture;
@@ -30,7 +31,7 @@ import static dbfit.util.Direction.*;
 public abstract class DbObjectExecutionFixture extends Fixture {
     private DbParameterAccessors accessors = new DbParameterAccessors();
     private Map<DbParameterAccessor, Binding> columnBindings;
-    private StatementExecution execution;
+    private PreparedDbStatement execution;
     private DbObject dbObject; // intentionally private, subclasses should extend getTargetObject
 
     /**
@@ -61,7 +62,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             dbObject = getTargetDbObject();
             if (dbObject == null) throw new Error("DB Object not specified!");
             if (rows == null) {//single execution, no args
-                try (StatementExecution preparedStatement =
+                try (PreparedDbStatement preparedStatement =
                         dbObject.buildPreparedStatement(accessors.toArray())) {
                     preparedStatement.run();
                     return;
@@ -71,7 +72,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             accessors = getAccessors(rows.parts, columnNames);
             if (accessors == null) return;// error reading args
             columnBindings = getColumnBindings();
-            try (StatementExecution preparedStatement
+            try (PreparedDbStatement preparedStatement
                     = dbObject.buildPreparedStatement(accessors.toArray())) {
                 execution = preparedStatement;
                 Parse row = rows;

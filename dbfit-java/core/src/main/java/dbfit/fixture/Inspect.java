@@ -2,6 +2,7 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
+import dbfit.util.PreparedDbStatement;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.FitNesseTestHost;
 import fit.Fixture;
@@ -76,8 +77,8 @@ public class Inspect extends fit.Fixture {
     }
 
     private void inspectQuery(Parse table) throws SQLException {
-        try (StatementExecution st =
-                environment.createStatementExecutionWithBoundFixtureSymbols(
+        try (PreparedDbStatement st =
+                environment.createStatementWithBoundFixtureSymbols(
                     FitNesseTestHost.getInstance(), objectName)) {
             ResultSet rs = st.executeQuery();
             Parse newRow = getHeaderFromRS(rs);

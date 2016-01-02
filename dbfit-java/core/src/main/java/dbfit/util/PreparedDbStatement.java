@@ -1,11 +1,11 @@
-package dbfit.fixture;
+package dbfit.util;
 
 import java.sql.*;
 
-public class StatementExecution implements AutoCloseable {
+public class PreparedDbStatement implements AutoCloseable {
     protected PreparedStatement statement;
 
-    public StatementExecution(PreparedStatement statement) {
+    public PreparedDbStatement(PreparedStatement statement) {
         this.statement = statement;
     }
 

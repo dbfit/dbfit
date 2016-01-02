@@ -2,6 +2,7 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
+import dbfit.util.PreparedDbStatement;
 import dbfit.util.FitNesseTestHost;
 import fit.Fixture;
 import fit.Parse;
@@ -20,8 +21,8 @@ public class Execute extends Fixture {
     }
 
     public void doRows(Parse rows) {
-        try (StatementExecution statement =
-                dbEnvironment.createStatementExecutionWithBoundFixtureSymbols(
+        try (PreparedDbStatement statement =
+                dbEnvironment.createStatementWithBoundFixtureSymbols(
                     FitNesseTestHost.getInstance(), getStatementText())) {
             statement.run();
         } catch (Throwable e) {

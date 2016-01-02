@@ -2,6 +2,7 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
+import dbfit.util.PreparedDbStatement;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessorTypeAdapter;
 import dbfit.util.NameNormaliser;
@@ -18,7 +19,7 @@ import dbfit.util.Direction;
 
 public class Update extends fit.Fixture {
     private DBEnvironment environment;
-    private StatementExecution statement;
+    private PreparedDbStatement statement;
     private String tableName;
     private Binding[] columnBindings;
     private DbParameterAccessor[] updateAccessors;
@@ -37,7 +38,7 @@ public class Update extends fit.Fixture {
         this.environment = dbEnvironment;
     }
 
-    private StatementExecution buildUpdateCommand() throws SQLException {
+    private PreparedDbStatement buildUpdateCommand() throws SQLException {
         if (updateAccessors.length == 0) {
             throw new Error("Update fixture must have at least one field to update. Have you forgotten = after the column name?");
         }
@@ -60,7 +61,7 @@ public class Update extends fit.Fixture {
             s.append(selectAccessors[i].getName()).append("=").append("?");
         }
 
-        StatementExecution cs = environment.createStatementExecution(s.toString());
+        PreparedDbStatement cs = environment.createPreparedStatement(s.toString());
 
         for (int i = 0; i < updateAccessors.length; i++) {
             updateAccessors[i].bindTo(cs, i + 1);
@@ -83,7 +84,7 @@ public class Update extends fit.Fixture {
 
         try {
             initParameters(rows.parts); //init parameters from the first row
-            try (StatementExecution st = buildUpdateCommand()) {
+            try (PreparedDbStatement st = buildUpdateCommand()) {
                 statement = st;
                 Parse row = rows;
                 while ((row = row.more) != null) {

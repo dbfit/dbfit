@@ -1,7 +1,6 @@
 package dbfit.api;
 
 import dbfit.util.*;
-import dbfit.fixture.StatementExecution;
 import static dbfit.util.Options.OPTION_AUTO_COMMIT;
 
 import java.io.FileNotFoundException;
@@ -106,7 +105,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     @Override
-    public final StatementExecution createStatementExecutionWithBoundFixtureSymbols(
+    public final PreparedDbStatement createStatementWithBoundFixtureSymbols(
             TestHost testHost, String commandText) throws SQLException {
         String command = Options.isBindSymbols() ? parseCommandText(commandText) : commandText;
         PreparedStatement cs = getConnection().prepareStatement(command);
@@ -119,35 +118,35 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
             }
         }
 
-        return createStatementExecution(cs);
+        return createPreparedStatement(cs);
     }
 
     @Override
-    public DdlStatementExecution createDdlStatementExecution(String ddl)
+    public DdlStatement createDdlStatement(String ddl)
             throws SQLException {
-        return new DdlStatementExecution(getConnection().createStatement(), ddl);
+        return new DdlStatement(getConnection().createStatement(), ddl);
     }
 
     /**
-     * Create a procedure statement execution object for the given prepared statement
+     * Create a PreparedDbStatement for the given prepared statement
      */
-    protected StatementExecution createStatementExecution(PreparedStatement statement) {
-        return new StatementExecution(statement);
+    protected PreparedDbStatement createPreparedStatement(PreparedStatement statement) {
+        return new PreparedDbStatement(statement);
     }
 
     @Override
-    public final StatementExecution createStatementExecution(String commandText) throws SQLException {
-        return createStatementExecution(getConnection().prepareStatement(commandText));
+    public final PreparedDbStatement createPreparedStatement(String commandText) throws SQLException {
+        return createPreparedStatement(getConnection().prepareStatement(commandText));
     }
 
-    protected StatementExecution createCallExecution(PreparedStatement statement, boolean isFunction)
+    protected PreparedDbStatement createCallableStatement(PreparedStatement statement, boolean isFunction)
             throws SQLException {
-        return new StatementExecution(statement);
+        return new PreparedDbStatement(statement);
     }
 
     @Override
-    public final StatementExecution createCallExecution(String commandText, boolean isFunction) throws SQLException {
-        return createCallExecution(getConnection().prepareCall(commandText), isFunction);
+    public final PreparedDbStatement createCallableStatement(String commandText, boolean isFunction) throws SQLException {
+        return createCallableStatement(getConnection().prepareCall(commandText), isFunction);
     }
 
     protected DbParameterAccessor createDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {
@@ -224,9 +223,9 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     @Override
-    public final StatementExecution buildInsertStatementExecution(String tableName, DbParameterAccessor[] accessors)
+    public final PreparedDbStatement buildInsertStatement(String tableName, DbParameterAccessor[] accessors)
             throws SQLException {
-        return createStatementExecution(buildInsertPreparedStatement(tableName, accessors));
+        return createPreparedStatement(buildInsertPreparedStatement(tableName, accessors));
     }
 
     /**

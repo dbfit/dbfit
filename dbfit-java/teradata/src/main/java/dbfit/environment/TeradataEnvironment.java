@@ -2,6 +2,7 @@ package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
+import dbfit.api.DdlStatement;
 import dbfit.util.*;
 import fit.TypeAdapter;
 
@@ -130,9 +131,9 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
-    public DdlStatementExecution createDdlStatementExecution(String ddl)
+    public DdlStatement createDdlStatement(String ddl)
             throws SQLException {
-        return new DdlStatementExecution(getConnection().createStatement(), ddl) {
+        return new DdlStatement(getConnection().createStatement(), ddl) {
             @Override
             public void run() throws SQLException {
                 super.run();

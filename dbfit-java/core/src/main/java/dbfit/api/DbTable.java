@@ -1,7 +1,7 @@
 package dbfit.api;
 
-import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
+import dbfit.util.PreparedDbStatement;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
 
@@ -28,10 +28,10 @@ public class DbTable implements DbObject {
         }
     }
 
-    public StatementExecution buildPreparedStatement(
+    public PreparedDbStatement buildPreparedStatement(
             DbParameterAccessor[] accessors) throws SQLException {
-        StatementExecution statement =
-            dbEnvironment.buildInsertStatementExecution(tableOrViewName, accessors);
+        PreparedDbStatement statement =
+            dbEnvironment.buildInsertStatement(tableOrViewName, accessors);
 
         for (int i = 0; i < accessors.length; i++) {
             accessors[i].bindTo(statement, i + 1);

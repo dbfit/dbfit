@@ -2,6 +2,7 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
+import dbfit.util.PreparedDbStatement;
 import dbfit.util.FitNesseTestHost;
 import fit.Parse;
 
@@ -80,8 +81,8 @@ public class Clean extends fit.ColumnFixture {
         }
 
         private void executeQuery(SQLQuery q) throws SQLException {
-            try (StatementExecution st =
-                    environment.createStatementExecutionWithBoundFixtureSymbols(
+            try (PreparedDbStatement st =
+                    environment.createStatementWithBoundFixtureSymbols(
                         FitNesseTestHost.getInstance(), q.toString())) {
                 st.run();
             }

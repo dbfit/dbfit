@@ -2,13 +2,13 @@ package dbfit.environment;
 
 import java.sql.*;
 
-import dbfit.fixture.StatementExecution;
+import dbfit.util.PreparedDbStatement;
 
-public class InformixFunctionStatementExecution extends StatementExecution {
+public class InformixFunctionStatement extends PreparedDbStatement {
     private Object returnValue = null;
     private int returnValueInd = -1;
 
-    public InformixFunctionStatementExecution(PreparedStatement statement) {
+    public InformixFunctionStatement(PreparedStatement statement) {
         super(statement);
     }
 
