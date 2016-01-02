@@ -147,7 +147,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
             return RETURN_VALUE;
         }
 
-        return (isOutput == 1) ? OUTPUT : INPUT;
+        return (isOutput == 1) ? INPUT_OUTPUT : INPUT;
     }
 
     private static int getSqlType(String dataType) {
