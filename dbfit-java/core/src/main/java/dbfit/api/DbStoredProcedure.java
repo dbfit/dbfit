@@ -35,12 +35,6 @@ public class DbStoredProcedure implements DbObject {
             parameter = parameter.clone();
             parameter.setDirection(expectedDirection);
         }
-        // sql server quirk. if output parameter is used in an input column,
-        // then the param should be cloned and remapped to IN/OUT
-        if (expectedDirection!=Direction.OUTPUT && parameter.hasDirection(Direction.OUTPUT)) {
-            parameter = parameter.clone();
-            parameter.setDirection(Direction.INPUT);
-        }
         return parameter;
     }
 
