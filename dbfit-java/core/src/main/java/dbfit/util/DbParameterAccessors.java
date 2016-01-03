@@ -80,6 +80,11 @@ public class DbParameterAccessors {
         return nameList;
     }
 
+    // number of distinct parameters (in, out, inout and return value)
+    public int getNumberOfParameters() {
+        return getSortedAccessorNames().size();
+    }
+
     public boolean containsReturnValue() {
         for (DbParameterAccessor ac : accessors) {
             if (ac.isReturnValueAccessor()) {
