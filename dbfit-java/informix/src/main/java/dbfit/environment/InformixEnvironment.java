@@ -6,6 +6,7 @@ import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
+import dbfit.util.DbParameterAccessorsMapBuilder;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -132,6 +133,7 @@ public class InformixEnvironment extends AbstractDbEnvironment {
             qry += "LOWER(p.owner) = ? AND ";
         }
         qry += "LOWER(p." + (forProcedureParameters ? "procname" : "tabname") + ") = ?";
+        qry += " ORDER BY position";
 
         return qry;
     }
@@ -150,26 +152,21 @@ public class InformixEnvironment extends AbstractDbEnvironment {
             }
 
             ResultSet rs = dc.executeQuery();
-            Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+            DbParameterAccessorsMapBuilder params =
+                new DbParameterAccessorsMapBuilder(dbfitToJdbcTransformerFactory);
 
             while (rs.next()) {
                 String paramName = defaultIfNull(rs.getString(1), "");
                 String dataType = rs.getString(2);
                 String direction = rs.getString(3);
-                int position = rs.getInt(4);
-                Direction paramDirection = getParameterDirection(direction);
-                if (paramDirection != RETURN_VALUE && paramName.isEmpty()) {
-                    throw new SQLException("Missing column or procedure parameter name");
-                }
-                DbParameterAccessor dbp = createDbParameterAccessor(
-                        paramName,
-                        paramDirection, getSqlType(dataType),
-                        getJavaClass(dataType),
-                        paramDirection == RETURN_VALUE ? -1 : position);
-                allParams.put(NameNormaliser.normaliseName(paramName), dbp);
+
+                params.add(paramName,
+                        getParameterDirection(direction),
+                        getSqlType(dataType),
+                        getJavaClass(dataType));
             }
             rs.close();
-            return allParams;
+            return params.toMap();
         }
     }
 
