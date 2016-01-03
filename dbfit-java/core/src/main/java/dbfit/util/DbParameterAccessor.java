@@ -48,6 +48,10 @@ public class DbParameterAccessor {
 
     public DbParameterAccessor(String name, Direction direction, int sqlType, String userDefinedTypeName, Class javaType, int position,
                                TypeTransformerFactory dbfitToJdbcTransformerFactory) {
+        if (direction == RETURN_VALUE && position != -1) {
+            throw new IllegalArgumentException("Position of return value should be -1");
+        }
+
         this.name = name;
         this.direction = direction;
         this.sqlType = sqlType;
