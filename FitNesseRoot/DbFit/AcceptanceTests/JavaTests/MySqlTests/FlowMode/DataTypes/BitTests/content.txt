@@ -1,0 +1,25 @@
+!3 Unreferenced BIT data type (allow operations on tables with BIT fields)
+
+BIT type is in general not supported but it should work fine to operate on other columns when a BIT field is not referenced
+
+|Execute|Create table datatypetest (b1 BIT, n2 INT)|
+
+|Insert|datatypetest|
+|n2|
+|13|
+
+|Query|Select n2 from datatypetest|
+|n2|
+|13|
+
+|Update|datatypetest|
+|n2|n2=|
+|13|7  |
+
+|Query|Select n2 from datatypetest|
+|n2|
+|7 |
+
+|Clean|
+|table|clean?|
+|datatypetest|true|

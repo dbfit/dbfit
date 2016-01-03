@@ -109,6 +109,7 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             "TIMESTAMP", "DATETIME" });
     private static List<String> timeTypes = Arrays.asList("TIME");
     private static List<String> refCursorTypes = Arrays.asList(new String[] {});
+    private static List<String> bitTypes = Arrays.asList("BIT");
 
     private static String normaliseTypeName(String dataType) {
         dataType = dataType.toUpperCase().trim();
@@ -141,6 +142,8 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             return java.sql.Types.TIME;
         if (refCursorTypes.contains(dataType))
             return java.sql.Types.REF;
+        if (bitTypes.contains(dataType))
+            return java.sql.Types.BIT;
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
     }
@@ -169,6 +172,8 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
             return java.sql.Timestamp.class;
         if (timeTypes.contains(dataType))
             return java.sql.Time.class;
+        if (bitTypes.contains(dataType))
+            return Boolean.class;
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
     }
