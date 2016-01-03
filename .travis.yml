@@ -3,7 +3,9 @@ language: java
 before_install:
 - "./gradlew -version"
 install: "./gradlew assemble"
-script: "./gradlew clean fastbuild"
+before_script:
+- mysql -u root -v < dbfit-java/mysql/src/integration-test/resources/create-db-mysql.sql
+script: "./gradlew clean travisbuild"
 jdk:
 - oraclejdk7
 - oraclejdk8
