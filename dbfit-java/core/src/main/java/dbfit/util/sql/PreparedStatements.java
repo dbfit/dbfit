@@ -4,13 +4,15 @@ import static dbfit.util.LangUtils.join;
 import static dbfit.util.LangUtils.repeat;
 
 public class PreparedStatements {
-    public static String buildStoredProcedureCall(String procName, int numberOfInputParameters) {
-        String inputs = join(repeat("?", numberOfInputParameters), ", ");
-        return "{ call " + procName + "(" + inputs + ")}";
+    private static String buildParamList(int numberOfParameters) {
+        return join(repeat("?", numberOfParameters), ", ");
     }
 
-    public static String buildFunctionCall(String procName, int numberOfInputParameters) {
-        String inputs = join(repeat("?", numberOfInputParameters), ", ");
-        return "{ ? = call " + procName + "(" + inputs + ")}";
+    public static String buildStoredProcedureCall(String procName, int numberOfPararameters) {
+        return "{ call " + procName + "(" + buildParamList(numberOfPararameters) + ")}";
+    }
+
+    public static String buildFunctionCall(String procName, int numberOfParameters) {
+        return "{ ? = call " + procName + "(" + buildParamList(numberOfParameters - 1) + ")}";
     }
 }

@@ -6,7 +6,6 @@ import dbfit.util.DbParameterAccessors;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
 
 import static dbfit.util.sql.PreparedStatements.buildFunctionCall;
 import static dbfit.util.sql.PreparedStatements.buildStoredProcedureCall;
@@ -33,17 +32,15 @@ public class DbStoredProcedureCall {
         return new DbParameterAccessors(accessors).containsReturnValue();
     }
 
-    public int getNumberOfInputParameters() {
-        List<String> accessorNames = new DbParameterAccessors(getAccessors()).getSortedAccessorNames();
-        int numberOfAccessors = accessorNames.size();
-        return isFunction() ? numberOfAccessors - 1 : numberOfAccessors;
+    private int getNumberOfParameters() {
+        return new DbParameterAccessors(getAccessors()).getNumberOfParameters();
     }
 
     public String toSqlString() {
         if (isFunction()) {
-            return buildFunctionCall(getName(), getNumberOfInputParameters());
+            return buildFunctionCall(getName(), getNumberOfParameters());
         } else {
-            return buildStoredProcedureCall(getName(), getNumberOfInputParameters());
+            return buildStoredProcedureCall(getName(), getNumberOfParameters());
         }
     }
 

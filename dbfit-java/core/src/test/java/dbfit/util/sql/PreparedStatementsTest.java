@@ -8,11 +8,11 @@ import static org.junit.Assert.assertEquals;
 
 public class PreparedStatementsTest {
     @Test public void functionWithoutParameters() {
-        assertEquals("{ ? = call func()}", buildFunctionCall("func", 0));
+        assertEquals("{ ? = call func()}", buildFunctionCall("func", 1));
     }
 
     @Test public void functionWithParameters() {
-        assertEquals("{ ? = call func(?, ?)}", buildFunctionCall("func", 2));
+        assertEquals("{ ? = call func(?, ?)}", buildFunctionCall("func", 3));
     }
 
     @Test public void procedureWithoutParameters() {
