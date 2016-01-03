@@ -52,6 +52,10 @@ public class DbParameterAccessor {
             throw new IllegalArgumentException("Position of return value should be -1");
         }
 
+        if ((name == null) || (direction != RETURN_VALUE && name.isEmpty())) {
+            throw new IllegalArgumentException("Missing column or procedure parameter name");
+        }
+
         this.name = name;
         this.direction = direction;
         this.sqlType = sqlType;
