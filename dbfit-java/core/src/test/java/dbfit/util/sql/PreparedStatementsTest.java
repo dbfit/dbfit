@@ -1,4 +1,4 @@
-package dbfit.api.sql;
+package dbfit.util.sql;
 
 import org.junit.Test;
 
@@ -6,7 +6,7 @@ import static dbfit.util.sql.PreparedStatements.buildFunctionCall;
 import static dbfit.util.sql.PreparedStatements.buildStoredProcedureCall;
 import static org.junit.Assert.assertEquals;
 
-public class PreparedStatmentsTest {
+public class PreparedStatementsTest {
     @Test public void functionWithoutParameters() {
         assertEquals("{ ? = call func()}", buildFunctionCall("func", 0));
     }
