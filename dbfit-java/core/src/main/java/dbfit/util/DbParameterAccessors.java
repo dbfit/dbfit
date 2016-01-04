@@ -25,9 +25,6 @@ public class DbParameterAccessors {
         for (DbParameterAccessor ac : accessors) {
             int realindex = accessorNames.indexOf(ac.getName());
             ac.bindTo(statement, realindex + 1); // jdbc params are 1-based
-            if (ac.hasDirection(Direction.RETURN_VALUE)) {
-                ac.bindTo(statement, Math.abs(ac.getPosition()));
-            }
         }
     }
 
