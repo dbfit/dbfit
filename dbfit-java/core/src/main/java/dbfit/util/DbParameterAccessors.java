@@ -71,15 +71,11 @@ public class DbParameterAccessors {
     }
 
     public List<String> getSortedAccessorNames() {
-        List<DbParameterAccessor> newacc = new ArrayList<DbParameterAccessor>(accessors);
-        Collections.sort(newacc, new PositionComparator());
-        List<String> nameList = new ArrayList<String>();
-        String lastName = null;
-        for (DbParameterAccessor p : newacc) {
-            if (lastName != p.getName()) {
-                lastName = p.getName();
-                nameList.add(p.getName());
-            }
+        SortedSet<DbParameterAccessor> nameSet = new TreeSet<>(new PositionComparator());
+        nameSet.addAll(new ArrayList<>(accessors));
+        List<String> nameList = new ArrayList<>();
+        for (DbParameterAccessor p : nameSet) {
+            nameList.add(p.getName());
         }
         return nameList;
     }
