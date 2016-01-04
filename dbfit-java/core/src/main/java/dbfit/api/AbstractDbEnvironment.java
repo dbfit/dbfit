@@ -127,7 +127,8 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     /**
-     * Create a PreparedDbStatement for the given prepared statement
+     * Create a {@link PreparedDbStatement} for the given prepared statement.
+     * This is the method to override if custom implementation needs to be returned
      */
     protected PreparedDbStatement createPreparedStatement(PreparedStatement statement) {
         return new PreparedDbStatement(statement);
@@ -138,6 +139,10 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return createPreparedStatement(getConnection().prepareStatement(commandText));
     }
 
+    /**
+     * Create a {@link DbStatement} for the given prepared statement.
+     * This is the method to override if custom implementation needs to be returned
+     */
     protected PreparedDbStatement createCallableStatement(PreparedStatement statement, boolean isFunction)
             throws SQLException {
         return new PreparedDbStatement(statement);

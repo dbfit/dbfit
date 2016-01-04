@@ -66,12 +66,16 @@ public interface DBEnvironment {
     PreparedDbStatement createPreparedStatement(String commandText) throws SQLException;
 
     /**
-     * Create a stored procedure call statement for the given command text
+     * Create a stored subroutine call {@link DbStatement} for the given command text.
+     *
+     * @param commandText typically it's something like
+     *                    {? = call f(?, ?, ...)} for functions or
+     *                    {call p(?, ?, ?)} for procedures
      */
     PreparedDbStatement createCallableStatement(String commandText, boolean isFunction) throws SQLException;
 
     /**
-     * Create a statement execution object for the given DDL text. Bind variables
+     * Create a {@list DbStatement} for the given DDL text. Bind variables
      * are not supported.
      */
     DbCommand createDdlStatement(String ddl) throws SQLException;
