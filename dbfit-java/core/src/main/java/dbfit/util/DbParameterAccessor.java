@@ -1,21 +1,20 @@
 package dbfit.util;
 
 import dbfit.fixture.StatementExecution;
+import static dbfit.util.Direction.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
-import static dbfit.util.Direction.*;
-
 public class DbParameterAccessor {
 
-    private int index; //index in effective sql statement (not necessarily the same as position below)
+    private int index; // index in effective sql statement (not necessarily the same as position below)
     private Direction direction;
     private String name;
     private int sqlType;
     private String userDefinedTypeName;
     private Class<?> javaType;
-    private int position; //zero-based index of parameter in procedure or column in table
+    private int position; // zero-based index of parameter in procedure (-1 for ret value) or column in table
     protected StatementExecution cs;
     private TypeTransformerFactory dbfitToJdbcTransformerFactory;
 
@@ -23,6 +22,7 @@ public class DbParameterAccessor {
         if (currVal == null) {
             return null;
         }
+
         TypeTransformer tn = TypeNormaliserFactory.getNormaliser(currVal.getClass());
         if (tn != null) {
             currVal = tn.transform(currVal);
@@ -61,7 +61,7 @@ public class DbParameterAccessor {
         this.sqlType = sqlType;
         this.userDefinedTypeName = userDefinedTypeName;
         this.javaType = javaType;
-        this.position=position;
+        this.position = position;
         this.dbfitToJdbcTransformerFactory = dbfitToJdbcTransformerFactory;
     }
 
@@ -81,15 +81,14 @@ public class DbParameterAccessor {
         return name;
     }
 
-    public void setDirection(Direction direction){
+    public void setDirection(Direction direction) {
         this.direction = direction;
     }
 
-    /*******************************************/
-    public void bindTo(StatementExecution cs, int ind) throws SQLException{
-        this.cs=cs;
-        this.index=ind;    
-        if (direction != INPUT){
+    public void bindTo(StatementExecution cs, int ind) throws SQLException {
+        this.cs = cs;
+        this.index = ind;
+        if (direction != INPUT) {
             cs.registerOutParameter(ind, getSqlType(), direction == RETURN_VALUE);
         }
     }
@@ -100,6 +99,7 @@ public class DbParameterAccessor {
         if (value != null) {
             dbfitToJdbcTransformer = dbfitToJdbcTransformerFactory.getTransformer(value.getClass());
         }
+
         if (dbfitToJdbcTransformer != null) {
             transformedValue = dbfitToJdbcTransformer.transform(value);
         } else {
@@ -109,23 +109,25 @@ public class DbParameterAccessor {
     }
 
     public void set(Object value) throws Exception {
-        if (direction == OUTPUT|| direction == RETURN_VALUE)
-            throw new UnsupportedOperationException("Trying to set value of output parameter "+name);
+        if (direction == OUTPUT || direction == RETURN_VALUE) {
+            throw new UnsupportedOperationException("Trying to set value of output parameter " + name);
+        }
         cs.setObject(index, toJdbcCompatibleValue(value), sqlType, userDefinedTypeName);
     }
 
     public Object get() throws IllegalAccessException, InvocationTargetException {
-        try{
-            if (direction.equals(INPUT))
-                throw new UnsupportedOperationException("Trying to get value of input parameter "+name);            
+        try {
+            if (direction.equals(INPUT)) {
+                throw new UnsupportedOperationException("Trying to get value of input parameter " + name);
+            }
             return normaliseValue(cs.getObject(index));
         }
-        catch (SQLException sqle){
+        catch (SQLException sqle) {
             throw new InvocationTargetException(sqle);
         }
     }
 
-    /** 
+    /**
      * Zero-based column or parameter position in a query, table or stored proc
      */
     public int getPosition() {
@@ -152,4 +154,3 @@ public class DbParameterAccessor {
         return !hasDirection(expectedDirection);
     }
 }
-
