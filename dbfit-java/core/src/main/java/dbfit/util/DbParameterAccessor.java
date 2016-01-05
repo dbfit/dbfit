@@ -30,13 +30,19 @@ public class DbParameterAccessor {
         return currVal;
     }
 
+    /*
+     * Create an exact copy of this object. Normally this should be
+     * overridden in favour of the clone template method
+     */
+    protected DbParameterAccessor copy() {
+        return new DbParameterAccessor(name, direction,
+                sqlType, javaType, position, dbfitToJdbcTransformerFactory);
+    }
+
     @Override
     public DbParameterAccessor clone() {
-        DbParameterAccessor copy = new DbParameterAccessor(name, direction,
-                sqlType, javaType, position, dbfitToJdbcTransformerFactory);
-
+        DbParameterAccessor copy = copy();
         copy.cs = null;
-
         return copy;
     }
 
