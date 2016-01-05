@@ -22,13 +22,9 @@ public class OracleDbParameterAccessor extends DbParameterAccessor {
     }
 
     @Override
-    public OracleDbParameterAccessor clone() {
-        OracleDbParameterAccessor copy = new OracleDbParameterAccessor(
+    protected DbParameterAccessor copy() {
+        return new OracleDbParameterAccessor(
                 getName(), getDirection(), getSqlType(), getJavaType(), getPosition(),
                 getDbfitToJdbcTransformerFactory(), originalTypeName, getUserDefinedTypeName());
-        copy.cs = null;
-
-        return copy;
     }
 }
-
