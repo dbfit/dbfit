@@ -3,37 +3,37 @@ package dbfit.api;
 import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessors;
+import static dbfit.util.sql.PreparedStatements.buildFunctionCall;
+import static dbfit.util.sql.PreparedStatements.buildStoredProcedureCall;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static dbfit.util.sql.PreparedStatements.buildFunctionCall;
-import static dbfit.util.sql.PreparedStatements.buildStoredProcedureCall;
-
 public class DbStoredProcedureCall {
-    private DBEnvironment environment;
-    private String name;
-    private DbParameterAccessor[] accessors;
+    private final DBEnvironment environment;
+    private final String name;
+    private final DbParameterAccessors accessors;
 
     public DbStoredProcedureCall(DBEnvironment environment, String name, DbParameterAccessor[] accessors) {
         this.environment = environment;
         this.name = name;
-        this.accessors = accessors;
+        this.accessors = new DbParameterAccessors(accessors);
     }
+
     public String getName() {
         return name;
     }
 
-    public DbParameterAccessor[] getAccessors() {
+    protected DbParameterAccessors getAccessors() {
         return accessors;
     }
 
     public boolean isFunction() {
-        return new DbParameterAccessors(accessors).containsReturnValue();
+        return getAccessors().containsReturnValue();
     }
 
     private int getNumberOfParameters() {
-        return new DbParameterAccessors(getAccessors()).getNumberOfParameters();
+        return getAccessors().getNumberOfParameters();
     }
 
     public String toSqlString() {
@@ -45,7 +45,7 @@ public class DbStoredProcedureCall {
     }
 
     void bindParametersTo(StatementExecution cs) throws SQLException {
-        new DbParameterAccessors(getAccessors()).bindParameters(cs);
+        getAccessors().bindParameters(cs);
     }
 
     public StatementExecution toStatementExecution() throws SQLException {

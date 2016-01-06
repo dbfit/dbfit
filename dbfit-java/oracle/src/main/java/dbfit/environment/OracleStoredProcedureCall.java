@@ -3,7 +3,6 @@ package dbfit.environment;
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbStoredProcedureCall;
 import dbfit.util.DbParameterAccessor;
-import dbfit.util.DbParameterAccessors;
 import dbfit.util.OracleDbParameterAccessor;
 import dbfit.util.oracle.OracleBooleanSpCommand;
 import dbfit.util.oracle.OracleSpParameter;
@@ -44,10 +43,9 @@ public class OracleStoredProcedureCall extends DbStoredProcedureCall {
         }
     }
 
-    private Map<String, DbParameterAccessor> getAccessorsMap(
-            DbParameterAccessor[] accessors) {
+    private Map<String, DbParameterAccessor> getAccessorsMap() {
         Map<String, DbParameterAccessor> map = new HashMap<String, DbParameterAccessor>();
-        for (DbParameterAccessor ac: accessors) {
+        for (DbParameterAccessor ac: getAccessors()) {
             addAccessor(map, ac);
         }
 
@@ -75,12 +73,11 @@ public class OracleStoredProcedureCall extends DbStoredProcedureCall {
     }
 
     private SpParamsSpec initSpParams() {
-        List<String> accessorNames = new DbParameterAccessors(getAccessors()).getSortedAccessorNames();
-        Map<String, DbParameterAccessor> accessorsMap = getAccessorsMap(getAccessors());
+        Map<String, DbParameterAccessor> accessorsMap = getAccessorsMap();
 
         SpParamsSpec params = new SpParamsSpec();
 
-        for (String acName: accessorNames) {
+        for (String acName: getAccessors().getSortedAccessorNames()) {
             OracleSpParameter param = makeOracleSpParameter(accessorsMap.get(acName));
             params.add(param);
         }
