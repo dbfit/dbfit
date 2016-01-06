@@ -4,7 +4,6 @@ import java.sql.*;
 
 public class StatementExecution implements AutoCloseable {
     protected PreparedStatement statement;
-    protected int returnValueInd = -1;
 
     public StatementExecution(PreparedStatement statement) {
         this.statement = statement;
@@ -15,9 +14,6 @@ public class StatementExecution implements AutoCloseable {
     }
 
     public void registerOutParameter(int index, int sqlType, boolean isReturnValue) throws SQLException {
-        if (isReturnValue) {
-            returnValueInd = index;
-        }
         convertStatementToCallable().registerOutParameter(index, sqlType);
     }
 
