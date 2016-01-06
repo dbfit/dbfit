@@ -127,13 +127,13 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     @Override
-    public StatementExecution createStatementExecution(PreparedStatement statement, boolean clearParameters) {
-        return new StatementExecution(statement, clearParameters);
+    public StatementExecution createStatementExecution(PreparedStatement statement) {
+        return new StatementExecution(statement);
     }
 
     @Override
-    public StatementExecution createFunctionStatementExecution(PreparedStatement statement, boolean clearParameters) {
-        return new StatementExecution(statement, clearParameters);
+    public StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
+        return new StatementExecution(statement);
     }
 
     protected DbParameterAccessor createDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {

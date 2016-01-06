@@ -6,15 +6,8 @@ public class StatementExecution implements AutoCloseable {
     protected PreparedStatement statement;
     protected int returnValueInd = -1;
 
-    public StatementExecution(PreparedStatement statement, boolean clearParameters) {
+    public StatementExecution(PreparedStatement statement) {
         this.statement = statement;
-        if (clearParameters) {
-            try {
-                statement.clearParameters();
-            } catch (SQLException e) {
-                throw new RuntimeException("Exception while clearing parameters on PreparedStatement", e);
-            }
-        }
     }
 
     public void run() throws SQLException {

@@ -67,12 +67,12 @@ public interface DBEnvironment {
     /**
      * Create a procedure statement execution object for the given command text.
      */
-    StatementExecution createStatementExecution(PreparedStatement statement, boolean clearParameters);
+    StatementExecution createStatementExecution(PreparedStatement statement);
 
     /**
      * Create a function statement execution object for the given command text.
      */
-    StatementExecution createFunctionStatementExecution(PreparedStatement statement, boolean clearParameters);
+    StatementExecution createFunctionStatementExecution(PreparedStatement statement);
 
     /**
      * Create a statement execution object for the given DDL text. Bind variables

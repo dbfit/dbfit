@@ -56,9 +56,9 @@ public class DbStoredProcedureCall {
         PreparedStatement ps = environment.getConnection().prepareCall(sql);
         StatementExecution cs;
         if (isFunction()) {
-            cs = environment.createFunctionStatementExecution(ps, true);
+            cs = environment.createFunctionStatementExecution(ps);
         } else {
-            cs = environment.createStatementExecution(ps, true);
+            cs = environment.createStatementExecution(ps);
         }
         bindParametersTo(cs);
         return cs;
