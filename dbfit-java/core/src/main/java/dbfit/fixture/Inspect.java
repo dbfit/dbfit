@@ -78,10 +78,10 @@ public class Inspect extends fit.Fixture {
     }
 
     private void inspectQuery(Parse table) throws SQLException {
-        try (DbQuery st =
+        try (DbQuery statement =
                 environment.createStatementWithBoundFixtureSymbols(
                     FitNesseTestHost.getInstance(), objectName)) {
-            ResultSet rs = st.executeQuery();
+            ResultSet rs = statement.executeQuery();
             Parse newRow = getHeaderFromRS(rs);
             table.parts.more = newRow;
             while (rs.next()) {

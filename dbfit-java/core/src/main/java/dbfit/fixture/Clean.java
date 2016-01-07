@@ -82,10 +82,10 @@ public class Clean extends fit.ColumnFixture {
         }
 
         private void executeQuery(SQLQuery q) throws SQLException {
-            try (DbCommand st =
+            try (DbCommand statement =
                     environment.createStatementWithBoundFixtureSymbols(
                         FitNesseTestHost.getInstance(), q.toString())) {
-                st.execute();
+                statement.execute();
             }
         }
     }

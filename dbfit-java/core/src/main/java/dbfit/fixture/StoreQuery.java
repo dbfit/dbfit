@@ -8,7 +8,6 @@ import dbfit.util.FitNesseTestHost;
 
 import fit.Parse;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class StoreQuery extends fit.Fixture {
@@ -38,12 +37,11 @@ public class StoreQuery extends fit.Fixture {
         }
 
         try (
-            DbQuery st =
+            DbQuery statement =
                 dbEnvironment.createStatementWithBoundFixtureSymbols(
                     FitNesseTestHost.getInstance(), query)
         ) {
-            ResultSet rs = st.executeQuery();
-            DataTable dt = new DataTable(rs);
+            DataTable dt = new DataTable(statement.executeQuery());
             dbfit.util.SymbolUtil.setSymbol(symbolName, dt);
         } catch (SQLException sqle) {
             throw new Error(sqle);

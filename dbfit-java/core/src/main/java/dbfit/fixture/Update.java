@@ -62,16 +62,16 @@ public class Update extends fit.Fixture {
             s.append(selectAccessors[i].getName()).append("=").append("?");
         }
 
-        PreparedDbStatement cs = environment.createPreparedStatement(s.toString());
+        PreparedDbStatement statement = environment.createPreparedStatement(s.toString());
 
         for (int i = 0; i < updateAccessors.length; i++) {
-            updateAccessors[i].bindTo(cs, i + 1);
+            updateAccessors[i].bindTo(statement, i + 1);
         }
 
         for (int j = 0; j < selectAccessors.length; j++) {
-            selectAccessors[j].bindTo(cs, j + updateAccessors.length + 1);
+            selectAccessors[j].bindTo(statement, j + updateAccessors.length + 1);
         }
-        return cs;
+        return statement;
     }
 
     public void doRows(Parse rows) {
@@ -85,8 +85,8 @@ public class Update extends fit.Fixture {
 
         try {
             initParameters(rows.parts); //init parameters from the first row
-            try (DbCommand st = buildUpdateCommand()) {
-                statement = st;
+            try (DbCommand satement = buildUpdateCommand()) {
+                this.statement = statement;
                 Parse row = rows;
                 while ((row = row.more) != null) {
                     runRow(row);

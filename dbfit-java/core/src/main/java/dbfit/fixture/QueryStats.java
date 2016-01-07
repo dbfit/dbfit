@@ -46,11 +46,11 @@ public class QueryStats extends fit.ColumnFixture {
             query = "select * from " + tableName + (where != null ? " where " + where : "");
         }
 
-        try (DbQuery st =
+        try (DbQuery statement =
                 environment.createStatementWithBoundFixtureSymbols(
                     FitNesseTestHost.getInstance(),
                     "select count(*) from (" + query + ") temp")) {
-            ResultSet rs = st.executeQuery();
+            ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 _rows = rs.getInt(1);
             }

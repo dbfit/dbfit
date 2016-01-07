@@ -40,10 +40,10 @@ public class Query extends RowSetFixture {
         }
 
         Log.log("Query: '%s'", queryOrSymbol);
-        try (DbQuery st =
+        try (DbQuery statement =
                 dbEnvironment.createStatementWithBoundFixtureSymbols(
                     FitNesseTestHost.getInstance(), queryOrSymbol)) {
-            return new MatchableDataTable(new DataTable(st.executeQuery()));
+            return new MatchableDataTable(new DataTable(statement.executeQuery()));
         }
     }
 

@@ -43,8 +43,8 @@ public class DbStoredProcedureCall {
         }
     }
 
-    void bindParametersTo(PreparedDbStatement cs) throws SQLException {
-        getAccessors().bindParameters(cs);
+    void bindParametersTo(PreparedDbStatement statement) throws SQLException {
+        getAccessors().bindParameters(statement);
     }
 
     public PreparedDbStatement toPreparedDbStatement() throws SQLException {
