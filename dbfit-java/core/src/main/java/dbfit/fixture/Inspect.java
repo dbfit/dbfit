@@ -2,9 +2,10 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
-import dbfit.util.PreparedDbStatement;
+import dbfit.api.DbQuery;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.FitNesseTestHost;
+
 import fit.Fixture;
 import fit.Parse;
 
@@ -77,7 +78,7 @@ public class Inspect extends fit.Fixture {
     }
 
     private void inspectQuery(Parse table) throws SQLException {
-        try (PreparedDbStatement st =
+        try (DbQuery st =
                 environment.createStatementWithBoundFixtureSymbols(
                     FitNesseTestHost.getInstance(), objectName)) {
             ResultSet rs = st.executeQuery();

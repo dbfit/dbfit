@@ -74,7 +74,7 @@ public interface DBEnvironment {
      * Create a statement execution object for the given DDL text. Bind variables
      * are not supported.
      */
-    DdlStatement createDdlStatement(String ddl) throws SQLException;
+    DbCommand createDdlStatement(String ddl) throws SQLException;
 
     /**
      * Closes the current connection and rolls back any active transactions. The

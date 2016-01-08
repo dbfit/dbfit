@@ -1,8 +1,9 @@
 package dbfit.fixture;
 
 import dbfit.api.DbObject;
-import dbfit.util.PreparedDbStatement;
+import dbfit.api.DbCommand;
 import dbfit.util.*;
+
 import fit.Binding;
 import fit.Fixture;
 import fit.Parse;
@@ -31,7 +32,7 @@ import static dbfit.util.Direction.*;
 public abstract class DbObjectExecutionFixture extends Fixture {
     private DbParameterAccessors accessors = new DbParameterAccessors();
     private Map<DbParameterAccessor, Binding> columnBindings;
-    private PreparedDbStatement execution;
+    private DbCommand execution;
     private DbObject dbObject; // intentionally private, subclasses should extend getTargetObject
 
     /**
@@ -62,9 +63,9 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             dbObject = getTargetDbObject();
             if (dbObject == null) throw new Error("DB Object not specified!");
             if (rows == null) {//single execution, no args
-                try (PreparedDbStatement preparedStatement =
+                try (DbCommand preparedStatement =
                         dbObject.buildPreparedStatement(accessors.toArray())) {
-                    preparedStatement.run();
+                    preparedStatement.execute();
                     return;
                 }
             }
@@ -72,7 +73,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             accessors = getAccessors(rows.parts, columnNames);
             if (accessors == null) return;// error reading args
             columnBindings = getColumnBindings();
-            try (PreparedDbStatement preparedStatement
+            try (DbCommand preparedStatement
                     = dbObject.buildPreparedStatement(accessors.toArray())) {
                 execution = preparedStatement;
                 Parse row = rows;
@@ -161,7 +162,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
 
     private void executeStatementExpectingException(Parse row) throws Exception {
         try {
-            execution.run();
+            execution.execute();
             wrong(row);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -182,7 +183,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
 
     private void executeStatementAndEvaluateOutputs(Parse row)
             throws SQLException, Throwable {
-        execution.run();
+        execution.execute();
         Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(asCellList(row));
         for (DbParameterAccessor outputAccessor : accessors.getOutputAccessors()) {
             Parse cell = cellMap.get(outputAccessor);

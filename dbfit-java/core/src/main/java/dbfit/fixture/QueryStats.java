@@ -1,12 +1,12 @@
 package dbfit.fixture;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
-import dbfit.util.PreparedDbStatement;
+import dbfit.api.DbQuery;
 import dbfit.util.FitNesseTestHost;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class QueryStats extends fit.ColumnFixture {
     private DBEnvironment environment;
@@ -46,7 +46,7 @@ public class QueryStats extends fit.ColumnFixture {
             query = "select * from " + tableName + (where != null ? " where " + where : "");
         }
 
-        try (PreparedDbStatement st =
+        try (DbQuery st =
                 environment.createStatementWithBoundFixtureSymbols(
                     FitNesseTestHost.getInstance(),
                     "select count(*) from (" + query + ") temp")) {

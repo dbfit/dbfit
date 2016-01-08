@@ -2,7 +2,7 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
-import dbfit.api.DdlStatement;
+import dbfit.api.DbCommand;
 
 import fit.Fixture;
 import fit.Parse;
@@ -21,8 +21,8 @@ public class ExecuteDdl extends Fixture {
     }
 
     public void doRows(Parse rows) {
-        try (DdlStatement ddl = createDdlExecution()) {
-            ddl.run();
+        try (DbCommand ddl = createDdlExecution()) {
+            ddl.execute();
         } catch (Throwable e) {
             throw new Error(e);
         }
@@ -35,7 +35,7 @@ public class ExecuteDdl extends Fixture {
         return statementText;
     }
 
-    private DdlStatement createDdlExecution() throws Exception {
+    private DbCommand createDdlExecution() throws Exception {
         return dbEnvironment.createDdlStatement(getStatementText());
     }
 }

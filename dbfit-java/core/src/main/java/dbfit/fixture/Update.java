@@ -2,11 +2,14 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
+import dbfit.api.DbCommand;
 import dbfit.util.PreparedDbStatement;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessorTypeAdapter;
 import dbfit.util.NameNormaliser;
 import dbfit.util.SymbolAccessSetBinding;
+import dbfit.util.Direction;
+
 import fit.Binding;
 import fit.Parse;
 
@@ -15,11 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import dbfit.util.Direction;
-
 public class Update extends fit.Fixture {
     private DBEnvironment environment;
-    private PreparedDbStatement statement;
+    private DbCommand statement;
     private String tableName;
     private Binding[] columnBindings;
     private DbParameterAccessor[] updateAccessors;
@@ -38,7 +39,7 @@ public class Update extends fit.Fixture {
         this.environment = dbEnvironment;
     }
 
-    private PreparedDbStatement buildUpdateCommand() throws SQLException {
+    private DbCommand buildUpdateCommand() throws SQLException {
         if (updateAccessors.length == 0) {
             throw new Error("Update fixture must have at least one field to update. Have you forgotten = after the column name?");
         }
@@ -84,7 +85,7 @@ public class Update extends fit.Fixture {
 
         try {
             initParameters(rows.parts); //init parameters from the first row
-            try (PreparedDbStatement st = buildUpdateCommand()) {
+            try (DbCommand st = buildUpdateCommand()) {
                 statement = st;
                 Parse row = rows;
                 while ((row = row.more) != null) {
@@ -139,7 +140,7 @@ public class Update extends fit.Fixture {
             for (int column = 0; column < columnBindings.length; column++, cell = cell.more) {
                 columnBindings[column].doCell(this, cell);
             }
-            statement.run();
+            statement.execute();
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             exception(row,sqle);

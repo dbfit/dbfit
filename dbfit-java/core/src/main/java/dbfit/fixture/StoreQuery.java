@@ -2,9 +2,10 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
-import dbfit.util.PreparedDbStatement;
+import dbfit.api.DbQuery;
 import dbfit.util.DataTable;
 import dbfit.util.FitNesseTestHost;
+
 import fit.Parse;
 
 import java.sql.ResultSet;
@@ -37,7 +38,7 @@ public class StoreQuery extends fit.Fixture {
         }
 
         try (
-            PreparedDbStatement st =
+            DbQuery st =
                 dbEnvironment.createStatementWithBoundFixtureSymbols(
                     FitNesseTestHost.getInstance(), query)
         ) {

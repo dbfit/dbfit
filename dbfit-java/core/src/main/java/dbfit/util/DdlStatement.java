@@ -1,9 +1,11 @@
-package dbfit.api;
+package dbfit.util;
+
+import dbfit.api.DbCommand;
 
 import java.sql.Statement;
 import java.sql.SQLException;
 
-public class DdlStatement implements AutoCloseable {
+public class DdlStatement implements DbCommand {
     private Statement statement;
     private String commandText;
 
@@ -12,7 +14,8 @@ public class DdlStatement implements AutoCloseable {
         this.commandText = commandText;
     }
 
-    public void run() throws SQLException {
+    @Override
+    public void execute() throws SQLException {
         statement.execute(commandText);
     }
 

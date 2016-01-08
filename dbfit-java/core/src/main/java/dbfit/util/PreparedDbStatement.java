@@ -1,18 +1,23 @@
 package dbfit.util;
 
+import dbfit.api.DbCommand;
+import dbfit.api.DbQuery;
+
 import java.sql.*;
 
-public class PreparedDbStatement implements AutoCloseable {
+public class PreparedDbStatement implements DbCommand, DbQuery {
     protected PreparedStatement statement;
 
     public PreparedDbStatement(PreparedStatement statement) {
         this.statement = statement;
     }
 
-    public void run() throws SQLException {
+    @Override
+    public void execute() throws SQLException {
         statement.execute();
     }
 
+    @Override
     public ResultSet executeQuery() throws SQLException {
         return statement.executeQuery();
     }

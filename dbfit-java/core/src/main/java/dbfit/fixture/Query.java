@@ -2,7 +2,7 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
-import dbfit.util.PreparedDbStatement;
+import dbfit.api.DbQuery;
 import dbfit.util.*;
 
 import java.sql.ResultSet;
@@ -40,7 +40,7 @@ public class Query extends RowSetFixture {
         }
 
         Log.log("Query: '%s'", queryOrSymbol);
-        try (PreparedDbStatement st =
+        try (DbQuery st =
                 dbEnvironment.createStatementWithBoundFixtureSymbols(
                     FitNesseTestHost.getInstance(), queryOrSymbol)) {
             return new MatchableDataTable(new DataTable(st.executeQuery()));

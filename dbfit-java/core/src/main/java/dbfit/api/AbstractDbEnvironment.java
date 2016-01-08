@@ -122,8 +122,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     @Override
-    public DdlStatement createDdlStatement(String ddl)
-            throws SQLException {
+    public DbCommand createDdlStatement(String ddl) throws SQLException {
         return new DdlStatement(getConnection().createStatement(), ddl);
     }
 

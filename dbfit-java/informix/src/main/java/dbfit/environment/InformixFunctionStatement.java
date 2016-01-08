@@ -13,7 +13,7 @@ public class InformixFunctionStatement extends PreparedDbStatement {
     }
 
     @Override
-    public void run() throws SQLException {
+    public void execute() throws SQLException {
         try (ResultSet rs = executeQuery()) {
             rs.next();
             returnValue = rs.getObject(1);

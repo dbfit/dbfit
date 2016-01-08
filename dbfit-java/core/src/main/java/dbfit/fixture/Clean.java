@@ -2,8 +2,9 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
-import dbfit.util.PreparedDbStatement;
+import dbfit.api.DbCommand;
 import dbfit.util.FitNesseTestHost;
+
 import fit.Parse;
 
 import java.math.BigDecimal;
@@ -81,10 +82,10 @@ public class Clean extends fit.ColumnFixture {
         }
 
         private void executeQuery(SQLQuery q) throws SQLException {
-            try (PreparedDbStatement st =
+            try (DbCommand st =
                     environment.createStatementWithBoundFixtureSymbols(
                         FitNesseTestHost.getInstance(), q.toString())) {
-                st.run();
+                st.execute();
             }
         }
     }
