@@ -3,7 +3,7 @@ package dbfit.fixture;
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
 import dbfit.api.DbCommand;
-import dbfit.util.PreparedDbStatement;
+import dbfit.api.DbTable;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessorTypeAdapter;
 import dbfit.util.NameNormaliser;
@@ -39,41 +39,6 @@ public class Update extends fit.Fixture {
         this.environment = dbEnvironment;
     }
 
-    private DbCommand buildUpdateCommand() throws SQLException {
-        if (updateAccessors.length == 0) {
-            throw new Error("Update fixture must have at least one field to update. Have you forgotten = after the column name?");
-        }
-
-        StringBuilder s = new StringBuilder("update ").append(tableName).append(" set ");
-
-        for (int i = 0; i < updateAccessors.length; i++) {
-            if (i > 0) {
-                s.append(", ");
-            }
-            s.append(updateAccessors[i].getName()).append("=").append("?");
-        }
-
-        s.append(" where ");
-
-        for (int i = 0; i < selectAccessors.length; i++) {
-            if (i > 0) {
-                s.append(" and ");
-            }
-            s.append(selectAccessors[i].getName()).append("=").append("?");
-        }
-
-        PreparedDbStatement statement = environment.createPreparedStatement(s.toString());
-
-        for (int i = 0; i < updateAccessors.length; i++) {
-            updateAccessors[i].bindTo(statement, i + 1);
-        }
-
-        for (int j = 0; j < selectAccessors.length; j++) {
-            selectAccessors[j].bindTo(statement, j + updateAccessors.length + 1);
-        }
-        return statement;
-    }
-
     public void doRows(Parse rows) {
         // if table not defined as parameter, read from fixture argument; if still not defined, read from first row
         if ((tableName == null || tableName.trim().length() == 0) && args.length > 0) {
@@ -85,7 +50,8 @@ public class Update extends fit.Fixture {
 
         try {
             initParameters(rows.parts); //init parameters from the first row
-            try (DbCommand satement = buildUpdateCommand()) {
+            DbTable dbTable = new DbTable(environment, tableName);
+            try (DbCommand satement = dbTable.buildUpdateCommand(selectAccessors, updateAccessors)) {
                 this.statement = statement;
                 Parse row = rows;
                 while ((row = row.more) != null) {
