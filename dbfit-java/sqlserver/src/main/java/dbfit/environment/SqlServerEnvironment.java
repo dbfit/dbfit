@@ -1,7 +1,6 @@
 package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
-import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessorsMapBuilder;
 import dbfit.util.Direction;
