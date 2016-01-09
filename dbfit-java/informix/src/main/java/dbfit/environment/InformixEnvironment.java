@@ -2,7 +2,7 @@ package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
-import dbfit.util.PreparedDbStatement;
+import dbfit.api.PreparedDbCommand;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
@@ -292,7 +292,7 @@ public class InformixEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
-    public PreparedDbStatement createCallableStatement(
+    public PreparedDbCommand createCallableStatement(
             PreparedStatement statement, boolean isFunction) throws SQLException {
         if (isFunction) {
             return new InformixFunctionStatement(statement);

@@ -1,7 +1,6 @@
 package dbfit.api;
 
 import dbfit.util.DbParameterAccessor;
-import dbfit.util.PreparedDbStatement;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -34,7 +33,7 @@ public interface DBEnvironment {
     /**
      * Create an insert command that will be used to populate new rows in a table
      */
-    PreparedDbStatement buildInsertStatement(String tableName, DbParameterAccessor[] accessors)
+    PreparedDbCommand buildInsertStatement(String tableName, DbParameterAccessor[] accessors)
             throws SQLException;
 
     /**
@@ -57,13 +56,13 @@ public interface DBEnvironment {
      * Create a {@link PreparedDbStatement} and binds fixture symbols to
      * SQL statement parameters with matching names.
      */
-    PreparedDbStatement createStatementWithBoundFixtureSymbols(TestHost testHost, String commandText)
+    PreparedDbCommand createStatementWithBoundFixtureSymbols(TestHost testHost, String commandText)
             throws SQLException;
 
     /**
      * Create a prepared statement for the given command text
      */
-    PreparedDbStatement createPreparedStatement(String commandText) throws SQLException;
+    PreparedDbCommand createPreparedStatement(String commandText) throws SQLException;
 
     /**
      * Create a stored subroutine call {@link DbStatement} for the given command text.
@@ -72,7 +71,7 @@ public interface DBEnvironment {
      *                    {? = call f(?, ?, ...)} for functions or
      *                    {call p(?, ?, ?)} for procedures
      */
-    PreparedDbStatement createCallableStatement(String commandText, boolean isFunction) throws SQLException;
+    PreparedDbCommand createCallableStatement(String commandText, boolean isFunction) throws SQLException;
 
     /**
      * Create a {@list DbStatement} for the given DDL text. Bind variables

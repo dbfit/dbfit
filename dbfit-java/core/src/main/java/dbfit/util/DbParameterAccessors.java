@@ -1,5 +1,7 @@
 package dbfit.util;
 
+import dbfit.api.PreparedDbCommand;
+
 import java.sql.SQLException;
 import java.util.*;
 
@@ -18,7 +20,7 @@ public class DbParameterAccessors implements Iterable<DbParameterAccessor> {
         this(new DbParameterAccessor[]{});
     }
 
-    public void bindParameters(PreparedDbStatement statement) throws SQLException {
+    public void bindParameters(PreparedDbCommand statement) throws SQLException {
         List<String> accessorNames = getSortedAccessorNames();
         for (DbParameterAccessor ac : accessors) {
             int realindex = accessorNames.indexOf(ac.getName());

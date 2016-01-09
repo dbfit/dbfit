@@ -105,7 +105,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     @Override
-    public final PreparedDbStatement createStatementWithBoundFixtureSymbols(
+    public final PreparedDbCommand createStatementWithBoundFixtureSymbols(
             TestHost testHost, String commandText) throws SQLException {
         String command = Options.isBindSymbols() ? parseCommandText(commandText) : commandText;
         PreparedStatement statement = getConnection().prepareStatement(command);
@@ -127,15 +127,15 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     /**
-     * Create a {@link PreparedDbStatement} for the given prepared statement.
+     * Create a {@link PreparedDbCommand} for the given prepared statement.
      * This is the method to override if custom implementation needs to be returned
      */
-    protected PreparedDbStatement createPreparedStatement(PreparedStatement statement) {
+    protected PreparedDbCommand createPreparedStatement(PreparedStatement statement) {
         return new PreparedDbStatement(statement);
     }
 
     @Override
-    public final PreparedDbStatement createPreparedStatement(String commandText) throws SQLException {
+    public final PreparedDbCommand createPreparedStatement(String commandText) throws SQLException {
         return createPreparedStatement(getConnection().prepareStatement(commandText));
     }
 
@@ -143,13 +143,13 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
      * Create a {@link DbStatement} for the given prepared statement.
      * This is the method to override if custom implementation needs to be returned
      */
-    protected PreparedDbStatement createCallableStatement(PreparedStatement statement, boolean isFunction)
+    protected PreparedDbCommand createCallableStatement(PreparedStatement statement, boolean isFunction)
             throws SQLException {
         return new PreparedDbStatement(statement);
     }
 
     @Override
-    public final PreparedDbStatement createCallableStatement(String commandText, boolean isFunction) throws SQLException {
+    public final PreparedDbCommand createCallableStatement(String commandText, boolean isFunction) throws SQLException {
         return createCallableStatement(getConnection().prepareCall(commandText), isFunction);
     }
 
@@ -227,7 +227,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     @Override
-    public final PreparedDbStatement buildInsertStatement(String tableName, DbParameterAccessor[] accessors)
+    public final PreparedDbCommand buildInsertStatement(String tableName, DbParameterAccessor[] accessors)
             throws SQLException {
         return createPreparedStatement(buildInsertPreparedStatement(tableName, accessors));
     }

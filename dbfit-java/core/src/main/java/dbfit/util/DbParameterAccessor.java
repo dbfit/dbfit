@@ -1,5 +1,6 @@
 package dbfit.util;
 
+import dbfit.api.PreparedDbCommand;
 import static dbfit.util.Direction.*;
 import static dbfit.util.ValueNormaliser.normaliseValue;
 
@@ -15,7 +16,7 @@ public class DbParameterAccessor {
     private String userDefinedTypeName;
     private Class<?> javaType;
     private int position; // zero-based index of parameter in procedure (-1 for ret value) or column in table
-    protected PreparedDbStatement statement;
+    protected PreparedDbCommand statement;
     private TypeTransformerFactory dbfitToJdbcTransformerFactory;
 
     /*
@@ -79,7 +80,7 @@ public class DbParameterAccessor {
         this.direction = direction;
     }
 
-    public void bindTo(PreparedDbStatement statement, int ind) throws SQLException{
+    public void bindTo(PreparedDbCommand statement, int ind) throws SQLException{
         this.statement = statement;
         this.index = ind;
         if (direction != INPUT) {

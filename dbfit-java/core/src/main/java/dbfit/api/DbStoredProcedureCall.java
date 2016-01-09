@@ -2,7 +2,6 @@ package dbfit.api;
 
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessors;
-import dbfit.util.PreparedDbStatement;
 import static dbfit.util.sql.PreparedStatements.buildFunctionCall;
 import static dbfit.util.sql.PreparedStatements.buildStoredProcedureCall;
 
@@ -43,12 +42,12 @@ public class DbStoredProcedureCall {
         }
     }
 
-    void bindParametersTo(PreparedDbStatement statement) throws SQLException {
+    void bindParametersTo(PreparedDbCommand statement) throws SQLException {
         getAccessors().bindParameters(statement);
     }
 
-    public PreparedDbStatement toPreparedDbStatement() throws SQLException {
-        PreparedDbStatement statement =
+    public DbCommand buildCallCommand() throws SQLException {
+        PreparedDbCommand statement =
             environment.createCallableStatement(toSqlString(), isFunction());
         bindParametersTo(statement);
         return statement;

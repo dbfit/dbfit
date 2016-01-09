@@ -1,7 +1,6 @@
 package dbfit.api;
 
 import dbfit.util.DbParameterAccessor;
-import dbfit.util.PreparedDbStatement;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
 
@@ -30,7 +29,7 @@ public class DbTable {
 
     public DbCommand buildInsertCommand(
             DbParameterAccessor[] accessors) throws SQLException {
-        PreparedDbStatement statement =
+        PreparedDbCommand statement =
             dbEnvironment.buildInsertStatement(tableOrViewName, accessors);
 
         for (int i = 0; i < accessors.length; i++) {
@@ -60,7 +59,7 @@ public class DbTable {
             s.append(selectAccessors[i].getName()).append("=").append("?");
         }
 
-        PreparedDbStatement statement = dbEnvironment.createPreparedStatement(s.toString());
+        PreparedDbCommand statement = dbEnvironment.createPreparedStatement(s.toString());
 
         for (int i = 0; i < updateAccessors.length; i++) {
             updateAccessors[i].bindTo(statement, i + 1);
