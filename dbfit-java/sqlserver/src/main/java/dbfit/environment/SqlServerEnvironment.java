@@ -137,7 +137,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
         String objectDatabasePrefix = "";
         String[] objnameParts = dbObjectName.split("\\.");
         if (objnameParts.length == 3) {
-        	objectDatabasePrefix = objnameParts[0] + ".";
+            objectDatabasePrefix = objnameParts[0] + ".";
         }
         return objectDatabasePrefix;
     }

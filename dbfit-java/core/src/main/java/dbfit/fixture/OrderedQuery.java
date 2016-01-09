@@ -5,8 +5,8 @@ package dbfit.fixture;
  * ordered row comparisons
  */
 public class OrderedQuery extends Query {
-	@Override
-	protected boolean isOrdered() {
-		return true;
-	}
+    @Override
+    protected boolean isOrdered() {
+        return true;
+    }
 }

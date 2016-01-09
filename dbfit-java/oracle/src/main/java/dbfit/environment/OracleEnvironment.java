@@ -97,9 +97,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
      */
     static class DbDictionaryParamsOrColumnsIterator extends AbstractParamsOrColumnsIterator
             implements Iterator<DbParameterOrColumnInfo> {
+    private ResultSet rs;
 
-        private ResultSet rs;
-        
         private DbDictionaryParamsOrColumnsIterator(ResultSet rs) {
             this.rs = rs;
             this.position = 0;
@@ -138,7 +137,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         private ResultSetMetaData md;
         private int currentColumn = -1;
         private int columnCount;
-        
+
         private JdbcRsMetaParamsOrColumnsIterator(ResultSetMetaData md) throws SQLException {
             this.md = md;
             this.position = 0;
@@ -158,7 +157,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                 ++currentColumn;
                 return true;
             }
-            
+
             return false;
         }
 
@@ -313,7 +312,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
         String query = "select * from " + tableOrViewName + " where 1 = 2";
-        return readIntoParams(new String[]{}, query, InfoSource.JDBC_RESULT_SET_META_DATA); 
+        return readIntoParams(new String[]{}, query, InfoSource.JDBC_RESULT_SET_META_DATA);
     }
 
     private DbParameterAccessor addSingleParam(Map<String, DbParameterAccessor> allParams,

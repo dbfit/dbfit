@@ -21,7 +21,7 @@ import dbfit.util.Direction;
 /**
  * Encapsulates support for the Derby database (also known as JavaDB). Operates
  * in Client mode.
- * 
+ *
  * @see EmbeddedDerbyEnvironment
  * @author P&aring;l Brattberg, pal.brattberg@acando.com
  */
@@ -204,4 +204,3 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
         }
     }
 }
-

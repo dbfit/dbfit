@@ -34,18 +34,18 @@ public class OracleClobNormaliserTest {
     @Test
     public void shouldThrowCorrectExceptionIfClobIsLargerThanMaximum() throws SQLException {
         CLOB clob = mock(CLOB.class);
-        
+
         when(clob.length()).thenReturn(10001l);
         expectedEx.expect(UnsupportedOperationException.class);
         expectedEx.expectMessage("Clobs larger than 10000 bytes are not supported by DBFIT");
-        
+
         new OracleClobNormaliser().transform(clob);
     }
 
     @Test
     public void shouldReturnContentsOfClobIFAllOkay() throws SQLException {
         CLOB clob = mock(CLOB.class);
-        
+
         when(clob.length()).thenReturn(Long.valueOf("CLOB contents".length()));
         when(clob.getChars(eq(1l), eq(10000), any(char[].class))).thenReturn("CLOB contents".length());
 
@@ -53,6 +53,4 @@ public class OracleClobNormaliserTest {
         //assertEquals("CLOB contents", new OracleClobNormaliser().normalise(clob));
         new OracleClobNormaliser().transform(clob);
     }
-
-
 }

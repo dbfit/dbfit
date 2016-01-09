@@ -8,7 +8,7 @@ public class TeradataDatePeriod extends DbStruct {
         super("PERIOD(DATE)", dates);
     }
 
-	@Override
+    @Override
     public String toString() {
         String r = "";
         try {
