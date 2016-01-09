@@ -88,7 +88,7 @@ public class OracleBooleanSpCommandTest {
     @Test
     public void procedureWithBooleanInputParamTest() throws IOException {
         verifyGeneratedWrapperWithSavedResource(getCmdBuilder(SP_PROC_1)
-                .withBooleanArgument(INPUT), 
+                .withBooleanArgument(INPUT),
                 "proc_1_1_bool_in.pls");
     }
 

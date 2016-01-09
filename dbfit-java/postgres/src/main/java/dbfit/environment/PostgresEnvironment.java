@@ -47,7 +47,7 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
             throws SQLException {
         String[] qualifiers = tableOrViewName.split("\\.");
         String qry = " select column_name, data_type, character_maximum_length "
-                + "	as direction from information_schema.columns where ";
+                + "as direction from information_schema.columns where ";
 
         if (qualifiers.length == 2) {
             qry += " table_schema=? and table_name=? ";

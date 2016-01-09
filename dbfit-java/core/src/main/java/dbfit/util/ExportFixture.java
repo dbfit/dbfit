@@ -9,8 +9,8 @@ import fit.Parse;
  * path.
  */
 public class ExportFixture extends Fixture {
-	public void doRow(Parse row) {
-		String packageName = row.parts.text();
-		FixtureLoader.instance().fixturePathElements.remove(packageName);
-	}
+    public void doRow(Parse row) {
+        String packageName = row.parts.text();
+        FixtureLoader.instance().fixturePathElements.remove(packageName);
+    }
 }
