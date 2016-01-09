@@ -17,7 +17,7 @@ public class NameNormaliserPostgres {
 
         if (isEscaped(name)) {
             return name.substring(1, name.length() - 1).replace("\"\"", "\"");
-        } 
+        }
         return dbfit.util.NameNormaliser.normaliseName(name);
     }
 }

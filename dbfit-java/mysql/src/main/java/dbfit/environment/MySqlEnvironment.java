@@ -51,7 +51,7 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
         String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
                 .split("\\.");
         String qry = " select column_name, data_type, character_maximum_length "
-                + "	as direction from information_schema.columns where ";
+                + "as direction from information_schema.columns where ";
         if (qualifiers.length == 2) {
             qry += " lower(table_schema)=? and lower(table_name)=? ";
         } else {
@@ -96,7 +96,7 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
     private static List<String> longTypes = Arrays.asList(new String[] {
             "BIGINT", "INTEGER UNSIGNED", "INT UNSIGNED" });
     private static List<String> bigIntUnsignedTypes = Arrays.asList(new String[] {
-	    "BIGINT UNSIGNED" });
+            "BIGINT UNSIGNED" });
     private static List<String> floatTypes = Arrays
             .asList(new String[] { "FLOAT" });
     private static List<String> doubleTypes = Arrays

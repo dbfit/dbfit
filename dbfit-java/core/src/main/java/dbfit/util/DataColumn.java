@@ -4,7 +4,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
- * minimal meta-data about a result-set column. 
+ * minimal meta-data about a result-set column.
  * @see DataTable
  */
 public class DataColumn {

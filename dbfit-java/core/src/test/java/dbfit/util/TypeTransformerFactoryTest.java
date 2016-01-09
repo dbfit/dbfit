@@ -33,7 +33,7 @@ public class TypeTransformerFactoryTest {
     private final TypeTransformer normaliserMid = createTypeTransformerFake("normaliser Mid");
     private final TypeTransformer normaliserLow = createTypeTransformerFake("normaliser Low");
 
-    private TypeTransformerFactory ttf = new TypeTransformerFactory(); 
+    private TypeTransformerFactory ttf = new TypeTransformerFactory();
 
     @Before
     public void init() {

@@ -3,6 +3,6 @@ package dbfit;
 public class DB2iTest extends DatabaseTest{
 
     public DB2iTest(){
-        super(dbfit.api.DbEnvironmentFactory.newEnvironmentInstance("DB2i")); 
-    }	
+        super(dbfit.api.DbEnvironmentFactory.newEnvironmentInstance("DB2i"));
+    }
 }

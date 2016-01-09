@@ -8,7 +8,7 @@ import java.util.*;
 import dbfit.util.*;
 
 public abstract class RowSetFixture extends ColumnFixture {
-    
+
     private MatchableDataTable dt;
     private DataRow currentRow;
     // if element not 0, fixture column -> result set column index

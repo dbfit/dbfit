@@ -5,7 +5,7 @@ import dbfit.annotations.DatabaseEnvironment;
 /**
  * Encapsulates support for the Derby database (also known as JavaDB). Operates
  * in Embedded mode.
- * 
+ *
  * @see DerbyEnvironment
  * @author P&aring;l Brattberg, pal.brattberg@acando.com
  */
