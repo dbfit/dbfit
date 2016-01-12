@@ -256,43 +256,4 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 
         return allParams;
     }
-
-    public String buildInsertCommand(String tableName,
-            DbParameterAccessor[] accessors) {
-        /*
-         * oracle jdbc interface with callablestatement has problems with
-         * returning into...
-         * http://forums.oracle.com/forums/thread.jspa?threadID
-         * =438204&tstart=0&messageID=1702717 so begin/end block has to be built
-         * around it
-         */
-        StringBuilder sb = new StringBuilder("insert into ");
-        sb.append(tableName).append("(");
-        String comma = "";
-        String retComma = "";
-
-        StringBuilder values = new StringBuilder();
-        StringBuilder retNames = new StringBuilder();
-        StringBuilder retValues = new StringBuilder();
-
-        for (DbParameterAccessor accessor : accessors) {
-            if (accessor.hasDirection(Direction.INPUT)) {
-                sb.append(comma);
-                values.append(comma);
-                sb.append(accessor.getName());
-                values.append("?");
-                comma = ",";
-            } else {
-                retNames.append(retComma);
-                retValues.append(retComma);
-                retNames.append(accessor.getName());
-                retValues.append("?");
-                retComma = ",";
-            }
-        }
-        sb.append(") values (");
-        sb.append(values);
-        sb.append(")");
-        return sb.toString();
-    }
 }
