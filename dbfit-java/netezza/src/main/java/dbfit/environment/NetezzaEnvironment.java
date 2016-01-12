@@ -246,36 +246,4 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
         }
         return allParams;
     }
-
-    public String buildInsertCommand(String tableName,
-            DbParameterAccessor[] accessors) {
-        StringBuilder sb = new StringBuilder("insert into ");
-        sb.append(tableName).append("(");
-        String comma = "";
-        String retComma = "";
-
-        StringBuilder values = new StringBuilder();
-        StringBuilder retNames = new StringBuilder();
-        StringBuilder retValues = new StringBuilder();
-
-        for (DbParameterAccessor accessor : accessors) {
-            if (accessor.hasDirection(Direction.INPUT)) {
-                sb.append(comma);
-                values.append(comma);
-                sb.append(accessor.getName());
-                values.append("?");
-                comma = ",";
-            } else {
-                retNames.append(retComma);
-                retValues.append(retComma);
-                retNames.append(accessor.getName());
-                retValues.append("?");
-                retComma = ",";
-            }
-        }
-        sb.append(") values (");
-        sb.append(values);
-        sb.append(")");
-        return sb.toString();
-    }
 }
