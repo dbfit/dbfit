@@ -38,7 +38,7 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
     public PreparedStatement buildInsertPreparedStatement(String tableName,
             DbParameterAccessor[] accessors) throws SQLException {
         return getConnection().prepareStatement(
-                buildInsertCommand(tableName, accessors));
+                buildInsertCommandText(tableName, accessors));
     }
 
     // netezza jdbc driver does not support named parameters - so just map them

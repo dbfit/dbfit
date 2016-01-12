@@ -33,7 +33,7 @@ public interface DBEnvironment {
     /**
      * Create an insert command that will be used to populate new rows in a table
      */
-    PreparedDbCommand buildInsertStatement(String tableName, DbParameterAccessor[] accessors)
+    PreparedDbCommand buildInsertCommand(String tableName, DbParameterAccessor[] accessors)
             throws SQLException;
 
     /**
@@ -55,35 +55,35 @@ public interface DBEnvironment {
     /*
      * CreateCommand(String statement) and BindFixtureSymbols are implemented
      * differently then in the .Net version due to JDBC API; they are combined
-     * into createStatementWithBoundFixtureSymbols
+     * into createCommandWithBoundSymbols
      */
 
     /**
-     * Create a {@link PreparedDbStatement} and binds fixture symbols to
+     * Create a {@link PreparedDbCommand} and binds fixture symbols to
      * SQL statement parameters with matching names.
      */
-    PreparedDbCommand createStatementWithBoundFixtureSymbols(TestHost testHost, String commandText)
+    PreparedDbCommand createCommandWithBoundSymbols(TestHost testHost, String commandText)
             throws SQLException;
 
     /**
      * Create a prepared statement for the given command text
      */
-    PreparedDbCommand createPreparedStatement(String commandText) throws SQLException;
+    PreparedDbCommand createPreparedDbCommand(String commandText) throws SQLException;
 
     /**
-     * Create a stored subroutine call {@link DbStatement} for the given command text.
+     * Create a stored subroutine call for the given command text.
      *
      * @param commandText typically it's something like
      *                    {? = call f(?, ?, ...)} for functions or
      *                    {call p(?, ?, ?)} for procedures
      */
-    PreparedDbCommand createCallableStatement(String commandText, boolean isFunction) throws SQLException;
+    PreparedDbCommand createCallCommand(String commandText, boolean isFunction) throws SQLException;
 
     /**
-     * Create a {@list DbStatement} for the given DDL text. Bind variables
+     * Create a {@list DbCommand} for the given DDL text. Bind variables
      * are not supported.
      */
-    DbCommand createDdlStatement(String ddl) throws SQLException;
+    DbCommand createDdlCommand(String ddl) throws SQLException;
 
     /**
      * Closes the current connection and rolls back any active transactions. The

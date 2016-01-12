@@ -30,7 +30,7 @@ public class DbTable {
     public DbCommand buildInsertCommand(
             DbParameterAccessor[] accessors) throws SQLException {
         PreparedDbCommand statement =
-            dbEnvironment.buildInsertStatement(tableOrViewName, accessors);
+            dbEnvironment.buildInsertCommand(tableOrViewName, accessors);
 
         for (int i = 0; i < accessors.length; i++) {
             accessors[i].bindTo(statement, i + 1);
@@ -59,7 +59,7 @@ public class DbTable {
             s.append(selectAccessors[i].getName()).append("=").append("?");
         }
 
-        PreparedDbCommand statement = dbEnvironment.createPreparedStatement(s.toString());
+        PreparedDbCommand statement = dbEnvironment.createPreparedDbCommand(s.toString());
 
         for (int i = 0; i < updateAccessors.length; i++) {
             updateAccessors[i].bindTo(statement, i + 1);

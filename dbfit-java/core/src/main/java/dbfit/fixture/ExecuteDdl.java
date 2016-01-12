@@ -36,6 +36,6 @@ public class ExecuteDdl extends Fixture {
     }
 
     private DbCommand createDdlExecution() throws Exception {
-        return dbEnvironment.createDdlStatement(getStatementText());
+        return dbEnvironment.createDdlCommand(getStatementText());
     }
 }

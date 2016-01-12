@@ -109,7 +109,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     @Override
-    public final PreparedDbCommand createStatementWithBoundFixtureSymbols(
+    public final PreparedDbCommand createCommandWithBoundSymbols(
             TestHost testHost, String commandText) throws SQLException {
         String command = Options.isBindSymbols() ? parseCommandText(commandText) : commandText;
         PreparedStatement statement = getConnection().prepareStatement(command);
@@ -122,11 +122,11 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
             }
         }
 
-        return createPreparedStatement(statement);
+        return createPreparedDbCommand(statement);
     }
 
     @Override
-    public DbCommand createDdlStatement(String ddl) throws SQLException {
+    public DbCommand createDdlCommand(String ddl) throws SQLException {
         return new DdlStatement(getConnection().createStatement(), ddl);
     }
 
@@ -134,27 +134,27 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
      * Create a {@link PreparedDbCommand} for the given prepared statement.
      * This is the method to override if custom implementation needs to be returned
      */
-    protected PreparedDbCommand createPreparedStatement(PreparedStatement statement) {
+    protected PreparedDbCommand createPreparedDbCommand(PreparedStatement statement) {
         return new PreparedDbStatement(statement);
     }
 
     @Override
-    public final PreparedDbCommand createPreparedStatement(String commandText) throws SQLException {
-        return createPreparedStatement(getConnection().prepareStatement(commandText));
+    public final PreparedDbCommand createPreparedDbCommand(String commandText) throws SQLException {
+        return createPreparedDbCommand(getConnection().prepareStatement(commandText));
     }
 
     /**
      * Create a {@link DbStatement} for the given prepared statement.
      * This is the method to override if custom implementation needs to be returned
      */
-    protected PreparedDbCommand createCallableStatement(PreparedStatement statement, boolean isFunction)
+    protected PreparedDbCommand createCallCommand(PreparedStatement statement, boolean isFunction)
             throws SQLException {
         return new PreparedDbStatement(statement);
     }
 
     @Override
-    public final PreparedDbCommand createCallableStatement(String commandText, boolean isFunction) throws SQLException {
-        return createCallableStatement(getConnection().prepareCall(commandText), isFunction);
+    public final PreparedDbCommand createCallCommand(String commandText, boolean isFunction) throws SQLException {
+        return createCallCommand(getConnection().prepareCall(commandText), isFunction);
     }
 
     protected DbParameterAccessor createDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {
@@ -226,14 +226,14 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     public PreparedStatement buildInsertPreparedStatement(String tableName,
             DbParameterAccessor[] accessors) throws SQLException {
         return getConnection().prepareStatement(
-                buildInsertCommand(tableName, accessors),
+                buildInsertCommandText(tableName, accessors),
                 Statement.RETURN_GENERATED_KEYS);
     }
 
     @Override
-    public final PreparedDbCommand buildInsertStatement(String tableName, DbParameterAccessor[] accessors)
+    public final PreparedDbCommand buildInsertCommand(String tableName, DbParameterAccessor[] accessors)
             throws SQLException {
-        return createPreparedStatement(buildInsertPreparedStatement(tableName, accessors));
+        return createPreparedDbCommand(buildInsertPreparedStatement(tableName, accessors));
     }
 
     /**
@@ -242,7 +242,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
      * isolated into a separate method so that subclasses can override one or
      * the other depending on db specifics
      */
-    public String buildInsertCommand(String tableName,
+    public String buildInsertCommandText(String tableName,
             DbParameterAccessor[] accessors) {
         StringBuilder sb = new StringBuilder("insert into ");
         sb.append(tableName).append("(");

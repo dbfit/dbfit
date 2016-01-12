@@ -38,7 +38,7 @@ public class StoreQuery extends fit.Fixture {
 
         try (
             DbQuery statement =
-                dbEnvironment.createStatementWithBoundFixtureSymbols(
+                dbEnvironment.createCommandWithBoundSymbols(
                     FitNesseTestHost.getInstance(), query)
         ) {
             DataTable dt = new DataTable(statement.executeQuery());

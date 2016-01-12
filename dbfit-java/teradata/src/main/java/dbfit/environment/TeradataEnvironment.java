@@ -131,7 +131,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
-    public DbCommand createDdlStatement(String ddl) throws SQLException {
+    public DbCommand createDdlCommand(String ddl) throws SQLException {
         return new DdlStatement(getConnection().createStatement(), ddl) {
             @Override
             public void execute() throws SQLException {

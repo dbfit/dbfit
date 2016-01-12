@@ -291,12 +291,12 @@ public class InformixEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
-    public PreparedDbCommand createCallableStatement(
+    public PreparedDbCommand createCallCommand(
             PreparedStatement statement, boolean isFunction) throws SQLException {
         if (isFunction) {
             return new InformixFunctionStatement(statement);
         } else {
-            return super.createCallableStatement(statement, isFunction);
+            return super.createCallCommand(statement, isFunction);
         }
     }
 }

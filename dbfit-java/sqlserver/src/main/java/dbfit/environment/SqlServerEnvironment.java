@@ -233,7 +233,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
                     + ") as u where object_id = OBJECT_ID(?) order by set_id, parameter_id");
     }
 
-    public String buildInsertCommand(String tableName,
+    public String buildInsertCommandText(String tableName,
             DbParameterAccessor[] accessors) {
         StringBuilder sb = new StringBuilder("insert into ");
         sb.append(tableName).append("(");

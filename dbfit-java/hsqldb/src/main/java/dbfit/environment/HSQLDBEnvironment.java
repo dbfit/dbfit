@@ -41,7 +41,7 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
     public PreparedStatement buildInsertPreparedStatement(String tableName,
             DbParameterAccessor[] accessors) throws SQLException {
         return getConnection().prepareStatement(
-                buildInsertCommand(tableName, accessors));
+                buildInsertCommandText(tableName, accessors));
     }
 
     @Override

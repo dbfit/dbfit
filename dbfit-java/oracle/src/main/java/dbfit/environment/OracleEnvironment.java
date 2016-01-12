@@ -486,7 +486,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                 + " is not supported");
     }
 
-    public String buildInsertCommand(String tableName,
+    public String buildInsertCommandText(String tableName,
             DbParameterAccessor[] accessors) {
         Log.log("buiding insert command for " + tableName);
 
@@ -547,7 +547,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     public PreparedStatement buildInsertPreparedStatement(String tableName,
             DbParameterAccessor[] accessors) throws SQLException {
         return getConnection().prepareCall(
-                buildInsertCommand(tableName, accessors));
+                buildInsertCommandText(tableName, accessors));
     }
 
     @Override

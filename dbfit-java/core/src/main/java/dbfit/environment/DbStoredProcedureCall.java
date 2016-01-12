@@ -51,7 +51,7 @@ class DbStoredProcedureCall {
 
     public DbCommand buildCallCommand() throws SQLException {
         PreparedDbCommand statement =
-            environment.createCallableStatement(toSqlString(), isFunction());
+            environment.createCallCommand(toSqlString(), isFunction());
         bindParametersTo(statement);
         return statement;
     }
