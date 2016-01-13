@@ -231,9 +231,11 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     @Override
-    public final PreparedDbCommand buildInsertCommand(String tableName, DbParameterAccessor[] accessors)
+    public final DbCommand buildInsertCommand(String tableName, DbParameterAccessor[] accessors)
             throws SQLException {
-        return createPreparedDbCommand(buildInsertPreparedStatement(tableName, accessors));
+        PreparedDbCommand cmd = createPreparedDbCommand(buildInsertPreparedStatement(tableName, accessors));
+        new DbParameterAccessors(accessors).bindParametersInGivenOrder(cmd);
+        return cmd;
     }
 
     /**

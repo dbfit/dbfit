@@ -1,11 +1,14 @@
 package dbfit.api;
 
 import dbfit.util.DbParameterAccessor;
+import dbfit.util.DbParameterAccessors;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
 
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static dbfit.util.Direction.INPUT;
 import static dbfit.util.Direction.OUTPUT;
@@ -29,13 +32,7 @@ public class DbTable {
 
     public DbCommand buildInsertCommand(
             DbParameterAccessor[] accessors) throws SQLException {
-        PreparedDbCommand statement =
-            dbEnvironment.buildInsertCommand(tableOrViewName, accessors);
-
-        for (int i = 0; i < accessors.length; i++) {
-            accessors[i].bindTo(statement, i + 1);
-        }
-        return statement;
+        return dbEnvironment.buildInsertCommand(tableOrViewName, accessors);
     }
 
     public DbCommand buildUpdateCommand(
@@ -61,13 +58,10 @@ public class DbTable {
 
         PreparedDbCommand statement = dbEnvironment.createPreparedDbCommand(s.toString());
 
-        for (int i = 0; i < updateAccessors.length; i++) {
-            updateAccessors[i].bindTo(statement, i + 1);
-        }
-
-        for (int j = 0; j < selectAccessors.length; j++) {
-            selectAccessors[j].bindTo(statement, j + updateAccessors.length + 1);
-        }
+        ArrayList<DbParameterAccessor> allAccessors =
+            new ArrayList<>(Arrays.asList(updateAccessors));
+        allAccessors.addAll(Arrays.asList(selectAccessors));
+        new DbParameterAccessors(allAccessors).bindParametersInGivenOrder(statement);
 
         return statement;
     }

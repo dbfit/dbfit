@@ -31,13 +31,15 @@ public interface DBEnvironment {
             throws SQLException;
 
     /**
-     * Create an insert command that will be used to populate new rows in a table
+     * Create an insert command that will be used to populate new rows in a table.
+     * The given accessors are bound to the database command.
      */
-    PreparedDbCommand buildInsertCommand(String tableName, DbParameterAccessor[] accessors)
+    DbCommand buildInsertCommand(String tableName, DbParameterAccessor[] accessors)
             throws SQLException;
 
     /**
-     * Build a call command for the given stored procedure name and parameters
+     * Build a call command for the given stored procedure name and parameters.
+     * The given accessors are bound to the database statement.
      */
     DbCommand buildStoredProcedureCall(String name, DbParameterAccessor[] accessors)
             throws SQLException;
