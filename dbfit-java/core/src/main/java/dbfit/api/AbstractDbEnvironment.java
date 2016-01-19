@@ -50,6 +50,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
 
     public void connect(String connectionString, Properties info) throws SQLException {
         registerDriver();
+        closeConnection();
         currentConnection = DriverManager.getConnection(connectionString, info);
         afterConnectionEstablished();
     }
