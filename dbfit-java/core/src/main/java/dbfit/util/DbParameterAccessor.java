@@ -2,6 +2,7 @@ package dbfit.util;
 
 import dbfit.fixture.StatementExecution;
 import static dbfit.util.Direction.*;
+import static dbfit.util.ValueNormaliser.normaliseValue;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
@@ -17,18 +18,6 @@ public class DbParameterAccessor {
     private int position; // zero-based index of parameter in procedure (-1 for ret value) or column in table
     protected StatementExecution cs;
     private TypeTransformerFactory dbfitToJdbcTransformerFactory;
-
-    public static Object normaliseValue(Object currVal) throws SQLException {
-        if (currVal == null) {
-            return null;
-        }
-
-        TypeTransformer tn = TypeNormaliserFactory.getNormaliser(currVal.getClass());
-        if (tn != null) {
-            currVal = tn.transform(currVal);
-        }
-        return currVal;
-    }
 
     /*
      * Create an exact copy of this object. Normally this should be

@@ -1,7 +1,7 @@
 package dbfit.util;
 
 import static dbfit.util.NameNormaliser.normaliseName;
-import static dbfit.util.DbParameterAccessor.normaliseValue;
+import static dbfit.util.ValueNormaliser.normaliseValue;
 
 import java.util.*;
 import java.sql.*;

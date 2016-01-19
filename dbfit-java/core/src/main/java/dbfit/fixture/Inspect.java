@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.Map;
 
 import static dbfit.util.Direction.*;
+import static dbfit.util.ValueNormaliser.normaliseValue;
 
 public class Inspect extends fit.Fixture {
     private DBEnvironment environment;
@@ -96,7 +97,7 @@ public class Inspect extends fit.Fixture {
         Parse prevCell = null;
         for (int i = 0; i < rsmd.getColumnCount(); i++) {
             Object value = rs.getObject(i + 1);
-            value = DbParameterAccessor.normaliseValue(value);
+            value = normaliseValue(value);
             Parse cell = new Parse("td",
                 Fixture.gray(value == null ? "null" : value.toString()), null, null);
             if (prevCell == null) {
