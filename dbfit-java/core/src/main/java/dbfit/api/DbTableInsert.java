@@ -15,7 +15,7 @@ public class DbTableInsert implements DbObject {
     }
 
     @Override
-    public DbCommand buildPreparedStatement(DbParameterAccessor[] accessors)
+    public DbCommand buildDbCommand(DbParameterAccessor[] accessors)
             throws SQLException {
         return dbTable.buildInsertCommand(accessors);
     }

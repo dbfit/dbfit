@@ -19,7 +19,7 @@ public class DbStoredProcedure implements DbObject {
     }
 
     @Override
-    public DbCommand buildPreparedStatement(DbParameterAccessor[] accessors)
+    public DbCommand buildDbCommand(DbParameterAccessor[] accessors)
             throws SQLException {
         return environment.buildStoredProcedureCall(name, accessors);
     }
