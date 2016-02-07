@@ -21,10 +21,12 @@ public class PreparedDbStatement implements PreparedDbCommand {
         return statement.executeQuery();
     }
 
+    @Override
     public void registerOutParameter(int index, int sqlType, boolean isReturnValue) throws SQLException {
         convertStatementToCallable().registerOutParameter(index, sqlType);
     }
 
+    @Override
     public void setObject(int index, Object value, int sqlType, String userDefinedTypeName) throws SQLException {
         if (value == null) {
             statement.setNull(index, sqlType, userDefinedTypeName);
@@ -35,6 +37,7 @@ public class PreparedDbStatement implements PreparedDbCommand {
         }
     }
 
+    @Override
     public Object getObject(int index) throws SQLException {
         return convertStatementToCallable().getObject(index);
     }
@@ -45,6 +48,7 @@ public class PreparedDbStatement implements PreparedDbCommand {
         throw new SQLException("This operation requires a callable statement instead of "+ statement.getClass().getName());
     }
 
+    @Override
     public Object getGeneratedKey(Class<?> type) throws SQLException, IllegalAccessException {
         ResultSet rs = statement.getGeneratedKeys();
         if (rs.next()) {//todo: first try to find by name (mysql does not support name-based return keys)
