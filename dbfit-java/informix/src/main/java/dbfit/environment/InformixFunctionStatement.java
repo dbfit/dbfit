@@ -2,9 +2,9 @@ package dbfit.environment;
 
 import java.sql.*;
 
-import dbfit.util.PreparedDbStatement;
+import dbfit.util.DefaultDbStatement;
 
-public class InformixFunctionStatement extends PreparedDbStatement {
+public class InformixFunctionStatement extends DefaultDbStatement {
     private Object returnValue = null;
     private int returnValueInd = -1;
 

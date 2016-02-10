@@ -1,13 +1,13 @@
 package dbfit.util;
 
-import dbfit.api.PreparedDbCommand;
+import dbfit.api.DbStatement;
 
 import java.sql.*;
 
-public class PreparedDbStatement implements PreparedDbCommand {
+public class DefaultDbStatement implements DbStatement {
     protected PreparedStatement statement;
 
-    public PreparedDbStatement(PreparedStatement statement) {
+    public DefaultDbStatement(PreparedStatement statement) {
         this.statement = statement;
     }
 

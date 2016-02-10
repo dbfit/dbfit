@@ -56,7 +56,7 @@ public class DbTable {
             s.append(selectAccessors[i].getName()).append("=").append("?");
         }
 
-        PreparedDbCommand statement = dbEnvironment.createPreparedDbCommand(s.toString());
+        DbStatement statement = dbEnvironment.createDbStatement(s.toString());
 
         ArrayList<DbParameterAccessor> allAccessors =
             new ArrayList<>(Arrays.asList(updateAccessors));

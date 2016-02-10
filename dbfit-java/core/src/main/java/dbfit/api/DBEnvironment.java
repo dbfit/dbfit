@@ -57,20 +57,20 @@ public interface DBEnvironment {
     /*
      * CreateCommand(String statement) and BindFixtureSymbols are implemented
      * differently then in the .Net version due to JDBC API; they are combined
-     * into createCommandWithBoundSymbols
+     * into createStatementWithBoundSymbols
      */
 
     /**
-     * Create a {@link PreparedDbCommand} and binds fixture symbols to
+     * Create a {@link DbStatement} and binds fixture symbols to
      * SQL statement parameters with matching names.
      */
-    PreparedDbCommand createCommandWithBoundSymbols(TestHost testHost, String commandText)
+    DbStatement createStatementWithBoundSymbols(TestHost testHost, String commandText)
             throws SQLException;
 
     /**
      * Create a prepared statement for the given command text
      */
-    PreparedDbCommand createPreparedDbCommand(String commandText) throws SQLException;
+    DbStatement createDbStatement(String commandText) throws SQLException;
 
     /**
      * Create a stored subroutine call for the given command text.
@@ -79,7 +79,7 @@ public interface DBEnvironment {
      *                    {? = call f(?, ?, ...)} for functions or
      *                    {call p(?, ?, ?)} for procedures
      */
-    PreparedDbCommand createCallCommand(String commandText, boolean isFunction) throws SQLException;
+    DbStatement createCallCommand(String commandText, boolean isFunction) throws SQLException;
 
     /**
      * Create a {@list DbCommand} for the given DDL text. Bind variables

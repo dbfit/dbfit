@@ -23,7 +23,7 @@ public class Execute extends Fixture {
 
     public void doRows(Parse rows) {
         try (DbCommand statement =
-                dbEnvironment.createCommandWithBoundSymbols(
+                dbEnvironment.createStatementWithBoundSymbols(
                     FitNesseTestHost.getInstance(), getStatementText())) {
             statement.execute();
         } catch (Throwable e) {

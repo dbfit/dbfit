@@ -2,7 +2,7 @@ package dbfit.environment;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbCommand;
-import dbfit.api.PreparedDbCommand;
+import dbfit.api.DbStatement;
 import dbfit.api.TestHost;
 import dbfit.util.*;
 import static dbfit.util.Options.OPTION_AUTO_COMMIT;
@@ -109,7 +109,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     @Override
-    public final PreparedDbCommand createCommandWithBoundSymbols(
+    public final DbStatement createStatementWithBoundSymbols(
             TestHost testHost, String commandText) throws SQLException {
         String command = Options.isBindSymbols() ? parseCommandText(commandText) : commandText;
         PreparedStatement statement = getConnection().prepareStatement(command);
@@ -122,7 +122,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
             }
         }
 
-        return createPreparedDbCommand(statement);
+        return createDbStatement(statement);
     }
 
     @Override
@@ -131,29 +131,29 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     /**
-     * Create a {@link PreparedDbCommand} for the given prepared statement.
+     * Create a {@link DbStatement} for the given prepared statement.
      * This is the method to override if custom implementation needs to be returned
      */
-    protected PreparedDbCommand createPreparedDbCommand(PreparedStatement statement) {
-        return new PreparedDbStatement(statement);
+    protected DbStatement createDbStatement(PreparedStatement statement) {
+        return new DefaultDbStatement(statement);
     }
 
     @Override
-    public final PreparedDbCommand createPreparedDbCommand(String commandText) throws SQLException {
-        return createPreparedDbCommand(getConnection().prepareStatement(commandText));
+    public final DbStatement createDbStatement(String commandText) throws SQLException {
+        return createDbStatement(getConnection().prepareStatement(commandText));
     }
 
     /**
      * Create a {@link DbStatement} for the given prepared statement.
      * This is the method to override if custom implementation needs to be returned
      */
-    protected PreparedDbCommand createCallCommand(PreparedStatement statement, boolean isFunction)
+    protected DbStatement createCallCommand(PreparedStatement statement, boolean isFunction)
             throws SQLException {
-        return new PreparedDbStatement(statement);
+        return new DefaultDbStatement(statement);
     }
 
     @Override
-    public final PreparedDbCommand createCallCommand(String commandText, boolean isFunction) throws SQLException {
+    public final DbStatement createCallCommand(String commandText, boolean isFunction) throws SQLException {
         return createCallCommand(getConnection().prepareCall(commandText), isFunction);
     }
 
@@ -233,7 +233,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     @Override
     public final DbCommand buildInsertCommand(String tableName, DbParameterAccessor[] accessors)
             throws SQLException {
-        PreparedDbCommand cmd = createPreparedDbCommand(buildInsertPreparedStatement(tableName, accessors));
+        DbStatement cmd = createDbStatement(buildInsertPreparedStatement(tableName, accessors));
         new DbParameterAccessors(accessors).bindParametersInGivenOrder(cmd);
         return cmd;
     }

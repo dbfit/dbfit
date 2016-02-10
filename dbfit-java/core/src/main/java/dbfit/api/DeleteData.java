@@ -29,7 +29,7 @@ public class DeleteData {
     }
 
     private void executeQuery(SQLQuery q) throws SQLException {
-        try (DbCommand command = environment.createCommandWithBoundSymbols(
+        try (DbCommand command = environment.createStatementWithBoundSymbols(
                     testHost, q.toString())) {
             command.execute();
         }

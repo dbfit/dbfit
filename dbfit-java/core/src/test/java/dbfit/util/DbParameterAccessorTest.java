@@ -13,14 +13,14 @@ public class DbParameterAccessorTest {
     int position = 1;
     String userDefinedTypeName = "whatever";
     TypeTransformerFactory inputTransformerFactory;
-    PreparedDbStatement statement;
+    DefaultDbStatement statement;
     DbParameterAccessor dbpa;
 
     @Before
     public void initialise() throws Exception {
         Class<?> javaType = String.class;
         inputTransformerFactory = mock(TypeTransformerFactory.class);
-        statement = mock(PreparedDbStatement.class);
+        statement = mock(DefaultDbStatement.class);
         dbpa = new DbParameterAccessor("dummy", INPUT_OUTPUT, sqlType,
                                        userDefinedTypeName, javaType, position, inputTransformerFactory);
         dbpa.bindTo(statement, position);

@@ -6,7 +6,7 @@ import java.sql.SQLException;
  * Represents a prepared database statement with ability to bind input parameters and
  * to register and access output ones including return values.
  */
-public interface PreparedDbCommand extends DbCommand, DbQuery {
+public interface DbStatement extends DbCommand, DbQuery {
 
     public void registerOutParameter(int index, int sqlType, boolean isReturnValue) throws SQLException;
 

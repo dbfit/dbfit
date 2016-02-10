@@ -79,7 +79,7 @@ public class Inspect extends fit.Fixture {
 
     private void inspectQuery(Parse table) throws SQLException {
         try (DbQuery statement =
-                environment.createCommandWithBoundSymbols(
+                environment.createStatementWithBoundSymbols(
                     FitNesseTestHost.getInstance(), objectName)) {
             ResultSet rs = statement.executeQuery();
             Parse newRow = getHeaderFromRS(rs);

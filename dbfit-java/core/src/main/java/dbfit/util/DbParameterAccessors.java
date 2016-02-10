@@ -1,6 +1,6 @@
 package dbfit.util;
 
-import dbfit.api.PreparedDbCommand;
+import dbfit.api.DbStatement;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -28,7 +28,7 @@ public class DbParameterAccessors implements Iterable<DbParameterAccessor> {
      * Bind accessors to the given statement on indexes as per the order in the
      * list used construct this object.
      */
-    public void bindParametersInGivenOrder(PreparedDbCommand statement) throws SQLException {
+    public void bindParametersInGivenOrder(DbStatement statement) throws SQLException {
         int index = 0;
         for (DbParameterAccessor ac : accessors) {
             ac.bindTo(statement, ++index);
@@ -39,7 +39,7 @@ public class DbParameterAccessors implements Iterable<DbParameterAccessor> {
      * Bind accessors to the given statement on indexes determined by
      * accessors' position in the database.
      */
-    public void bindParameters(PreparedDbCommand statement) throws SQLException {
+    public void bindParameters(DbStatement statement) throws SQLException {
         List<String> accessorNames = getSortedAccessorNames();
         for (DbParameterAccessor ac : accessors) {
             int realindex = accessorNames.indexOf(ac.getName());
