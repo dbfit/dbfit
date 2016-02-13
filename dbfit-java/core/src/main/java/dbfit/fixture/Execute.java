@@ -1,8 +1,8 @@
 package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
+import dbfit.api.DbEnvironmentFacade;
 import dbfit.api.DbEnvironmentFactory;
-import dbfit.api.DbCommand;
 import dbfit.util.FitNesseTestHost;
 
 import fit.Fixture;
@@ -10,22 +10,21 @@ import fit.Parse;
 
 public class Execute extends Fixture {
     private String statementText;
-    private DBEnvironment dbEnvironment;
+    private DbEnvironmentFacade dbEnvironment;
 
     public Execute() {
-        dbEnvironment = DbEnvironmentFactory.getDefaultEnvironment();
+        this(DbEnvironmentFactory.getDefaultEnvironment(), null);
     }
 
     public Execute(DBEnvironment env, String statement) {
         this.statementText = statement;
-        this.dbEnvironment = env;
+        this.dbEnvironment =
+            new DbEnvironmentFacade(env, FitNesseTestHost.getInstance());
     }
 
     public void doRows(Parse rows) {
-        try (DbCommand statement =
-                dbEnvironment.createStatementWithBoundSymbols(
-                    FitNesseTestHost.getInstance(), getStatementText())) {
-            statement.execute();
+        try {
+            dbEnvironment.runCommandWithBoundSymbols(getStatementText());
         } catch (Throwable e) {
             throw new Error(e);
         }

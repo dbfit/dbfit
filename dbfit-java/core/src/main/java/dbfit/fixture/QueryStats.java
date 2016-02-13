@@ -2,14 +2,14 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
-import dbfit.api.DbQuery;
+import dbfit.api.DbEnvironmentFacade;
 import dbfit.util.FitNesseTestHost;
+import dbfit.util.DataTable;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class QueryStats extends fit.ColumnFixture {
-    private DBEnvironment environment;
+    private DbEnvironmentFacade environmentFacade;
     private boolean hasExecuted = false;
     private int _rows;
 
@@ -18,11 +18,12 @@ public class QueryStats extends fit.ColumnFixture {
     public String query;
 
     public QueryStats() {
-        environment = DbEnvironmentFactory.getDefaultEnvironment();
+        this(DbEnvironmentFactory.getDefaultEnvironment());
     }
 
     public QueryStats(DBEnvironment environment) {
-        this.environment = environment;
+        this.environmentFacade = new DbEnvironmentFacade(environment,
+                FitNesseTestHost.getInstance());
     }
 
     public void setViewName(String value) {
@@ -46,15 +47,10 @@ public class QueryStats extends fit.ColumnFixture {
             query = "select * from " + tableName + (where != null ? " where " + where : "");
         }
 
-        try (DbQuery statement =
-                environment.createStatementWithBoundSymbols(
-                    FitNesseTestHost.getInstance(),
-                    "select count(*) from (" + query + ") temp")) {
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                _rows = rs.getInt(1);
-            }
-        }
+        String countQuery = "select count(*) from (" + query + ") temp";
+        DataTable dt = environmentFacade.getQueryTable(countQuery);
+        String columnName = dt.getColumns().get(0).getName();
+        _rows = ((Number) dt.getRows().get(0).get(columnName)).intValue();
 
         hasExecuted = true;
     }

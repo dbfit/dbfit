@@ -2,23 +2,24 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
-import dbfit.api.DbQuery;
-import dbfit.util.DbParameterAccessor;
+import dbfit.api.DbEnvironmentFacade;
+import dbfit.api.DbParameterDescriptor;
 import dbfit.util.FitNesseTestHost;
+import dbfit.util.DataTable;
+import dbfit.util.DataColumn;
+import dbfit.util.DataRow;
 
 import fit.Fixture;
 import fit.Parse;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.List;
 
 import static dbfit.util.Direction.*;
-import static dbfit.util.ValueNormaliser.normaliseValue;
 
 public class Inspect extends fit.Fixture {
-    private DBEnvironment environment;
+    private DbEnvironmentFacade environmentFacade;
     private String objectName;
     private String mode;
     public static String MODE_PROCEDURE = "PROCEDURE";
@@ -26,13 +27,14 @@ public class Inspect extends fit.Fixture {
     public static String MODE_QUERY = "QUERY";
 
     public Inspect() {
-        this.environment = DbEnvironmentFactory.getDefaultEnvironment();
+        this(DbEnvironmentFactory.getDefaultEnvironment(), null, null);
     }
 
     public Inspect(DBEnvironment dbEnvironment, String mode, String objName) {
         this.objectName = objName;
         this.mode = mode;
-        this.environment = dbEnvironment;
+        this.environmentFacade =
+            new DbEnvironmentFacade(dbEnvironment, FitNesseTestHost.getInstance());
     }
 
     public void doTable(Parse table) {
@@ -56,8 +58,8 @@ public class Inspect extends fit.Fixture {
     }
 
     private void inspectTable(Parse table) throws SQLException {
-        Map<String, DbParameterAccessor> allParams =
-            environment.getAllColumns(objectName);
+        Map<String, ? extends DbParameterDescriptor> allParams =
+            environmentFacade.describeProcedureParameters(objectName);
         if (allParams.isEmpty()) {
             throw new SQLException(
                     "Cannot retrieve list of columns for table or view " +
@@ -67,8 +69,8 @@ public class Inspect extends fit.Fixture {
     }
 
     private void inspectProcedure(Parse table) throws SQLException {
-        Map<String, DbParameterAccessor> allParams =
-            environment.getAllProcedureParameters(objectName);
+        Map<String, ? extends DbParameterDescriptor> allParams =
+            environmentFacade.describeProcedureParameters(objectName);
         if (allParams.isEmpty()){
             throw new SQLException(
                     "Cannot retrieve list of parameters for procedure " +
@@ -78,29 +80,23 @@ public class Inspect extends fit.Fixture {
     }
 
     private void inspectQuery(Parse table) throws SQLException {
-        try (DbQuery statement =
-                environment.createStatementWithBoundSymbols(
-                    FitNesseTestHost.getInstance(), objectName)) {
-            ResultSet rs = statement.executeQuery();
-            Parse newRow = getHeaderFromRS(rs);
-            table.parts.more = newRow;
-            while (rs.next()) {
-                newRow.more = getDataRow(rs);
-                newRow = newRow.more;
-            }
-            rs.close();
+        DataTable dt = environmentFacade.getQueryTable(objectName);
+        Parse newRow = getHeaderFromTableColumns(dt.getColumns());
+        table.parts.more = newRow;
+
+        for (DataRow row : dt.getRows()) {
+            newRow.more = getDataRow(row, dt.getColumns());
+            newRow = newRow.more;
         }
     }
 
-    private Parse getDataRow(ResultSet rs) throws SQLException {
+    private Parse getDataRow(DataRow row, List<DataColumn> columns) {
         Parse newRow = new Parse("tr", null, null, null);
-        ResultSetMetaData rsmd = rs.getMetaData();
         Parse prevCell = null;
-        for (int i = 0; i < rsmd.getColumnCount(); i++) {
-            Object value = rs.getObject(i + 1);
-            value = normaliseValue(value);
+
+        for (DataColumn column : columns) {
             Parse cell = new Parse("td",
-                Fixture.gray(value == null ? "null" : value.toString()), null, null);
+                Fixture.gray(row.getStringValue(column.getName())), null, null);
             if (prevCell == null) {
                 newRow.parts = cell;
             } else {
@@ -108,15 +104,16 @@ public class Inspect extends fit.Fixture {
             }
             prevCell = cell;
         }
+
         return newRow;
     }
 
-    private Parse getHeaderFromRS(ResultSet rs) throws SQLException {
+    private Parse getHeaderFromTableColumns(List<DataColumn> columns) {
         Parse newRow = new Parse("tr", null, null, null);
-        ResultSetMetaData rsmd = rs.getMetaData();
         Parse prevCell = null;
-        for (int i = 0; i < rsmd.getColumnCount(); i++) {
-            Parse cell = new Parse("td", Fixture.gray(rsmd.getColumnLabel(i + 1)), null, null);
+
+        for (DataColumn column : columns) {
+            Parse cell = new Parse("td", Fixture.gray(column.getName()), null, null);
             if (prevCell == null) {
                 newRow.parts = cell;
             } else {
@@ -124,10 +121,11 @@ public class Inspect extends fit.Fixture {
             }
             prevCell = cell;
         }
+
         return newRow;
     }
 
-    private void addRowWithParamNames(Parse table, Map<String, DbParameterAccessor> params) {
+    private void addRowWithParamNames(Parse table, Map<String, ? extends DbParameterDescriptor> params) {
         Parse newRow = new Parse("tr", null, null, null);
         table.parts.more = newRow;
         Parse prevCell = null;
@@ -148,7 +146,7 @@ public class Inspect extends fit.Fixture {
                 name = "";
             }
 
-            if (params.get(name).doesNotHaveDirection(INPUT)) {
+            if (params.get(name).getDirection() != INPUT) {
                 name = name + "?";
             }
 

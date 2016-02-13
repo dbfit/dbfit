@@ -1,13 +1,14 @@
 package dbfit.util;
 
 import dbfit.api.DbStatement;
+import dbfit.api.DbParameterDescriptor;
 import static dbfit.util.Direction.*;
 import static dbfit.util.ValueNormaliser.normaliseValue;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
-public class DbParameterAccessor {
+public class DbParameterAccessor implements DbParameterDescriptor {
 
     private int index; // index in effective sql statement (not necessarily the same as position below)
     private Direction direction;
