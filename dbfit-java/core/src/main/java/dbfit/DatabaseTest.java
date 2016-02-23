@@ -27,7 +27,6 @@ public class DatabaseTest extends Fixture {
         try {
             Log.log("Rolling back");
             if (environment != null) {
-                environment.rollback();
                 environment.closeConnection();
             }
         } catch (Exception e) {
@@ -57,7 +56,6 @@ public class DatabaseTest extends Fixture {
     }
 
     public void close() throws SQLException {
-        environment.rollback();
         environment.closeConnection();
     }
 
