@@ -108,6 +108,12 @@ There are two ways around this:
 2. Deploy `sqljdbc4.jar` in DbFit's `lib` folder - the same folder as dbfit-XXX.jar.
 3. Deploy auth\x86\sqljdbc_auth.dll in `%programfiles(x86)%\Java\jre7\bin` folder to allow `integrated windows authentication`
 
+### Database Engine configuration 
+
+* Make sure the engine is configured to allow TCP/IP connections. Launch SQL Server Configuration. SQL Server Network Configuration > SQL Server Express > Right click TCP/IP and choose Enable. 
+* Make sure you restart your engine after you enable TCP/IP connections.
+* Make sure you allow mixed-mode authentication so you can use Logins created to use SQL Authentication.
+
 ### Network and firewall settings
 
 * If connecting over network each database should be configured to accept TCP/IP connections (including allowance in firewall if any).
