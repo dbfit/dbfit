@@ -110,9 +110,13 @@ There are two ways around this:
 
 ### Database Engine configuration 
 
-* Make sure the engine is configured to allow TCP/IP connections. Launch SQL Server Configuration. SQL Server Network Configuration > SQL Server Express > Right click TCP/IP and choose Enable. 
+* Make sure the engine is configured to allow TCP/IP connections. Launch SQL Server Configuration. SQL Server Network Configuration > SQL Server > Right click TCP/IP and choose Enable. 
 * Make sure you restart your engine after you enable TCP/IP connections.
 * Make sure you allow mixed-mode authentication so you can use Logins created to use SQL Authentication.
+
+#### SQL Express Specific 
+
+* Enable and start the SQL Browser Service. Change the service state from Disabled to Auto or Manual, then Start the service. The driver will indicate that it cannot communicate to UDP port 1434 if the SQL Browser Service is not started.
 
 ### Network and firewall settings
 
