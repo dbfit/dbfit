@@ -64,7 +64,7 @@ public abstract class RowSetFixture extends ColumnFixture {
     }
 
     @Override
-    protected void bind(Parse heads) {
+    protected void bindColumnHeadersToMethodsAndFields(Parse heads) {
         try {
             columnBindings = new Binding[heads.size()];
             keyColumns = new String[heads.size()];
