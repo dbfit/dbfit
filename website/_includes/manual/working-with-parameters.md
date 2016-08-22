@@ -1,6 +1,6 @@
 ## Working with parameters
 
-DbFit enables you to use Fixture symbols as global variables during test execution, to store or read intermediate results. The .NET syntax to access symbols (`>>parameter` to store a value and `<<parameter` to read the value) is supported in both .NET and Java versions. In addition, you can uset he `Set Parameter` command to explicitly seta parameter value to a string.
+DbFit enables you to use Fixture symbols as global variables during test execution, to store or read intermediate results. The .NET syntax to access symbols (`>>parameter` to store a value and `<<parameter` to read the value) is supported in both .NET and Java versions. In addition, you can use the `Set Parameter` command to explicitly set a parameter value to a string.
 
     |Set parameter|username|arthur|
 
