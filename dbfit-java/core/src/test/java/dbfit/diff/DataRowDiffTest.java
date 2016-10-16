@@ -118,6 +118,6 @@ public class DataRowDiffTest {
     }
 
     private DataCell anyDataCell() {
-        return org.mockito.Matchers.any(DataCell.class);
+        return org.mockito.ArgumentMatchers.any();
     }
 }
