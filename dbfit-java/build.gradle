@@ -1,6 +1,6 @@
 ext {
     fitNesseVersion = '20160618'
-    mockitoVersion = '1.10.19'
+    mockitoVersion = '2.2.2'
     junitVersion = '4.12'
 }
 
