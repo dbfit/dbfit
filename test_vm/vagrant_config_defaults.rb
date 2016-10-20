@@ -1,5 +1,5 @@
 unix_synced_folder_defaults =
-  {nfs: true, nfs_version: 4, mount_options: ["noatime", "nodiratime"]}
+  {nfs: true, nfs_version: 4, nfs_udp: false, mount_options: ["noatime", "nodiratime"]}
 
 # Default options
 CONFIG['memory'] = "1100"
