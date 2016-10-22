@@ -21,6 +21,7 @@ test_vm/.vagrant
 test_vm/tmp
 test_vm/Disk1
 test_vm/vagrant_config_custom.rb
+test_vm/disk1.vdi
 oracle-xe-*.rpm.zip
 db2_linuxx64_expc.tar.gz
 
