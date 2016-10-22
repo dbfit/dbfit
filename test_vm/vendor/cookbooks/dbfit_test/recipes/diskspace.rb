@@ -1,5 +1,3 @@
-chef_gem 'di-ruby-lvm'
-
 lvm_physical_volume '/dev/sdb' do
   action :create
 end
