@@ -1,5 +1,5 @@
 mysql2_chef_gem 'default' do
-  gem_version '0.3.18'
+  gem_version '0.4.4'
   client_version node['mysql']['version'] if node['mysql']
   action :install
 end
