@@ -7,7 +7,7 @@ long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '0.2.0'
 depends          'mysql2_chef_gem'
 depends          'mysql', '< 8.0'
-depends          'postgresql'
+depends          'postgresql', '>= 4.0'
 depends          'database'
 depends          'java'
 depends          'swap'
