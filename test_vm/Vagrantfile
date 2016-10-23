@@ -38,8 +38,22 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         "password" => {
           "postgres" => "postgres"
         },
-        "version" => "9.4",
-        "enable_pgdg_yum" => true
+        "version" => "9.6",
+        "enable_pgdg_yum" => true,
+        "pgdg" => {
+          "repo_rpm_url" => {'9.6' => {'centos' => {'7' => {'x86_64' => {
+            'url' => 'http://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/',
+            'package' => 'pgdg-centos96-9.6-3.noarch.rpm'
+          }}}}}
+        },
+        "server" => {
+          "packages" => ["postgresql96-server"],
+          "service_name" => "postgresql-9.6"
+        },
+        "client" => {
+          "packages" => ["postgresql96", "postgresql96-devel"]
+        },
+        "setup_script" => "postgresql96-setup"
       },
       "java" => {
         "install_flavor" => "oracle",
