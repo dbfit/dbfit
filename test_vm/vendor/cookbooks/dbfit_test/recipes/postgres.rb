@@ -14,21 +14,23 @@ postgresql_database 'dbfit' do
   action :create
 end
 
-postgresql_database_user 'dbfit' do
+postgresql_database_user 'create dbfit user' do
   connection postgresql_connection_info
+  username 'dbfit'
   password 'dbfit'
   action :create
 end
 
-postgresql_database_user 'dbfit' do
+postgresql_database_user 'dbfit grants' do
   connection postgresql_connection_info
+  username 'dbfit'
   database_name 'dbfit'
   privileges [:all]
   action :grant
 end
 
 # needed to support DbDeploy
-postgresql_database 'dbfit' do
+postgresql_database 'dbfit.changelog' do
   connection postgresql_connection_info
   sql "CREATE TABLE IF NOT EXISTS changelog (
          change_number INTEGER CONSTRAINT Pkchangelog PRIMARY KEY,
