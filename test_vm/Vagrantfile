@@ -5,23 +5,19 @@ require_relative 'vagrant_config_helper'
 
 VAGRANTFILE_API_VERSION = "2"
 
-file_to_disk = CONFIG['additional_disk1_file']
-
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider "virtualbox" do |vb|
     vb.customize ["modifyvm", :id, "--memory", CONFIG['memory']]
-    # Add another disk.
-    if ARGV[0] == "up" && !File.exist?(file_to_disk)
-        vb.customize ['createhd', '--filename', file_to_disk, '--size', 10 * 1024]
-        vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', file_to_disk]
-    end
   end
+
+  config.newdisk.path = CONFIG['additional_disk1_file']
+  config.newdisk.size = CONFIG['additional_disk1_size']
 
   config.omnibus.chef_version = :latest
   config.vbguest.auto_update = true
 
-  config.vm.box = "chef/centos-7.1"
-  config.vm.box_url = "chef/centos-7.1"
+  config.vm.box = "centos/7"
+  config.vm.box_url = "centos/7"
   config.vm.host_name = "dbfitvm"
   config.vm.network "private_network", ip: "192.168.33.10"
   config.vm.network "forwarded_port", guest: 8085, host: 8085
@@ -36,13 +32,28 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         "server_repl_password" => "password",
         "server_debian_password" => "password",
         "bind_address" => "127.0.0.1",
+        "version" => "5.7"
       },
       "postgresql" => {
         "password" => {
           "postgres" => "postgres"
         },
-        "version" => "9.4",
-        "enable_pgdg_yum" => true
+        "version" => "9.6",
+        "enable_pgdg_yum" => true,
+        "pgdg" => {
+          "repo_rpm_url" => {'9.6' => {'centos' => {'7' => {'x86_64' => {
+            'url' => 'http://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/',
+            'package' => 'pgdg-centos96-9.6-3.noarch.rpm'
+          }}}}}
+        },
+        "server" => {
+          "packages" => ["postgresql96-server"],
+          "service_name" => "postgresql-9.6"
+        },
+        "client" => {
+          "packages" => ["postgresql96", "postgresql96-devel"]
+        },
+        "setup_script" => "postgresql96-setup"
       },
       "java" => {
         "install_flavor" => "oracle",
@@ -52,8 +63,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         }
       },
       "git" => {
-        "version" => "2.4.5",
-        "checksum" => "eff7fc2f8378a57aea46501ab0468052377301e264cca1f454067d3ce2fd85ca"
+        "version" => "2.10.1",
+        "url" => "https://www.kernel.org/pub/software/scm/git/git-2.10.1.tar.gz",
+        "checksum" => "78553f786f1a66cb68983c170be482558028a3376056c0f2ed366f331b1e35f2"
       },
       "run_list" => ["recipe[dbfit_test]"]
     }

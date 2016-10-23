@@ -4,6 +4,3 @@
 site 'http://community.opscode.com/api/v1'
 
 cookbook 'dbfit_test', :path => "vendor/cookbooks/dbfit_test"
-
-cookbook 'postgresql', :git => "https://github.com/dbfit/postgresql", :ref => "develop"
-cookbook 'swap', :git => "https://github.com/dbfit/swap"
