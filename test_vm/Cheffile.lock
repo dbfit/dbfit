@@ -40,8 +40,12 @@ SITE
       build-essential (>= 0.0.0)
       mariadb (>= 0.0.0)
       mysql (>= 6.0)
-    openssl (4.0.0)
-      chef-sugar (>= 0.0.0)
+    openssl (4.4.0)
+      chef-sugar (>= 3.1.1)
+    postgresql (4.0.6)
+      apt (>= 1.9.0)
+      build-essential (>= 0.0.0)
+      openssl (~> 4.0)
     rbac (1.0.3)
     selinux (0.9.0)
     seven_zip (2.0.2)
@@ -54,16 +58,6 @@ SITE
       yum (>= 3.6)
     yum-mysql-community (1.0.0)
       yum (>= 3.2)
-
-GIT
-  remote: https://github.com/dbfit/postgresql
-  ref: develop
-  sha: 8c6a3847478f1723700858816c8b78fa8e4cf2d9
-  specs:
-    postgresql (3.4.21)
-      apt (>= 1.9.0)
-      build-essential (>= 0.0.0)
-      openssl (~> 4.0.0)
 
 GIT
   remote: https://github.com/dbfit/swap
@@ -90,6 +84,5 @@ PATH
 
 DEPENDENCIES
   dbfit_test (>= 0)
-  postgresql (>= 0)
   swap (>= 0)
 
