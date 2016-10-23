@@ -71,31 +71,33 @@ The VM doesn't include:
 
 2. [Install vagrant](http://docs.vagrantup.com/v2/installation/). Versions 1.2+.
 
-3. Install vagrant plugins
-   [vagrant-librarian-chef](https://github.com/jimmycuadra/vagrant-librarian-chef),
-   [vagrant-omnibus](https://github.com/schisamo/vagrant-omnibus),
-   [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest):
-   [vagrant-newdisk](https://github.com/dbfit/vagrant-newdisk):
+3. [Install Chef Development Kit](https://downloads.chef.io/chef-dk)
 
-        vagrant plugin install vagrant-librarian-chef
+4. Install vagrant plugins
+   [vagrant-berkshelf](https://github.com/berkshelf/vagrant-berkshelf),
+   [vagrant-omnibus](https://github.com/schisamo/vagrant-omnibus),
+   [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest),
+   [vagrant-newdisk](https://github.com/dbfit/vagrant-newdisk)
+
+        vagrant plugin install vagrant-berkshelf
         vagrant plugin install vagrant-omnibus
         vagrant plugin install vagrant-vbguest
         vagrant plugin install vagrant-newdisk
 
-4. If you want to provision Oracle database - download the setup package as
+5. If you want to provision Oracle database - download the setup package as
    described in 1st bullet of [ORACLE file](ORACLE.md).
 
-5. If you want to provision DB2 database - download the setup package as
+6. If you want to provision DB2 database - download the setup package as
    described in 1st bullet of [DB2 file](DB2.md).
 
-6. If you want to provision Informix database - download the setup package as
+7. If you want to provision Informix database - download the setup package as
    described in 1st bullet of [Informix file](INFORMIX.md).
 
-7. Run every subsequent command from the `test_vm` folder:
+8. Run every subsequent command from the `test_vm` folder:
 
         cd test_vm
 
-8. Provision and start the vagrant VM:
+9. Provision and start the vagrant VM:
 
         vagrant up
 
