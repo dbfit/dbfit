@@ -5,15 +5,13 @@ require_relative 'vagrant_config_helper'
 
 VAGRANTFILE_API_VERSION = "2"
 
-file_to_disk = CONFIG['additional_disk1_file']
-
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider "virtualbox" do |vb|
     vb.customize ["modifyvm", :id, "--memory", CONFIG['memory']]
   end
 
-  config.newdisk.size = 10 * 1024
-  config.newdisk.path = file_to_disk
+  config.newdisk.path = CONFIG['additional_disk1_file']
+  config.newdisk.size = CONFIG['additional_disk1_size']
 
   config.omnibus.chef_version = :latest
   config.vbguest.auto_update = true
