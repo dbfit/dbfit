@@ -23,14 +23,18 @@ mysql_database 'dbfit' do
 end
 
 users.each do |username, password|
-  mysql_database_user username do
+  mysql_database_user "create #{username}" do
     connection mysql_connection_info
+    username username
     password password
     action :create
   end
 
   %w{localhost 127.0.0.1}.each do |hostname|
-    mysql_database_user username do
+    mysql_database_user "grants on dbfit.* to #{username}@#{hostname}" do
+      connection mysql_connection_info
+      username username
+      password password
       host hostname
       database_name 'dbfit'
       privileges [:all]
@@ -40,7 +44,10 @@ users.each do |username, password|
 end
 
 %w{localhost 127.0.0.1}.each do |hostname|
-  mysql_database_user 'dbfit_user' do
+  mysql_database_user "grants on mysql.* to dbfit_user@#{hostname}" do
+    connection mysql_connection_info
+    username "dbfit_user"
+    password users["dbfit_user"]
     host hostname
     database_name 'mysql'
     privileges [:select]
@@ -49,7 +56,7 @@ end
 end
 
 # needed to support DbDeploy
-mysql_database 'dbfit' do
+mysql_database 'create dbfit.changelog table' do
   database_name 'dbfit'
   connection(
     :host => mysql_connection_info[:host],
