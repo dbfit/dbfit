@@ -52,19 +52,13 @@ SITE
       windows (>= 1.2.2)
     smf (2.2.8)
       rbac (>= 1.0.1)
+    swap (0.3.8)
     windows (2.0.2)
     yum (4.1.0)
     yum-epel (1.0.2)
       yum (>= 3.6)
     yum-mysql-community (1.0.0)
       yum (>= 3.2)
-
-GIT
-  remote: https://github.com/dbfit/swap
-  ref: master
-  sha: 579982b444ac81256470915f20c04197081eae3f
-  specs:
-    swap (0.3.8)
 
 PATH
   remote: vendor/cookbooks/dbfit_test
@@ -84,5 +78,4 @@ PATH
 
 DEPENDENCIES
   dbfit_test (>= 0)
-  swap (>= 0)
 
