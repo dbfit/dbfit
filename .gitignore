@@ -25,6 +25,7 @@ test_vm/disk1.vdi
 test_vm/.Vagrantfile.swp
 oracle-xe-*.rpm.zip
 db2_linuxx64_expc.tar.gz
+ids-linux-x86_64.tar
 
 # the documentation
 website/_site
