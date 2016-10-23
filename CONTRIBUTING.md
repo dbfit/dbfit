@@ -75,10 +75,12 @@ The VM doesn't include:
    [vagrant-librarian-chef](https://github.com/jimmycuadra/vagrant-librarian-chef),
    [vagrant-omnibus](https://github.com/schisamo/vagrant-omnibus),
    [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest):
+   [vagrant-newdisk](https://github.com/dbfit/vagrant-newdisk):
 
         vagrant plugin install vagrant-librarian-chef
         vagrant plugin install vagrant-omnibus
         vagrant plugin install vagrant-vbguest
+        vagrant plugin install vagrant-newdisk
 
 4. If you want to provision Oracle database - download the setup package as
    described in 1st bullet of [ORACLE file](ORACLE.md).
