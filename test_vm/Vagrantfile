@@ -10,12 +10,10 @@ file_to_disk = CONFIG['additional_disk1_file']
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider "virtualbox" do |vb|
     vb.customize ["modifyvm", :id, "--memory", CONFIG['memory']]
-    # Add another disk.
-    if ARGV[0] == "up" && !File.exist?(file_to_disk)
-        vb.customize ['createhd', '--filename', file_to_disk, '--size', 10 * 1024]
-        vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', file_to_disk]
-    end
   end
+
+  config.newdisk.size = 10 * 1024
+  config.newdisk.path = file_to_disk
 
   config.omnibus.chef_version = :latest
   config.vbguest.auto_update = true
