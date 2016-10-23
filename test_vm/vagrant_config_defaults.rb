@@ -5,3 +5,4 @@ unix_synced_folder_defaults =
 CONFIG['memory'] = "1100"
 CONFIG['synced_folder_options'] = windows? ? nil : unix_synced_folder_defaults
 CONFIG['additional_disk1_file'] = "./disk1.vdi"
+CONFIG['additional_disk1_size'] = 10 * 1024
