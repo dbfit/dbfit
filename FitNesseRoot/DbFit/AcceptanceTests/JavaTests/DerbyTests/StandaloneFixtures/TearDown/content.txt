@@ -9,6 +9,10 @@
 
 |Execute Ddl|${DROPMULTIPLYPROC}|
 
+|Execute Ddl|${DROPRAISEERRORWITHPARAMSPROC}|
+
+|Execute Ddl|${DROPRAISEERRORNOPARAMSPROC}|
+
 |Database Environment|
 |Commit|
 

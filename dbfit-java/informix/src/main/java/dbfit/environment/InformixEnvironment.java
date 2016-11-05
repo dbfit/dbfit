@@ -281,4 +281,9 @@ public class InformixEnvironment extends AbstractDbEnvironment {
     public StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
         return new StatementExecutionCapturingResultSetValue(statement);
     }
+
+    @Override
+    public String getActualErrorCode(SQLException e) {
+        return String.valueOf(e.getErrorCode());
+    }
 }

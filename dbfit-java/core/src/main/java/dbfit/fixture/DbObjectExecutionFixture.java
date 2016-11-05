@@ -43,14 +43,40 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     /**
      * override this method and supply the expected exception number, if one is expected
      */
-    protected int getExpectedErrorCode() {
-        return 0;
+    protected String getExpectedErrorCode() {
+        return "0";
+    }
+
+    /**
+     * override this method and supply the actual exception number.
+     */
+    protected String getActualErrorCode(SQLException e) {
+        return e.getSQLState();
     }
 
     /**
      * override this method and supply the dbObject implementation that will be executed for each row
      */
     protected abstract DbObject getTargetDbObject() throws SQLException;
+
+    private void runTable() throws Exception {
+        try (StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray())) {
+            try {
+                preparedStatement.run();
+                if (getExpectedBehaviour() != ExpectedBehaviour.NO_EXCEPTION) {
+                    throw new SQLException("Expected exception but none thrown");
+                }
+            } catch (SQLException e) {
+                if (getExpectedBehaviour() != ExpectedBehaviour.ANY_EXCEPTION) {
+                    if (!getExpectedErrorCode().equals(getActualErrorCode(e))) {
+                        throw new SQLException("Caught exception with error code: " + getActualErrorCode(e)
+                            + " (SQLState: " + e.getSQLState() + ", Error Code: " + e.getErrorCode() + ")"
+                            + " but was expecting: " + getExpectedErrorCode(), e.getSQLState(), e.getErrorCode());
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * executes the target dbObject for all rows of the table. if no rows are specified, executes
@@ -59,20 +85,20 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     public void doRows(Parse rows) {
         try {
             dbObject = getTargetDbObject();
-            if (dbObject == null) throw new Error("DB Object not specified!");
-            if (rows == null) {//single execution, no args
-                try (StatementExecution preparedStatement =
-                        dbObject.buildPreparedStatement(accessors.toArray())) {
-                    preparedStatement.run();
-                    return;
-                }
+            if (dbObject == null) {
+                throw new Error("DB Object not specified!");
+            }
+            if (rows == null) { //single execution, no args
+                runTable();
+                return;
             }
             List<String> columnNames = getColumnNamesFrom(rows.parts);
             accessors = getAccessors(rows.parts, columnNames);
-            if (accessors == null) return;// error reading args
+            if (accessors == null) {
+                throw new SQLException("error reading args");
+            }
             columnBindings = getColumnBindings();
-            try (StatementExecution preparedStatement
-                    = dbObject.buildPreparedStatement(accessors.toArray())) {
+            try (StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray())) {
                 execution = preparedStatement;
                 Parse row = rows;
                 while ((row = row.more) != null) {
@@ -168,8 +194,8 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             if (getExpectedBehaviour() == ExpectedBehaviour.ANY_EXCEPTION) {
                 right(row);
             } else {
-                int realError = e.getErrorCode();
-                if (realError == getExpectedErrorCode())
+                String realError = getActualErrorCode(e);
+                if (realError.equals(getExpectedErrorCode()))
                     right(row);
                 else {
                     wrong(row);

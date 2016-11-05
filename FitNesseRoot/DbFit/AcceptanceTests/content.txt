@@ -4,5 +4,6 @@
 !define CALCLENGTH_IN_COLUMN {name}
 !define DEFAULT_PARAM1_NAME {@integer1}
 !define DEFAULT_PARAM2_NAME {@string1}
+!define EXCEPTION_NUMBER {38123}
 
 !contents

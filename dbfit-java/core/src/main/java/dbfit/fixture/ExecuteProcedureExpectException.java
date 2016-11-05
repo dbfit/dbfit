@@ -4,17 +4,18 @@ import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
 import dbfit.util.ExpectedBehaviour;
 import static dbfit.util.ExpectedBehaviour.*;
+import java.sql.SQLException;
 
 public class ExecuteProcedureExpectException extends ExecuteProcedure {
     private boolean excNumberDefined = false;
-    private int excNumberExpected;
+    private String excNumberExpected;
 
     public ExecuteProcedureExpectException() {
         this.environment = DbEnvironmentFactory.getDefaultEnvironment();
     }
 
     public ExecuteProcedureExpectException(DBEnvironment dbEnvironment, String procName,
-                            int expectedErrorCode) {
+                            String expectedErrorCode) {
         this.procName = procName;
         this.environment = dbEnvironment;
         this.excNumberDefined = true;
@@ -33,7 +34,12 @@ public class ExecuteProcedureExpectException extends ExecuteProcedure {
     }
 
     @Override
-    protected int getExpectedErrorCode() {
+    protected String getExpectedErrorCode() {
         return excNumberExpected;
+    }
+
+    @Override
+    protected String getActualErrorCode(SQLException e) {
+        return environment.getActualErrorCode(e);
     }
 }

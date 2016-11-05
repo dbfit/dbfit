@@ -177,5 +177,10 @@ public class DB2Environment extends AbstractDbEnvironment {
         qry += " order by ordinal";
         return readIntoParams(qualifiers, qry);
     }
+
+    @Override
+    public String getActualErrorCode(SQLException e) {
+        return e.getSQLState();
+    }
 }
 

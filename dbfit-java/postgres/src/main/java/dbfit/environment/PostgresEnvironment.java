@@ -291,4 +291,9 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
             }
         }
     }
+
+    @Override
+    public String getActualErrorCode(SQLException e) {
+        return e.getSQLState();
+    }
 }
