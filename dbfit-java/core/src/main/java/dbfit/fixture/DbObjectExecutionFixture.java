@@ -43,8 +43,15 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     /**
      * override this method and supply the expected exception number, if one is expected
      */
-    protected int getExpectedErrorCode() {
-        return 0;
+    protected String getExpectedErrorCode() {
+        return "0";
+    }
+
+    /**
+     * override this method and supply the actual exception number.
+     */
+    protected String getActualErrorCode(SQLException e) {
+        return e.getSQLState();
     }
 
     /**
@@ -61,9 +68,22 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             dbObject = getTargetDbObject();
             if (dbObject == null) throw new Error("DB Object not specified!");
             if (rows == null) {//single execution, no args
-                try (StatementExecution preparedStatement =
+                try (StatementExecution preparedStatement = 
                         dbObject.buildPreparedStatement(accessors.toArray())) {
-                    preparedStatement.run();
+                	try {
+                        preparedStatement.run();
+                        if (getExpectedBehaviour() != ExpectedBehaviour.NO_EXCEPTION) {
+                        	throw new SQLException("Executed procedure was expected raise an exception");
+                        }                      	
+                	} catch (SQLException e) {
+                		if (getExpectedBehaviour() != ExpectedBehaviour.ANY_EXCEPTION) {
+                		    String realError = getActualErrorCode(e);
+                            if (!realError.equals(getExpectedErrorCode())) {
+                        	    throw new SQLException("Executed procedure was expected raise an exception with error code " +
+                                    getExpectedErrorCode() + " but got error code " + realError);
+                            }
+                        }
+                	}
                     return;
                 }
             }
@@ -168,8 +188,8 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             if (getExpectedBehaviour() == ExpectedBehaviour.ANY_EXCEPTION) {
                 right(row);
             } else {
-                int realError = e.getErrorCode();
-                if (realError == getExpectedErrorCode())
+                String realError = getActualErrorCode(e);
+                if (realError.equals(getExpectedErrorCode()))
                     right(row);
                 else {
                     wrong(row);

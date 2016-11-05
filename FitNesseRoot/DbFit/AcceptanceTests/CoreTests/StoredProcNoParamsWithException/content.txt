@@ -1,0 +1,9 @@
+!3 Use ''Execute Procedure Expect Exception'' to check if a stored proc will throw an exception
+
+Output parameters will just be ignored in case of an exception
+
+!|Execute Procedure Expect Exception|raise_error_no_params|
+
+!3 Use an explicit error code with ''Execute Procedure Expect Exception'' to test for an explicit error code
+
+!|Execute Procedure Expect Exception|raise_error_no_params|20001|

@@ -14,4 +14,9 @@ CREATE PROCEDURE multiplyio (IN factor int, INOUT val int)  LANGUAGE SQL BEGIN s
 
 CREATE function multiply(n1 int, n2 int) returns int return n1 * n2
 
+CREATE PROCEDURE raise_error_with_params (IN name VARCHAR(200), OUT strlength INTEGER) LANGUAGE SQL BEGIN IF (name = 'xx') THEN SIGNAL SQLSTATE '20001' SET MESSAGE_TEXT = 'text exception'; END IF; SET strlength = LENGTH(name); RETURN; END
+
+CREATE PROCEDURE raise_error_no_params LANGUAGE SQL BEGIN SIGNAL SQLSTATE '20001' SET MESSAGE_TEXT = 'text exception'; RETURN; END
+
+-- Or do we use SIGNAL SQLSTATE '20000' SET MESSAGE_TEXT = 'text exception'; 
 CONNECT RESET

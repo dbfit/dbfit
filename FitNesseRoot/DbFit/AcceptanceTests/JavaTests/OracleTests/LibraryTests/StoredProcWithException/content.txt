@@ -1,3 +1,6 @@
+=======
+!2 Procedures with parameters
+
 !3 Use ''Execute Procedure Expect Exception'' to check if a stored proc will throw an exception
 
 !|Execute|!-
@@ -28,3 +31,23 @@ Execute procedure will still work ok if it does not throw an error
 !|Execute Procedure Expect Exception |TestProc1|20001|
 |name|str length?|
 |xx|4|
+
+!2 Procedures without parameters
+
+!|Execute|!-
+create or replace procedure TestProc2 as
+begin
+    raise_application_error(-20001,'test exception');
+end;
+-!|
+
+!3 Use ''Execute Procedure Expect Exception'' to check if a stored proc will throw an exception
+
+Output parameters will just be ignored in case of an exception
+
+!|Execute Procedure Expect Exception|TestProc2|
+
+
+!3 Use an explicit error code with ''Execute Procedure Expect Exception'' to test for an explicit error code
+
+!|Execute Procedure Expect Exception |TestProc2|20001|

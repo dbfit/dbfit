@@ -6,5 +6,9 @@
 !define DROPCALCLENGTHPROC {DROP PROCEDURE !-CalcLength-!}
 !define CREATEMULTIPLYPROC {CREATE FUNCTION !-Multiply-!(n1 DOUBLE, n2 DOUBLE) RETURNS DOUBLE LANGUAGE JAVA PARAMETER STYLE JAVA EXTERNAL NAME '!-dbfit.environment.DerbyRegressionSupportStoredProcs.multiply-!'}
 !define DROPMULTIPLYPROC {DROP FUNCTION !-Multiply-!}
+!define CREATERAISEERRORWITHPARAMSPROC {CREATE PROCEDURE !-raise_error_with_params-!(IN name VARCHAR(200), OUT strlength INTEGER) LANGUAGE JAVA PARAMETER STYLE JAVA EXTERNAL NAME '!-dbfit.environment.DerbyRegressionSupportStoredProcs.raise_error_with_params-!'}
+!define DROPRAISEERRORWITHPARAMSPROC {DROP PROCEDURE !-raise_error_with_params-!}
+!define CREATERAISEERRORNOPARAMSPROC {CREATE PROCEDURE !-raise_error_no_params-!() LANGUAGE JAVA PARAMETER STYLE JAVA EXTERNAL NAME '!-dbfit.environment.DerbyRegressionSupportStoredProcs.raise_error_no_params-!'}
+!define DROPRAISEERRORNOPARAMSPROC {DROP PROCEDURE !-raise_error_no_params-!}
 
 !contents -R
