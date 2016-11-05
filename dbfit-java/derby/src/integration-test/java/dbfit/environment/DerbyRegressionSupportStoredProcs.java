@@ -46,7 +46,7 @@ public class DerbyRegressionSupportStoredProcs {
             // "jdbc:default:connection" tells the DriverManager to use the existing connection.
             Connection conn = DriverManager.getConnection("jdbc:default:connection");
             Statement stmt = conn.createStatement();
-        ) {
+        ) {       	
             throw new SQLException("test exception", "20001");
         }
     }

@@ -328,4 +328,13 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
             }
         }
     }
+
+    @Override
+    public String getActualErrorCode(SQLException e) {
+        if (e.getSQLState().equals("38000")) { // A database-side method has thrown an exception. 
+            return e.getNextException().getSQLState();        	
+        } else {
+        	return e.getSQLState();
+        }
+    }
 }

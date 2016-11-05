@@ -13,3 +13,5 @@ create procedure createuser(IN newname varchar(100), IN newusername varchar(100)
 create procedure MultiplyIO(IN factor int, INOUT val int) set val = val * factor;
 
 create function Multiply(n1 int, n2 int) returns int deterministic return n1 * n2;
+
+CREATE PROCEDURE raise_error_no_params() BEGIN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'test exception'; END;

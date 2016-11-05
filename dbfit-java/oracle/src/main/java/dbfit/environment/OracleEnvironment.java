@@ -549,8 +549,10 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         return new OracleStoredProcedureCall(this, name, accessors);
     }
 
-    public String getActualErrorCode(SQLException e) {
-System.out.println("in Oracle getActualErrorCode");
-        return Integer.toString(e.getErrorCode());
-    }
+    //@Override
+    //public String getActualErrorCode(SQLException e) {
+//System.out.println("in Oracle getActualErrorCode");
+        //return Integer.toString(e.getErrorCode());
+  //      return e.getSQLState();
+    //}
 }

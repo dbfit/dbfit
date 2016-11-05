@@ -51,6 +51,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
      * override this method and supply the actual exception number.
      */
     protected String getActualErrorCode(SQLException e) {
+System.out.println("In DbObjectExecutionFixture.getActualErrorCode");
         return e.getSQLState();
     }
 
@@ -76,6 +77,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
                         	throw new SQLException("Executed procedure was expected raise an exception");
                         }                      	
                 	} catch (SQLException e) {
+System.out.println("In DbObjectExecutionFixture: doRows: e.getMessage(): " + e.getMessage());
                 		if (getExpectedBehaviour() != ExpectedBehaviour.ANY_EXCEPTION) {
                 		    String realError = getActualErrorCode(e);
                             if (!realError.equals(getExpectedErrorCode())) {
