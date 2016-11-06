@@ -1,8 +1,10 @@
+|Execute Ddl|CREATE FUNCTION raise_error_no_params() RETURNS VOID AS $body$ BEGIN ROLLBACK; RAISE EXCEPTION SQLSTATE '20001' USING MESSAGE = 'test exception'; END; $body$ LANGUAGE plpgsql;|
+
 !3 Use ''Execute Procedure Expect Exception'' to check if a stored proc will throw an exception
 
 Output parameters will just be ignored in case of an exception
 
-!|Execute Procedure Expect Exception|raise_error_no_params|
+...!|Execute Procedure Expect Exception|raise_error_no_params|
 
 !3 Use an explicit error code with ''Execute Procedure Expect Exception'' to test for an explicit error code
 
