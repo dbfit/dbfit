@@ -37,22 +37,4 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
         if (procName==null) procName=args[0];
         return new DbStoredProcedure(environment, procName);
     }
-
-    @Override
-    protected ExpectedBehaviour getExpectedBehaviour() {
-        if (!exceptionExpected) return ExpectedBehaviour.NO_EXCEPTION;
-        if (!excNumberDefined) return ExpectedBehaviour.ANY_EXCEPTION;
-        return ExpectedBehaviour.SPECIFIC_EXCEPTION;
-    }
-
-    @Override
-    protected String getExpectedErrorCode() {
-        return excNumberExpected;
-    }
-
-    @Override
-    protected String getActualErrorCode(SQLException e) {
-System.out.println("in Execute projecure getActualErrorCode");
-        return environment.getActualErrorCode(e);
-    }
 }
