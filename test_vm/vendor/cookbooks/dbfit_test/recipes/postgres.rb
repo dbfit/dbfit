@@ -32,6 +32,7 @@ end
 # needed to support DbDeploy
 postgresql_database 'dbfit.changelog' do
   connection postgresql_connection_info
+  database_name 'dbfit'
   sql "CREATE TABLE IF NOT EXISTS changelog (
          change_number INTEGER CONSTRAINT Pkchangelog PRIMARY KEY,
          complete_dt TIMESTAMP NOT NULL,
