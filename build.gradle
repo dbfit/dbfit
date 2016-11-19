@@ -49,7 +49,7 @@ task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAl
         eachFile {details ->
             details.path = flattenPath(details.path)
         }
-        includeEmptyDirs = false 
+        includeEmptyDirs = false
     }
 }
 
