@@ -1,0 +1,6 @@
+---
+Test
+---
+!|Execute Procedure|CalcLength|
+|InString|StrLength?|
+|asdf|4|

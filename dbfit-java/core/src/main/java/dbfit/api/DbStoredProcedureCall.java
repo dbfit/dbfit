@@ -16,6 +16,7 @@ public class DbStoredProcedureCall {
     public DbStoredProcedureCall(DBEnvironment environment, String name, DbParameterAccessor[] accessors) {
         this.environment = environment;
         this.name = name;
+System.out.println("DbStoredProcedureCall: name: " + name);
         this.accessors = new DbParameterAccessors(accessors);
     }
 

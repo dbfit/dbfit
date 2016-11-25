@@ -19,11 +19,11 @@ public class DerbyRegressionSupportStoredProcs {
         }
     }
 
-    public static void calcLength(String name, int[] strLength) throws SQLException {
-        strLength[0] = name.length();
+    public static void CalcLength(String InString, int[] StrLength) throws SQLException {
+        StrLength[0] = InString.length();
     }
 
-    public static double multiply(double n1, double n2) throws SQLException {
+    public static double Multiply(double n1, double n2) throws SQLException {
         return n1 * n2;
     }
 

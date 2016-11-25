@@ -7,8 +7,11 @@ import dbfit.util.Direction;
 import dbfit.util.DatabaseObjectName;
 import static dbfit.util.NameNormaliser.normaliseName;
 
+import static dbfit.util.Direction.RETURN_VALUE;
+
 import java.math.BigDecimal;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
@@ -124,6 +127,84 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
         protected Direction getColumnDirection(ResultSet rs) {
             return Direction.INPUT;
         }
+    }
+
+    public Map<String, DbParameterAccessor> getAllProcedureParameters(String procName)
+                                                                  throws SQLException {
+        String[] qualifiers = procName.split("\\.");
+        String schemaName, procedureName;
+        if (qualifiers.length == 2) {
+            schemaName = qualifiers[0];
+            procedureName = qualifiers[1];
+        } else {
+            schemaName = getConnection().getSchema();
+            procedureName = qualifiers[0];
+        }
+        procedureName = procedureName.toUpperCase();
+        DatabaseMetaData dbmd = getConnection().getMetaData();
+        ResultSet rs;
+        rs = dbmd.getProcedures(null, schemaName, procedureName);
+        boolean isFunction = false;
+        if (rs.next()) {
+            rs.close();
+            rs = dbmd.getProcedureColumns(null, schemaName, procedureName, "%");
+        } else {
+            rs.close();
+            rs = dbmd.getFunctions(null, schemaName, procedureName);
+            if (rs.next()) {
+                isFunction = true;
+                rs.close();
+                rs = dbmd.getFunctionColumns(null, schemaName, procedureName, "%");
+            }
+        }
+        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+        int position = 0;
+        while (rs.next()) {
+            String paramName = rs.getString("COLUMN_NAME");
+            if (paramName == null)
+                paramName = "";
+            final String dataType = rs.getString("TYPE_NAME");
+            Direction paramDirection;
+            if (isFunction) {
+                switch (rs.getInt("COLUMN_TYPE")) {            	
+                    case DatabaseMetaData.functionColumnIn:
+                        paramDirection = Direction.INPUT;
+                        break;
+                    case DatabaseMetaData.functionReturn:
+                        paramDirection = Direction.RETURN_VALUE;
+                        break; 
+                    default:
+                        throw new UnsupportedOperationException(
+                            "Type " + rs.getInt("COLUMN_TYPE") + " is not supported in function parameters");
+                }
+            } else {
+                switch (rs.getInt("COLUMN_TYPE")) {
+                    case DatabaseMetaData.procedureColumnIn:
+                        paramDirection = Direction.INPUT;
+                        break;
+                    case DatabaseMetaData.procedureColumnInOut:
+                        paramDirection = Direction.INPUT_OUTPUT;
+                        break;
+                    case DatabaseMetaData.procedureColumnOut:
+                        paramDirection = Direction.OUTPUT;
+                        break;
+                    case DatabaseMetaData.procedureColumnReturn:
+                        paramDirection = Direction.RETURN_VALUE;
+                        break;
+                    default:
+                        throw new UnsupportedOperationException(
+                            "Type " + rs.getInt("COLUMN_TYPE") + " is not supported in procedure parameters");
+                }
+            }
+            DbParameterAccessor dbp = createDbParameterAccessor(
+                    paramName,
+                    paramDirection, typeMapper.getJDBCSQLTypeForDBType(dataType),
+                    getJavaClass(dataType),
+                    paramDirection == RETURN_VALUE ? -1 : position++);
+            allParams.put(NameNormaliser.normaliseName(paramName), dbp);
+        }
+        rs.close();
+        return allParams;
     }
 
     private class DatabaseProcedure extends DatabaseObject {

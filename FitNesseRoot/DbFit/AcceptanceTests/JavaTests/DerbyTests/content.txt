@@ -2,9 +2,7 @@
 !define DROPUSERTABLE {DROP TABLE USERS}
 !define CREATEMAKEUSERPROC {CREATE PROCEDURE !-MakeUser-!() LANGUAGE JAVA PARAMETER STYLE JAVA EXTERNAL NAME '!-dbfit.environment.DerbyRegressionSupportStoredProcs.MakeUser-!'}
 !define DROPMAKEUSERPROC {DROP PROCEDURE !-MakeUser-!}
-!define CREATECALCLENGTHPROC {CREATE PROCEDURE !-CalcLength-!(IN !-Name-! VARCHAR(200), OUT !-StrLength-! INTEGER) LANGUAGE JAVA PARAMETER STYLE JAVA EXTERNAL NAME '!-dbfit.environment.DerbyRegressionSupportStoredProcs.calcLength-!'}
-!define DROPCALCLENGTHPROC {DROP PROCEDURE !-CalcLength-!}
-!define CREATEMULTIPLYPROC {CREATE FUNCTION !-Multiply-!(n1 DOUBLE, n2 DOUBLE) RETURNS DOUBLE LANGUAGE JAVA PARAMETER STYLE JAVA EXTERNAL NAME '!-dbfit.environment.DerbyRegressionSupportStoredProcs.multiply-!'}
+!define CREATEMULTIPLYPROC {CREATE FUNCTION !-Multiply-!(n1 DOUBLE, n2 DOUBLE) RETURNS DOUBLE LANGUAGE JAVA PARAMETER STYLE JAVA EXTERNAL NAME '!-dbfit.environment.DerbyRegressionSupportStoredProcs.Multiply-!'}
 !define DROPMULTIPLYPROC {DROP FUNCTION !-Multiply-!}
 !define CREATERAISEERRORWITHPARAMSPROC {CREATE PROCEDURE !-raise_error_with_params-!(IN name VARCHAR(200), OUT strlength INTEGER) LANGUAGE JAVA PARAMETER STYLE JAVA EXTERNAL NAME '!-dbfit.environment.DerbyRegressionSupportStoredProcs.raise_error_with_params-!'}
 !define DROPRAISEERRORWITHPARAMSPROC {DROP PROCEDURE !-raise_error_with_params-!}
