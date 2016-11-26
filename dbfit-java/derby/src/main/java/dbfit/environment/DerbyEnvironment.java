@@ -4,8 +4,10 @@ import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
+import dbfit.util.Direction;
 
 import java.math.BigDecimal;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import dbfit.util.Direction;
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 /**
  * Encapsulates support for the Derby database (also known as JavaDB). Operates
@@ -51,42 +53,153 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
         return paramRegex;
     }
 
+    @Override
     public Map<String, DbParameterAccessor> getAllColumns(
             final String tableOrViewName) throws SQLException {
-        String qry = "SELECT COLUMNNAME, COLUMNDATATYPE "
-                + "FROM SYS.SYSCOLUMNS WHERE REFERENCEID = "
-                + "(SELECT TABLEID FROM SYS.SYSTABLES WHERE TABLENAME = ?)";
-        return readIntoParams(tableOrViewName.toUpperCase(), qry);
+        DatabaseObjectName name = buildDatabaseObjectName(tableOrViewName);
+        String qry =
+        "SELECT C.COLUMNNAME" +
+        "           AS COLUMN_NAME" +
+        "     , C.COLUMNDATATYPE" +
+        "           AS TYPE_NAME" +
+        "     , ROW_NUMBER() OVER()" +
+        "           AS ORDINAL_POSITION" +
+        "     , 'INPUT'" +
+        "           AS COLUMN_DIRECTION" +
+        "  FROM SYS.SYSCOLUMNS C" +
+        "     , SYS.SYSTABLES T" +
+        "     , SYS.SYSSCHEMAS S" +
+        " WHERE C.REFERENCEID = T.TABLEID" +
+        "   AND T.TABLENAME = ?" +
+        "   AND T.SCHEMAID = S.SCHEMAID" +
+        "   AND S.SCHEMANAME = ?" +
+        " ORDER" +
+        "    BY C.COLUMNNUMBER";
+        return fetchIntoParams(name, qry);
     }
 
-    private Map<String, DbParameterAccessor> readIntoParams(
-            String tableOrViewName, String query) throws SQLException {
+    private Map<String, DbParameterAccessor> fetchIntoParams(DatabaseObjectName name, String query)
+            throws SQLException {
         try (PreparedStatement dc = getConnection().prepareStatement(query)) {
-            dc.setString(1, tableOrViewName);
-
-            ResultSet rs = dc.executeQuery();
-            Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-            int position = 0;
-            while (rs.next()) {
-                String columnName = rs.getString(1);
-                String dataType = rs.getString(2);
-                DbParameterAccessor dbp = createDbParameterAccessor(
-                        columnName,
-                        Direction.INPUT,
-                        typeMapper.getJDBCSQLTypeForDBType(dataType),
-                        getJavaClass(dataType), position++);
-                allParams.put(NameNormaliser.normaliseName(columnName), dbp);
+            dc.setString(2, name.getSchemaName());
+            dc.setString(1, name.getObjectName());
+            try (ResultSet rs = dc.executeQuery()) {
+                return createParamMap(rs);
             }
-            rs.close();
-            return allParams;
         }
     }
 
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(
-            String procName) throws SQLException {
-        throw new UnsupportedOperationException();
+    private Map<String, DbParameterAccessor> createParamMap(ResultSet rs)
+            throws SQLException {
+        Map<String, DbParameterAccessor> allParams = new HashMap<>();
+        while (rs.next()) {
+            String paramName = defaultIfNull(rs.getString("COLUMN_NAME"), "");
+            String paramTypeName = rs.getString("TYPE_NAME");
+            allParams.put(NameNormaliser.normaliseName(paramName),
+                createDbParameterAccessor(
+                    paramName, getParamDirection(rs.getString("COLUMN_DIRECTION")),
+                    typeMapper.getJDBCSQLTypeForDBType(paramTypeName),
+                    getJavaClass(paramTypeName), rs.getInt("ORDINAL_POSITION") - 1));
+        }
+        return allParams;
     }
 
+    private Direction getParamDirection(String direction) throws SQLException {
+        switch (direction) {
+            case "INPUT":
+                return Direction.INPUT;
+            case "INPUT_OUTPUT":
+                return Direction.INPUT_OUTPUT;
+            case "OUTPUT":
+                return Direction.OUTPUT;
+            case "RETURN_VALUE":
+                return Direction.RETURN_VALUE;
+            default:
+                throw new SQLException("Invalid column/parameter direction string " + direction);
+        }
+    }
+
+    private static class DatabaseObjectName {
+        String schemaName, objectName;
+
+        private DatabaseObjectName(String objSchemaName, String objName) {
+            schemaName = objSchemaName;
+            objectName = objName;
+        }
+
+        private String getSchemaName() {
+            return schemaName;
+        }
+
+        String getObjectName() {
+            return objectName;
+        }
+    }
+
+    DatabaseObjectName buildDatabaseObjectName(String objName) throws SQLException {
+        String[] qualifiers = objName.toUpperCase().split("\\.");
+        String schemaName = (qualifiers.length == 2) ? qualifiers[0] : getConnection().getSchema();
+        String objectName = (qualifiers.length == 2) ? qualifiers[1] : qualifiers[0];
+        return new DatabaseObjectName(schemaName, objectName);
+    }
+
+    @Override
+    public Map<String, DbParameterAccessor> getAllProcedureParameters(String procName)
+            throws SQLException {
+        DatabaseObjectName name = buildDatabaseObjectName(procName);
+        // https://github.com/apache/derby/blob/10.13/java/engine/org/apache/derby/impl/jdbc/metadata.properties
+        String sql =
+        "SELECT V.COLUMN_NAME" +
+        "           AS COLUMN_NAME" +
+        "     , CASE WHEN A.ALIASTYPE = 'P'" +
+        "            THEN CASE WHEN V.COLUMN_TYPE = " + DatabaseMetaData.procedureColumnIn +
+        "                      THEN 'INPUT'" +
+        "                      WHEN V.COLUMN_TYPE = " + DatabaseMetaData.procedureColumnInOut +
+        "                      THEN 'INPUT_OUTPUT'" +
+        "                      WHEN V.COLUMN_TYPE = " + DatabaseMetaData.procedureColumnOut +
+        "                      THEN 'OUTPUT'" +
+        "                      ELSE NULL" +
+        "                  END" +
+        "            WHEN A.ALIASTYPE = 'F'" +
+        "            THEN CASE WHEN V.COLUMN_TYPE = " + DatabaseMetaData.functionColumnIn +
+        "                      THEN 'INPUT'" +
+        "                      WHEN V.COLUMN_TYPE = " + DatabaseMetaData.functionReturn +
+        "                      THEN 'RETURN_VALUE'" +
+        "                      ELSE NULL" +
+        "             END" +
+        "        END" +
+        "           AS COLUMN_DIRECTION" +
+        "     , V.DATA_TYPE" +
+        "           AS DATA_TYPE" +
+        "     , V.TYPE_NAME" +
+        "           AS TYPE_NAME" +
+        "     , CASE WHEN (V.COLUMN_TYPE = 5)" +
+        "            THEN CAST((V.PARAMETER_ID + 1 - V.METHOD_ID) AS INT)" +
+        "            ELSE CAST((V.PARAMETER_ID + 1) AS INT)" +
+        "        END" +
+        "           AS ORDINAL_POSITION" +
+        "     , V.PARAMETER_ID" +
+        "           AS PARAMETER_ID" +
+        "  FROM SYS.SYSALIASES A" +
+        "     , SYS.SYSSCHEMAS S" +
+        "     , NEW org.apache.derby.catalog.GetProcedureColumns(A.ALIASINFO, A.ALIASTYPE) V" +
+        " WHERE A.ALIASTYPE = '<<ProcFuncTypeFlag>>'" +
+        "   AND A.SCHEMAID = S.SCHEMAID" +
+        "   AND A.ALIAS = ?" +
+        "   AND S.SCHEMANAME = ?" +
+        " ORDER" +
+        "    BY PARAMETER_ID" +
+        "     , ORDINAL_POSITION";
+        String query = sql.replaceAll("<<ProcFuncTypeFlag>>", "P");
+        Map<String, DbParameterAccessor> params = fetchIntoParams(name, query);
+        if (!params.isEmpty()) {
+            return params;
+        }
+        query = sql.replaceAll("<<ProcFuncTypeFlag>>", "F");
+        return fetchIntoParams(name, query);
+    }
+
+    @Override
     public Class<?> getJavaClass(final String dataType) {
         return typeMapper.getJavaClassForDBType(dataType);
     }
@@ -127,6 +240,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
         private static final List<String> timeTypes = Arrays
                 .asList(new String[] { "TIME" });
 
+        @Override
         public Class<?> getJavaClassForDBType(final String dbDataType) {
             String dataType = normaliseTypeName(dbDataType);
             if (stringTypes.contains(dataType))
@@ -153,6 +267,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
                     + "' is not supported for Derby");
         }
 
+        @Override
         public int getJDBCSQLTypeForDBType(final String dbDataType) {
             String dataType = normaliseTypeName(dbDataType);
             if (stringTypes.contains(dataType))
