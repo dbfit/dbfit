@@ -4,8 +4,10 @@ import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
+import dbfit.util.Direction;
 
 import java.math.BigDecimal;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import dbfit.util.Direction;
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 /**
  * Encapsulates support for the Derby database (also known as JavaDB). Operates
@@ -53,38 +55,131 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
 
     public Map<String, DbParameterAccessor> getAllColumns(
             final String tableOrViewName) throws SQLException {
-        String qry = "SELECT COLUMNNAME, COLUMNDATATYPE "
+        String qry = "SELECT COLUMNNAME AS COLUMN_NAME, COLUMNDATATYPE AS TYPE_NAME, "
+                + " ROW_NUMBER() OVER() AS ORDINAL_POSITION, " +
+                + DatabaseMetaData.procedureColumnIn + " AS COLUMN_TYPE "
                 + "FROM SYS.SYSCOLUMNS WHERE REFERENCEID = "
-                + "(SELECT TABLEID FROM SYS.SYSTABLES WHERE TABLENAME = ?)";
-        return readIntoParams(tableOrViewName.toUpperCase(), qry);
+                + "(SELECT TABLEID FROM SYS.SYSTABLES WHERE TABLENAME = ?)"
+                + "ORDER BY COLUMNNUMBER";
+        return fetchIntoParams(tableOrViewName.toUpperCase(), qry);
     }
 
-    private Map<String, DbParameterAccessor> readIntoParams(
-            String tableOrViewName, String query) throws SQLException {
+    private Map<String, DbParameterAccessor> readIntoParams(ResultSet rs)
+                                                      throws SQLException {
+        Map<String, DbParameterAccessor> allParams = new HashMap<>();
+        while (rs.next()) {
+            String columnName = rs.getString("COLUMN_NAME");
+            DbParameterAccessor dbp = createObjectDbParamAccessor(columnName, rs, false);
+            allParams.put(NameNormaliser.normaliseName(columnName), dbp);
+        }
+        return allParams;
+    }
+
+    private Map<String, DbParameterAccessor> fetchIntoParams(String tableOrViewName, String query)
+                                                                               throws SQLException {
         try (PreparedStatement dc = getConnection().prepareStatement(query)) {
             dc.setString(1, tableOrViewName);
-
-            ResultSet rs = dc.executeQuery();
-            Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-            int position = 0;
-            while (rs.next()) {
-                String columnName = rs.getString(1);
-                String dataType = rs.getString(2);
-                DbParameterAccessor dbp = createDbParameterAccessor(
-                        columnName,
-                        Direction.INPUT,
-                        typeMapper.getJDBCSQLTypeForDBType(dataType),
-                        getJavaClass(dataType), position++);
-                allParams.put(NameNormaliser.normaliseName(columnName), dbp);
+            try(ResultSet rs = dc.executeQuery()) {
+                return readIntoParams(rs);
             }
-            rs.close();
-            return allParams;
         }
     }
 
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(
-            String procName) throws SQLException {
-        throw new UnsupportedOperationException();
+    private boolean isProcedureOrFunction(DbObjectName qn, boolean checkForFunction)
+                                                                  throws SQLException {
+        DatabaseMetaData dbmd = getConnection().getMetaData();
+        try (ResultSet rs = checkForFunction ? dbmd.getFunctions(null, qn.getSchemaName(), qn.getObjectName()) :
+                                               dbmd.getProcedures(null, qn.getSchemaName(), qn.getObjectName())) {
+            return rs.next();
+        }
+    }
+
+    private Direction getParamDirection(int columnType, boolean isFunction) {
+        if (isFunction) {
+            switch (columnType) {
+                case DatabaseMetaData.functionColumnIn:
+                    return Direction.INPUT;
+                case DatabaseMetaData.functionReturn:
+                    return Direction.RETURN_VALUE;
+            }
+        } else {
+            switch (columnType) {
+                case DatabaseMetaData.procedureColumnIn:
+                    return Direction.INPUT;
+                case DatabaseMetaData.procedureColumnInOut:
+                    return Direction.INPUT_OUTPUT;
+                case DatabaseMetaData.procedureColumnOut:
+                    return Direction.OUTPUT;
+            }
+        }
+        throw new UnsupportedOperationException("Type " + columnType
+                      + " is not a supported type for "
+                      + (isFunction ? "function" : "procedure") + " parameters");
+    }
+
+    private DbParameterAccessor createObjectDbParamAccessor(String paramName,
+                                                            ResultSet rs,
+                                                            boolean isFunction)
+                                                            throws SQLException {
+        Direction paramDirection = getParamDirection(rs.getInt("COLUMN_TYPE"), isFunction);
+        String paramTypeName = rs.getString("TYPE_NAME");
+        int position = rs.getInt("ORDINAL_POSITION"); // We rely upon Derby returning 0 for function return value.
+        return createDbParameterAccessor(paramName, paramDirection,
+                   typeMapper.getJDBCSQLTypeForDBType(paramTypeName), getJavaClass(paramTypeName),
+                   position - 1);
+    }
+
+    private ResultSet getObjectParameters(DbObjectName qn, boolean isFunction)
+                                                            throws SQLException {
+        DatabaseMetaData dbmd = getConnection().getMetaData();
+        return isFunction ? dbmd.getFunctionColumns(null, qn.getSchemaName(), qn.getObjectName(), "%")
+                          : dbmd.getProcedureColumns(null, qn.getSchemaName(), qn.getObjectName(), "%");
+    }
+
+    private Map<String, DbParameterAccessor> getParamMap(DbObjectName qn,
+                                                         boolean isFunction)
+                                                         throws SQLException {
+        Map<String, DbParameterAccessor> allParams = new HashMap<>();
+        try (ResultSet rs = getObjectParameters(qn, isFunction)) {
+            while (rs.next()) {
+                String paramName = defaultIfNull(rs.getString("COLUMN_NAME"), "");
+                allParams.put(NameNormaliser.normaliseName(paramName),
+                              createObjectDbParamAccessor(paramName, rs, isFunction));
+            }
+        }
+        return allParams;
+    }
+
+    private class DbObjectName {
+        String schemaName, objectName;
+
+        private DbObjectName(String defaultSchemaName, String objName) {
+            String[] qualifiers = objName.split("\\.");
+            schemaName = (qualifiers.length == 2) ? qualifiers[0] : defaultSchemaName;
+            objectName = (qualifiers.length == 2) ? qualifiers[1] : qualifiers[0];
+        }
+
+        private String getSchemaName() {
+            return schemaName;
+        }
+
+        private String getObjectName() {
+            return objectName;
+        }
+    }
+
+    public Map<String, DbParameterAccessor> getAllProcedureParameters(String procName)
+                                                                   throws SQLException {
+        DbObjectName qn = new DbObjectName(getConnection().getSchema(), procName.toUpperCase());
+        boolean isFunction;
+        if (isProcedureOrFunction(qn, false)) {
+            isFunction = false;
+        } else if (isProcedureOrFunction(qn, true)) {
+            isFunction = true;
+        } else {
+            throw new SQLException("Cannot find Procedure or Function with name " + procName);
+        }
+        return getParamMap(qn, isFunction);
     }
 
     public Class<?> getJavaClass(final String dataType) {

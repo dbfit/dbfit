@@ -8,5 +8,9 @@
 
 |Execute Ddl|${CREATEMAKEUSERPROC}|
 
+|Execute Ddl|${CREATECALCLENGTHPROC}|
+
+|Execute Ddl|${CREATEMULTIPLYPROC}|
+
 |Database Environment|
 |Commit|

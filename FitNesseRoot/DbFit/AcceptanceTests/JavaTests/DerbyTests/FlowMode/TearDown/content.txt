@@ -4,4 +4,8 @@
 
 |Execute Ddl|${DROPMAKEUSERPROC}|
 
+|Execute Ddl|${DROPCALCLENGTHPROC}|
+
+|Execute Ddl|${DROPMULTIPLYPROC}|
+
 |Commit|
