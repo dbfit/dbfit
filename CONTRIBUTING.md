@@ -18,6 +18,10 @@ If your editor or other tools don't have good support for the Unix end-of-line c
 
 If your tools have good support for Unix end-of-line format - it's perfectly OK to run with autocrlf unconfigured (or `autocrlf = false`).
 
+##### Java style
+
+The coding style conventions for Java that have been adopted by the DbFit project are those of the Java Language Specification, from Sun Microsystems (now Oracle). See the full style guide document at: http://www.oracle.com/technetwork/java/codeconvtoc-136057.html.
+
 #### Fast build
 
 The quickest way to get feedback on your code changes is to run the fast build:
