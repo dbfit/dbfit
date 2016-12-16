@@ -2,5 +2,9 @@
 !define DROPUSERTABLE {DROP TABLE USERS}
 !define CREATEMAKEUSERPROC {CREATE PROCEDURE !-MakeUser-!() LANGUAGE JAVA PARAMETER STYLE JAVA EXTERNAL NAME '!-dbfit.environment.DerbyRegressionSupportStoredProcs.MakeUser-!'}
 !define DROPMAKEUSERPROC {DROP PROCEDURE !-MakeUser-!}
+!define CREATECALCLENGTHPROC {CREATE PROCEDURE !-CalcLength-!(IN !-Name-! VARCHAR(200), OUT !-StrLength-! INTEGER) LANGUAGE JAVA PARAMETER STYLE JAVA EXTERNAL NAME '!-dbfit.environment.DerbyRegressionSupportStoredProcs.calcLength-!'}
+!define DROPCALCLENGTHPROC {DROP PROCEDURE !-CalcLength-!}
+!define CREATEMULTIPLYPROC {CREATE FUNCTION !-Multiply-!(n1 DOUBLE, n2 DOUBLE) RETURNS DOUBLE LANGUAGE JAVA PARAMETER STYLE JAVA EXTERNAL NAME '!-dbfit.environment.DerbyRegressionSupportStoredProcs.multiply-!'}
+!define DROPMULTIPLYPROC {DROP FUNCTION !-Multiply-!}
 
 !contents -R

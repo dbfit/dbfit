@@ -6,4 +6,8 @@
 
 |Execute Ddl|${CREATEMAKEUSERPROC}|
 
+|Execute Ddl|${CREATECALCLENGTHPROC}|
+
+|Execute Ddl|${CREATEMULTIPLYPROC}|
+
 |Commit|
