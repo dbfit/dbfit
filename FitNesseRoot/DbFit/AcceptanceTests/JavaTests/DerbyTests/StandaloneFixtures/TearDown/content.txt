@@ -5,6 +5,10 @@
 
 |Execute Ddl|${DROPMAKEUSERPROC}|
 
+|Execute Ddl|${DROPCALCLENGTHPROC}|
+
+|Execute Ddl|${DROPMULTIPLYPROC}|
+
 |Database Environment|
 |Commit|
 
