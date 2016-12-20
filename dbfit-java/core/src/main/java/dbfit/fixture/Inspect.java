@@ -28,6 +28,11 @@ public class Inspect extends fit.Fixture {
         this.environment = DbEnvironmentFactory.getDefaultEnvironment();
     }
 
+    public Inspect(String mode) {
+        this.mode = mode;
+        this.environment = DbEnvironmentFactory.getDefaultEnvironment();
+    }
+
     public Inspect(DBEnvironment dbEnvironment, String mode, String objName) {
         this.objectName = objName;
         this.mode = mode;
