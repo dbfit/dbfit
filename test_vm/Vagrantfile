@@ -63,9 +63,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         }
       },
       "git" => {
-        "version" => "2.10.1",
-        "url" => "https://www.kernel.org/pub/software/scm/git/git-2.10.1.tar.gz",
-        "checksum" => "78553f786f1a66cb68983c170be482558028a3376056c0f2ed366f331b1e35f2"
+        "version" => "2.11.0",
+        "url" => "https://www.kernel.org/pub/software/scm/git/git-2.11.0.tar.gz",
+        "checksum" => "d3be9961c799562565f158ce5b836e2b90f38502d3992a115dfb653d7825fd7e"
       },
       "run_list" => ["recipe[dbfit_test]"]
     }
