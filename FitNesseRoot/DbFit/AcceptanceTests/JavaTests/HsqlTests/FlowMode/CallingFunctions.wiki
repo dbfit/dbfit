@@ -1,0 +1,16 @@
+---
+Test
+---
+!3 Functions are tested like procedures, with ? used for the result
+
+|Execute Procedure|Multiply|
+|n1|n2 |?  |
+|10|15 |150|
+|2 |8  |16 |
+
+Order of parameters in table should not be important (does not have to match db order)
+
+|Execute Procedure|Multiply|
+|n2|?  |n1|
+|15|150|10|
+|8 |16 |2 |
