@@ -229,8 +229,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         TypeNormaliserFactory.setNormaliser(java.sql.Date.class,
                 new SqlDateNormaliser());
         try {
-            TypeNormaliserFactory.setNormaliser(
-                    Class.forName("oracle.jdbc.driver.OracleResultSetImpl"),
+            TypeNormaliserFactory.setNormaliser(java.sql.ResultSet.class,
                     new OracleRefNormaliser());
         } catch (Exception e) {
             throw new Error("Cannot initialise oracle rowset", e);
