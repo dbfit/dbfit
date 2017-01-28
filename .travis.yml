@@ -1,10 +1,17 @@
-sudo: false
+sudo: required
+
+services:
+  - docker
+
 language: java
 before_install:
-- "./gradlew -version"
+  - (docker pull wnameless/oracle-xe-11g &&
+     docker run -p 1521:1521 -p 49160:22 -v "`pwd`/test_vm/scripts/oracle/sql:/docker-entrypoint-initdb.d:ro" wnameless/oracle-xe-11g) &
+  - "./gradlew -version"
 install: "./gradlew assemble"
 before_script:
-- mysql -u root -v < dbfit-java/mysql/src/integration-test/resources/create-db-mysql.sql
+  - mysql -u root -v < dbfit-java/mysql/src/integration-test/resources/create-db-mysql.sql
+  - for i in {1..30}; do echo "$i waiting for Oracle server startup"; nc -w2 -q1 localhost 49160 | grep SSH && echo "[Oracle UP]" && break || sleep 6; done
 script: "./gradlew clean travisbuild"
 jdk:
 - oraclejdk7
