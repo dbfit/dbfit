@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
+THIS_DIR="`dirname $0`" && cd "${THIS_DIR}" && THIS_DIR="`pwd`" || { "Can't change to ${THIS_DIR}!"; exit 1; }
+
 RPM_PATH=/var/dbfit
 ORACLE_ENV_SCRIPT=/u01/app/oracle/product/11.2.0/xe/bin/oracle_env.sh
-ORACLE_SQL_SCRIPT=/var/dbfit/dbfit-java/oracle/src/integration-test/resources/acceptancescripts-Oracle.sql 
+ORACLE_SQL_SCRIPT="${THIS_DIR}/sql/acceptancescripts-Oracle.sql"
 ORACLE_PW=oracle
 ORACLE_ZIP=$(ls $RPM_PATH/oracle-xe-*.rpm.zip)
 ORACLE_RPM=$(ls $RPM_PATH/Disk1/oracle-xe-*.rpm)
