@@ -1,11 +1,7 @@
-set define on
 whenever sqlerror exit sql.sqlcode
-whenever sqlerror exit 9
-
-connect / as sysdba
+whenever oserror exit 9
 
 define tbs_data = USERS
-set define off
 
 create user dftest identified by dftest;
 grant connect to dftest;
@@ -15,9 +11,7 @@ grant create table to dftest;
 grant resource to dftest;
 grant create procedure to dftest;
 
-set define on
-connect dftest/dftest
-set define off
+alter session set current_schema = dftest;
 
 create or replace procedure ConcatenateStrings(firstString varchar2, secondString varchar2, concatenated out varchar2) as
 begin
@@ -106,15 +100,12 @@ create or replace package body RCLOBTest as
 end;
 /
 
-set define on
-
-connect / as sysdba
-
-set verify off
 
 create user dfsyntest identified by dfsyntest default tablespace &&tbs_data;
 
 alter user dfsyntest quota unlimited on &&tbs_data;
+
+alter session set current_schema = dfsyntest;
 
 create or replace procedure dfsyntest.standaloneproc(num1 number, num2 out number) as
 begin

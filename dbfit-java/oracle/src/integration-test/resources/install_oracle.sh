@@ -36,7 +36,7 @@ $ORACLE_PW
 y
 EOF
 
-CONFIG_CMD="source ${ORACLE_ENV_SCRIPT} && sqlplus /nolog @ ${ORACLE_SQL_SCRIPT}"
+CONFIG_CMD="source ${ORACLE_ENV_SCRIPT} && sqlplus / as sysdba @ ${ORACLE_SQL_SCRIPT}"
 su -s /bin/bash oracle -c "${CONFIG_CMD}" || { echo "Config via '${CONFIG_CMD}' failed!" 2>&1; exit 1; }
 
 rm -rf $RPM_PATH/Disk1
