@@ -13,7 +13,7 @@
 
 2. Install Oracle (this may take a while to complete)
 
-        sudo dbfit-java/oracle/src/integration-test/resources/install_oracle.sh
+        sudo test_vm/scripts/oracle/install_oracle.sh
 
 3. Run integration tests to verify setup
 
