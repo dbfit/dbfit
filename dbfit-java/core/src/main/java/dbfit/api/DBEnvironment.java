@@ -189,6 +189,4 @@ public interface DBEnvironment {
             FileNotFoundException;
 
     DbStoredProcedureCall newStoredProcedureCall(String name, DbParameterAccessor[] accessors);
-
-    String buildFunctionCall(String procOrFuncName, int numberOfParameters);
 }

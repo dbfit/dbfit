@@ -1,7 +1,6 @@
 package dbfit.api;
 
 import dbfit.util.*;
-import dbfit.util.sql.PreparedStatements;
 import dbfit.fixture.StatementExecution;
 import static dbfit.util.Options.OPTION_AUTO_COMMIT;
 
@@ -264,8 +263,5 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return (conn != null && !conn.isClosed());
     }
 
-    public String buildFunctionCall(String procOrFuncName, int numberOfParameters) {
-        return PreparedStatements.buildFunctionCall(procOrFuncName, numberOfParameters);
-    }
 }
 
