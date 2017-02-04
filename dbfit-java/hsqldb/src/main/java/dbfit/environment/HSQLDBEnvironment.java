@@ -6,7 +6,6 @@ import dbfit.fixture.StatementExecution;
 import dbfit.fixture.FunctionResultSetStatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
-import dbfit.util.sql.HSQLDBPreparedStatements;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
@@ -279,11 +278,6 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
     @Override
     public StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
         return new FunctionResultSetStatementExecution(statement);
-    }
-
-    @Override
-    public String buildFunctionCall(String procOrFuncName, int numberOfParameters) {
-        return HSQLDBPreparedStatements.buildFunctionCall(procOrFuncName, numberOfParameters);
     }
 }
 
