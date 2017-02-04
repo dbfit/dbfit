@@ -3,7 +3,7 @@ package dbfit.api;
 import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessors;
-import static dbfit.util.sql.PreparedStatements.buildStoredProcedureCall;
+import static dbfit.util.sql.PreparedStatements.buildStoredRoutineCallCmdText;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -36,11 +36,7 @@ public class DbStoredProcedureCall {
     }
 
     public String toSqlString() {
-        if (isFunction()) {
-            return environment.buildFunctionCall(getName(), getNumberOfParameters());
-        } else {
-            return buildStoredProcedureCall(getName(), getNumberOfParameters());
-        }
+        return buildStoredRoutineCallCmdText(getName(), getNumberOfParameters(), isFunction());
     }
 
     void bindParametersTo(StatementExecution cs) throws SQLException {
