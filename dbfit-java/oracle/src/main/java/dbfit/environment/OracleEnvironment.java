@@ -2,7 +2,7 @@ package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
-import dbfit.api.DbStoredProcedureCall;
+import dbfit.api.vendor.DbStoredProcedureCall;
 import dbfit.util.*;
 import dbfit.util.OracleDbParameterAccessor;
 import oracle.jdbc.OracleTypes;

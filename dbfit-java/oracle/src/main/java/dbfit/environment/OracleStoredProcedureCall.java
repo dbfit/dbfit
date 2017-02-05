@@ -1,7 +1,7 @@
 package dbfit.environment;
 
 import dbfit.api.DBEnvironment;
-import dbfit.api.DbStoredProcedureCall;
+import dbfit.api.vendor.DefaultDbStoredProcedureCall;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.OracleDbParameterAccessor;
 import dbfit.util.oracle.OracleBooleanSpCommand;
@@ -15,13 +15,13 @@ import java.util.Map;
 
 import dbfit.util.Direction;
 
-public class OracleStoredProcedureCall extends DbStoredProcedureCall {
+public class OracleStoredProcedureCall extends DefaultDbStoredProcedureCall {
     public OracleStoredProcedureCall(DBEnvironment environment, String name, DbParameterAccessor[] accessors) {
         super(environment, name, accessors);
     }
 
     @Override
-    public String toSqlString() {
+    protected String toSqlString() {
         if (!containsBooleanType()) {
             return super.toSqlString();
         }

@@ -1,5 +1,6 @@
 package dbfit.api;
 
+import dbfit.api.vendor.DbStoredProcedureCall;
 import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DdlStatementExecution;
