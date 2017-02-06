@@ -8,9 +8,11 @@ public class PreparedStatements {
         return join(repeat("?", numberOfParameters), ", ");
     }
 
-    public static String buildStoredRoutineCallCmdText(
-            String routineName, int numberOfPararameters, boolean paramsIncludeReturnValue) {
-        return "{ " + (paramsIncludeReturnValue ? "? = " : "") + "call " + routineName + "(" +
-            buildParamList((paramsIncludeReturnValue ? numberOfPararameters - 1 : numberOfPararameters)) + ") }";
+    public static String buildStoredRoutineCallText(
+            String name, int numberOfParams, boolean hasReturnValueParam) {
+        int numArgs = numberOfParams - (hasReturnValueParam ? 1 : 0);
+        String resultAssignment = hasReturnValueParam ? "? = " : "";
+        String voidInvocation = name + "(" + buildParamList(numArgs) + ")";
+        return "{ " + resultAssignment + "call " + voidInvocation + " }";
     }
 }

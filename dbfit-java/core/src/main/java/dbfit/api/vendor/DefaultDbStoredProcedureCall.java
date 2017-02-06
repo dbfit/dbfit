@@ -4,7 +4,7 @@ import dbfit.api.DBEnvironment;
 import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessors;
-import static dbfit.util.sql.PreparedStatements.buildStoredRoutineCallCmdText;
+import static dbfit.util.sql.PreparedStatements.buildStoredRoutineCallText;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
