@@ -5,6 +5,8 @@ services:
 
 language: java
 before_install:
+  - docker run --name dbfitdb2 -d -p 50000:50000 -v "`pwd`/dbfit-java/db2/src/integration-test/resources:/var/dbfit/dbfit-java/db2/src/integration-test/resources" -e DB2INST1_PASSWORD=db2inst1-pwd -e LICENSE=accept ibmcom/db2express-c:latest db2start
+  - docker exec dbfitdb2 /var/dbfit/dbfit-java/db2/src/integration-test/resources/create_db_schema.sh
   - (docker pull wnameless/oracle-xe-11g &&
      docker run -p 1521:1521 -p 49160:22 -v "`pwd`/test_vm/scripts/oracle/sql:/docker-entrypoint-initdb.d:ro" wnameless/oracle-xe-11g) &
   - "./gradlew -version"
