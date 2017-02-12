@@ -9,7 +9,7 @@ EM="$MODNAME: ERROR:"
 WM="$MODNAME: WARNING:"
 
 DBFIT_ROOT=/var/dbfit
-DB2_SCRIPTS=$DBFIT_ROOT/dbfit-java/db2/src/integration-test/resources
+DB2_SCRIPTS=$DBFIT_ROOT/test_vm/scripts/db2
 
 # Set DB2 environment.
 DB2PROFILE=/home/db2inst1/sqllib/db2profile
@@ -34,7 +34,7 @@ fi
 # Create dftest DB and dftest schema.
 # Run as db2inst1 instance owner.
 echo "$IM creating 'DBFIT' database and 'DFTEST' schema..."
-runuser -l db2inst1 -c "db2 -vf '$DB2_SCRIPTS/create-db-schema-db2.sql'"
+runuser -l db2inst1 -c "db2 -vf '$DB2_SCRIPTS/sql/create-db-schema-db2.sql'"
 if [ $? -ne 0 ]
 then
 	echo "$EM creating DB2 'DBFIT' DB and 'DFTEST' schema" 1>&2
@@ -42,7 +42,7 @@ then
 fi
 
 echo "INFO: creating DbFit acceptance testing DB objects..."
-runuser -l dftest -c ". '$DB2PROFILE' && db2 -vf '$DB2_SCRIPTS/acceptancetests-db2.sql'"
+runuser -l dftest -c ". '$DB2PROFILE' && db2 -vf '$DB2_SCRIPTS/sql/acceptancetests-db2.sql'"
 if [ $? -ne 0 ]
 then
 	echo "$EM creating DB2 acceptance testing DB objects" 1>&2
