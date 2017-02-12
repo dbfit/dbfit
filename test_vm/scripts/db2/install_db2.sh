@@ -12,7 +12,7 @@ WM="$MODNAME: WARNING:"
 
 DBFIT_ROOT=/var/dbfit
 DB2_INST_ROOT=/tmp
-DB2_SCRIPTS=$DBFIT_ROOT/dbfit-java/db2/src/integration-test/resources
+DB2_SCRIPTS=$DBFIT_ROOT/test_vm/scripts/db2
 
 DOLIBS=true
 DODETECT=true
@@ -118,7 +118,7 @@ then
 	fi
 	# Install DB2 using a response file.
 	echo "$IM running db2setup utility..."
-	./db2setup -r ${DBFIT_ROOT}/dbfit-java/db2/src/integration-test/resources/db2expc_typical.rsp
+	./db2setup -r ${DBFIT_ROOT}/test_vm/scripts/db2/db2expc_typical.rsp
 	if [ $? -ne 0 ]
 	then
 		echo "$EM executing db2setup utility" 1>&2
