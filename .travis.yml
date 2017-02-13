@@ -5,16 +5,16 @@ services:
 
 language: java
 before_install:
-  - docker run --name dbfitdb2 -d -p 50000:50000 -v "`pwd`/test_vm/scripts/db2:/var/dbfit/test_vm/scripts/db2" -e DB2INST1_PASSWORD=db2inst1-pwd -e LICENSE=accept ibmcom/db2express-c:latest db2start &
+  - docker run --name dbfitdb2 -d -p 50000:50000 -v "`pwd`/test_vm/scripts/db2:/scripts" -e DB2INST1_PASSWORD=db2inst1-pwd -e LICENSE=accept ibmcom/db2express-c:latest db2start
   - (docker pull wnameless/oracle-xe-11g &&
      docker run -p 1521:1521 -p 49160:22 -v "`pwd`/test_vm/scripts/oracle/sql:/docker-entrypoint-initdb.d:ro" wnameless/oracle-xe-11g) &
   - "./gradlew -version"
 install: "./gradlew assemble"
 before_script:
   - mysql -u root -v < dbfit-java/mysql/src/integration-test/resources/create-db-mysql.sql
-  - for i in {1..30}; do echo "$i waiting for Oracle server startup"; nc -w2 -q1 localhost 49160 | grep SSH && echo "[Oracle UP]" && break || sleep 6; done
-  - for i in {1..30}; do echo "$i waiting for DB2 server startup"; docker exec dbfitdb2 /var/dbfit/test_vm/scripts/db2/detect_dbstart.sh 2 && break || sleep 6; done
-  - docker exec dbfitdb2 /var/dbfit/test_vm/scripts/db2/create_db_schema.sh
+  - for i in {1..60}; do echo "$i waiting for Oracle server startup"; nc -w2 -q1 localhost 49160 | grep SSH && echo "[Oracle UP]" && break || sleep 6; done
+  - for i in {1..60}; do echo "$i waiting for DB2 server startup"; docker exec dbfitdb2 /scripts/detect_dbstart.sh 2 && break || sleep 6; done
+  - docker exec dbfitdb2 /scripts/create_db_schema.sh
 script: "./gradlew clean travisbuild"
 jdk:
 - oraclejdk7
