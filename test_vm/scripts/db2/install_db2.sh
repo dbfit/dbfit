@@ -10,9 +10,9 @@ IM="$MODNAME: INFO:"
 EM="$MODNAME: ERROR:"
 WM="$MODNAME: WARNING:"
 
-DBFIT_ROOT=/var/dbfit
 DB2_INST_ROOT=/tmp
-DB2_SCRIPTS=$DBFIT_ROOT/test_vm/scripts/db2
+DB2_SCRIPTS=`dirname $0`
+DBFIT_ROOT=/var/dbfit
 
 DOLIBS=true
 DODETECT=true

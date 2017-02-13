@@ -8,8 +8,7 @@ IM="$MODNAME: INFO:"
 EM="$MODNAME: ERROR:"
 WM="$MODNAME: WARNING:"
 
-DBFIT_ROOT=/var/dbfit
-DB2_SCRIPTS=$DBFIT_ROOT/test_vm/scripts/db2
+DB2_SCRIPTS=`dirname $0`
 
 # Set DB2 environment.
 DB2PROFILE=/home/db2inst1/sqllib/db2profile
