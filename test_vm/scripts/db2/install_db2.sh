@@ -10,9 +10,9 @@ IM="$MODNAME: INFO:"
 EM="$MODNAME: ERROR:"
 WM="$MODNAME: WARNING:"
 
-DBFIT_ROOT=/var/dbfit
 DB2_INST_ROOT=/tmp
-DB2_SCRIPTS=$DBFIT_ROOT/dbfit-java/db2/src/integration-test/resources
+DB2_SCRIPTS=`dirname $0`
+DBFIT_ROOT=/var/dbfit
 
 DOLIBS=true
 DODETECT=true
@@ -118,7 +118,7 @@ then
 	fi
 	# Install DB2 using a response file.
 	echo "$IM running db2setup utility..."
-	./db2setup -r ${DBFIT_ROOT}/dbfit-java/db2/src/integration-test/resources/db2expc_typical.rsp
+	./db2setup -r ${DBFIT_ROOT}/test_vm/scripts/db2/db2expc_typical.rsp
 	if [ $? -ne 0 ]
 	then
 		echo "$EM executing db2setup utility" 1>&2
@@ -144,41 +144,10 @@ then
 	exit 3
 fi
 
-# Set DB2 environment.
-DB2PROFILE=/home/db2inst1/sqllib/db2profile
-
-# Create dftest OS user for dbfit tests.
-echo "$IM creating OS user 'dftest'..."
-useradd dftest
-if [ $? -ne 0 ]
-then
-	echo "$EM creating 'dftest' OS user" 1>&2
-	exit 1
-fi
-
-echo "$IM setting passwd for OS user 'dftest'..."
-echo dftest:DFTEST|chpasswd
-if [ $? -ne 0 ]
-then
-	echo "$EM setting passwd for OS user 'dftest'" 1>&2
-	exit 1
-fi
-
-# Create dftest DB and dftest schema.
-# Run as db2inst1 instance owner.
-echo "$IM creating 'DBFIT' database and 'DFTEST' schema..."
-runuser -l db2inst1 -c "db2 -vf '$DB2_SCRIPTS/create-db-schema-db2.sql'"
+$DB2_SCRIPTS/create_db_schema.sh
 if [ $? -ne 0 ]
 then
 	echo "$EM creating DB2 'DBFIT' DB and 'DFTEST' schema" 1>&2
-	exit 1
-fi
-
-echo "INFO: creating DbFit acceptance testing DB objects..."
-runuser -l dftest -c ". '$DB2PROFILE' && db2 -vf '$DB2_SCRIPTS/acceptancetests-db2.sql'"
-if [ $? -ne 0 ]
-then
-	echo "$EM creating DB2 acceptance testing DB objects" 1>&2
 	exit 1
 fi
 

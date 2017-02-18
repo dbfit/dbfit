@@ -246,6 +246,7 @@ task fastbuild(dependsOn: [
 
 task travisbuild(dependsOn: [
     fastbuild,
+    ':dbfit-java:db2:integrationTest',
     ':dbfit-java:mysql:integrationTest',
     ':dbfit-java:oracle:integrationTest'
     ])
