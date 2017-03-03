@@ -1,0 +1,79 @@
+---
+Test
+---
+!|Execute Ddl|create table testtbl(id int, val int)|
+
+!|Insert|testtbl|
+|id     |val    |
+|1      |101    |
+|2      |102    |
+
+!3 Symbols in Query
+
+# Assigning
+!|Query|select id, val from testtbl|
+|id|val?                       |
+|1 |>>v1                       |
+|2 |>>>v2                      |
+
+# Query - symbol in key columns
+!|Query|select val from testtbl|
+|val                           |
+|<<v1                          |
+|<<<v2                         |
+
+# Query - symbol in non key columns
+!|Query|select id, val from testtbl|
+|id|val?                           |
+|1 |<<<v1                          |
+|2 |<<v2                           |
+
+!3 symbols in Update
+
+|Update|testtbl|
+|val=  |id     |
+|<<v2  |1      |
+|<<<v1 |2      |
+
+!|Query|select id, val from testtbl|
+|id|val?                           |
+|2 |<<<v1                          |
+|1 |<<v2                           |
+
+!3 Set Parameter
+
+!|Set Parameter|x3|103|
+
+!|Set Parameter|x4|104|
+
+!|Set Parameter|v3|<<x3|
+
+!|Set Parameter|v4|<<<x4|
+
+!3 Insert
+
+!|Insert|testtbl|
+|id     |val    |
+|3      |<<v3   |
+|4      |<<<v4  |
+
+!|Query|select id, val from testtbl where id in (3, 4)|
+|id|val? |
+|3 |103  |
+|4 |104  |
+
+!3 Stored Procedures
+
+!|Execute Procedure    |CalcLength  |
+|name                  |str length? |
+|abcd                  |>>len4      |
+|abc1234               |>>>len7     |
+|<<v3                  |3           |
+
+!|Execute Procedure    |CalcLength  |
+|name                  |str length? |
+|abcd                  |<<len4      |
+|abc1234               |<<<len7     |
+
+# Tear Down
+!|Execute Ddl|drop table testtbl|

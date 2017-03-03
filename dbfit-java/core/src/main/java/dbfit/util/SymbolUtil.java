@@ -60,4 +60,8 @@ public class SymbolUtil {
     public static boolean isSymbolSetter(String text) {
         return SymbolReference.fromFullName(text).isSymbolSetter();
     }
+
+    public static boolean isSymbolHidden(String text) {
+        return SymbolReference.fromFullName(text).isHidden();
+    }
 }

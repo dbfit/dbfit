@@ -11,12 +11,15 @@ public class SymbolAccessQueryBinding extends Binding.QueryBinding {
             if (content.isSymbolSetter()) {
                 Object actual = this.adapter.get();
                 dbfit.util.SymbolUtil.setSymbol(content.text(), actual);
-                cell.addToBody(Fixture.gray("= " + String.valueOf(actual)));
+                if (!content.isSymbolHidden()) {
+                    cell.addToBody(Fixture.gray("= " + String.valueOf(actual)));
+                }
                 // fixture.ignore(cell);
             } else if (content.isSymbolGetter()) {
                 Object actual = this.adapter.get();
                 Object expected = this.adapter.parse(content.text());
-                cell.addToBody(Fixture.gray("= " + String.valueOf(expected)));
+                String displayValue = content.isSymbolHidden() ? "" : ("= " + String.valueOf(expected));
+                cell.addToBody(Fixture.gray(displayValue));
 
                 if (adapter.equals(actual, expected)) {
                     fixture.right(cell);
@@ -59,6 +62,10 @@ public class SymbolAccessQueryBinding extends Binding.QueryBinding {
 
         public boolean isSymbolGetter() {
             return SymbolUtil.isSymbolGetter(content);
+        }
+
+        public boolean isSymbolHidden() {
+            return SymbolUtil.isSymbolHidden(content);
         }
 
         private boolean isExpectingInequality() {

@@ -47,4 +47,16 @@ public class SymbolReferenceTest {
             super("SYMBOL_X", ">>", ">>SYMBOL_X");
         }
     }
+
+    public static class HiddenSymbolGetterReferenceTest extends AbstractSymbolReferenceTest {
+        public HiddenSymbolGetterReferenceTest() {
+            super("SYMBOL_X", "<<<", "<<<SYMBOL_X");
+        }
+    }
+
+    public static class HiddenSymbolSetterReferenceTest extends AbstractSymbolReferenceTest {
+        public HiddenSymbolSetterReferenceTest() {
+            super("SYMBOL_X", ">>>", ">>>SYMBOL_X");
+        }
+    }
 }

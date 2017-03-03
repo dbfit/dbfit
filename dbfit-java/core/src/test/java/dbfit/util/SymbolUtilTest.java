@@ -3,6 +3,7 @@ package dbfit.util;
 import static dbfit.util.SymbolUtil.getSymbol;
 import static dbfit.util.SymbolUtil.isSymbolGetter;
 import static dbfit.util.SymbolUtil.isSymbolSetter;
+import static dbfit.util.SymbolUtil.isSymbolHidden;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -47,23 +48,28 @@ public class SymbolUtilTest {
         private String symbolFullName;
         private boolean expectedIsSymbolGetter;
         private boolean expectedIsSymbolSetter;
+        private boolean expectedIsSymbolHidden;
 
         public IsSymbolGetterOrSetterTest(
                 String symbolFullName,
                 Boolean expectedIsSymbolGetter,
-                Boolean expectedIsSymbolSetter) {
+                Boolean expectedIsSymbolSetter,
+                Boolean expectedIsSymbolHidden) {
             this.symbolFullName = symbolFullName;
             this.expectedIsSymbolGetter = expectedIsSymbolGetter;
             this.expectedIsSymbolSetter = expectedIsSymbolSetter;
+            this.expectedIsSymbolHidden = expectedIsSymbolHidden;
         }
 
         @Parameters(name = "({index}): symbol {0} -> expecting {1}")
         public static Collection<Object[]> data() throws Exception {
             return java.util.Arrays.asList(new Object[][] {
-                {"<<SYMBOL_X", true,  false},
-                {">>SYMBOL_X", false, true},
-                {"SYMBOL_X",   false, false},
-                {null,         false, false}
+                {"<<SYMBOL_X",  true,  false, false},
+                {">>SYMBOL_X",  false, true,  false},
+                {"<<<SYMBOL_X", true,  false, true},
+                {">>>SYMBOL_X", false, true,  true},
+                {"SYMBOL_X",    false, false, false},
+                {null,          false, false, false}
             });
         }
 
@@ -75,6 +81,11 @@ public class SymbolUtilTest {
         @Test
         public void testIsSymbolSetter() {
             assertEquals(expectedIsSymbolSetter, isSymbolSetter(symbolFullName));
+        }
+
+        @Test
+        public void testIsSymbolHidden() {
+            assertEquals(expectedIsSymbolHidden, isSymbolHidden(symbolFullName));
         }
     }
 }
