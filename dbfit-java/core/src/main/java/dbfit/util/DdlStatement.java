@@ -1,18 +1,21 @@
 package dbfit.util;
 
+import dbfit.api.DbCommand;
+
 import java.sql.Statement;
 import java.sql.SQLException;
 
-public class DdlStatementExecution implements AutoCloseable {
+public class DdlStatement implements DbCommand {
     private Statement statement;
     private String commandText;
 
-    public DdlStatementExecution(Statement statement, String commandText) {
+    public DdlStatement(Statement statement, String commandText) {
         this.statement = statement;
         this.commandText = commandText;
     }
 
-    public void run() throws SQLException {
+    @Override
+    public void execute() throws SQLException {
         statement.execute(commandText);
     }
 

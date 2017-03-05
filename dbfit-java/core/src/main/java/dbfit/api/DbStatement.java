@@ -1,25 +1,18 @@
 package dbfit.api;
 
-import dbfit.fixture.StatementExecution;
-
 import java.sql.SQLException;
 
-public class DbStatement {
-    private DBEnvironment environment;
-    private String statementText;
-    private TestHost testHost;
+/**
+ * Represents a prepared database statement with ability to bind input parameters and
+ * to register and access output ones including return values.
+ */
+public interface DbStatement extends DbCommand, DbQuery {
 
-    public DbStatement() {
-        environment = DbEnvironmentFactory.getDefaultEnvironment();
-    }
+    public void registerOutParameter(int index, int sqlType, boolean isReturnValue) throws SQLException;
 
-    public DbStatement(DBEnvironment environment, String statementText, TestHost testHost) {
-        this.environment = environment;
-        this.statementText = statementText;
-        this.testHost = testHost;
-    }
+    public void setObject(int index, Object value, int sqlType, String userDefinedTypeName) throws SQLException;
 
-    public StatementExecution buildPreparedStatement() throws SQLException {
-        return environment.createStatementExecution(environment.createStatementWithBoundFixtureSymbols(testHost, statementText));
-    }
+    public Object getObject(int index) throws SQLException;
+
+    public Object getGeneratedKey(Class<?> type) throws SQLException, IllegalAccessException;
 }

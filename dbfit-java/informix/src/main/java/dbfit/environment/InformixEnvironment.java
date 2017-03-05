@@ -1,8 +1,7 @@
 package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
-import dbfit.api.AbstractDbEnvironment;
-import dbfit.fixture.StatementExecution;
+import dbfit.api.DbStatement;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
@@ -292,7 +291,12 @@ public class InformixEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
-    public StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
-        return new InformixFunctionStatementExecution(statement);
+    public DbStatement createCallCommand(
+            PreparedStatement statement, boolean isFunction) throws SQLException {
+        if (isFunction) {
+            return new InformixFunctionStatement(statement);
+        } else {
+            return super.createCallCommand(statement, isFunction);
+        }
     }
 }

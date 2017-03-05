@@ -3,7 +3,7 @@ package dbfit.fixture;
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
 import dbfit.api.DbObject;
-import dbfit.api.DbTable;
+import dbfit.api.DbTableInsert;
 
 import java.sql.SQLException;
 
@@ -29,6 +29,6 @@ public class Insert extends DbObjectExecutionFixture {
         if ((tableName == null || tableName.trim().length() == 0) && args.length > 0) {
             tableName = args[0];
         };
-        return new DbTable(environment, tableName);
+        return new DbTableInsert(environment, tableName);
     }
 }

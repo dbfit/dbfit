@@ -1,7 +1,7 @@
 package dbfit.util;
 
-import dbfit.fixture.StatementExecution;
 import static dbfit.util.Direction.INPUT_OUTPUT;
+
 import org.junit.*;
 import static org.mockito.Mockito.*;
 import static java.sql.Types.*;
@@ -13,14 +13,14 @@ public class DbParameterAccessorTest {
     int position = 1;
     String userDefinedTypeName = "whatever";
     TypeTransformerFactory inputTransformerFactory;
-    StatementExecution statement;
+    DefaultDbStatement statement;
     DbParameterAccessor dbpa;
 
     @Before
     public void initialise() throws Exception {
         Class<?> javaType = String.class;
         inputTransformerFactory = mock(TypeTransformerFactory.class);
-        statement = mock(StatementExecution.class);
+        statement = mock(DefaultDbStatement.class);
         dbpa = new DbParameterAccessor("dummy", INPUT_OUTPUT, sqlType,
                                        userDefinedTypeName, javaType, position, inputTransformerFactory);
         dbpa.bindTo(statement, position);

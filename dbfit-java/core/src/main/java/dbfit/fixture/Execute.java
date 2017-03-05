@@ -1,31 +1,30 @@
 package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
+import dbfit.api.DbEnvironmentFacade;
 import dbfit.api.DbEnvironmentFactory;
-import dbfit.api.DbStatement;
 import dbfit.util.FitNesseTestHost;
+
 import fit.Fixture;
 import fit.Parse;
 
 public class Execute extends Fixture {
     private String statementText;
-    private DBEnvironment dbEnvironment;
+    private DbEnvironmentFacade dbEnvironment;
 
     public Execute() {
-        dbEnvironment = DbEnvironmentFactory.getDefaultEnvironment();
+        this(DbEnvironmentFactory.getDefaultEnvironment(), null);
     }
 
     public Execute(DBEnvironment env, String statement) {
         this.statementText = statement;
-        this.dbEnvironment = env;
+        this.dbEnvironment =
+            new DbEnvironmentFacade(env, FitNesseTestHost.getInstance());
     }
 
     public void doRows(Parse rows) {
         try {
-            DbStatement dbObject = new DbStatement(dbEnvironment, getStatementText(), FitNesseTestHost.getInstance());
-            try (StatementExecution preparedStatement = dbObject.buildPreparedStatement()) {
-                preparedStatement.run();
-            }
+            dbEnvironment.runCommandWithBoundSymbols(getStatementText());
         } catch (Throwable e) {
             throw new Error(e);
         }

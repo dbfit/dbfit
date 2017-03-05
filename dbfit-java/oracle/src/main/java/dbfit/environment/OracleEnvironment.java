@@ -1,8 +1,7 @@
 package dbfit.environment;
 
+import dbfit.api.DbCommand;
 import dbfit.annotations.DatabaseEnvironment;
-import dbfit.api.AbstractDbEnvironment;
-import dbfit.api.DbStoredProcedureCall;
 import dbfit.util.*;
 import dbfit.util.OracleDbParameterAccessor;
 import oracle.jdbc.OracleTypes;
@@ -486,7 +485,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                 + " is not supported");
     }
 
-    public String buildInsertCommand(String tableName,
+    public String buildInsertCommandText(String tableName,
             DbParameterAccessor[] accessors) {
         Log.log("buiding insert command for " + tableName);
 
@@ -547,11 +546,12 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     public PreparedStatement buildInsertPreparedStatement(String tableName,
             DbParameterAccessor[] accessors) throws SQLException {
         return getConnection().prepareCall(
-                buildInsertCommand(tableName, accessors));
+                buildInsertCommandText(tableName, accessors));
     }
 
     @Override
-    public DbStoredProcedureCall newStoredProcedureCall(String name, DbParameterAccessor[] accessors) {
-        return new OracleStoredProcedureCall(this, name, accessors);
+    public DbCommand buildStoredProcedureCall(String name, DbParameterAccessor[] accessors)
+            throws SQLException {
+        return new OracleStoredProcedureCall(this, name, accessors).buildCallCommand();
     }
 }

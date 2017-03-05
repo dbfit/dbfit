@@ -1,7 +1,10 @@
-package dbfit.api;
+package dbfit.environment;
 
+import dbfit.api.DBEnvironment;
+import dbfit.api.DbCommand;
+import dbfit.api.DbStatement;
+import dbfit.api.TestHost;
 import dbfit.util.*;
-import dbfit.fixture.StatementExecution;
 import static dbfit.util.Options.OPTION_AUTO_COMMIT;
 
 import java.io.FileNotFoundException;
@@ -105,36 +108,53 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return commandText;
     }
 
-    public final PreparedStatement createStatementWithBoundFixtureSymbols(
+    @Override
+    public final DbStatement createStatementWithBoundSymbols(
             TestHost testHost, String commandText) throws SQLException {
         String command = Options.isBindSymbols() ? parseCommandText(commandText) : commandText;
-        PreparedStatement cs = getConnection().prepareStatement(
-                command);
+        PreparedStatement statement = getConnection().prepareStatement(command);
 
         if (Options.isBindSymbols()) {
             String paramNames[] = extractParamNames(commandText);
             for (int i = 0; i < paramNames.length; i++) {
                 Object value = testHost.getSymbolValue(paramNames[i]);
-                cs.setObject(i + 1, value);
+                statement.setObject(i + 1, value);
             }
         }
-        return cs;
+
+        return createDbStatement(statement);
     }
 
     @Override
-    public DdlStatementExecution createDdlStatementExecution(String ddl)
+    public DbCommand createDdlCommand(String ddl) throws SQLException {
+        return new DdlStatement(getConnection().createStatement(), ddl);
+    }
+
+    /**
+     * Create a {@link DbStatement} for the given prepared statement.
+     * This is the method to override if custom implementation needs to be returned
+     */
+    protected DbStatement createDbStatement(PreparedStatement statement) {
+        return new DefaultDbStatement(statement);
+    }
+
+    @Override
+    public final DbStatement createDbStatement(String commandText) throws SQLException {
+        return createDbStatement(getConnection().prepareStatement(commandText));
+    }
+
+    /**
+     * Create a {@link DbStatement} for the given prepared statement.
+     * This is the method to override if custom implementation needs to be returned
+     */
+    protected DbStatement createCallCommand(PreparedStatement statement, boolean isFunction)
             throws SQLException {
-        return new DdlStatementExecution(getConnection().createStatement(), ddl);
+        return new DefaultDbStatement(statement);
     }
 
     @Override
-    public StatementExecution createStatementExecution(PreparedStatement statement) {
-        return new StatementExecution(statement);
-    }
-
-    @Override
-    public StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
-        return new StatementExecution(statement);
+    public final DbStatement createCallCommand(String commandText, boolean isFunction) throws SQLException {
+        return createCallCommand(getConnection().prepareCall(commandText), isFunction);
     }
 
     protected DbParameterAccessor createDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {
@@ -206,8 +226,16 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     public PreparedStatement buildInsertPreparedStatement(String tableName,
             DbParameterAccessor[] accessors) throws SQLException {
         return getConnection().prepareStatement(
-                buildInsertCommand(tableName, accessors),
+                buildInsertCommandText(tableName, accessors),
                 Statement.RETURN_GENERATED_KEYS);
+    }
+
+    @Override
+    public final DbCommand buildInsertCommand(String tableName, DbParameterAccessor[] accessors)
+            throws SQLException {
+        DbStatement cmd = createDbStatement(buildInsertPreparedStatement(tableName, accessors));
+        new DbParameterAccessors(accessors).bindParametersInGivenOrder(cmd);
+        return cmd;
     }
 
     /**
@@ -216,7 +244,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
      * isolated into a separate method so that subclasses can override one or
      * the other depending on db specifics
      */
-    public String buildInsertCommand(String tableName,
+    public String buildInsertCommandText(String tableName,
             DbParameterAccessor[] accessors) {
         StringBuilder sb = new StringBuilder("insert into ");
         sb.append(tableName).append("(");
@@ -240,8 +268,10 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return sb.toString();
     }
 
-    public DbStoredProcedureCall newStoredProcedureCall(String name, DbParameterAccessor[] accessors) {
-        return new DbStoredProcedureCall(this, name, accessors);
+    @Override
+    public DbCommand buildStoredProcedureCall(String name, DbParameterAccessor[] accessors)
+            throws SQLException {
+        return new DbStoredProcedureCall(this, name, accessors).buildCallCommand();
     }
 
     public DbParameterAccessor createAutogeneratedPrimaryKeyAccessor(

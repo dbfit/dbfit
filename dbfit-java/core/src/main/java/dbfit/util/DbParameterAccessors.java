@@ -1,6 +1,6 @@
 package dbfit.util;
 
-import dbfit.fixture.StatementExecution;
+import dbfit.api.DbStatement;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -12,15 +12,34 @@ import static dbfit.util.Direction.RETURN_VALUE;
 public class DbParameterAccessors implements Iterable<DbParameterAccessor> {
     private List<DbParameterAccessor> accessors;
 
+    public DbParameterAccessors(List<DbParameterAccessor> accessors) {
+        this.accessors = accessors;
+    }
+
     public DbParameterAccessors(DbParameterAccessor[] accessors) {
-        this.accessors = new ArrayList<DbParameterAccessor>(Arrays.asList(accessors));
+        this(new ArrayList<DbParameterAccessor>(Arrays.asList(accessors)));
     }
 
     public DbParameterAccessors() {
         this(new DbParameterAccessor[]{});
     }
 
-    public void bindParameters(StatementExecution statement) throws SQLException {
+    /**
+     * Bind accessors to the given statement on indexes as per the order in the
+     * list used construct this object.
+     */
+    public void bindParametersInGivenOrder(DbStatement statement) throws SQLException {
+        int index = 0;
+        for (DbParameterAccessor ac : accessors) {
+            ac.bindTo(statement, ++index);
+        }
+    }
+
+    /**
+     * Bind accessors to the given statement on indexes determined by
+     * accessors' position in the database.
+     */
+    public void bindParameters(DbStatement statement) throws SQLException {
         List<String> accessorNames = getSortedAccessorNames();
         for (DbParameterAccessor ac : accessors) {
             int realindex = accessorNames.indexOf(ac.getName());

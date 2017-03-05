@@ -31,7 +31,7 @@ public class DataRow {
     }
 
     public String getStringValue(String columnName) {
-        return String.valueOf(values.get(columnName));
+        return String.valueOf(get(columnName));
     }
 
     public boolean matches(final Map<String, Object> keyProperties) {

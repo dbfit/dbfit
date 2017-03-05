@@ -1,16 +1,12 @@
 package dbfit.api;
 
-import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
-import dbfit.util.DdlStatementExecution;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
-
 
 public interface DBEnvironment {
     /**
@@ -35,10 +31,17 @@ public interface DBEnvironment {
             throws SQLException;
 
     /**
-     * This method creates an insert command that will be used to populate new
-     * rows in a table.
+     * Create an insert command that will be used to populate new rows in a table.
+     * The given accessors are bound to the database command.
      */
-    PreparedStatement buildInsertPreparedStatement(String tableName, DbParameterAccessor[] accessors)
+    DbCommand buildInsertCommand(String tableName, DbParameterAccessor[] accessors)
+            throws SQLException;
+
+    /**
+     * Build a call command for the given stored procedure name and parameters.
+     * The given accessors are bound to the database statement.
+     */
+    DbCommand buildStoredProcedureCall(String name, DbParameterAccessor[] accessors)
             throws SQLException;
 
     /**
@@ -54,31 +57,35 @@ public interface DBEnvironment {
     /*
      * CreateCommand(String statement) and BindFixtureSymbols are implemented
      * differently then in the .Net version due to JDBC API; they are combined
-     * into createStatementWithBoundFixtureSymbols
+     * into createStatementWithBoundSymbols
      */
 
     /**
-     * Create a {@link PreparedStatement} object and binds fixture symbols to
+     * Create a {@link DbStatement} and binds fixture symbols to
      * SQL statement parameters with matching names.
      */
-    PreparedStatement createStatementWithBoundFixtureSymbols(TestHost th, String commandText)
+    DbStatement createStatementWithBoundSymbols(TestHost testHost, String commandText)
             throws SQLException;
 
     /**
-     * Create a procedure statement execution object for the given command text.
+     * Create a prepared statement for the given command text
      */
-    StatementExecution createStatementExecution(PreparedStatement statement);
+    DbStatement createDbStatement(String commandText) throws SQLException;
 
     /**
-     * Create a function statement execution object for the given command text.
+     * Create a stored subroutine call for the given command text.
+     *
+     * @param commandText typically it's something like
+     *                    {? = call f(?, ?, ...)} for functions or
+     *                    {call p(?, ?, ?)} for procedures
      */
-    StatementExecution createFunctionStatementExecution(PreparedStatement statement);
+    DbStatement createCallCommand(String commandText, boolean isFunction) throws SQLException;
 
     /**
-     * Create a statement execution object for the given DDL text. Bind variables
+     * Create a {@list DbCommand} for the given DDL text. Bind variables
      * are not supported.
      */
-    DdlStatementExecution createDdlStatementExecution(String ddl) throws SQLException;
+    DbCommand createDdlCommand(String ddl) throws SQLException;
 
     /**
      * Closes the current connection and rolls back any active transactions. The
@@ -187,6 +194,4 @@ public interface DBEnvironment {
      */
     void connectUsingFile(String filePath) throws SQLException, IOException,
             FileNotFoundException;
-
-    DbStoredProcedureCall newStoredProcedureCall(String name, DbParameterAccessor[] accessors);
 }

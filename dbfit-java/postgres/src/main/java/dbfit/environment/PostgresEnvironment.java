@@ -1,7 +1,6 @@
 package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
-import dbfit.api.AbstractDbEnvironment;
 import dbfit.environment.postgres.NameNormaliserPostgres;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;

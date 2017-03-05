@@ -1,27 +1,27 @@
 package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
+import dbfit.api.DbEnvironmentFacade;
 import dbfit.api.DbEnvironmentFactory;
-import dbfit.util.DataTable;
 import dbfit.util.FitNesseTestHost;
+import dbfit.util.SymbolUtil;
+
 import fit.Parse;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class StoreQuery extends fit.Fixture {
 
-    private DBEnvironment dbEnvironment;
+    private DbEnvironmentFacade dbEnvironment;
     private String query;
     private String symbolName;
 
     public StoreQuery() {
-        dbEnvironment = DbEnvironmentFactory.getDefaultEnvironment();
+        this(DbEnvironmentFactory.getDefaultEnvironment(), null, null);
     }
 
     public StoreQuery(DBEnvironment environment, String query, String symbolName) {
-        this.dbEnvironment = environment;
+        this.dbEnvironment = new DbEnvironmentFacade(environment, FitNesseTestHost.getInstance());
         this.query = query;
         this.symbolName = symbolName;
     }
@@ -36,14 +36,8 @@ public class StoreQuery extends fit.Fixture {
             symbolName = args[1];
         }
 
-        try (
-            PreparedStatement st =
-                dbEnvironment.createStatementWithBoundFixtureSymbols(
-                    FitNesseTestHost.getInstance(), query)
-        ) {
-            ResultSet rs = st.executeQuery();
-            DataTable dt = new DataTable(rs);
-            dbfit.util.SymbolUtil.setSymbol(symbolName, dt);
+        try {
+            SymbolUtil.setSymbol(symbolName, dbEnvironment.getQueryTable(query));
         } catch (SQLException sqle) {
             throw new Error(sqle);
         }

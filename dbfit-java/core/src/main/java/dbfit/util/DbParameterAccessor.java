@@ -1,13 +1,14 @@
 package dbfit.util;
 
-import dbfit.fixture.StatementExecution;
+import dbfit.api.DbStatement;
+import dbfit.api.DbParameterDescriptor;
 import static dbfit.util.Direction.*;
 import static dbfit.util.ValueNormaliser.normaliseValue;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
-public class DbParameterAccessor {
+public class DbParameterAccessor implements DbParameterDescriptor {
 
     private int index; // index in effective sql statement (not necessarily the same as position below)
     private Direction direction;
@@ -16,7 +17,7 @@ public class DbParameterAccessor {
     private String userDefinedTypeName;
     private Class<?> javaType;
     private int position; // zero-based index of parameter in procedure (-1 for ret value) or column in table
-    protected StatementExecution cs;
+    protected DbStatement statement;
     private TypeTransformerFactory dbfitToJdbcTransformerFactory;
 
     /*
@@ -31,7 +32,7 @@ public class DbParameterAccessor {
     @Override
     public DbParameterAccessor clone() {
         DbParameterAccessor copy = copy();
-        copy.cs = null;
+        copy.statement = null;
         return copy;
     }
 
@@ -80,11 +81,11 @@ public class DbParameterAccessor {
         this.direction = direction;
     }
 
-    public void bindTo(StatementExecution cs, int ind) throws SQLException {
-        this.cs = cs;
+    public void bindTo(DbStatement statement, int ind) throws SQLException{
+        this.statement = statement;
         this.index = ind;
         if (direction != INPUT) {
-            cs.registerOutParameter(ind, getSqlType(), direction == RETURN_VALUE);
+            statement.registerOutParameter(ind, getSqlType(), direction == RETURN_VALUE);
         }
     }
 
@@ -107,7 +108,7 @@ public class DbParameterAccessor {
         if (direction == OUTPUT || direction == RETURN_VALUE) {
             throw new UnsupportedOperationException("Trying to set value of output parameter " + name);
         }
-        cs.setObject(index, toJdbcCompatibleValue(value), sqlType, userDefinedTypeName);
+        statement.setObject(index, toJdbcCompatibleValue(value), sqlType, userDefinedTypeName);
     }
 
     public Object get() throws IllegalAccessException, InvocationTargetException {
@@ -115,7 +116,7 @@ public class DbParameterAccessor {
             if (direction.equals(INPUT)) {
                 throw new UnsupportedOperationException("Trying to get value of input parameter " + name);
             }
-            return normaliseValue(cs.getObject(index));
+            return normaliseValue(statement.getObject(index));
         }
         catch (SQLException sqle) {
             throw new InvocationTargetException(sqle);

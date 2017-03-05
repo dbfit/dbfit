@@ -1,23 +1,22 @@
 package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
+import dbfit.api.DbEnvironmentFacade;
 import dbfit.api.DbEnvironmentFactory;
 import dbfit.util.*;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static dbfit.util.SymbolUtil.isSymbolGetter;
 
 public class Query extends RowSetFixture {
-    private DBEnvironment dbEnvironment;
+    private DbEnvironmentFacade dbEnvironment;
     private String queryOrSymbol;
     private boolean isOrdered;
 
     public Query() {
-        dbEnvironment = DbEnvironmentFactory.getDefaultEnvironment();
-        isOrdered = false;
+        this(DbEnvironmentFactory.getDefaultEnvironment(), null);
     }
 
     public Query(DBEnvironment environment, String queryOrSymbol) {
@@ -25,7 +24,7 @@ public class Query extends RowSetFixture {
     }
 
     public Query(DBEnvironment environment, String queryOrSymbol, boolean isOrdered) {
-        this.dbEnvironment = environment;
+        this.dbEnvironment = new DbEnvironmentFacade(environment, FitNesseTestHost.getInstance());
         this.queryOrSymbol = queryOrSymbol;
         this.isOrdered = isOrdered;
     }
@@ -40,11 +39,7 @@ public class Query extends RowSetFixture {
         }
 
         Log.log("Query: '%s'", queryOrSymbol);
-        try (PreparedStatement st =
-                dbEnvironment.createStatementWithBoundFixtureSymbols(
-                    FitNesseTestHost.getInstance(), queryOrSymbol)) {
-            return new MatchableDataTable(new DataTable(st.executeQuery()));
-        }
+        return new MatchableDataTable(dbEnvironment.getQueryTable(queryOrSymbol));
     }
 
     private DataTable getFromSymbol() throws SQLException {

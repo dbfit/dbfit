@@ -2,27 +2,29 @@ package dbfit.fixture;
 
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
-import dbfit.util.DdlStatementExecution;
+import dbfit.api.DbEnvironmentFacade;
+import dbfit.util.FitNesseTestHost;
 
 import fit.Fixture;
 import fit.Parse;
 
 public class ExecuteDdl extends Fixture {
     private String statementText;
-    private DBEnvironment dbEnvironment;
+    private DbEnvironmentFacade environmentFacade;
 
     public ExecuteDdl() {
-        dbEnvironment = DbEnvironmentFactory.getDefaultEnvironment();
+        this(DbEnvironmentFactory.getDefaultEnvironment(), null);
     }
 
     public ExecuteDdl(DBEnvironment env, String statement) {
         this.statementText = statement;
-        this.dbEnvironment = env;
+        this.environmentFacade =
+            new DbEnvironmentFacade(env, FitNesseTestHost.getInstance());
     }
 
     public void doRows(Parse rows) {
-        try (DdlStatementExecution ddl = createDdlExecution()) {
-            ddl.run();
+        try {
+            environmentFacade.runDdl(getStatementText());
         } catch (Throwable e) {
             throw new Error(e);
         }
@@ -33,9 +35,5 @@ public class ExecuteDdl extends Fixture {
             statementText = args[0];
         }
         return statementText;
-    }
-
-    private DdlStatementExecution createDdlExecution() throws Exception {
-        return dbEnvironment.createDdlStatementExecution(getStatementText());
     }
 }

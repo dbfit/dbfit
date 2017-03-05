@@ -22,7 +22,7 @@ public class SqlServerDbEnvironmentUnitTests {
         parameters[1] = new DbParameterAccessor("Column Two", Direction.INPUT, 0, null, 1, dbfitToJdbcTransformerFactory);
         parameters[2] = new DbParameterAccessor("ColumnThree", Direction.INPUT, 0, null, 2, dbfitToJdbcTransformerFactory);
 
-        String actualResult = env.buildInsertCommand("DummyTable", parameters);
+        String actualResult = env.buildInsertCommandText("DummyTable", parameters);
 
         assertEquals(expectedResult, actualResult);
     }
@@ -37,7 +37,7 @@ public class SqlServerDbEnvironmentUnitTests {
         parameters[0] = new DbParameterAccessor("Column1", Direction.INPUT, 0, null, 0, dbfitToJdbcTransformerFactory);
         parameters[1] = new DbParameterAccessor("Column2", Direction.OUTPUT, 0, null, 0, dbfitToJdbcTransformerFactory);
 
-        String actualResult = env.buildInsertCommand("DummyTable", parameters);
+        String actualResult = env.buildInsertCommandText("DummyTable", parameters);
 
         assertEquals(expectedResult, actualResult);
     }

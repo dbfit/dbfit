@@ -1,15 +1,16 @@
-package dbfit.api;
+package dbfit.environment;
 
-import dbfit.fixture.StatementExecution;
+import dbfit.api.DBEnvironment;
+import dbfit.api.DbCommand;
+import dbfit.api.DbStatement;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessors;
 import static dbfit.util.sql.PreparedStatements.buildFunctionCall;
 import static dbfit.util.sql.PreparedStatements.buildStoredProcedureCall;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class DbStoredProcedureCall {
+class DbStoredProcedureCall {
     private final DBEnvironment environment;
     private final String name;
     private final DbParameterAccessors accessors;
@@ -44,20 +45,14 @@ public class DbStoredProcedureCall {
         }
     }
 
-    void bindParametersTo(StatementExecution cs) throws SQLException {
-        getAccessors().bindParameters(cs);
+    void bindParametersTo(DbStatement statement) throws SQLException {
+        getAccessors().bindParameters(statement);
     }
 
-    public StatementExecution toStatementExecution() throws SQLException {
-        String sql = toSqlString();
-        PreparedStatement ps = environment.getConnection().prepareCall(sql);
-        StatementExecution cs;
-        if (isFunction()) {
-            cs = environment.createFunctionStatementExecution(ps);
-        } else {
-            cs = environment.createStatementExecution(ps);
-        }
-        bindParametersTo(cs);
-        return cs;
+    public DbCommand buildCallCommand() throws SQLException {
+        DbStatement statement =
+            environment.createCallCommand(toSqlString(), isFunction());
+        bindParametersTo(statement);
+        return statement;
     }
 }

@@ -1,8 +1,9 @@
 package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
-import dbfit.api.AbstractDbEnvironment;
+import dbfit.api.DbCommand;
 import dbfit.util.*;
+
 import fit.TypeAdapter;
 
 import java.math.BigDecimal;
@@ -130,12 +131,11 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
-    public DdlStatementExecution createDdlStatementExecution(String ddl)
-            throws SQLException {
-        return new DdlStatementExecution(getConnection().createStatement(), ddl) {
+    public DbCommand createDdlCommand(String ddl) throws SQLException {
+        return new DdlStatement(getConnection().createStatement(), ddl) {
             @Override
-            public void run() throws SQLException {
-                super.run();
+            public void execute() throws SQLException {
+                super.execute();
                 getConnection().commit();
             }
         };
