@@ -50,16 +50,14 @@ public class SymbolUtil {
     }
 
     public static String getSymbolName(String symbolFullName) {
-        return ((isSymbolGetter(symbolFullName) || isSymbolSetter(symbolFullName))
-                ? symbolFullName.substring(2)
-                : symbolFullName).trim();
+        return SymbolReference.fromFullName(symbolFullName).getName();
     }
 
     public static boolean isSymbolGetter(String text) {
-        return text != null && text.startsWith("<<");
+        return SymbolReference.fromFullName(text).isSymbolGetter();
     }
 
     public static boolean isSymbolSetter(String text) {
-        return text != null && text.startsWith(">>");
+        return SymbolReference.fromFullName(text).isSymbolSetter();
     }
 }

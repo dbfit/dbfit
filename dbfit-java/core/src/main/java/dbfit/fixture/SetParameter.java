@@ -9,17 +9,19 @@ import static dbfit.util.SymbolUtil.isSymbolGetter;
  * which takes care of NULL keyword and symbol loading
  *
  */
-public class SetParameter extends fit.Fixture{
-    public static void setParameter(String name, String value) {
-        if (value == null || "null".equals(value.toString().toLowerCase())) {
-            dbfit.util.SymbolUtil.setSymbol(name, null);
+public class SetParameter extends fit.Fixture {
+    private static Object eval(String value) {
+        if (value == null || "null".equals(value.toLowerCase())) {
+            return null;
         } else if (isSymbolGetter(value)) {
-            String varname = value.toString().substring(2);
-            if (!name.equals(varname)) {
-                dbfit.util.SymbolUtil.setSymbol(name, dbfit.util.SymbolUtil.getSymbol(varname));
-            }
-        } else
-        dbfit.util.SymbolUtil.setSymbol(name, value);
+            return dbfit.util.SymbolUtil.getSymbol(value);
+        } else {
+            return value;
+        }
+    }
+
+    public static void setParameter(String name, String value) {
+        dbfit.util.SymbolUtil.setSymbol(name, eval(value));
     }
 
     @Override
