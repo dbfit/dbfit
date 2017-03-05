@@ -2,8 +2,11 @@ package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
+import dbfit.fixture.StatementExecution;
+import dbfit.fixture.FunctionResultSetStatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.NameNormaliser;
+import dbfit.util.sql.HSQLDBPreparedStatements;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
@@ -16,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static dbfit.util.Direction.*;
+import dbfit.util.Direction;
 
 /**
  * Provides support for testing HSQLDB databases.
@@ -65,37 +68,42 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
-        String qry = "SELECT COLUMN_NAME, TYPE_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS\n"
-                + "WHERE TABLE_NAME = ?";
+        String qry = "SELECT column_name"
+                   + "           AS parameter_name"
+                   + "     , type_name"
+                   + "     , 'INPUT'"
+                   + "           AS statement_parameter_mode"
+                   + "  FROM information_schema.system_columns"
+                   + " WHERE table_name = ?"
+                   + "   AND table_schem = ?";
         return readIntoParams(tableOrViewName, qry);
     }
 
-    private Map<String, DbParameterAccessor> readIntoParams(
-            String tableOrViewName, String query) throws SQLException {
+    private Map<String, DbParameterAccessor> readIntoParams(String objName, String query)
+            throws SQLException {
+        String[] nameParts = objName.toUpperCase().split("\\.");
+        String schemaName = nameParts.length == 2 ? nameParts[0] : getConnection().getSchema();
+        String objectName = nameParts.length == 2 ? nameParts[1] : nameParts[0];
         try (PreparedStatement dc = getConnection().prepareStatement(query)) {
-
-            String tvname;
-            if (tableOrViewName.trim().startsWith("\"") && tableOrViewName.trim().endsWith("\"")) {
+            if (objectName.trim().startsWith("\"") && objectName.trim().endsWith("\"")) {
                 // Remove double quotes.
-                tvname = tableOrViewName.replaceFirst("\"", "");
-                int i = tvname.lastIndexOf("\"");
-                tvname = tvname.substring(0, i) + tvname.substring(i + 1);
-            } else {
-                tvname = tableOrViewName.toUpperCase();
+                objectName = objectName.replaceFirst("\"", "");
+                int i = objectName.lastIndexOf("\"");
+                objectName = objName.substring(0, i) + objName.substring(i + 1);
             }
-
-            dc.setString(1, tvname);
+            dc.setString(1, objectName);
+            dc.setString(2, schemaName);
             ResultSet rs = dc.executeQuery();
             Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
             int position = 0;
             while (rs.next()) {
-                String columnName = rs.getString(1);
-                String dataType = rs.getString(2);
+                String columnName = rs.getString("PARAMETER_NAME");
+                String dataType = rs.getString("TYPE_NAME");
                 DbParameterAccessor dbp = createDbParameterAccessor(
                         columnName,
-                        INPUT,
+                        Direction.valueOf(rs.getString("STATEMENT_PARAMETER_MODE")),
                         typeMapper.getJDBCSQLTypeForDBType(dataType),
-                        getJavaClass(dataType), position++);
+                        getJavaClass(dataType), position++ - 1);
                 allParams.put(NameNormaliser.normaliseName(columnName), dbp);
             }
             rs.close();
@@ -103,9 +111,50 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
         }
     }
 
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(String s)
+    public Map<String, DbParameterAccessor> getAllProcedureParameters(String procName)
             throws SQLException {
-        throw new UnsupportedOperationException();
+        String qry = "SELECT parameter_name"
+                   + "           AS column_name"
+                   + "     , data_type"
+                   + "           AS type_name"
+                   + "     , statement_parameter_mode"
+                   + "  FROM ("
+                   + "       SELECT rout.routine_schema"
+                   + "            , rout.routine_name"
+                   + "            , para.parameter_name"
+                   + "            , para.data_type"
+                   + "            , CASE para.parameter_mode"
+                   + "                   WHEN 'IN'"
+                   + "                   THEN 'INPUT'"
+                   + "                   WHEN 'INOUT'"
+                   + "                   THEN 'INPUT_OUTPUT'"
+                   + "                   WHEN 'OUT'"
+                   + "                   THEN 'OUTPUT'"
+                   + "                   ELSE para.parameter_mode"
+                   + "               END"
+                   + "                  AS statement_parameter_mode"
+                   + "            , para.ordinal_position"
+                   + "         FROM information_schema.routines rout"
+                   + "        INNER"
+                   + "         JOIN information_schema.parameters para"
+                   + "           ON rout.specific_catalog = para.specific_catalog"
+                   + "          AND rout.specific_schema = para.specific_schema"
+                   + "          AND rout.specific_name = para.specific_name"
+                   + "        UNION ALL"
+                   + "       SELECT routine_schema"
+                   + "            , routine_name"
+                   + "            , ''"
+                   + "            , data_type"
+                   + "            , 'RETURN_VALUE'"
+                   + "            , 0"
+                   + "         FROM information_schema.routines"
+                   + "        WHERE routine_type = 'FUNCTION'"
+                   + "       )"
+                   + " WHERE routine_name = ?"
+                   + "   AND routine_schema = ?"
+                   + " ORDER"
+                   + "    BY ordinal_position";
+        return readIntoParams(procName, qry);
     }
 
     public Class<?> getJavaClass(String dataType) {
@@ -127,7 +176,7 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
     public static class HsqldbTypeMapper implements TypeMapper {
         private static final List<String> stringTypes = Arrays.asList(
                 "VARCHAR", "VARCHAR_IGNORECASE", "CHAR", "CHARACTER",
-                "LONGVARCHAR");
+                "LONGVARCHAR", "CHARACTER VARYING");
         private static final List<String> intTypes = Arrays.asList("INTEGER",
                 "INT");
         private static final List<String> longTypes = Arrays.asList("BIGINT");
@@ -225,6 +274,16 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
                         "You must specify a valid type for conversions");
             }
         }
+    }
+
+    @Override
+    public StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
+        return new FunctionResultSetStatementExecution(statement);
+    }
+
+    @Override
+    public String buildFunctionCall(String procOrFuncName, int numberOfParameters) {
+        return HSQLDBPreparedStatements.buildFunctionCall(procOrFuncName, numberOfParameters);
     }
 }
 

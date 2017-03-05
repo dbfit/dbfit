@@ -4,7 +4,7 @@ import static dbfit.util.LangUtils.join;
 import static dbfit.util.LangUtils.repeat;
 
 public class PreparedStatements {
-    private static String buildParamList(int numberOfParameters) {
+    protected static String buildParamList(int numberOfParameters) {
         return join(repeat("?", numberOfParameters), ", ");
     }
 
