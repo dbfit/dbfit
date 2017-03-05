@@ -8,11 +8,23 @@ public class PreparedStatements {
         return join(repeat("?", numberOfParameters), ", ");
     }
 
-    public static String buildStoredProcedureCall(String procName, int numberOfPararameters) {
-        return "{ call " + procName + "(" + buildParamList(numberOfPararameters) + ")}";
+    private static String returnValueParam(boolean returnsValue) {
+        return returnsValue ? "? = " : "";
     }
 
-    public static String buildFunctionCall(String procName, int numberOfParameters) {
-        return "{ ? = call " + procName + "(" + buildParamList(numberOfParameters - 1) + ")}";
+    private static String storedRoutineExecution(String routineName, int numberOfParameters) {
+        return "call " + routineName + "(" + buildParamList(numberOfParameters) + ")";
+    }
+
+    public static String storedRoutineStatement(
+            String routineName, int numberOfParams, boolean hasReturnValueParam) {
+        int executionParams = numberOfParams - (hasReturnValueParam ? 1 : 0);
+        return returnValueParam(hasReturnValueParam) +
+            storedRoutineExecution(routineName, executionParams);
+    }
+
+    public static String storedRoutineCall(
+            String routineName, int numberOfParams, boolean hasReturnValueParam) {
+        return "{ " + storedRoutineStatement(routineName, numberOfParams, hasReturnValueParam) + " }";
     }
 }

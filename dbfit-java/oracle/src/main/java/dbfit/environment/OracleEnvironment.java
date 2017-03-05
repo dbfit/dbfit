@@ -2,7 +2,7 @@ package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
-import dbfit.api.DbStoredProcedureCall;
+import dbfit.api.DbStoredProcedure;
 import dbfit.util.*;
 import dbfit.util.OracleDbParameterAccessor;
 import oracle.jdbc.OracleTypes;
@@ -551,7 +551,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
-    public DbStoredProcedureCall newStoredProcedureCall(String name, DbParameterAccessor[] accessors) {
-        return new OracleStoredProcedureCall(this, name, accessors);
+    public DbStoredProcedure newDbStoredProcedure(String name) {
+        return new OracleStoredProcedure(this, name);
     }
 }

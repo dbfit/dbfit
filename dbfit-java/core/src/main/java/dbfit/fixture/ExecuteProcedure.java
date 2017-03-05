@@ -3,7 +3,6 @@ package dbfit.fixture;
 import dbfit.api.DBEnvironment;
 import dbfit.api.DbEnvironmentFactory;
 import dbfit.api.DbObject;
-import dbfit.api.DbStoredProcedure;
 import dbfit.util.ExpectedBehaviour;
 
 import java.sql.SQLException;
@@ -43,7 +42,7 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
     @Override
     protected DbObject getTargetDbObject() throws SQLException {
         if (procName==null) procName=args[0];
-        return new DbStoredProcedure(environment, procName);
+        return environment.newDbStoredProcedure(procName);
     }
 
     @Override

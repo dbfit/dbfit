@@ -2,10 +2,13 @@ package dbfit.api;
 
 import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
+import dbfit.util.DbParameterAccessors;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
 import static dbfit.util.Direction.INPUT_OUTPUT;
+import static dbfit.util.sql.PreparedStatements.storedRoutineCall;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -21,7 +24,16 @@ public class DbStoredProcedure implements DbObject {
 
     public StatementExecution buildPreparedStatement(
             DbParameterAccessor[] accessors) throws SQLException {
-        return environment.newStoredProcedureCall(name, accessors).toStatementExecution();
+        DbParameterAccessors paramAccessors = new DbParameterAccessors(accessors);
+        PreparedStatement ps = environment.getConnection().prepareCall(toSqlString(paramAccessors));
+        StatementExecution cs;
+        if (paramAccessors.containsReturnValue()) {
+            cs = environment.createFunctionStatementExecution(ps);
+        } else {
+            cs = environment.createStatementExecution(ps);
+        }
+        paramAccessors.bindParameters(cs);
+        return cs;
     }
 
     public DbParameterAccessor getDbParameterAccessor(
@@ -55,8 +67,12 @@ public class DbStoredProcedure implements DbObject {
         return allParams;
     }
 
-    public String getName() {
+    protected String getName() {
         return name;
     }
 
+    protected String toSqlString(DbParameterAccessors accessors) {
+        return storedRoutineCall(getName(), accessors.getNumberOfParameters(),
+            accessors.containsReturnValue());
+    }
 }
