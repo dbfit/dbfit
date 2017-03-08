@@ -21,7 +21,7 @@ public class DbStoredProcedure implements DbObject {
 
     public StatementExecution buildPreparedStatement(
             DbParameterAccessor[] accessors) throws SQLException {
-        return environment.newStoredProcedureCall(name, accessors).toStatementExecution();
+        return environment.newStoredProcedureCall(name, accessors);
     }
 
     public DbParameterAccessor getDbParameterAccessor(

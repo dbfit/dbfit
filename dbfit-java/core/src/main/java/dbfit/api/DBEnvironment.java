@@ -1,6 +1,5 @@
 package dbfit.api;
 
-import dbfit.api.vendor.DbStoredProcedureCall;
 import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DdlStatementExecution;
@@ -189,5 +188,6 @@ public interface DBEnvironment {
     void connectUsingFile(String filePath) throws SQLException, IOException,
             FileNotFoundException;
 
-    DbStoredProcedureCall newStoredProcedureCall(String name, DbParameterAccessor[] accessors);
+    StatementExecution newStoredProcedureCall(String name, DbParameterAccessor[] accessors)
+            throws SQLException;
 }
