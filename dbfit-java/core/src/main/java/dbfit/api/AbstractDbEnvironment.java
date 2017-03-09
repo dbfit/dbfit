@@ -241,7 +241,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return sb.toString();
     }
 
-    public StatementExecution newStoredProcedureCall(String name, DbParameterAccessor[] accessors)
+    public DbCommand newStoredProcedureCall(String name, DbParameterAccessor[] accessors)
             throws SQLException {
         return new DefaultDbStoredProcedureCall(this, name, accessors).toStatementExecution();
     }

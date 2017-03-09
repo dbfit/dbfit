@@ -139,7 +139,7 @@ public class Update extends fit.Fixture {
             for (int column = 0; column < columnBindings.length; column++, cell = cell.more) {
                 columnBindings[column].doCell(this, cell);
             }
-            statement.run();
+            statement.execute();
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             exception(row,sqle);

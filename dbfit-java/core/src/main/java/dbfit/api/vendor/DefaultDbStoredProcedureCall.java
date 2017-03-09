@@ -9,7 +9,7 @@ import static dbfit.util.sql.PreparedStatements.buildStoredRoutineCallText;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class DefaultDbStoredProcedureCall implements DbStoredProcedureCall {
+public class DefaultDbStoredProcedureCall {
     private final DBEnvironment environment;
     private final String name;
     private final DbParameterAccessors accessors;
@@ -44,7 +44,6 @@ public class DefaultDbStoredProcedureCall implements DbStoredProcedureCall {
         getAccessors().bindParameters(cs);
     }
 
-    @Override
     public StatementExecution toStatementExecution() throws SQLException {
         String sql = toSqlString();
         PreparedStatement ps = environment.getConnection().prepareCall(sql);
