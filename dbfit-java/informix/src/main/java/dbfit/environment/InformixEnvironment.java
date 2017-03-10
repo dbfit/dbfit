@@ -2,6 +2,7 @@ package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
+import dbfit.fixture.FunctionResultSetStatementExecution;
 import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;
@@ -293,6 +294,6 @@ public class InformixEnvironment extends AbstractDbEnvironment {
 
     @Override
     public StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
-        return new InformixFunctionStatementExecution(statement);
+        return new FunctionResultSetStatementExecution(statement);
     }
 }

@@ -21,7 +21,7 @@ public class OracleStoredProcedureCall extends DbStoredProcedureCall {
     }
 
     @Override
-    public String toSqlString() {
+    protected String toSqlString() {
         if (!containsBooleanType()) {
             return super.toSqlString();
         }
