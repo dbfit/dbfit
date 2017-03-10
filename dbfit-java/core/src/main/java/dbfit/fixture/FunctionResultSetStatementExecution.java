@@ -11,7 +11,7 @@ public class FunctionResultSetStatementExecution extends StatementExecution {
     }
 
     @Override
-    public void execute() throws SQLException {
+    public void run() throws SQLException {
         try (ResultSet rs = statement.executeQuery()) {
             rs.next();
             returnValue = rs.getObject(1);

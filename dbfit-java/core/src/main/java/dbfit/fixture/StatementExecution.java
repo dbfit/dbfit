@@ -1,16 +1,15 @@
 package dbfit.fixture;
 
-import dbfit.api.DbCommand;
 import java.sql.*;
 
-public class StatementExecution implements DbCommand {
+public class StatementExecution implements AutoCloseable {
     protected PreparedStatement statement;
 
     public StatementExecution(PreparedStatement statement) {
         this.statement = statement;
     }
 
-    public void execute() throws SQLException {
+    public void run() throws SQLException {
         statement.execute();
     }
 

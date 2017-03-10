@@ -1,6 +1,5 @@
-package dbfit.api.vendor;
+package dbfit.api;
 
-import dbfit.api.DBEnvironment;
 import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessors;

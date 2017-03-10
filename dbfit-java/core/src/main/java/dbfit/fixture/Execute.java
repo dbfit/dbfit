@@ -24,7 +24,7 @@ public class Execute extends Fixture {
         try {
             DbStatement dbObject = new DbStatement(dbEnvironment, getStatementText(), FitNesseTestHost.getInstance());
             try (StatementExecution preparedStatement = dbObject.buildPreparedStatement()) {
-                preparedStatement.execute();
+                preparedStatement.run();
             }
         } catch (Throwable e) {
             throw new Error(e);

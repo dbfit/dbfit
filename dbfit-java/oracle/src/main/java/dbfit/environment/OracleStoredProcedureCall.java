@@ -1,7 +1,7 @@
 package dbfit.environment;
 
 import dbfit.api.DBEnvironment;
-import dbfit.api.vendor.DbStoredProcedureCall;
+import dbfit.api.DbStoredProcedureCall;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.OracleDbParameterAccessor;
 import dbfit.util.oracle.OracleBooleanSpCommand;

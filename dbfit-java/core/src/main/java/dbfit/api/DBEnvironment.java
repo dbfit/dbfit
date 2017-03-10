@@ -188,6 +188,5 @@ public interface DBEnvironment {
     void connectUsingFile(String filePath) throws SQLException, IOException,
             FileNotFoundException;
 
-    DbCommand newStoredProcedureCall(String name, DbParameterAccessor[] accessors)
-            throws SQLException;
+    DbStoredProcedureCall newStoredProcedureCall(String name, DbParameterAccessor[] accessors);
 }

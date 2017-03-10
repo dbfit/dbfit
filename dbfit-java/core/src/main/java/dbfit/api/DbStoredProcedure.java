@@ -1,5 +1,6 @@
 package dbfit.api;
 
+import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
@@ -18,9 +19,9 @@ public class DbStoredProcedure implements DbObject {
         this.name = name;
     }
 
-    public DbCommand buildPreparedStatement(
+    public StatementExecution buildPreparedStatement(
             DbParameterAccessor[] accessors) throws SQLException {
-        return environment.newStoredProcedureCall(name, accessors);
+        return environment.newStoredProcedureCall(name, accessors).toStatementExecution();
     }
 
     public DbParameterAccessor getDbParameterAccessor(
