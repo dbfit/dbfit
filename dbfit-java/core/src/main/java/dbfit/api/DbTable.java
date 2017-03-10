@@ -28,7 +28,7 @@ public class DbTable implements DbObject {
         }
     }
 
-    public StatementExecution buildPreparedStatement(
+    public DbCommand buildDbCommand(
             DbParameterAccessor[] accessors) throws SQLException {
         StatementExecution statement = dbEnvironment.createStatementExecution(dbEnvironment
                 .buildInsertPreparedStatement(tableOrViewName, accessors));

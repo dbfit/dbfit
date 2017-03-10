@@ -13,7 +13,7 @@ public class InformixFunctionStatementExecution extends StatementExecution {
     }
 
     @Override
-    public void run() throws SQLException {
+    public void execute() throws SQLException {
         try (ResultSet rs = statement.executeQuery()) {
             rs.next();
             returnValue = rs.getObject(1);
