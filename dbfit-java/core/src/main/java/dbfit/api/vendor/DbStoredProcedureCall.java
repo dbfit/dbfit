@@ -1,10 +1,10 @@
-package dbfit.api;
+package dbfit.api.vendor;
 
+import dbfit.api.DBEnvironment;
 import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessors;
-import static dbfit.util.sql.PreparedStatements.buildFunctionCall;
-import static dbfit.util.sql.PreparedStatements.buildStoredProcedureCall;
+import static dbfit.util.sql.PreparedStatements.buildStoredRoutineCallText;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -28,7 +28,7 @@ public class DbStoredProcedureCall {
         return accessors;
     }
 
-    public boolean isFunction() {
+    private boolean hasReturnValue() {
         return getAccessors().containsReturnValue();
     }
 
@@ -36,12 +36,8 @@ public class DbStoredProcedureCall {
         return getAccessors().getNumberOfParameters();
     }
 
-    public String toSqlString() {
-        if (isFunction()) {
-            return buildFunctionCall(getName(), getNumberOfParameters());
-        } else {
-            return buildStoredProcedureCall(getName(), getNumberOfParameters());
-        }
+    protected String toSqlString() {
+        return buildStoredRoutineCallText(getName(), getNumberOfParameters(), hasReturnValue());
     }
 
     void bindParametersTo(StatementExecution cs) throws SQLException {
@@ -52,7 +48,7 @@ public class DbStoredProcedureCall {
         String sql = toSqlString();
         PreparedStatement ps = environment.getConnection().prepareCall(sql);
         StatementExecution cs;
-        if (isFunction()) {
+        if (hasReturnValue()) {
             cs = environment.createFunctionStatementExecution(ps);
         } else {
             cs = environment.createStatementExecution(ps);

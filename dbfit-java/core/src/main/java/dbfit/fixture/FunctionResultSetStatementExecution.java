@@ -1,19 +1,17 @@
-package dbfit.environment;
+package dbfit.fixture;
 
 import java.sql.*;
 
-import dbfit.fixture.StatementExecution;
-
-public class InformixFunctionStatementExecution extends StatementExecution {
+public class FunctionResultSetStatementExecution extends StatementExecution {
     private Object returnValue = null;
     private int returnValueInd = -1;
 
-    public InformixFunctionStatementExecution(PreparedStatement statement) {
+    public FunctionResultSetStatementExecution(PreparedStatement statement) {
         super(statement);
     }
 
     @Override
-    public void run() throws SQLException {
+    public void execute() throws SQLException {
         try (ResultSet rs = statement.executeQuery()) {
             rs.next();
             returnValue = rs.getObject(1);

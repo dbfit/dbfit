@@ -2,25 +2,24 @@ package dbfit.util.sql;
 
 import org.junit.Test;
 
-import static dbfit.util.sql.PreparedStatements.buildFunctionCall;
-import static dbfit.util.sql.PreparedStatements.buildStoredProcedureCall;
+import static dbfit.util.sql.PreparedStatements.buildStoredRoutineCallText;
 import static org.junit.Assert.assertEquals;
 
 public class PreparedStatementsTest {
     @Test public void functionWithoutParameters() {
-        assertEquals("{ ? = call func()}", buildFunctionCall("func", 1));
+        assertEquals("{ ? = call func() }", buildStoredRoutineCallText("func", 1, true));
     }
 
     @Test public void functionWithParameters() {
-        assertEquals("{ ? = call func(?, ?)}", buildFunctionCall("func", 3));
+        assertEquals("{ ? = call func(?, ?) }", buildStoredRoutineCallText("func", 3, true));
     }
 
     @Test public void procedureWithoutParameters() {
-        assertEquals("{ call storedProc()}", buildStoredProcedureCall("storedProc", 0));
+        assertEquals("{ call storedProc() }", buildStoredRoutineCallText("storedProc", 0, false));
     }
 
     @Test public void procedureWithParameters() {
-        assertEquals("{ call storedProc(?, ?)}", buildStoredProcedureCall("storedProc", 2));
+        assertEquals("{ call storedProc(?, ?) }", buildStoredRoutineCallText("storedProc", 2, false));
     }
 }
 

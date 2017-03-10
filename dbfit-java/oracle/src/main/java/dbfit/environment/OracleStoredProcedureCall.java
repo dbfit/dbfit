@@ -1,7 +1,7 @@
 package dbfit.environment;
 
 import dbfit.api.DBEnvironment;
-import dbfit.api.DbStoredProcedureCall;
+import dbfit.api.vendor.DbStoredProcedureCall;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.OracleDbParameterAccessor;
 import dbfit.util.oracle.OracleBooleanSpCommand;
@@ -21,7 +21,7 @@ public class OracleStoredProcedureCall extends DbStoredProcedureCall {
     }
 
     @Override
-    public String toSqlString() {
+    protected String toSqlString() {
         if (!containsBooleanType()) {
             return super.toSqlString();
         }
