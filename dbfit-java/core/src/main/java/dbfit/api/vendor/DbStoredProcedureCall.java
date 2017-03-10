@@ -9,12 +9,12 @@ import static dbfit.util.sql.PreparedStatements.buildStoredRoutineCallText;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class DefaultDbStoredProcedureCall {
+public class DbStoredProcedureCall {
     private final DBEnvironment environment;
     private final String name;
     private final DbParameterAccessors accessors;
 
-    public DefaultDbStoredProcedureCall(DBEnvironment environment, String name, DbParameterAccessor[] accessors) {
+    public DbStoredProcedureCall(DBEnvironment environment, String name, DbParameterAccessor[] accessors) {
         this.environment = environment;
         this.name = name;
         this.accessors = new DbParameterAccessors(accessors);
