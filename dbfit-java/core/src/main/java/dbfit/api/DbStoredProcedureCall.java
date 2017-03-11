@@ -28,7 +28,7 @@ public class DbStoredProcedureCall {
         return accessors;
     }
 
-    public boolean isFunction() {
+    public boolean hasReturnValue() {
         return getAccessors().containsReturnValue();
     }
 
@@ -52,7 +52,7 @@ public class DbStoredProcedureCall {
         String sql = toSqlString();
         PreparedStatement ps = environment.getConnection().prepareCall(sql);
         StatementExecution cs;
-        if (isFunction()) {
+        if (hasReturnValue()) {
             cs = environment.createFunctionStatementExecution(ps);
         } else {
             cs = environment.createStatementExecution(ps);
