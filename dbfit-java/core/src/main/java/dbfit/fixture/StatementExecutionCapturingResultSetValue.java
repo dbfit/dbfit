@@ -1,14 +1,12 @@
-package dbfit.environment;
+package dbfit.fixture;
 
 import java.sql.*;
 
-import dbfit.fixture.StatementExecution;
-
-public class InformixFunctionStatementExecution extends StatementExecution {
+public class StatementExecutionCapturingResultSetValue extends StatementExecution {
     private Object returnValue = null;
     private int returnValueInd = -1;
 
-    public InformixFunctionStatementExecution(PreparedStatement statement) {
+    public StatementExecutionCapturingResultSetValue(PreparedStatement statement) {
         super(statement);
     }
 
