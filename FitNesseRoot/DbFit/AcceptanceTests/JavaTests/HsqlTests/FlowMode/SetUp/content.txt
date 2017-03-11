@@ -5,3 +5,7 @@
 |Execute Ddl|${CREATEUSERTABLE}|
 
 |Execute Ddl|${CREATEMAKEUSERPROC}|
+
+|Execute Ddl|${CREATEMULTIPLYPROC}|
+
+|Execute Ddl|${CREATECALCLENGTHPROC}|
