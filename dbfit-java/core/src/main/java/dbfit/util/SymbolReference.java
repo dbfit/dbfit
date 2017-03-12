@@ -1,11 +1,13 @@
 package dbfit.util;
 
+import static java.util.Arrays.asList;
+
 public class SymbolReference {
 
     private String name;
     private String prefix;
 
-    private static final String[] PREFIXES = { "<<", ">>" };
+    private static final String[] PREFIXES = { "<<<", ">>>", "<<", ">>" };
 
     public String getName() {
         return name;
@@ -21,6 +23,10 @@ public class SymbolReference {
 
     public boolean isSymbolSetter() {
         return getPrefix().startsWith(">>");
+    }
+
+    public boolean isHidden() {
+        return asList("<<<", ">>>").contains(getPrefix());
     }
 
     private SymbolReference(String name, String prefix) {

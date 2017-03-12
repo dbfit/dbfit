@@ -5,6 +5,8 @@ import fit.Fixture;
 import fit.Parse;
 
 import static dbfit.util.SymbolUtil.isSymbolGetter;
+import static dbfit.util.SymbolUtil.isSymbolHidden;
+import static dbfit.util.CellHelper.appendObjectValue;
 
 public class SymbolAccessSetBinding extends Binding.SetBinding {
 
@@ -13,7 +15,7 @@ public class SymbolAccessSetBinding extends Binding.SetBinding {
         String text = cell.text();
         if (isSymbolGetter(text)) {
             Object value = dbfit.util.SymbolUtil.getSymbol(text);
-            cell.addToBody(Fixture.gray(" = " + String.valueOf(value)));
+            appendObjectValue(cell, value, !isSymbolHidden(text));
             adapter.set(value);
             return;
         }
