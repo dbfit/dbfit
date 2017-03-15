@@ -11,6 +11,7 @@
 <SymbolicLinks>
 <CommitAndRollback>.DbFit.AcceptanceTests.LibraryTests.CommitAndRollback</CommitAndRollback>
 <CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
+<StoredProcWithException>.DbFit.AcceptanceTests.JavaTests.OracleTests.LibraryTests.StoredProcWithException</StoredProcWithException>
 </SymbolicLinks>
 <Versions/>
 <WhereUsed/>

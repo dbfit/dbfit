@@ -36,7 +36,7 @@
 <SimpleStoredProc>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.SimpleStoredProc</SimpleStoredProc>
 <StoreAndCompareQueries>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.StoreAndCompareQueries</StoreAndCompareQueries>
 <StoredProcReturningQuery>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.StoredProcReturningQuery</StoredProcReturningQuery>
-<StoredProcedureWithException>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.StoredProcedureWithException</StoredProcedureWithException>
+<StoredProcWithException>.DbFit.AcceptanceTests.JavaTests.SqlServerTests.LibraryTests.StoredProcWithException</StoredProcWithException>
 <TransactionsTest>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.TransactionsTest</TransactionsTest>
 <UnknownParametersAreIgnored>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.UnknownParametersAreIgnored</UnknownParametersAreIgnored>
 <UpdateTest>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.UpdateTest</UpdateTest>
