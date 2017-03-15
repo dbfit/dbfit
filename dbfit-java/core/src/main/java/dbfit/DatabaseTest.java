@@ -88,11 +88,11 @@ public class DatabaseTest extends Fixture {
     }
 
     public Fixture executeProcedureExpectException(String statement) {
-        return new dbfit.fixture.ExecuteProcedure(environment, statement, true);
+        return new dbfit.fixture.ExecuteProcedureExpectException(environment, statement);
     }
 
     public Fixture executeProcedureExpectException(String statement, int code) {
-        return new dbfit.fixture.ExecuteProcedure(environment, statement, code);
+        return new dbfit.fixture.ExecuteProcedureExpectException(environment, statement, code);
     }
 
     public Fixture insert(String tableName) {
