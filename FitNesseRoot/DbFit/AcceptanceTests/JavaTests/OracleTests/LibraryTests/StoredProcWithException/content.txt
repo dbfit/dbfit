@@ -1,12 +1,12 @@
-!3 Use ''Execute Procedure With Exception'' to check if a stored proc will throw an exception
+!3 Use ''Execute Procedure Expect Exception'' to check if a stored proc will throw an exception
 
 !|Execute|!-
 create or replace procedure TestProc1(name varchar2, strlength out number) as
 begin
-        if (name='xx') then
-          raise_application_error(-20001,'test exception');
-        end if;
-	strlength:=length(name);
+    if (name = 'xx') then
+        raise_application_error(-20001,'test exception');
+    end if;
+    strlength := length(name);
 end;
 -!|
 
@@ -23,9 +23,7 @@ Execute procedure will still work ok if it does not throw an error
 |mika|4|
 |paradajz|8|
 
-
-!3 Use an explicit error code with ''Execute Procedure With Exception'' to for an explicit error code
-
+!3 Use an explicit error code with ''Execute Procedure Expect Exception'' to test for an explicit error code
 
 !|Execute Procedure Expect Exception |TestProc1|20001|
 |name|str length?|

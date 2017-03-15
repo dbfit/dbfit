@@ -12,6 +12,7 @@
 <CommitAndRollback>.DbFit.AcceptanceTests.LibraryTests.CommitAndRollback</CommitAndRollback>
 <CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
 <OrderedQuery>.DbFit.AcceptanceTests.JavaTests.MySqlTests.FlowMode.OrderedQuery</OrderedQuery>
+<StoredProcWithException>.DbFit.AcceptanceTests.JavaTests.PostgresTests.LibraryTests.StoredProcWithException</StoredProcWithException>
 </SymbolicLinks>
 <Versions/>
 <WhereUsed/>
