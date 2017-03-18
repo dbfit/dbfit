@@ -42,9 +42,9 @@ Test
 
 !3 Set Parameter
 
-!|Set Parameter|x3|103|
+!|Set Parameter|x3|103|java.lang.Integer|
 
-!|Set Parameter|x4|104|
+!|Set Parameter|x4|104|java.lang.Integer|
 
 !|Set Parameter|v3|<<x3|
 

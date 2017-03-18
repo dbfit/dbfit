@@ -63,6 +63,10 @@ public class DatabaseTest extends Fixture {
         dbfit.fixture.SetParameter.setParameter(name, value);
     }
 
+    public void setParameter(String name, String value, String parseDelegate) {
+        dbfit.fixture.SetParameter.setParameter(name, value, parseDelegate);
+    }
+
     public void clearParameters() {
         SymbolUtil.clearSymbols();
     }
