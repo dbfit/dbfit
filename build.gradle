@@ -248,7 +248,8 @@ task travisbuild(dependsOn: [
     fastbuild,
     ':dbfit-java:db2:integrationTest',
     ':dbfit-java:mysql:integrationTest',
-    ':dbfit-java:oracle:integrationTest'
+    ':dbfit-java:oracle:integrationTest',
+    ':dbfit-java:postgres:integrationTest'
     ])
 
 if (!project.hasProperty('excludeIntegrationTests')) {
