@@ -7,10 +7,10 @@
 <Refactor/>
 <Search/>
 <Suite/>
-<Suites/>
 <SymbolicLinks>
 <CommitAndRollback>.DbFit.AcceptanceTests.LibraryTests.CommitAndRollback</CommitAndRollback>
 <CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
+<StoredProcWithException>.DbFit.AcceptanceTests.JavaTests.PostgresTests.LibraryTests.StoredProcWithException</StoredProcWithException>
 </SymbolicLinks>
 <Versions/>
 <WhereUsed/>
