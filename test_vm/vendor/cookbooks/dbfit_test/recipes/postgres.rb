@@ -9,6 +9,8 @@ postgresql_connection_info = {:host => "127.0.0.1",
                               :username => 'postgres',
                               :password => node['postgresql']['password']['postgres']}
 
+sql_dir = File.join(node['dbfit']['project_root'], "postgresql/sql")
+
 postgresql_database 'dbfit' do
   connection postgresql_connection_info
   action :create
@@ -33,15 +35,7 @@ end
 postgresql_database 'dbfit.changelog' do
   connection postgresql_connection_info
   database_name 'dbfit'
-  sql "CREATE TABLE IF NOT EXISTS changelog (
-         change_number INTEGER CONSTRAINT Pkchangelog PRIMARY KEY,
-         complete_dt TIMESTAMP NOT NULL,
-         applied_by VARCHAR(100) NOT NULL,
-         description VARCHAR(500) NOT NULL
-       );
-
-       ALTER TABLE changelog OWNER to dbfit;
-       "
+  sql { ::File.open("#{sql_dir}/create-db-schema-postgresql.sql").read }
   action :query
 end
 
