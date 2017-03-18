@@ -2,7 +2,7 @@ package dbfit.fixture;
 
 import fit.Parse;
 
-import static dbfit.util.SymbolUtil.isSymbolGetter;
+import dbfit.util.ValueParser;
 
 /**
  * simple wrapper for fixture symbol value setting,
@@ -10,18 +10,10 @@ import static dbfit.util.SymbolUtil.isSymbolGetter;
  *
  */
 public class SetParameter extends fit.Fixture {
-    private static Object eval(String value) {
-        if (value == null || "null".equals(value.toLowerCase())) {
-            return null;
-        } else if (isSymbolGetter(value)) {
-            return dbfit.util.SymbolUtil.getSymbol(value);
-        } else {
-            return value;
-        }
-    }
+    private static final ValueParser parser = new ValueParser();
 
     public static void setParameter(String name, String value) {
-        dbfit.util.SymbolUtil.setSymbol(name, eval(value));
+        dbfit.util.SymbolUtil.setSymbol(name, parser.parse(value));
     }
 
     @Override
