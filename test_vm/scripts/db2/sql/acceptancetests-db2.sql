@@ -10,6 +10,8 @@ CREATE PROCEDURE concatenatestrings (IN firststring VARCHAR(400), IN secondstrin
 
 CREATE PROCEDURE makeuser LANGUAGE SQL BEGIN insert into users (name, username) values ('user1','fromproc'); RETURN; END
 
-CREATE PROCEDURE multiply (IN factor int, INOUT val int)  LANGUAGE SQL BEGIN set val=val*factor; RETURN; END
+CREATE PROCEDURE multiplyio (IN factor int, INOUT val int)  LANGUAGE SQL BEGIN set val=val*factor; RETURN; END
+
+CREATE function multiply(n1 int, n2 int) returns int return n1 * n2
 
 CONNECT RESET
