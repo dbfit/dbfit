@@ -1,7 +1,7 @@
 create user dftest from sysadmin as password=dftest spool=3000000 temporary=1000000 permanent=1000000;
 
 grant create function on dftest to dbc;
-grant create procedure on dftest to dbc; 
+grant create procedure on dftest to dbc;
 
 database dftest;
 
