@@ -55,13 +55,21 @@ $body$
 LANGUAGE plpgsql
 ;
 
-CREATE FUNCTION Multiply(factor INTEGER, val INTEGER)
+CREATE FUNCTION Multiply(n1 INTEGER, n2 INTEGER)
 RETURNS INTEGER AS
 $body$
 BEGIN
-  RETURN (val*factor);
+  RETURN (n1 * n2);
 END;
 $body$
 LANGUAGE plpgsql
 ;
 
+CREATE OR REPLACE FUNCTION MultiplyIO(factor INTEGER, inout val INTEGER) AS
+$body$
+BEGIN
+  val := val * factor;
+END;
+$body$
+LANGUAGE plpgsql
+;
