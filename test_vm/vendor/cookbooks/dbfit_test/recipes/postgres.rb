@@ -9,7 +9,7 @@ postgresql_connection_info = {:host => "127.0.0.1",
                               :username => 'postgres',
                               :password => node['postgresql']['password']['postgres']}
 
-sql_dir = File.join(node['dbfit']['project_root'], "postgresql/sql")
+sql_dir = File.join(node['dbfit']['project_root'], "test_vm/scripts/postgresql/sql")
 
 postgresql_database 'dbfit' do
   connection postgresql_connection_info
