@@ -5,6 +5,7 @@ import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
+import dbfit.util.ParamDescriptor;
 
 import javax.sql.RowSet;
 import java.math.BigDecimal;
