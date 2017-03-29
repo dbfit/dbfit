@@ -1,6 +1,6 @@
 package dbfit.test.matchers;
 
-import dbfit.environment.ParamDescriptor;
+import dbfit.util.ParamDescriptor;
 import dbfit.util.Direction;
 
 import org.hamcrest.Matcher;

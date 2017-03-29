@@ -1,6 +1,5 @@
-package dbfit.environment;
+package dbfit.util;
 
-import dbfit.util.Direction;
 import static dbfit.util.Direction.*;
 
 public class ParamDescriptor {
