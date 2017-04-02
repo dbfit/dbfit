@@ -6,6 +6,8 @@ import dbfit.environment.postgres.NameNormaliserPostgres;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
+import dbfit.util.ParamDescriptor;
+import static dbfit.util.Direction.*;
 
 import javax.sql.RowSet;
 import java.math.BigDecimal;
@@ -175,85 +177,103 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 
         String[] qualifiers = NameNormaliser.normaliseName(procName).split(
                 "\\.");
-        String qry = "select 'FUNCTION' as type, "
-                + "array_to_string(array(select coalesce(pro.proargnames[t.id+1],'') || ' ' || pt.typname from generate_series(0, array_upper(pro.proargtypes, 1)) as t(id), pg_type pt where pt.oid = pro.proargtypes[t.id] order by t.id), ',') as param_list, "
-                + "(select typname from pg_type pt where pt.oid = pro.prorettype) as returns "
-                + "from pg_proc pro, pg_namespace ns where ns.oid = pro.pronamespace";
+
+        String qry =
+            "select " +
+            "    coalesce(pro.proargnames, array_fill(''::\"char\", ARRAY[array_length(arg_types, 1)])) as param_names, " +
+            "    array( " +
+            "        select " +
+            "            pt.typname " +
+            "        from " +
+            "            generate_series(array_lower(pro.arg_types, 1), array_upper(pro.arg_types, 1)) as t(id) " +
+            "            join pg_type pt on (pt.oid = pro.arg_types[t.id]) " +
+            "        order by t.id " +
+            "    ) as param_types, " +
+            "    coalesce(proargmodes, array_fill('i'::\"char\", ARRAY[array_length(arg_types, 1)])) as param_modes, " +
+            "    (select typname from pg_type pt where pt.oid = pro.prorettype) as return_type " +
+            "from " +
+            "    (select coalesce(p.proallargtypes, p.proargtypes) as arg_types, p.* from pg_proc p) pro " +
+            "    join pg_namespace ns on (ns.oid = pro.pronamespace) " +
+            "where ";
+
         if (qualifiers.length == 2) {
-            qry += " and lower(ns.nspname)=? and lower(proname)=? ";
+            qry += " lower(ns.nspname) = ? and lower(pro.proname) = ? ";
         } else {
-            qry += " and (lower(ns.nspname)=current_schema() and lower(proname)=?)";
+            qry += " (lower(ns.nspname) = current_schema() and lower(pro.proname) = ?)";
         }
 
-        String type;
-        String paramList;
-        String returns;
+        String[] paramNames;
+        String[] paramTypes;
+        String[] paramModes;
+        String returnType;
 
         try (PreparedStatement dc = currentConnection.prepareStatement(qry)) {
             for (int i = 0; i < qualifiers.length; i++) {
                 dc.setString(i + 1, NameNormaliser.normaliseName(qualifiers[i]));
             }
+
             ResultSet rs = dc.executeQuery();
             if (!rs.next()) {
                 throw new SQLException("Unknown procedure " + procName);
             }
-            type = rs.getString(1);
-            paramList = rs.getString(2);
-            returns = rs.getString(3);
+
+            paramNames = (String[]) rs.getArray("param_names").getArray();
+            paramTypes = (String[]) rs.getArray("param_types").getArray();
+            paramModes = (String[]) rs.getArray("param_modes").getArray();
+            returnType = rs.getString("return_type");
+
             rs.close();
         }
 
-        int position = 0;
-        Direction direction = Direction.INPUT;
-        String paramName;
-        String dataType;
-        String token;
         Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+        for (int i = 0; i < paramTypes.length; ++i) {
+            ParamDescriptor pd = parameterFrom(paramNames[i], paramModes[i], paramTypes[i]);
+            addSingleParam(allParams, pd);
 
-        for (String param : paramList.split(",")) {
-            StringTokenizer s = new StringTokenizer(param.trim().toLowerCase(),
-                    " ()");
-
-            token = s.nextToken();
-
-            if (token.equals("in")) {
-                token = s.nextToken();
-            } else if (token.equals("inout")) {
-                direction = Direction.INPUT_OUTPUT;
-                token = s.nextToken();
-            } else if (token.equals("out")) {
-                direction = Direction.OUTPUT;
-                token = s.nextToken();
+            if (pd.direction.isOutOrInout()) {
+                returnType = pd.type;
             }
-
-            if (s.hasMoreTokens()) {
-                paramName = token;
-                dataType = s.nextToken();
-            } else {
-                paramName = "$" + (position + 1);
-                dataType = token;
-            }
-
-            DbParameterAccessor dbp = createDbParameterAccessor(
-                    paramName,
-                    direction, getSqlType(dataType),
-                    getJavaClass(dataType), position++);
-            allParams.put(NameNormaliser.normaliseName(paramName), dbp);
         }
 
-        if ("FUNCTION".equals(type)) {
-            StringTokenizer s = new StringTokenizer(returns.trim()
-                    .toLowerCase(), " ()");
-            dataType = s.nextToken();
-
-            if (!dataType.equals("void")) {
-                allParams.put("", createDbParameterAccessor(
+        if (!returnType.equals("void")) {
+            allParams.put("", createDbParameterAccessor(
                         "",
-                        Direction.RETURN_VALUE, getSqlType(dataType),
-                        getJavaClass(dataType), -1));
-            }
+                        Direction.RETURN_VALUE,
+                        getSqlType(returnType),
+                        getJavaClass(returnType), -1));
         }
 
         return allParams;
+    }
+
+    private ParamDescriptor parameterFrom(String name, String mode, String type) {
+        return new ParamDescriptor(name, parseDirection(mode), type);
+    }
+
+    private void addSingleParam(Map<String, DbParameterAccessor> allParams, ParamDescriptor pd) {
+        DbParameterAccessor dbp = makeSingleParam(pd, allParams.size());
+        allParams.put(NameNormaliser.normaliseName(dbp.getName()), dbp);
+    }
+
+    private DbParameterAccessor makeSingleParam(ParamDescriptor pd, int position) {
+        return createDbParameterAccessor(
+                    pd.name.isEmpty() ? ("$" + (position + 1)) : pd.name,
+                    pd.direction,
+                    getSqlType(pd.type),
+                    getJavaClass(pd.type),
+                    position);
+    }
+
+    private Direction parseDirection(final String mode) {
+        switch(mode) {
+        case "i":
+            return INPUT;
+        case "b":
+            return INPUT_OUTPUT;
+        case "o":
+            return OUTPUT;
+        default:
+            throw new RuntimeException("Unknown direction: " + mode);
+        }
     }
 }

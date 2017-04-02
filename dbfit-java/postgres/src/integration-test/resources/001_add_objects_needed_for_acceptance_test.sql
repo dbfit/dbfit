@@ -15,10 +15,10 @@ $body$
 LANGUAGE plpgsql
 ;
 
-CREATE FUNCTION CalcLength(name varchar(100)) RETURNS INTEGER AS
+CREATE OR REPLACE FUNCTION CalcLength(name varchar(100), out strlength integer) AS
 $body$
 BEGIN
-  RETURN LENGTH(name);
+  strlength := LENGTH(name);
 END;
 $body$
 LANGUAGE plpgsql
