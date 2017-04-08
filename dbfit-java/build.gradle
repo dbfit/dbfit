@@ -244,7 +244,7 @@ project('mysql') {
 }
 
 def publicPostgresCompileDeps = [
-    'org.postgresql:postgresql:9.3-1101-jdbc41'
+    'org.postgresql:postgresql:42.0.0.jre7'
 ]
 
 project('postgres') {

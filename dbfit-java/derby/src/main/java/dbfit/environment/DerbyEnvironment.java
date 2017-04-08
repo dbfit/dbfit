@@ -4,6 +4,7 @@ import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;
+import dbfit.util.DatabaseObjectName;
 import static dbfit.util.NameNormaliser.normaliseName;
 
 import java.math.BigDecimal;
@@ -193,28 +194,9 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
         }
     }
 
-    private static class DatabaseObjectName {
-        String schemaName, objectName;
-
-        private DatabaseObjectName(String objSchemaName, String objName) {
-            schemaName = objSchemaName;
-            objectName = objName;
-        }
-
-        private String getSchemaName() {
-            return schemaName;
-        }
-
-        String getObjectName() {
-            return objectName;
-        }
-    }
-
     DatabaseObjectName buildDatabaseObjectName(String objName) throws SQLException {
-        String[] qualifiers = objName.toUpperCase().split("\\.");
-        String schemaName = (qualifiers.length == 2) ? qualifiers[0] : getConnection().getSchema();
-        String objectName = (qualifiers.length == 2) ? qualifiers[1] : qualifiers[0];
-        return new DatabaseObjectName(schemaName, objectName);
+        return DatabaseObjectName.splitWithDelimiter(
+                objName.toUpperCase(), "\\.", getConnection().getSchema());
     }
 
     DatabaseObject findStoredRoutine(DatabaseObjectName objName) throws SQLException {
