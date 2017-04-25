@@ -2,7 +2,7 @@ include_recipe 'yum-mysql-community::mysql57'
 
 mysql2_chef_gem 'default' do
   gem_version '0.4.5'
-  client_version node['mysql']['version'] if node['mysql']
+  package_version node['mysql']['version'] if node['mysql']
   action :install
 end
 
