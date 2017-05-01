@@ -1,7 +1,7 @@
 !3 IN and OUT params
 
 !|Execute Procedure|CalcLength|
-|In String|Str Length?|
+|Name|Str Length?|
 |mika|4|
 |paradajz|8|
 |saeiluhrweurhfi7fhi7rhgf|24|
