@@ -182,7 +182,38 @@ then
 	exit 1
 fi
 
-# Run as Informix super user.
+# Disable IPV6 for client connections (requires the instance to be restarted).
+touch $INFORMIX_INST_TARG_ROOT/etc/IFX_DISABLE_IPV6
+if [ $? -ne 0 ]
+then
+	echo "$EM cannot create file $INFORMIX_INST_TARG_ROOT/etc/IFX_DISABLE_IPV6" 1>&2
+	exit 1
+fi
+
+chown informix:informix $INFORMIX_INST_TARG_ROOT/etc/IFX_DISABLE_IPV6
+if [ $? -ne 0 ]
+then
+	echo "$EM cannot change ownership of file $INFORMIX_INST_TARG_ROOT/etc/IFX_DISABLE_IPV6" 1>&2
+	exit 1
+fi
+
+# Restart the Informix instance.
+echo "$IM stopping Informix instance..."
+runuser informix -c "onmode -ky"
+if [ $? -ne 0 ]
+then
+	echo "$EM stopping Informix instance"
+	exit 1
+fi
+
+echo "$IM starting Informix instance..."
+runuser informix -c "oninit -vwy"
+if [ $? -ne 0 ]
+then
+	echo "$EM starting Informix instance"
+	exit 1
+fi
+
 echo "$IM creating 'DBFIT' database..."
 runuser dbfit -c "dbaccess sysmaster '$INFORMIX_SCRIPTS/create-db-informix.sql'"
 if [ $? -ne 0 ]
@@ -191,7 +222,6 @@ then
 	exit 1
 fi
 
-# Run as dbfit (Informix) user.
 echo "$IM creating DbFit acceptance testing DB objects in 'dbfit_ansi' database..."
 runuser dbfit -c "dbaccess dbfit_ansi '$INFORMIX_SCRIPTS/create-acceptance-test-objects-informix.sql'"
 if [ $? -ne 0 ]
