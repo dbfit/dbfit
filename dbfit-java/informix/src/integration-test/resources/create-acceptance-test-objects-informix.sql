@@ -4,7 +4,7 @@ CREATE FUNCTION ConcatenateF(FirstString VARCHAR(100), SecondString VARCHAR(100)
 
 CREATE FUNCTION FuncWithOutParams(InString VARCHAR(100), OUT OutString VARCHAR(200)) RETURNS VARCHAR(200) LET OutString = InString || ' returned via OUT param'; RETURN InString || ' returned via RETURNS'; END FUNCTION;
 
-CREATE PROCEDURE CalcLength(InString VARCHAR(255), OUT StrLength INTEGER) LET StrLength = LENGTH(InString); RETURN; END PROCEDURE;
+CREATE PROCEDURE CalcLength(Name VARCHAR(255), OUT StrLength INTEGER) LET StrLength = LENGTH(Name); RETURN; END PROCEDURE;
 
 CREATE PROCEDURE ConcatenateStrings(FirstString VARCHAR(255), SecondString VARCHAR(255), OUT Concatenated VARCHAR(255)) LET Concatenated = FirstString || ' ' || SecondString; RETURN; END PROCEDURE;
 
