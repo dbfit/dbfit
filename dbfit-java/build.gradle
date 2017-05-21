@@ -284,7 +284,7 @@ project('netezza') {
 
     dependencies {
         compile project(':dbfit-java:core')
-        runtime 'org.netezza:nzjdbc:7.1@jar'
+        runtime 'org.netezza:nzjdbc3:7.2@jar'
     }
 }
 
