@@ -235,6 +235,7 @@ project('mysql') {
     dependencies {
         compile project(':dbfit-java:core')
         compile publicMysqlCompileDeps
+        testCompile project(':dbfit-java:core').sourceSets.test.output
     }
 
     integrationTest.doFirst {
@@ -243,7 +244,7 @@ project('mysql') {
 }
 
 def publicPostgresCompileDeps = [
-    'org.postgresql:postgresql:9.3-1101-jdbc41'
+    'org.postgresql:postgresql:42.0.0.jre7'
 ]
 
 project('postgres') {

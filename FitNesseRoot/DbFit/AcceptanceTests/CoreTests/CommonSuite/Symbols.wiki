@@ -64,11 +64,13 @@ Test
 
 !3 Stored Procedures
 
+!|Set Parameter|s3|abc|
+
 !|Execute Procedure    |CalcLength  |
 |name                  |str length? |
 |abcd                  |>>len4      |
 |abc1234               |>>>len7     |
-|<<v3                  |3           |
+|<<s3                  |3           |
 
 !|Execute Procedure    |CalcLength  |
 |name                  |str length? |
