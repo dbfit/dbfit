@@ -89,7 +89,9 @@ subprojects {
         classpath += sourceSets.main.runtimeClasspath
     }
 
-    ext.dbdeploy = { dbDriver, url, userid, password, delimiterType = 'normal' ->
+    ext.dbdeploy = {
+        dbDriver, url, userid, password, delimiterType = 'normal', delimiter = ';',
+        dir = "$projectDir/src/integration-test/resources" ->
         ant.taskdef(name: 'dbdeploy',
                 classname: 'com.dbdeploy.AntTarget',
                 classpath: configurations.testRuntime.asPath)
@@ -97,8 +99,9 @@ subprojects {
                 url: url,
                 userid: userid,
                 password: password,
-                dir: "$projectDir/src/integration-test/resources",
-                delimiterType: delimiterType
+                dir: dir,
+                delimiterType: delimiterType,
+                delimiter: delimiter
         )
     }
 
@@ -267,6 +270,10 @@ project('sqlserver') {
         compile project(':dbfit-java:core')
         runtime 'com.microsoft:sqljdbc:4.1.5605@jar'
         integrationTestRuntime 'com.microsoft:sqljdbc:4.1.5605@jar'
+    }
+
+    integrationTest.doFirst {
+        dbdeploy('com.microsoft.sqlserver.jdbc.SQLServerDriver', 'jdbc:sqlserver://127.0.0.1', 'dbfit', 'DbFit000!', 'normal', 'GO')
     }
 }
 

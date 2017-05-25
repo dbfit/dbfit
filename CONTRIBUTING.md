@@ -58,14 +58,13 @@ However, unlike the VM, this approach doesn't necessarily create all the users a
 The easiest way to get a DbFit test environment is to provision a Linux virtual machine image. The instructions below describe how to do this.
 
 The fully-built VM includes:
- *  working installs of Gradle, MySQL, PostgreSQL, Derby and HSQLDB
+ *  working installs of Gradle, MySQL, PostgreSQL, SQL Server, Derby and HSQLDB
  *  the pre-requisites to easily install Oracle
  *  the pre-requisites to easily install DB2
  *  the pre-requisites to easily install Informix
 
 The VM doesn't include:
  *  a working Oracle installation (however there is a shell script to help with the installation described below)
- *  a working SQL Server installation (obviously)
  *  a working Teradata installation (this can be created separately as a VMWare or EC2 installation)
  *  a working Netezza installation (this can be created separately as a pair of VMWare machines)
 
