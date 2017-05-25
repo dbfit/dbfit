@@ -1,0 +1,7 @@
+!|dbfit.OracleTest|
+
+!|Connect|localhost:1521|dftest|dftest|XE|
+
+!|Query|select 'hello world' as x from dual|
+|x                                         |
+|hello world                               |

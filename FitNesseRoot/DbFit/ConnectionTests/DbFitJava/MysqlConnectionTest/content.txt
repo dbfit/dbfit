@@ -1,0 +1,7 @@
+!|dbfit.MySqlTest|
+
+!|Connect|localhost|dbfit_user|password|dbfit|
+
+!|Query|select 'hello world' as x|
+|x                               |
+|hello world                     |
