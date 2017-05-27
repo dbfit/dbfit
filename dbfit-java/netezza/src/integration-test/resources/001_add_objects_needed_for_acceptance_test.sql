@@ -1,4 +1,4 @@
-1CREATE TABLE users (
+CREATE TABLE users (
   name VARCHAR(50),
   username VARCHAR(50)
 )
