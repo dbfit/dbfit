@@ -1,1 +1,4 @@
+!define CALCLENGTH_OUT_COLUMN {}
+!define CALCLENGTH_IN_COLUMN {$1}
+
 !contents -R

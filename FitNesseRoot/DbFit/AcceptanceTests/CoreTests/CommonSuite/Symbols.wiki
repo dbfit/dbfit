@@ -66,16 +66,16 @@ Test
 
 !|Set Parameter|s3|abc|
 
-!|Execute Procedure    |CalcLength  |
-|name                  |str length? |
-|abcd                  |>>len4      |
-|abc1234               |>>>len7     |
-|<<s3                  |3           |
+!|Execute Procedure     |CalcLength               |
+|${CALCLENGTH_IN_COLUMN}|${CALCLENGTH_OUT_COLUMN}?|
+|abcd                   |>>len4                   |
+|abc1234                |>>>len7                  |
+|<<s3                   |3                        |
 
-!|Execute Procedure    |CalcLength  |
-|name                  |str length? |
-|abcd                  |<<len4      |
-|abc1234               |<<<len7     |
+!|Execute Procedure     |CalcLength               |
+|${CALCLENGTH_IN_COLUMN}|${CALCLENGTH_OUT_COLUMN}?|
+|abcd                   |<<len4                   |
+|abc1234                |<<<len7                  |
 
 # Tear Down
 !|Execute Ddl|drop table testtbl|
