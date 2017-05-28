@@ -5,9 +5,16 @@ import java.sql.*;
 public class StatementExecutionCapturingResultSetValue extends StatementExecution {
     private Object returnValue = null;
     private int returnValueInd = -1;
+    private final int realIndexOffset;
+
+    public StatementExecutionCapturingResultSetValue(PreparedStatement statement, int realIndexOffset) {
+        super(statement);
+        this.realIndexOffset = realIndexOffset;
+    }
 
     public StatementExecutionCapturingResultSetValue(PreparedStatement statement) {
-        super(statement);
+        // Ignore the "?" for the return value
+        this(statement, -1);
     }
 
     @Override
@@ -42,6 +49,6 @@ public class StatementExecutionCapturingResultSetValue extends StatementExecutio
     }
 
     private int getRealIndex(int index) {
-        return index - 1; // Ignore the "?" for the return value
+        return index + realIndexOffset;
     }
 }
