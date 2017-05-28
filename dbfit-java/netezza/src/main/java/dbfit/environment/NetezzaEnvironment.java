@@ -5,6 +5,8 @@ import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
+import dbfit.fixture.StatementExecution;
+import dbfit.fixture.StatementExecutionCapturingResultSetValue;
 
 import javax.sql.RowSet;
 import java.math.BigDecimal;
@@ -191,12 +193,17 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
                 + " is not supported");
     }
 
+    @Override
+    public StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
+        return new StatementExecutionCapturingResultSetValue(statement, 0);
+    }
+
     public Map<String, DbParameterAccessor> getAllProcedureParameters(
             String procName) throws SQLException {
 
         String[] qualifiers = NameNormaliser.normaliseName(procName).split(
                 "\\.");
-        String qry = "select btrim(btrim(arguments,'('),')') as param_list from _v_procedure where 1=1";
+        String qry = "select btrim(btrim(arguments,'('),')') as param_list, returns from _v_procedure where 1=1";
         if (qualifiers.length == 3) {
             qry += " and lower(database)=? and lower(schema)=? and lower(procedure)=? ";
         } else if (qualifiers.length == 2) {
@@ -206,6 +213,7 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
         }
 
         String paramList;
+        String returnType;
 
         try (PreparedStatement dc = currentConnection.prepareStatement(qry)) {
             for (int i = 0; i < qualifiers.length; i++) {
@@ -216,6 +224,7 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
                 throw new SQLException("Unknown procedure " + procName);
             }
             paramList = rs.getString(1);
+            returnType = rs.getString(2);
             rs.close();
         }
 
@@ -244,6 +253,18 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }
         }
+
+        if (returnType != null) {
+            dataType = normaliseTypeName(returnType);
+            DbParameterAccessor dbp = createDbParameterAccessor(
+                    "",
+                    Direction.RETURN_VALUE,
+                    getSqlType(dataType),
+                    getJavaClass(dataType),
+                    -1);
+            allParams.put("", dbp);
+        }
+
         return allParams;
     }
 }
