@@ -15,7 +15,7 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE [dbo].[CalcLength_P]
+CREATE PROCEDURE [dbo].[CalcLength]
     @name        VARCHAR(255)
   , @strlength   INT OUTPUT
 AS
