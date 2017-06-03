@@ -1,6 +1,6 @@
 This stored proc tests output parameters - CalcLength returns string length as second output param
 {{{
-CREATE PROCEDURE CalcLength_P
+CREATE PROCEDURE CalcLength
 @name VARCHAR(255)
 , @strlength INT OUTPUT
 AS
@@ -10,7 +10,7 @@ END;
 GO
 }}}
 
-!|Execute Procedure|CalcLength_P|
+!|Execute Procedure|CalcLength|
 |name|str length?|
 |mika|4|
 |paradajz|8|
@@ -18,7 +18,7 @@ GO
 
 Caputure the implicit return value
 
-!|Execute Procedure|CalcLength_P|
+!|Execute Procedure|CalcLength|
 |name|str length?|?|
 |mika|4|0|
 

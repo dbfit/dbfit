@@ -1,6 +1,6 @@
 !3 Inspect Procedure prints procedure arguments to be used for Execute procedure
  
-!|Inspect Procedure|CalcLength_P|
+!|Inspect Procedure|CalcLength|
 
 !3 Inspect Table prints table/view columns to be used for Insert/Update/Query procedure
  
