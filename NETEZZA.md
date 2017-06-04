@@ -28,9 +28,16 @@ It consists of 2 VMware images which theoretically could be run on any VMware en
    * Test if the Netezza Emulator is visible from the development vm (example: $ping 192.168.85.128)
    * Optionally install the linux client tools on the VM.
 
-3. Create the database NETEZZATEST using either the Administrator GUI or nzsql 
+3. Configure the connection for the DbFit acceptance tests in the file `dbfit-java\TestDbConnectionDbFitNetezza.properties.custom`:
+   * Set the user name in the 'username=' key.
+   * Set the password in the 'password=' key.
+   * Set the hostname and the port number (format is <hostname>:<port>) in the 'service=' key.
 
-4. Run 001_add_objects_needed_for_acceptance_test.sql to create the objects needed for the coretests
+4. Create the database NETEZZATEST and acceptance test database objects either by: -
+   * Running the command './gradlew :dbfit-java-netezza:setUpTestDatabase'
+   or
+   * Create the database NETEZZATEST using either the Administrator GUI or nzsql and
+     running `001_add_objects_needed_for_acceptance_test.sql`.
 
 5. Rename the nzjdbc.jar to nzjdbc-7.1.jar and put it in the custom libs
 
