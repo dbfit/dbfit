@@ -7,6 +7,7 @@ import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
 import dbfit.fixture.StatementExecution;
 import dbfit.fixture.StatementExecutionCapturingResultSetValue;
+import static dbfit.util.Direction.*;
 
 import javax.sql.RowSet;
 import java.math.BigDecimal;
@@ -268,23 +269,18 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
         }
 
         private DbParameterAccessor parameterAt(int pos) {
-            String dataType = reduceType(paramTypes[pos]);
-            return createDbParameterAccessor(
-                    "$" + (pos + 1),
-                    Direction.INPUT,
-                    getSqlType(dataType),
-                    getJavaClass(dataType),
-                    pos);
+            return createAccessor("$" + (pos + 1), INPUT, paramTypes[pos], pos);
         }
 
         private DbParameterAccessor returnValueOf(String returnType) {
-            String dataType = reduceType(returnType);
+            return createAccessor("", RETURN_VALUE, returnType, -1);
+        }
+
+        private DbParameterAccessor createAccessor(
+                String name, Direction direction, String type, int pos) {
+            String dataType = reduceType(type);
             return createDbParameterAccessor(
-                    "",
-                    Direction.RETURN_VALUE,
-                    getSqlType(dataType),
-                    getJavaClass(dataType),
-                    -1);
+                    name, direction, getSqlType(dataType), getJavaClass(dataType), pos);
         }
 
         private void addSingleParam(Map<String, DbParameterAccessor> allParams, DbParameterAccessor dbp) {
