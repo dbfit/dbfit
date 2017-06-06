@@ -268,25 +268,31 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
         }
 
         private DbParameterAccessor parameterAt(int pos) {
+            String dataType = reduceType(paramTypes[pos]);
             return createDbParameterAccessor(
                     "$" + (pos + 1),
                     Direction.INPUT,
-                    getSqlType(paramTypes[pos]),
-                    getJavaClass(paramTypes[pos]),
+                    getSqlType(dataType),
+                    getJavaClass(dataType),
                     pos);
         }
 
         private DbParameterAccessor returnValueOf(String returnType) {
+            String dataType = reduceType(returnType);
             return createDbParameterAccessor(
                     "",
                     Direction.RETURN_VALUE,
-                    getSqlType(returnType),
-                    getJavaClass(returnType),
+                    getSqlType(dataType),
+                    getJavaClass(dataType),
                     -1);
         }
 
         private void addSingleParam(Map<String, DbParameterAccessor> allParams, DbParameterAccessor dbp) {
             allParams.put(NameNormaliser.normaliseName(dbp.getName()), dbp);
+        }
+
+        private String reduceType(String paramType) {
+            return paramType.split("\\(")[0].trim();
         }
     }
 }
