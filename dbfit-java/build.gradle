@@ -119,7 +119,35 @@ subprojects {
                 src: sourceFile
         )
     }
+
+    ext.copyProperties = {
+        file, destination ->
+            copy {
+                from "${file}.default"
+                into destination
+                rename "(.*)\\.default", '$1'
+            }
+            copy {
+                from "${file}.custom"
+                into destination
+                rename "(.*)\\.custom", '$1'
+            }
+    }
+
+    // to be overriden when needed
+    ext.connectionPropertiesFiles = []
+
+    ext.copyConnectionProperties = {
+        destination ->
+            project.connectionPropertiesFiles.each { file ->
+                copyProperties new File(project.projectDir, file), destination
+            }
+    }
+
     integrationTest.inputs.dir file("$projectDir/../../FitNesseRoot/DbFit/AcceptanceTests/JavaTests")
+    integrationTest.doFirst {
+        copyConnectionProperties '.'
+    }
 }
 
 
@@ -181,35 +209,13 @@ project('hsqldb') {
 project('informix') {
     description = 'DBFit Informix engine'
 
+    ext.connectionPropertiesFiles = [
+        'TestDbConnectionDbFitInformixANSI.properties',
+        'TestDbConnectionDbFitInformixINFORMIX.properties']
+
     dependencies {
         compile project(':dbfit-java:core')
         compile 'com.informix:ifxjdbc:4.10.JC4W1@jar'
-    }
-
-    integrationTest.doFirst {
-        copy {
-            from 'TestDbConnectionDbFitInformixANSI.properties.default'
-            into '.'
-            rename '(.*).default', '$1'
-        }
-
-        copy {
-            from 'TestDbConnectionDbFitInformixANSI.properties.custom'
-            into '.'
-            rename '(.*).custom', '$1'
-        }
-
-        copy {
-            from 'TestDbConnectionDbFitInformixINFORMIX.properties.default'
-            into '.'
-            rename '(.*).default', '$1'
-        }
-
-        copy {
-            from 'TestDbConnectionDbFitInformixINFORMIX.properties.custom'
-            into '.'
-            rename '(.*).custom', '$1'
-        }
     }
 }
 
@@ -227,19 +233,7 @@ project('oracle') {
         testCompile "org.mockito:mockito-core:${mockitoVersion}"
     }
 
-    integrationTest.doFirst {
-        copy {
-            from 'TestDbConnectionDbFitOracle.properties.default'
-            into '.'
-            rename '(.*).default', '$1'
-        }
-
-        copy {
-            from 'TestDbConnectionDbFitOracle.properties.custom'
-            into '.'
-            rename '(.*).custom', '$1'
-        }
-    }
+    ext.connectionPropertiesFiles = ['TestDbConnectionDbFitOracle.properties']
 }
 
 def publicMysqlCompileDeps = [
@@ -310,23 +304,11 @@ project('netezza') {
     }
 
     ext.connectionPropertiesFile = 'TestDbConnectionDbFitNetezza.properties'
+    ext.connectionPropertiesFiles = [connectionPropertiesFile]
 
-    task copyConnectionFile {
-        copy {
-            from connectionPropertiesFile + '.default'
-            into '.'
-            rename '(.*).default', '$1'
-        }
-
-        copy {
-            from connectionPropertiesFile + '.custom'
-            into '.'
-            rename '(.*).custom', '$1'
-        }
-    }
-
-    task connectionProperties(dependsOn: copyConnectionFile) {
+    task connectionProperties {
         doLast {
+            copyConnectionProperties '.'
             def props = new Properties()
             file(connectionPropertiesFile).withInputStream { props.load(it) }
             def propService = props.getProperty('service')
