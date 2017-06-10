@@ -129,6 +129,18 @@ task copyConnections(dependsOn: [copyLocal]) {
             into 'dist'
             rename '(.*).custom', '$1'
         }
+
+        copy {
+            from 'dbfit-java/netezza/TestDbConnectionDbFitNetezza.properties.default'
+            into 'dist'
+            rename '(.*).default', '$1'
+        }
+
+        copy {
+            from 'dbfit-java/netezza/TestDbConnectionDbFitNetezza.properties.custom'
+            into 'dist'
+            rename '(.*).custom', '$1'
+        }
     }
 }
 

@@ -105,6 +105,20 @@ subprojects {
         )
     }
 
+    ext.sql = {
+        dbDriver, url, userid, password, sourceFile, delimiterType = 'normal',
+        delimiter = ';', autocommit = true ->
+        ant.sql(classpath: configurations.runtime.asPath,
+                driver: dbDriver,
+                url: url,
+                userid: userid,
+                password: password,
+                delimiterType: delimiterType,
+                delimiter: delimiter,
+                autocommit: autocommit,
+                src: sourceFile
+        )
+    }
     integrationTest.inputs.dir file("$projectDir/../../FitNesseRoot/DbFit/AcceptanceTests/JavaTests")
 }
 
@@ -293,6 +307,78 @@ project('netezza') {
     dependencies {
         compile project(':dbfit-java:core')
         runtime 'org.netezza:nzjdbc3:7.2@jar'
+    }
+
+    ext.connectionPropertiesFile = 'TestDbConnectionDbFitNetezza.properties'
+
+    task copyConnectionFile {
+        copy {
+            from connectionPropertiesFile + '.default'
+            into '.'
+            rename '(.*).default', '$1'
+        }
+
+        copy {
+            from connectionPropertiesFile + '.custom'
+            into '.'
+            rename '(.*).custom', '$1'
+        }
+    }
+
+    task connectionProperties(dependsOn: copyConnectionFile) {
+        doLast {
+            def props = new Properties()
+            file(connectionPropertiesFile).withInputStream { props.load(it) }
+            def propService = props.getProperty('service')
+            def propServiceParts = propService.tokenize(':')
+            def propServiceHost = propServiceParts[0]
+            def propServicePort = propServiceParts[1]
+            def propDatabase = props.getProperty('database')
+
+            ext {
+                jdbcDriverClass = 'org.netezza.Driver'
+                jdbcUrlPrefix = 'jdbc:netezza://'
+                delimiterType = 'row'
+                userName = props.getProperty('username')
+                passWord = props.getProperty('password')
+                database = propDatabase.isEmpty() ? "" : ('/' + propDatabase)
+                jdbcUrl = jdbcUrlPrefix + propServiceHost + (propServicePort.isEmpty() ? (':' + propServicePort) : '')
+            }
+        }
+    }
+
+    integrationTest.dependsOn connectionProperties
+
+    integrationTest.doFirst {
+        dbdeploy(connectionProperties.jdbcDriverClass,
+            connectionProperties.jdbcUrl + connectionProperties.database,
+            connectionProperties.userName,
+            connectionProperties.passWord,
+            connectionProperties.delimiterType)
+    }
+
+    ext.execSqlScriptTestDatabase = {
+        scriptFile ->
+        sql(connectionProperties.jdbcDriverClass,
+            connectionProperties.jdbcUrl + '/system',
+            connectionProperties.userName,
+            connectionProperties.passWord,
+            scriptFile,
+            connectionProperties.delimiterType, true)
+    }
+
+    task setUpTestDatabase(dependsOn: connectionProperties) {
+        doLast {
+            execSqlScriptTestDatabase(
+                "${rootProject.projectDir}/test_vm/scripts/netezza/sql/create-databases-netezza.sql")
+        }
+    }
+
+    task tearDownTestDatabase(dependsOn: connectionProperties) {
+        doLast {
+            execSqlScriptTestDatabase(
+                "${rootProject.projectDir}/test_vm/scripts/netezza/sql/drop-databases-netezza.sql")
+        }
     }
 }
 
