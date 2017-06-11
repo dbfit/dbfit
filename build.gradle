@@ -94,52 +94,10 @@ task copyTestLibs(dependsOn: ':dbfit-java:derby:integrationTestJar') {
 
 task copyConnections(dependsOn: [copyLocal]) {
     doLast {
-        copy {
-            from 'dbfit-java/informix/TestDbConnectionDbFitInformixANSI.properties.default'
-            into 'dist'
-            rename '(.*).default', '$1'
-        }
-
-        copy {
-            from 'dbfit-java/informix/TestDbConnectionDbFitInformixANSI.properties.custom'
-            into 'dist'
-            rename '(.*).custom', '$1'
-        }
-
-        copy {
-            from 'dbfit-java/informix/TestDbConnectionDbFitInformixINFORMIX.properties.default'
-            into 'dist'
-            rename '(.*).default', '$1'
-        }
-
-        copy {
-            from 'dbfit-java/informix/TestDbConnectionDbFitInformixINFORMIX.properties.custom'
-            into 'dist'
-            rename '(.*).custom', '$1'
-        }
-
-        copy {
-            from 'dbfit-java/oracle/TestDbConnectionDbFitOracle.properties.default'
-            into 'dist'
-            rename '(.*).default', '$1'
-        }
-
-        copy {
-            from 'dbfit-java/oracle/TestDbConnectionDbFitOracle.properties.custom'
-            into 'dist'
-            rename '(.*).custom', '$1'
-        }
-
-        copy {
-            from 'dbfit-java/netezza/TestDbConnectionDbFitNetezza.properties.default'
-            into 'dist'
-            rename '(.*).default', '$1'
-        }
-
-        copy {
-            from 'dbfit-java/netezza/TestDbConnectionDbFitNetezza.properties.custom'
-            into 'dist'
-            rename '(.*).custom', '$1'
+        subprojects.each { prj ->
+            if (prj.hasProperty('copyConnectionProperties')) {
+                prj.copyConnectionProperties new File(project.rootDir, 'dist')
+            }
         }
     }
 }
