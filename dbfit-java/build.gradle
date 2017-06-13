@@ -346,7 +346,7 @@ project('netezza') {
             connectionProperties.userName,
             connectionProperties.passWord,
             scriptFile,
-            connectionProperties.delimiterType, true)
+            connectionProperties.delimiterType, ';', true)
     }
 
     task setUpTestDatabase(dependsOn: connectionProperties) {
