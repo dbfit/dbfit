@@ -11,6 +11,7 @@ dbfit-java/derby/dbfit/
 out
 
 dist
+/zips/
 /docs
 tmp/*
 custom_libs/*.jar
