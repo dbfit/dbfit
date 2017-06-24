@@ -1,3 +1,0 @@
-|Query|Select 'Connected' AS c1|
-|c1|
-|Connected|
