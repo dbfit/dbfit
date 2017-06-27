@@ -18,7 +18,7 @@ before_script:
   - docker exec dbfitdb2 /scripts/create_db_schema.sh
 script: "./gradlew --continue clean travisbuild"
 jdk:
-- openjdk7
+- oraclejdk7
 - oraclejdk8
 after_success:
 - "./gradlew bundle"
