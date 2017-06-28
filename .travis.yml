@@ -6,6 +6,12 @@ services:
 
 language: java
 before_install:
+  - "sudo apt-get remove openjdk-7-jdk"
+  - "sudo apt-get remove openjdk-7-jre"
+  - "sudo apt-get remove openjdk-7-jre-headless"
+  - "sudo apt-get install openjdk-7-jre-headless=7u51-2.4.6-1ubuntu4"
+  - "sudo apt-get install openjdk-7-jre=7u51-2.4.6-1ubuntu4"
+  - "sudo apt-get install openjdk-7-jdk=7u51-2.4.6-1ubuntu4"
   - docker run --name dbfitdb2 -p 50000:50000 -v "`pwd`/test_vm/scripts/db2:/scripts" -e DB2INST1_PASSWORD=db2inst1-pwd -e LICENSE=accept ibmcom/db2express-c:latest db2start &
   - docker run -p 1521:1521 -p 49160:22 -v "`pwd`/test_vm/scripts/oracle/sql:/docker-entrypoint-initdb.d:ro" wnameless/oracle-xe-11g &
   - "./gradlew -version"
@@ -18,7 +24,7 @@ before_script:
   - docker exec dbfitdb2 /scripts/create_db_schema.sh
 script: "./gradlew --continue clean travisbuild"
 jdk:
-- oraclejdk7
+- openjdk7
 - oraclejdk8
 after_success:
 - "./gradlew bundle"
