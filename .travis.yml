@@ -16,12 +16,12 @@ before_script:
   - for i in {1..60}; do echo "$i waiting for Oracle server startup"; nc -w2 -q1 localhost 49160 | grep SSH && echo "[Oracle UP]" && break || sleep 6; done
   - for i in {1..60}; do echo "$i waiting for DB2 server startup"; docker exec dbfitdb2 /scripts/detect_dbstart.sh 2 && break || sleep 6; done
   - docker exec dbfitdb2 /scripts/create_db_schema.sh
-script: "./gradlew --continue clean travisbuild"
+script:
+  - ./gradlew --continue clean travisbuild
+  - ./gradlew bundle
 jdk:
 - openjdk7
 - oraclejdk8
-after_success:
-- "./gradlew bundle"
 addons:
   artifacts:
     paths:
