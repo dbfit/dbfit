@@ -98,8 +98,8 @@ task copyTestLibs(dependsOn: ':dbfit-java:derby:integrationTestJar') {
 task copyConnections(dependsOn: [copyLocal]) {
     doLast {
         subprojects.each { prj ->
-            if (prj.hasProperty('copyConnectionProperties')) {
-                prj.copyConnectionProperties new File(project.rootDir, 'dist')
+            if (prj.hasProperty('connectionPropertiesFiles')) {
+                prj.copyConnectionProperties prj.connectionPropertiesFiles, new File(project.rootDir, 'dist')
             }
         }
     }
