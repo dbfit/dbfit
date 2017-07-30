@@ -1,7 +1,10 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-ext.dbfitVersion = '3.2.1-SNAPSHOT'
-ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+ext {
+    dbfitVersion = '3.2.1-SNAPSHOT'
+    isReleaseVersion = !version.endsWith("SNAPSHOT")
+    fitSharpVersion = '2.5'
+}
 
 task cleanFitnesseroot(type:Exec) {
     def gitArgs = ['clean', '-d', '-x', '-f', 'FitNesseRoot/']
@@ -161,15 +164,16 @@ def flattenPath(def path) {
 
 task bundleFitsharp(dependsOn: copyLocal) {
     doLast {
+        def fitSharpFileName = "release.${fitSharpVersion}.net.40.zip"
         mkdir 'dist/fitsharp/'
-        ant.get(src: 'http://cloud.github.com/downloads/jediwhale/fitsharp/release.2.2.net.40.zip',
+        ant.get(src: "http://github.com/jediwhale/fitsharp/releases/download/${fitSharpVersion}/${fitSharpFileName}",
                 dest: 'dist/fitsharp/',
                 verbose: true)
         copy {
-            from zipTree('dist/fitsharp/release.2.2.net.40.zip')
+            from zipTree("dist/fitsharp/${fitSharpFileName}")
             into 'dist/fitsharp/'
         }
-        delete 'dist/fitsharp/release.2.2.net.40.zip'
+        delete "dist/fitsharp/${fitSharpFileName}"
         file('dist/fitsharp/Runner.exe.config') << '<configuration><runtime><loadFromRemoteSources enabled="true"/></runtime></configuration>'
     }
 }
