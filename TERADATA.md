@@ -21,18 +21,12 @@ There are two options for hosting the Teradata Express Edition (TDE) Linux VM:
      
      **NOTE:** if you need to logon to the VM use user name `root` (password `root`).
 
-2. Log into the Teradata VM as the user `root` (password `root`) and start Teradata Studio Express from the desktop icon.
-   Connect to Teradata (on `localhost`) as user `dbc` (password `dbc`) in Teradata transaction mode (`TMODE=TERA`).
+2. Configure the connection for the DbFit acceptance tests in the file `dbfit-java/teradata/TestDbConnectionDbFitTeradata.properties.custom`:
+   * Set the user name in the `username=` key.
+   * Set the password in the `password=` key.
+   * Set the hostname and the port number (format is `<hostname>:<port>`) in the `service=` key.
 
-3. Open the Teradata acceptance tests database objects setup script from the host `dbfit-java/teradata/src/integration-test/resources/acceptancescripts-teradata.sql`.
-   
-   Copy and paste the script into a Teradata Studio Express SQL Editor query window on the guest and run the script.
-   
-   Alternatively you may set up shared folders for the VM to acccess folders on the host from
-       Player -> Manage -> Virtual Machine Settings -> Options -> Shared Folders
-   
-   Or install Teradata Studio Express on the host machine and connect to the VM (the default IP address is `192.168.68.128`).
+3. Create the test database by running the command `./gradlew :dbfit-java:teradata:setUpTestDatabase`.
+  * **NOTE:** The test database can be destroyed with the command `./gradlew :dbfit-java:teradata:tearDownTestDatabase`.
 
-4. Run integration tests to verify setup
-
-        ./gradlew :dbfit-java:teradata:integrationTest
+4. Run the Netezza DbFit acceptance tests with `./gradlew :dbfit-java:teradata:integrationTest`.

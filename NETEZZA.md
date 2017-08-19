@@ -18,6 +18,7 @@ Because of the nested VM virtualisation of Intel VT-x/EPT or AMD-V/RVI is requir
    * Set the password in the `password=` key.
    * Set the hostname and the port number (format is `<hostname>:<port>`) in the `service=` key.
 
-3. Create the database NETEZZATEST by running the command `./gradlew :dbfit-java-netezza:setUpTestDatabase`.
+3. Create the database NETEZZATEST by running the command `./gradlew :dbfit-java:netezza:setUpTestDatabase`.
+  * **NOTE:** The test database can be destroyed with the command `./gradlew :dbfit-java:netezza:tearDownTestDatabase`.
 
 4. Run the Netezza DbFit acceptance tests with `./gradlew :dbfit-java:netezza:integrationTest`.
