@@ -29,4 +29,4 @@ There are two options for hosting the Teradata Express Edition (TDE) Linux VM:
 3. Create the test database by running the command `./gradlew :dbfit-java:teradata:setUpTestDatabase`.
   * **NOTE:** The test database can be destroyed with the command `./gradlew :dbfit-java:teradata:tearDownTestDatabase`.
 
-4. Run the Netezza DbFit acceptance tests with `./gradlew :dbfit-java:teradata:integrationTest`.
+4. Run the Teradata DbFit acceptance tests with `./gradlew :dbfit-java:teradata:integrationTest`.
