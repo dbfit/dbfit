@@ -72,7 +72,8 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
                 + " join dbo.sysusers u on u.uid = o.uid "
                 + " join dbo.syscolumns c on c.id = o.id "
                 + " join dbo.systypes t on t.type = c.type and t.usertype = c.usertype "
-                + " where o.type in ('U', 'V') and u.name || '.' || o.name = ? "
+                + " where o.type in ('U', 'V') and o.name = ? "
+                //+ " where o.type in ('U', 'V') and u.name || '.' || o.name = ? "
                 + " order by colid";
         return readIntoParams(tableOrViewName, qry);
     }
@@ -81,11 +82,8 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
             String query) throws SQLException {
         DbParameterAccessorsMapBuilder params = new DbParameterAccessorsMapBuilder(dbfitToJdbcTransformerFactory);
 
-        objname = objname.replaceAll("[^a-zA-Z0-9_.#$]", "");
-        String bracketedName = enquoteAndJoin(objname.split("\\."), ".", "[", "]");
-
         try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
-            dc.setString(1, bracketedName);
+            dc.setString(1, objname);
             ResultSet rs = dc.executeQuery();
 
             while (rs.next()) {
