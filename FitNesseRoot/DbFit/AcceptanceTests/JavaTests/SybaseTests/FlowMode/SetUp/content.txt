@@ -1,0 +1,3 @@
+!|dbfit.SybaseTest|
+
+!|Connect|192.168.52.128:9678|DBA|sql|iqdemo|
