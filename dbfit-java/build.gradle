@@ -376,6 +376,15 @@ project('sqlserver') {
     }
 }
 
+project('sybase') {
+    description = 'DBFit Sybase engine'
+
+    dependencies {
+        compile project(':dbfit-java:core')
+    }
+
+}
+
 project('teradata') {
     description = 'DBFit Teradata engine'
 
