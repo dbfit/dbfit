@@ -7,13 +7,9 @@ as
 	return @n1*@n2;
 }}}
 
-!|setOption|bindsymbols|false|
-
-!|execute|!-
+!|execute ddl|!-
 create or replace function Multiply(@n1 int, @n2 int) returns int as return @n1*@n2;
 -!|
-
-!|setOption|bindsymbols|true|
 
 |Execute procedure|Multiply|
 |n1|n2|?|
