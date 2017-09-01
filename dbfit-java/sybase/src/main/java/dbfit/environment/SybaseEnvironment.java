@@ -202,7 +202,7 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
 
     public Map<String, DbParameterAccessor> getAllProcedureParameters(
             String procName) throws SQLException {
-        String query = "exec sp_sproc_columns '?'";
+        String query = "exec sp_sproc_columns ?";
 
         DbParameterAccessorsMapBuilder params = new DbParameterAccessorsMapBuilder(dbfitToJdbcTransformerFactory);
         try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
@@ -210,11 +210,11 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
             ResultSet rs = dc.executeQuery();
 
             while (rs.next()) {
-                String paramName = rs.getString("column_name");
-                String paramType = rs.getString("column_type");
-                String paramDataType = rs.getString("data_type");
-                params.add(paramName,
-                           (paramType == "IN")? INPUT : RETURN_VALUE,
+                String paramName = rs.getString("column_name").substring(1).trim();
+                String paramType = rs.getString("column_type").trim();
+                String paramDataType = rs.getString("type_name").trim();
+                params.add(("RETURN_VALUE".equals(paramName))? "" : paramName,
+                           ("IN".equals(paramType))? INPUT : RETURN_VALUE,
                            getSqlType(paramDataType),
                            getJavaClass(paramDataType));
             }
