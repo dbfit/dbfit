@@ -1,0 +1,19 @@
+!3 Enclose multi-line queries into !- !- -! and !- -! -! to prevent table breaks
+
+newlines are replaced with blanks - so don't use them in string values. edit page source to see that query is multi-line
+
+|Ordered Query|!-
+with a as (
+select 1 as n
+union all
+select 2 as n
+union all
+select 3 as n
+)
+select * from a
+order by n
+-!|
+|n|
+|1|
+|2|
+|3|
