@@ -1,3 +1,9 @@
 !|dbfit.SybaseTest|
 
 !|Connect|192.168.52.128:9678|DBA|sql|iqdemo|
+
+!|execute ddl|create or replace function Multiply(@n1 int, @n2 int) returns int as return @n1*@n2;|
+
+!|execute ddl|!-drop table if exists users;
+create table users(name varchar(50) unique, username varchar(50), userid integer identity);
+-!|

@@ -6,8 +6,6 @@ import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessorsMapBuilder;
 import dbfit.util.Direction;
 import static dbfit.util.Direction.*;
-import static dbfit.util.LangUtils.enquoteAndJoin;
-//import dbfit.util.TypeNormaliserFactory;
 import static dbfit.environment.SybaseTypeNameNormaliser.normaliseTypeName;
 
 import java.math.BigDecimal;
@@ -22,7 +20,7 @@ import java.util.Properties;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
-@DatabaseEnvironment(name="Sybase", driver="com.sybase.jdbc4.jdbc.SybDataSource")
+@DatabaseEnvironment(name="Sybase", driver="com.sybase.jdbc4.jdbc.SybDriver")
 public class SybaseEnvironment extends AbstractDbEnvironment {
 
     public SybaseEnvironment(String driverClassName) {
@@ -121,9 +119,11 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
             "DECIMAL", "DECIMALN", "MONEY", "MONEYN", "SMALLMONEY" });
     private static List<String> timestampTypes = Arrays.asList(new String[] {
             "SMALLDATETIME", "DATETIME", "DATETIMN", "TIMESTAMP" });
+    private static List<String> dateTypes = Arrays.asList("DATE");
     //private static List<String> binaryTypes = Arrays.asList(new String[] {
     //        "BINARY", "VARBINARY"});
 
+/*
     private String objectDatabasePrefix(String dbObjectName) {
         String objectDatabasePrefix = "";
         String[] objnameParts = dbObjectName.split("\\.");
@@ -132,15 +132,8 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
         }
         return objectDatabasePrefix;
     }
-/*
-    private static Direction getParameterDirection(int isOutput, String name) {
-        if (name.isEmpty()) {
-            return RETURN_VALUE;
-        }
-
-        return (isOutput == 1) ? INPUT_OUTPUT : INPUT;
-    }
 */
+
     private static int getSqlType(String dataType) {
         // todo:strip everything from first blank
         dataType = normaliseTypeName(dataType);
@@ -155,6 +148,8 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
             return java.sql.Types.INTEGER;
         if (timestampTypes.contains(dataType))
             return java.sql.Types.TIMESTAMP;
+        if (dateTypes.contains(dataType))
+                return java.sql.Types.DATE;
         if (booleanTypes.contains(dataType))
             return java.sql.Types.BOOLEAN;
         if (floatTypes.contains(dataType))
@@ -183,6 +178,8 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
             return Integer.class;
         if (timestampTypes.contains(dataType))
             return java.sql.Timestamp.class;
+        if (dateTypes.contains(dataType))
+            return java.sql.Date.class;
         if (booleanTypes.contains(dataType))
             return Boolean.class;
         if (floatTypes.contains(dataType))
@@ -192,7 +189,7 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
         if (longTypes.contains(dataType))
             return Long.class;
         if (shortTypes.contains(dataType))
-            return Short.class;
+            return Integer.class;
 
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");

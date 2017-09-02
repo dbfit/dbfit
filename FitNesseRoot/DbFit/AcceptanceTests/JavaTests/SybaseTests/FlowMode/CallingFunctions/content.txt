@@ -1,16 +1,5 @@
 !3 Functions are tested like procedures, with ? used for the result
 
-this is a test for 
-{{{
-create or replace function Multiply(@n1 int, @n2 int) returns int 
-as 
-	return @n1*@n2;
-}}}
-
-!|execute ddl|!-
-create or replace function Multiply(@n1 int, @n2 int) returns int as return @n1*@n2;
--!|
-
 |Execute procedure|Multiply|
 |n1|n2|?|
 |10|15|150|
