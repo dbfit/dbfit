@@ -208,8 +208,14 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
                 String paramName = rs.getString("column_name").substring(1).trim();
                 String paramType = rs.getString("column_type").trim();
                 String paramDataType = rs.getString("type_name").trim();
+
+                Direction direction;
+                if ("IN".equals(paramType)) direction = INPUT;
+                    else if ("INOUT".equals(paramType)) direction = INPUT_OUTPUT;
+                    else direction = RETURN_VALUE;
+
                 params.add(("RETURN_VALUE".equals(paramName))? "" : paramName,
-                           ("IN".equals(paramType))? INPUT : RETURN_VALUE,
+                           direction,
                            getSqlType(paramDataType),
                            getJavaClass(paramDataType));
             }

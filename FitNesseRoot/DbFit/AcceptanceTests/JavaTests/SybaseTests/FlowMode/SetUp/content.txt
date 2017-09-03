@@ -5,5 +5,5 @@
 !|execute ddl|create or replace function Multiply(@n1 int, @n2 int) returns int as return @n1*@n2;|
 
 !|execute ddl|!-drop table if exists users;
-create table users(name varchar(50) unique, username varchar(50), userid integer identity);
+create table users(name varchar(50), username varchar(50) unique, userid integer identity);
 -!|
