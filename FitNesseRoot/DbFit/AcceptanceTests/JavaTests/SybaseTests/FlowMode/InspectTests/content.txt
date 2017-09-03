@@ -2,9 +2,13 @@
  
 !|Inspect Procedure|Multiply|
 
+!|Inspect Procedure|dba.Multiply|
+
 !3 Inspect Table prints table/view columns to be used for Insert/Update/Query procedure
  
 !|Inspect Table|users|
+
+!|Inspect Table|dba.users|
 
 !3 Inspect query prints columns and data
 
