@@ -5,7 +5,6 @@ import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessorsMapBuilder;
 import dbfit.util.Direction;
-import static dbfit.util.Direction.*;
 import static dbfit.environment.SybaseTypeNameNormaliser.normaliseTypeName;
 
 import java.math.BigDecimal;
@@ -25,9 +24,6 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
 
     public SybaseEnvironment(String driverClassName) {
         super(driverClassName);
-
-        /*TypeNormaliserFactory.setNormaliser(java.sql.Time.class,
-                new MillisecondTimeNormaliser());*/
     }
 
     public boolean supportsOuputOnInsert() {
@@ -65,31 +61,31 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
-        String qry = " select c.name, t.name as type, 0 as is_output "
+        String check = " and u.name || '.' || o.name = ? ";
+        // Adding current user_name if it's not provided
+        if (tableOrViewName.indexOf('.') == -1)
+            check = " and u.name = user_name() and o.name = ? ";
+        String query = " select c.name, t.name as type "
                 + " from dbo.sysobjects o "
                 + " join dbo.sysusers u on u.uid = o.uid "
                 + " join dbo.syscolumns c on c.id = o.id "
                 + " join dbo.systypes t on t.type = c.type and t.usertype = c.usertype "
-                + " where o.type in ('U', 'V') and o.name = ? "
-                //+ " where o.type in ('U', 'V') and u.name || '.' || o.name = ? "
+                + " where o.type in ('U', 'V') "
+                + check
                 + " order by colid";
-        return readIntoParams(tableOrViewName, qry);
-    }
 
-    private Map<String, DbParameterAccessor> readIntoParams(String objname,
-            String query) throws SQLException {
         DbParameterAccessorsMapBuilder params = new DbParameterAccessorsMapBuilder(dbfitToJdbcTransformerFactory);
 
         try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
-            dc.setString(1, objname);
+            dc.setString(1, tableOrViewName);
             ResultSet rs = dc.executeQuery();
 
             while (rs.next()) {
-                String paramName = defaultIfNull(rs.getString(1), "");
+                String paramName = defaultIfNull(rs.getString("name"), "");
                 params.add(paramName,
-                           INPUT,
-                           getSqlType(rs.getString(2)),
-                           getJavaClass(rs.getString(2)));
+                           Direction.INPUT,
+                           getSqlType(rs.getString("type")),
+                           getJavaClass(rs.getString("type")));
             }
         }
 
@@ -120,19 +116,7 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
     private static List<String> timestampTypes = Arrays.asList(new String[] {
             "SMALLDATETIME", "DATETIME", "DATETIMN", "TIMESTAMP" });
     private static List<String> dateTypes = Arrays.asList("DATE");
-    //private static List<String> binaryTypes = Arrays.asList(new String[] {
-    //        "BINARY", "VARBINARY"});
-
-/*
-    private String objectDatabasePrefix(String dbObjectName) {
-        String objectDatabasePrefix = "";
-        String[] objnameParts = dbObjectName.split("\\.");
-        if (objnameParts.length == 3) {
-            objectDatabasePrefix = objnameParts[0] + ".";
-        }
-        return objectDatabasePrefix;
-    }
-*/
+    private static List<String> timeTypes = Arrays.asList("TIME");
 
     private static int getSqlType(String dataType) {
         // todo:strip everything from first blank
@@ -149,7 +133,9 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
         if (timestampTypes.contains(dataType))
             return java.sql.Types.TIMESTAMP;
         if (dateTypes.contains(dataType))
-                return java.sql.Types.DATE;
+            return java.sql.Types.DATE;
+        if (timeTypes.contains(dataType))
+            return java.sql.Types.TIME;
         if (booleanTypes.contains(dataType))
             return java.sql.Types.BOOLEAN;
         if (floatTypes.contains(dataType))
@@ -180,6 +166,8 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
             return java.sql.Timestamp.class;
         if (dateTypes.contains(dataType))
             return java.sql.Date.class;
+        if (timeTypes.contains(dataType))
+            return java.sql.Time.class;
         if (booleanTypes.contains(dataType))
             return Boolean.class;
         if (floatTypes.contains(dataType))
@@ -198,6 +186,9 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
     public Map<String, DbParameterAccessor> getAllProcedureParameters(
             String procName) throws SQLException {
         String query = "exec sp_sproc_columns ?";
+        // Adding current user_name if it's not provided
+        if (procName.indexOf('.') == -1)
+            query = "exec sp_sproc_columns user_name() || '.' || ?";
 
         DbParameterAccessorsMapBuilder params = new DbParameterAccessorsMapBuilder(dbfitToJdbcTransformerFactory);
         try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
@@ -210,9 +201,9 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
                 String paramDataType = rs.getString("type_name").trim();
 
                 Direction direction;
-                if ("IN".equals(paramType)) direction = INPUT;
-                    else if ("INOUT".equals(paramType)) direction = INPUT_OUTPUT;
-                    else direction = RETURN_VALUE;
+                if ("IN".equals(paramType)) direction = Direction.INPUT;
+                    else if ("INOUT".equals(paramType)) direction = Direction.INPUT_OUTPUT;
+                    else direction = Direction.RETURN_VALUE;
 
                 params.add(("RETURN_VALUE".equals(paramName))? "" : paramName,
                            direction,

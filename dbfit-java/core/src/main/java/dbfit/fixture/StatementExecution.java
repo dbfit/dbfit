@@ -19,7 +19,11 @@ public class StatementExecution implements AutoCloseable {
 
     public void setObject(int index, Object value, int sqlType, String userDefinedTypeName) throws SQLException {
         if (value == null) {
-            statement.setNull(index, sqlType, userDefinedTypeName);
+            try {
+                statement.setNull(index, sqlType, userDefinedTypeName);
+            } catch (UnsupportedOperationException e) { // Former procedure is not supported in Sybase
+                statement.setNull(index, sqlType);
+            }
         } else {
             // Don't use the variant that takes sqlType.
             // Derby (at least) assumes no decimal places for Types.DECIMAL and truncates the source data.
