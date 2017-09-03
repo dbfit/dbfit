@@ -1,0 +1,15 @@
+|Set Parameter|depth|10|
+
+|Query|SELECT ROW_NUM+@depth n FROM sa_rowgenerator( 1, @depth )|
+|n|
+|12|
+|11|
+|13|
+|14|
+|15|
+|16|
+|17|
+|18|
+|19|
+|20|
+
