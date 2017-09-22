@@ -387,7 +387,7 @@ project('teradata') {
     ext.connectionPropertiesFiles = ['TestDbConnectionDbFitTeradata.properties']
     ext.adminConnectionPropertiesFile = 'TestDbConnectionTeradataAdmin.properties'
 
-    task deploymentProperties.doLast {
+    deploymentProperties.doLast {
         ext {
             jdbcDriverClass = 'com.teradata.jdbc.TeraDriver'
             jdbcDriverUrlPrefix = 'jdbc:teradata://'
