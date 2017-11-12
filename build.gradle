@@ -1,7 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 ext {
-    dbfitVersion = '4.0.0-SNAPSHOT'
+    dbfitVersion = '4.0.0'
     isReleaseVersion = !version.endsWith("SNAPSHOT")
     fitSharpVersion = '2.5'
 }
