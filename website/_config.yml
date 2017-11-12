@@ -17,7 +17,7 @@ author :
   github : benilovj
   twitter : benilov
 
-dbfit_version: "3.2.1-SNAPSHOT"
+dbfit_version: "4.0.0"
 
 baseurl: /dbfit
 
