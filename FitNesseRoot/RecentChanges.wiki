@@ -1,3 +1,5 @@
+|DbFit.AcceptanceTests.JavaTests.MySqlTests.FlowMode.CoreTests.StoredProcNoParamsWithException||11:14:06 Sat, Mar 25, 2017|
+|DbFit.AcceptanceTests.JavaTests.OracleTests.FlowMode.CoreTests.StoredProcNoParamsWithException||10:26:03 Sat, Mar 25, 2017|
 |DbFit.AcceptanceTests.JavaTests.DerbyTests.FlowMode.CallingFunctions||23:36:19 Wed, Nov 23, 2016|
 |DbFit.AcceptanceTests.JavaTests.DerbyTests||23:29:09 Wed, Nov 23, 2016|
 |DbFit.AcceptanceTests.JavaTests.DerbyTests.StandaloneFixtures.SetUp||23:26:45 Wed, Nov 23, 2016|

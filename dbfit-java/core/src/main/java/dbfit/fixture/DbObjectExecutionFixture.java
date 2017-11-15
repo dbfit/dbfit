@@ -43,15 +43,14 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     /**
      * override this method and supply the expected exception number, if one is expected
      */
-    protected String getExpectedErrorCode() {
-        return "0";
+    protected int getExpectedErrorCode() {
+        return 0;
     }
 
     /**
      * override this method and supply the actual exception number.
      */
     protected String getActualErrorCode(SQLException e) {
-System.out.println("In DbObjectExecutionFixture.getActualErrorCode");
         return e.getSQLState();
     }
 
@@ -60,6 +59,23 @@ System.out.println("In DbObjectExecutionFixture.getActualErrorCode");
      */
     protected abstract DbObject getTargetDbObject() throws SQLException;
 
+    private void runTable() throws Exception {
+        try (StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray())) {
+            try {
+                preparedStatement.run();
+                if (getExpectedBehaviour() != ExpectedBehaviour.NO_EXCEPTION) {
+                    throw new SQLException("Expected exception but none thrown");
+                }
+            } catch (SQLException e) {
+                if (getExpectedBehaviour() != ExpectedBehaviour.ANY_EXCEPTION) {
+                    if (getExpectedErrorCode() != e.getErrorCode()) {
+                        throw new SQLException("Caught exception with error code " + e.getErrorCode());
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * executes the target dbObject for all rows of the table. if no rows are specified, executes
      * the target object only once
@@ -67,34 +83,20 @@ System.out.println("In DbObjectExecutionFixture.getActualErrorCode");
     public void doRows(Parse rows) {
         try {
             dbObject = getTargetDbObject();
-            if (dbObject == null) throw new Error("DB Object not specified!");
-            if (rows == null) {//single execution, no args
-                try (StatementExecution preparedStatement = 
-                        dbObject.buildPreparedStatement(accessors.toArray())) {
-                	try {
-                        preparedStatement.run();
-                        if (getExpectedBehaviour() != ExpectedBehaviour.NO_EXCEPTION) {
-                        	throw new SQLException("Executed procedure was expected raise an exception");
-                        }                      	
-                	} catch (SQLException e) {
-System.out.println("In DbObjectExecutionFixture: doRows: e.getMessage(): " + e.getMessage());
-                		if (getExpectedBehaviour() != ExpectedBehaviour.ANY_EXCEPTION) {
-                		    String realError = getActualErrorCode(e);
-                            if (!realError.equals(getExpectedErrorCode())) {
-                        	    throw new SQLException("Executed procedure was expected raise an exception with error code " +
-                                    getExpectedErrorCode() + " but got error code " + realError);
-                            }
-                        }
-                	}
-                    return;
-                }
+            if (dbObject == null) {
+                throw new Error("DB Object not specified!");
+            }
+            if (rows == null) { //single execution, no args
+                runTable();
+                return;
             }
             List<String> columnNames = getColumnNamesFrom(rows.parts);
             accessors = getAccessors(rows.parts, columnNames);
-            if (accessors == null) return;// error reading args
+            if (accessors == null) {
+                throw new SQLException("error reading args");
+            }
             columnBindings = getColumnBindings();
-            try (StatementExecution preparedStatement
-                    = dbObject.buildPreparedStatement(accessors.toArray())) {
+            try (StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray())) {
                 execution = preparedStatement;
                 Parse row = rows;
                 while ((row = row.more) != null) {

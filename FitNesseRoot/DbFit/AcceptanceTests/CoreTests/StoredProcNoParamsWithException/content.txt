@@ -1,3 +1,28 @@
 !3 Use ''Execute Procedure Expect Exception'' to check if a stored proc will throw an exception
 
+!|Execute Ddl|!-CREATE PROCEDURE p (pval INT)
+BEGIN
+  DECLARE specialty CONDITION FOR SQLSTATE '45000';
+  IF pval = 0 THEN
+    SIGNAL SQLSTATE '01000';
+  ELSEIF pval = 1 THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'An error occurred';
+  ELSEIF pval = 2 THEN
+    SIGNAL specialty
+      SET MESSAGE_TEXT = 'An error occurred';
+  ELSE
+    SIGNAL SQLSTATE '01000'
+      SET MESSAGE_TEXT = 'A warning occurred', MYSQL_ERRNO = 1000;
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'An error occurred', MYSQL_ERRNO = 1001;
+  END IF;
+END;-!|
+
+!|Execute Procedure Expect Exception|p|1000|
+|pval|
+|3|
+
 !|Execute Procedure Expect Exception|raise_error_no_params|
+
+!|Execute Procedure Expect Exception|raise_error_no_params|20001|

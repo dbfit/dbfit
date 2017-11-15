@@ -8,14 +8,14 @@ import java.sql.SQLException;
 
 public class ExecuteProcedureExpectException extends ExecuteProcedure {
     private boolean excNumberDefined = false;
-    private String excNumberExpected;
+    private int excNumberExpected;
 
     public ExecuteProcedureExpectException() {
         this.environment = DbEnvironmentFactory.getDefaultEnvironment();
     }
 
     public ExecuteProcedureExpectException(DBEnvironment dbEnvironment, String procName,
-                            String expectedErrorCode) {
+                            int expectedErrorCode) {
         this.procName = procName;
         this.environment = dbEnvironment;
         this.excNumberDefined = true;
@@ -40,7 +40,7 @@ public class ExecuteProcedureExpectException extends ExecuteProcedure {
     }
 
     @Override
-    protected String getExpectedErrorCode() {
+    protected int getExpectedErrorCode() {
         return excNumberExpected;
     }
 
