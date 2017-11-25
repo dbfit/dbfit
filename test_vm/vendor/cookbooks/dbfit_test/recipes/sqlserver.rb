@@ -9,8 +9,9 @@ sa_usr = 'sa'
 sa_pwd = 'DbFit000!'
 sql_host = 'localhost'
 
-ENV['SA_PASSWORD'] = sa_pwd
+ENV['MSSQL_SA_PASSWORD'] = sa_pwd
 ENV['ACCEPT_EULA'] = 'Y'
+ENV['MSSQL_PID'] = 'Developer'
 
 service 'stop mssql-server' do
   service_name 'mssql-server'
@@ -18,7 +19,7 @@ service 'stop mssql-server' do
 end
 
 execute 'configure SQL Server' do
-  command '/opt/mssql/bin/mssql-conf setup'
+  command '/opt/mssql/bin/mssql-conf -n setup'
   action :run
   not_if 'systemctl status mssql-server | grep active (running)'
 end
