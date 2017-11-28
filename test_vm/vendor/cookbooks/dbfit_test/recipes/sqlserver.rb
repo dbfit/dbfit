@@ -40,7 +40,7 @@ sql_dir = File.join(node['dbfit']['project_root'], "test_vm/scripts/sqlserver/sq
 sql_bin = '/opt/mssql-tools/bin'
 sql_cmd = "#{sql_bin}/sqlcmd -S #{sql_host} -U #{sa_usr} -P #{sa_pwd} -b "
 
-detect_changelog = "#{sql_cmd} -Q 'SELECT COUNT(*) FROM dbfit.dbo.changelog'"
+detect_changelog = "#{sql_cmd} -Q 'SELECT 1 FROM dbfit.dbo.changelog'"
 
 execute 'create databases' do
   command "#{sql_cmd} -i #{sql_dir}/create-databases-sqlserver.sql"
