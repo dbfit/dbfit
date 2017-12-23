@@ -31,13 +31,6 @@ allprojects {
         }
     }
 
-    dependencies {
-        compile "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
-    }
-}
-
-subprojects {
-    jar.baseName = "dbfit-" + project.archivesBaseName
     repositories {
         flatDir {
             dirs "${rootProject.projectDir}/custom_libs"
@@ -51,6 +44,14 @@ subprojects {
             ivyPattern "https://aws.amazon.com/s3/ivy.xml"
         }
     }
+
+    dependencies {
+        compile "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
+    }
+}
+
+subprojects {
+    jar.baseName = "dbfit-" + project.archivesBaseName
 
     task libs(type: Copy) {
         from configurations.runtime
