@@ -1,0 +1,12 @@
+---
+Suites
+Test
+saveId: 1208740999656
+ticketId: 1583776820878787670
+---
+execute procedure allows multiple parameters, with blanks in names
+
+!|Execute Procedure |ConcatenateStrings|
+|first string |second string |concatenated?|
+|Hello |World |Hello World|
+|Ford |Prefect |Ford Prefect|

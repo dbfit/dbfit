@@ -1,3 +1,0 @@
-!|dbfit.OracleTest|
-
-!|ConnectUsingFile|TestDbConnectionDbFitOracle.properties|

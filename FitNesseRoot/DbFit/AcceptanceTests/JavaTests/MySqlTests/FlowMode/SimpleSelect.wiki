@@ -1,0 +1,9 @@
+---
+Suites
+Test
+saveId: 1204392352359
+ticketId: -8865850156391945795
+---
+!|Query| select 'test' as x|
+|x|
+|test|

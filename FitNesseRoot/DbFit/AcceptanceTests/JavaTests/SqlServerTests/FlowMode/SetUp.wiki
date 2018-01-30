@@ -1,0 +1,7 @@
+---
+saveId: 1206796408968
+ticketId: -2976509910150106466
+---
+!|dbfit.SqlServerTest|
+
+!|Connect|localhost|FitNesseUser|FitN355#|FitNesseTestDB|

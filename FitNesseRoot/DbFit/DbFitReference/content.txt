@@ -1,8 +1,0 @@
-!2 !-DbFit-! Reference 
-by Gojko Adzic, Marisa Seal 2008
-
-This subwiki is a !-FitNesse-! version of the !-DbFit-! reference.  This document contains copyright protected portions from [[!-Test Driven .NET Development with FitNesse-!][http://gojko.net/fitnesse/book]] (ISBN:978-0-9556836-0-2, published by [[Neuri Limited][http://neuri.com]] in 2008), used with publisher's permission. This is a free document, and you have the right to redistribute it unmodified, in original form. All other rights are reserved by the authors.  
- 
-You can access the most recent version of this document online at the [[!-DbFit GitHub Project-!][http://dbfit.github.io/dbfit/docs/]] where you will also find links to contact the authors or provide feedback. PDF version is also available from [[here][https://github.com/dbfit/dbfit/releases/download/v1.1/dbfit-20080822.pdf]].
-
-!include -seamless >TableOfContents

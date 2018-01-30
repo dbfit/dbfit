@@ -1,5 +1,0 @@
-|import fixture|
-|dbfit.fixture|
-
-!|DatabaseEnvironment|mysql|
-|Connect|localhost|dbfit_user|password|dbfit|

@@ -1,0 +1,13 @@
+---
+Suites
+Test
+saveId: 1228861838931
+ticketId: 783953836182787811
+---
+Null value should be accepted as parameter
+
+|Set Parameter|myid|null|
+
+|Query|Select coalesce(_:myid,-1) as val|
+|val|
+|-1|

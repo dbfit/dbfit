@@ -1,0 +1,13 @@
+---
+Suites
+Test
+saveId: 1186166462288
+ticketId: -68844632264818094
+---
+This table matches only n, so it will report that 4 is a wrong value for 2
+
+|Query|SELECT n, n*2 as l  FROM ( select 1 as n union select 2 union select 3 ) x|
+|n|l?|
+|1|2|
+|2|fail[7]|
+|3|6|

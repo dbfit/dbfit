@@ -1,0 +1,5 @@
+---
+saveId: 1318527497383
+ticketId: 3657421277899937154
+---
+!|Execute Ddl|Drop table datatypetest|

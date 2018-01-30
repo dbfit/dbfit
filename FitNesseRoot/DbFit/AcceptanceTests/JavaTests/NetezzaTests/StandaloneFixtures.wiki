@@ -1,0 +1,11 @@
+---
+Suite
+Suites: null
+SymbolicLinks
+  CommitAndRollback: .DbFit.AcceptanceTests.LibraryTests.CommitAndRollback
+  CoreTests: .DbFit.AcceptanceTests.CoreTests
+  OrderedQuery: .DbFit.AcceptanceTests.JavaTests.MySqlTests.FlowMode.OrderedQuery
+saveId: 1186735591564
+ticketId: -8989150350196239075
+---
+!contents -R

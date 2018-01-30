@@ -1,0 +1,13 @@
+---
+Suites
+Test
+saveId: 1208658042140
+ticketId: 8815824313407400154
+---
+Null value should be accepted as parameter
+
+|Set Parameter|myid|null|
+
+|Query|Select coalesce(@myid,-1) as val from sysibm.sysdummy1|
+|val|
+|-1|

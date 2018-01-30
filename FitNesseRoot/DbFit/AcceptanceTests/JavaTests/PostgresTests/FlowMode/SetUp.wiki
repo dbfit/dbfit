@@ -1,0 +1,7 @@
+---
+saveId: 1226704461729
+ticketId: 748942413959878233
+---
+!|dbfit.PostgresTest|
+
+!|Connect|localhost:5432|dbfit|dbfit|dbfit|

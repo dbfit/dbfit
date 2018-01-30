@@ -1,0 +1,17 @@
+---
+Suites
+Test
+saveId: 1228861631632
+ticketId: -7351939091245153524
+---
+!|Query| select 'test'::text as x|
+|x|
+|test|
+
+!|Execute|!-
+CREATE FUNCTION add_em(integer, integer) RETURNS integer AS
+$$ 
+    SELECT $1 + $2;
+$$
+LANGUAGE SQL;
+-!|

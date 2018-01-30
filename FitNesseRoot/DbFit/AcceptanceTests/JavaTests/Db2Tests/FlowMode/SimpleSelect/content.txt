@@ -1,3 +1,0 @@
-!|Query|Select 1 as x from sysibm.sysdummy1|
-|x|
-|1|

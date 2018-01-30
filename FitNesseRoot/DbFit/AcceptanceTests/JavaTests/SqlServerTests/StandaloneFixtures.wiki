@@ -1,0 +1,9 @@
+---
+Suite
+SymbolicLinks
+  AccessObjectsInNonDefaultDb: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.AccessObjectsInNonDefaultDb
+  CommitAndRollback: .DbFit.AcceptanceTests.LibraryTests.CommitAndRollback
+  CoreTests: .DbFit.AcceptanceTests.CoreTests
+  StoredProcWithException: .DbFit.AcceptanceTests.JavaTests.SqlServerTests.LibraryTests.StoredProcWithException
+---
+!contents -R2 -g -p -f -h

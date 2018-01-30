@@ -1,0 +1,12 @@
+---
+Suite
+Suites
+SymbolicLinks
+  CommitAndRollback: .DbFit.AcceptanceTests.LibraryTests.CommitAndRollback
+  CoreTests: .DbFit.AcceptanceTests.CoreTests
+saveId: 1211976567031
+ticketId: 4781297850769370943
+---
+!3 These tests have been copied from the tests available for other databases, perhaps mostly from the DB2 and MySQL tests.
+
+!contents -R

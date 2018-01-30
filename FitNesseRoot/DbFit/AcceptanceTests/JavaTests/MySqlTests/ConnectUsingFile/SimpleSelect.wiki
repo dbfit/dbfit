@@ -1,0 +1,12 @@
+---
+Suites
+Test
+saveId: 1186165260799
+ticketId: 1260130616884493860
+---
+!3 Simple Select
+
+|Query| select 'test' as x|
+|x|
+|test|
+

@@ -1,0 +1,11 @@
+---
+Suite
+Suites
+SymbolicLinks
+  CommitAndRollback: .DbFit.AcceptanceTests.LibraryTests.CommitAndRollback
+  CoreTests: .DbFit.AcceptanceTests.CoreTests
+  StoredProcWithException: .DbFit.AcceptanceTests.JavaTests.OracleTests.LibraryTests.StoredProcWithException
+saveId: 1185178825007
+ticketId: -2210587439976022050
+---
+!contents -R

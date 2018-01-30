@@ -1,0 +1,19 @@
+---
+Test
+saveId: 1318923131792
+ticketId: -1573826289790104916
+---
+|Query|Select null n|
+|n?|
+|fail[3]|
+
+|Execute Ddl|!-Replace Procedure nulls_back(out out1 varchar, out out2 numeric, out out3 date)
+begin
+   set out1 = null;
+   set out2 = null;
+   set out3 = null;
+end;-!|
+
+!|Execute Procedure|nulls_back|
+|out1?|out2?|out3?|
+|fail[ABC]|fail[10]|fail[2008-01-01]| 

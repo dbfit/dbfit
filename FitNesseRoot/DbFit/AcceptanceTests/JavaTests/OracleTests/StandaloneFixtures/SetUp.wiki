@@ -1,0 +1,9 @@
+---
+saveId: 1196049763764
+ticketId: 3222008372527617365
+---
+|import fixture|
+|dbfit.fixture|
+
+!|DatabaseEnvironment|oracle|
+|ConnectUsingFile|TestDbConnectionDbFitOracle.properties|

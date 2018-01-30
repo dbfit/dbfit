@@ -1,7 +1,0 @@
-!3 IN/OUT params should be split into two columns - one for in, one for out
-
-
-|Execute procedure|MultiplyIO|
-|factor|val|val?|
-|10|5|50|
-|2|8|16|

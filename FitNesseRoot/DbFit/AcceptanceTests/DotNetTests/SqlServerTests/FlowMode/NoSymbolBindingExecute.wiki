@@ -1,0 +1,18 @@
+---
+Suites
+Test
+saveId: 1213378059062
+ticketId: -765749671040939653
+---
+!|dbfit.fixture.DatabaseEnvironment|
+|set option|bind symbols|false|
+
+|execute|!-begin
+declare @x varchar(100);
+set @x='test test';
+insert into users (username,name) values (@x,'test');
+end;-!|
+
+|query|select * from users|
+|username|name|
+|test test|test|

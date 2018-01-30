@@ -1,3 +1,0 @@
-!|Query|Select 'test' as x|
-|x|
-|test|

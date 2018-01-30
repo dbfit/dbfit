@@ -1,0 +1,11 @@
+---
+Suites
+Test
+saveId: 1204401770116
+ticketId: -871446045049613978
+---
+!|Execute Procedure |CalcLength|
+|name |str length?|
+|mika |  4|
+|paradajz |  8|
+|saeiluhrweurhfi7fhi7rhgf |  24|

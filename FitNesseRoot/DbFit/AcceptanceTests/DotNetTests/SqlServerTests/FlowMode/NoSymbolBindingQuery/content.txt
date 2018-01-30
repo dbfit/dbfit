@@ -1,6 +1,0 @@
-
-|set option|bind symbols|false|
-
-|query|select '@test' x|
-|x|
-|@test|

@@ -1,0 +1,7 @@
+---
+Suite
+SymbolicLinks
+  CommitAndRollback: .DbFit.AcceptanceTests.LibraryTests.CommitAndRollback
+  CoreTests: .DbFit.AcceptanceTests.CoreTests
+---
+!contents -R2 -g -p -f -h

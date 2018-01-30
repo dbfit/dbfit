@@ -1,0 +1,7 @@
+---
+saveId: 1208654097500
+ticketId: -6863104974958546303
+---
+!|dbfit.DB2Test|
+
+!|Connect|localhost:50000|DFTEST|DFTEST|DBFIT|

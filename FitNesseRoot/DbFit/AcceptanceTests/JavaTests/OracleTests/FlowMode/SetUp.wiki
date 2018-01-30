@@ -1,0 +1,7 @@
+---
+saveId: 1236616303724
+ticketId: -5562069951870529630
+---
+!|dbfit.OracleTest|
+
+!|ConnectUsingFile|TestDbConnectionDbFitOracle.properties|

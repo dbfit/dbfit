@@ -1,4 +1,0 @@
-!path lib/*.jar
-This is a new DBFit port to Java, mostly compatible with .Net version. In addition to standard FIT Java features, DBFit/Java brings the fail keyword (see >OracleTests.FlowMode.OrderedQuery) and accessing symbols with << and >> (see >OracleTests.FlowMode.ParametersAreLoadedAutomaticallyFromVariables).
-
-!contents

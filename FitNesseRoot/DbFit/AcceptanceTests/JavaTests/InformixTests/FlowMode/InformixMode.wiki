@@ -1,0 +1,7 @@
+---
+Suite
+SymbolicLinks
+  CommonTests: .DbFit.AcceptanceTests.JavaTests.InformixTests.LibraryTests.CommonTests
+  CoreTests: .DbFit.AcceptanceTests.CoreTests
+---
+!contents -R2 -g -p -f -h

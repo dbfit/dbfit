@@ -1,0 +1,19 @@
+---
+Suites
+Test
+saveId: 1197522659823
+ticketId: 5686157163283250904
+---
+!3 Integers
+
+|Execute|Create table datatypetest (n1 BIGINT, n2 TINYINT, n3 SMALLINT, n4 INT)|
+
+|Insert|datatypetest|
+|n1|n2|n3|n4|
+|11|12|13|14|
+
+|Query|select * from datatypetest|
+|n1|n2|n3|n4|
+|11|12|13|14|
+
+

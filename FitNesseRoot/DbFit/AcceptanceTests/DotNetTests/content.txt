@@ -1,6 +1,0 @@
-!define COMMAND_PATTERN {%m -r fitnesse.fitserver.FitServer %p}
-!define TEST_RUNNER {fitsharp\Runner.exe}
-!define PATH_SEPARATOR {;}
-!path fitsharp\*.dll
-
-!contents
