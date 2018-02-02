@@ -1,5 +1,5 @@
 remote_file '/etc/yum.repos.d/mssql-server.repo' do
-  source 'https://packages.microsoft.com/config/rhel/7/mssql-server.repo'
+  source 'https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo'
   action :create
 end
 
