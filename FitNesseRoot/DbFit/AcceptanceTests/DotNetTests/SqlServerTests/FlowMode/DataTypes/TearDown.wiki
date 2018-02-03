@@ -1,0 +1,5 @@
+---
+saveId: 1197522602464
+ticketId: 5056294780604917322
+---
+|Execute|Drop table datatypetest|

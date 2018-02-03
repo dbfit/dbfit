@@ -1,0 +1,13 @@
+---
+Suites
+Test
+saveId: 1204392453683
+ticketId: 3651131686769352973
+---
+|Store Query|select n from ( select 1 as n union select 2 union select 3) x|firsttable|
+
+|query|<<firsttable|
+|n|
+|1|
+|2|
+|3|

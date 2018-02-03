@@ -1,0 +1,12 @@
+---
+Suites
+Test
+saveId: 1213359870078
+ticketId: 358881488733207215
+---
+
+|set option|bind symbols|false|
+
+|query|select '@test' x|
+|x|
+|@test|

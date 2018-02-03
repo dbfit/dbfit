@@ -1,0 +1,31 @@
+---
+Suite
+Suites
+SymbolicLinks
+  BulkInsert: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsert
+  BulkInsertWithReturning: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsertWithReturning
+  CallingFunctions: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.CallingFunctions
+  ColumnMatching: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ColumnMatching
+  DataTypes: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.DataTypes
+  ExecutingStatements: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ExecutingStatements
+  ExpectingErrors: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ExpectingErrors
+  InspectTests: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.InspectTests
+  MultiLineQueries: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.MultiLineQueries
+  NullValueAcceptedAsParameter: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.NullValueAcceptedAsParameter
+  OrderedQuery: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.OrderedQuery
+  ParametersAreLoadedAutomaticallyFromVariables: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ParametersAreLoadedAutomaticallyFromVariables
+  ParametersArePersistent: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ParametersArePersistent
+  QueryWithParameter: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.QueryWithParameter
+  ReadingQueryIntoVariables: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ReadingQueryIntoVariables
+  SequenceSelect: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.SequenceSelect
+  SimpleSelect: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.SimpleSelect
+  SimpleStoredProc: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.SimpleStoredProc
+  StoreAndCompareQueries: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.StoreAndCompareQueries
+  StoredProcedureWithException: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.StoredProcedureWithException
+  TransactionsTest: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.TransactionsTest
+  UnknownParametersAreIgnored: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.UnknownParametersAreIgnored
+  UpdateTest: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.UpdateTest
+saveId: 1199740243578
+ticketId: -6198224738085878946
+---
+!contents -R

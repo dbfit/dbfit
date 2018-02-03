@@ -1,0 +1,10 @@
+---
+saveId: 1198305468613
+ticketId: -7295690535704969166
+---
+(override setup so that parent setup does not load)
+
+!|dbfit.OracleTest|
+
+|Connect using file|testdbconnection.properties|
+

@@ -1,0 +1,27 @@
+---
+Suites
+Test
+saveId: 1212870823390
+ticketId: 941179248842115356
+---
+|execute| create table test_insert ([name] [varchar](50) NULL, [testid] [smallint] IDENTITY(1,1) NOT NULL)|
+
+!|Insert|test_insert|
+|name|testid?|
+|pera|>>pera|
+|Mika|>>mika|
+
+
+!|Query|Select * from test_insert|
+|name?|testid?|
+|pera|<<pera|
+|Mika|<<mika|
+
+|set parameter|testid|<<pera|
+
+|Query|Select * from test_insert where testid=@pera|
+|name|testid|
+|pera|<<pera|
+
+
+|execute| drop table test_insert|

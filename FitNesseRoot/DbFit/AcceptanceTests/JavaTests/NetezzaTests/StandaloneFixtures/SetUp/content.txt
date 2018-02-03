@@ -1,6 +1,0 @@
-|import fixture|
-|dbfit.fixture|
-
-!|DatabaseEnvironment|netezza|
-|Connect Using File|TestDbConnectionDbFitNetezza.properties|
-

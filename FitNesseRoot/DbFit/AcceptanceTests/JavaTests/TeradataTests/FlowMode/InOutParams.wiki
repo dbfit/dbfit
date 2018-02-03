@@ -1,0 +1,16 @@
+---
+Test
+saveId: 1202087506579
+ticketId: -3582735366208648972
+---
+!3 IN/OUT params should be split into two columns - one for in, one for out
+
+|Execute Ddl|!-Replace Procedure MultiplyIO(IN factor number, INOUT val number)
+begin
+    set val = val*factor;
+end;-!|
+
+|Execute procedure|MultiplyIO|
+|factor|val|val?|
+|10|5|50|
+|2|8|16|

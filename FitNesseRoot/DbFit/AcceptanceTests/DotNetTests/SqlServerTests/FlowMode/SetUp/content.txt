@@ -1,3 +1,0 @@
-!|dbfit.SqlServerTest|
-
-!|Connect|LOCALHOST\SQLEXPRESS|FitNesseUser|FitNesseUser|FitNesseTestDB|

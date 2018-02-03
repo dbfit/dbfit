@@ -1,0 +1,13 @@
+---
+Suites
+Test
+saveId: 1208658493578
+ticketId: 8666706059965462423
+---
+|Store Query|select n from ( select 1 as n from sysibm.sysdummy1 union select 2 as n from sysibm.sysdummy1 union select 3 as n from sysibm.sysdummy1) as A |firsttable|
+
+|query|<<firsttable|
+|n|
+|1|
+|2|
+|3|

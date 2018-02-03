@@ -1,0 +1,8 @@
+---
+Suite
+SymbolicLinks
+  DisabledTests: .DbFit.AcceptanceTests.DotNetTests.SqlServerTests.DisabledTests
+saveId: 1206796425000
+ticketId: -2027860017541469723
+---
+!contents -R

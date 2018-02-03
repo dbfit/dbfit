@@ -1,0 +1,13 @@
+---
+Suites
+Test
+saveId: 1202090242720
+ticketId: 6295014176633485723
+---
+!3 IN/OUT params should be split into two columns - one for in, one for out
+
+
+|Execute procedure|MultiplyIO|
+|factor|val|val?|
+|10|5|50|
+|2|8|16|

@@ -1,0 +1,7 @@
+---
+saveId: 1203885204875
+ticketId: -8189828710062052845
+---
+!|dbfit.MySqlTest|
+
+!|Connect|localhost|dbfit_user|password|dbfit|

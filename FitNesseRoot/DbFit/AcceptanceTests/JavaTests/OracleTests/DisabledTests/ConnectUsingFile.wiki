@@ -1,0 +1,9 @@
+---
+Suite
+Suites
+SymbolicLinks
+  SimpleSelect: .DbFit.AcceptanceTests.DotNetTests.OracleTests.FlowMode.SimpleSelect
+saveId: 1198305446727
+ticketId: -4069203929286607687
+---
+!contents -R

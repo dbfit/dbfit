@@ -1,0 +1,10 @@
+---
+Suites
+Test
+saveId: 1210930258562
+ticketId: 1378110115678714734
+---
+!|Execute Procedure|TestDecimal|
+|inParam|copyOfInParam?|constOutParam?|
+|3.14|3.14|123.456|
+|0.79|0.79|123.456|

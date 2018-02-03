@@ -1,0 +1,9 @@
+---
+Suite
+SymbolicLinks
+  ObjectNames: .DbFit.AcceptanceTests.CoreTests.ObjectNames
+  StoredProcWithException: .DbFit.AcceptanceTests.JavaTests.TeradataTests.LibraryTests.StoredProcWithException
+saveId: 1180578664406
+ticketId: -6700603202119823952
+---
+!contents -R

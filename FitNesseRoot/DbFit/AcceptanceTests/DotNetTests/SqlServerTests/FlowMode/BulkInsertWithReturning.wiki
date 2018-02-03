@@ -1,0 +1,26 @@
+---
+Test
+saveId: 1193063125759
+ticketId: -952519937714030788
+---
+|execute| delete from users|
+
+!|Insert|users|
+|username|name|userid?|
+|pera|Petar Detlic|>>pera|
+|Mika|Mitar Miric|>>mika|
+|Zeka|Dusko Dugousko|>>zeka|
+|DevNull|null|>>nll|
+
+!|Query|Select * from users|
+|username|name?|userid?|
+|pera|Petar Detlic|<<pera|
+|Mika|Mitar Miric|<<mika|
+|Zeka|Dusko Dugousko|<<zeka|
+|DevNull|null|<<nll|
+
+|set parameter|userid|<<zeka|
+
+|Query|Select * from users where !-UserId-!=@userid|
+|username|name|userid|
+|Zeka|Dusko Dugousko|<<zeka|

@@ -1,0 +1,14 @@
+---
+Suites
+Test
+saveId: 1186169251137
+ticketId: -3144367955272772046
+---
+!3 !-MySql-! test framework allows using @xxx as parameter format
+ 
+|Set Parameter|depth|3|
+
+|Query|SELECT @depth+n as n FROM ( SELECT 1 as n union select 2 union select 3 union select 4) x where n<@depth |
+|n|
+|4|
+|5|

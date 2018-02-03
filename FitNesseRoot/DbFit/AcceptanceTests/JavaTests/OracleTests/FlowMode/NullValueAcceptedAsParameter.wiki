@@ -1,0 +1,12 @@
+---
+Test
+saveId: 1196048953967
+ticketId: -5479996793042959708
+---
+Null value should be accepted as parameter
+
+|Set Parameter|myid|null|
+
+|Query|Select decode(:myid,null,-1,0) as val from dual|
+|val|
+|-1|

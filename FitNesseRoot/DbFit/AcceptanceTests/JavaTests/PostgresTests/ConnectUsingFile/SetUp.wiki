@@ -1,0 +1,10 @@
+---
+saveId: 1226704719901
+ticketId: -3457629953508993450
+---
+(override setup so that parent setup does not load)
+
+!|dbfit.PostgresTest|
+
+|Connect using file|DbfitPostgresDBConnection.properties|
+

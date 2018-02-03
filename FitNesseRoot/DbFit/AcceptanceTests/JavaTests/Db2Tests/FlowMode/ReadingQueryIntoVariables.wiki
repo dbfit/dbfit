@@ -1,0 +1,9 @@
+---
+Suites
+Test
+saveId: 1208658847359
+ticketId: 3602697009348710023
+---
+!|query|select current date as currd from sysibm.sysdummy1|
+|currd?|
+|>>tsevt|

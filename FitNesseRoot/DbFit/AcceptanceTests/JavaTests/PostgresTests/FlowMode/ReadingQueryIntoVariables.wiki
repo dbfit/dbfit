@@ -1,0 +1,9 @@
+---
+Suites
+Test
+saveId: 1186169377613
+ticketId: 7800605536668188948
+---
+!|query|select now() as currd|
+|currd?|
+|>>tsevt|

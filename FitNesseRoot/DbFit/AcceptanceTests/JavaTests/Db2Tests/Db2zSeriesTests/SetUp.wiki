@@ -1,0 +1,8 @@
+---
+Help
+Static
+Suites
+---
+!|dbfit.DB2zTest|
+
+!|Connect|localhost:50000|DFTEST|DFTEST|DBFIT|

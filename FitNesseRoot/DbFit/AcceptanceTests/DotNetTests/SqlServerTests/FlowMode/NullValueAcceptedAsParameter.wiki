@@ -1,0 +1,13 @@
+---
+Test
+saveId: 1172680562751
+ticketId: -4279852116961544408
+---
+Null value should be accepted as parameter
+
+
+|Set Parameter|myid|null|
+
+|Query|Select (case when @myid is null then -1 else 0 end) as val|
+|val|
+|-1|

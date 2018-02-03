@@ -1,0 +1,8 @@
+---
+Help: (Linux, Unix, Windows)
+LastModifyingUser: mpatrick
+Suite
+SymbolicLinks
+  FlowMode: .DbFit.AcceptanceTests.JavaTests.Db2Tests.FlowMode
+---
+!contents -R2 -g -p -f -h

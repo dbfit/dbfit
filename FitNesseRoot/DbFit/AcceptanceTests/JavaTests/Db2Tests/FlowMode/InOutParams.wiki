@@ -1,0 +1,11 @@
+---
+Suites
+Test
+saveId: 1208742509875
+ticketId: -4642044864352315555
+---
+IN/OUT params need to be specified twice
+
+!|execute procedure |MultiplyIO|
+|factor |val |val?|
+|5 |10 |50|

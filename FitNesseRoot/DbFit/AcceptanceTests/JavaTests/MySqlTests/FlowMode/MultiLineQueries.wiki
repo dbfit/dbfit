@@ -1,0 +1,17 @@
+---
+Suites
+Test
+saveId: 1204408668724
+ticketId: 420441854781364368
+---
+|Ordered Query|!-
+select n from (
+ select 1 as n union
+ select 2 union 
+ select 3) 
+x
+-!|
+|n|
+|1|
+|2|
+|3|

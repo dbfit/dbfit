@@ -1,0 +1,14 @@
+---
+Help: (Shared Tests)
+LastModifyingUser: mpatrick
+Suite
+Suites: (Shared Tests)
+SymbolicLinks
+  CommitAndRollback: .DbFit.AcceptanceTests.LibraryTests.CommitAndRollback
+  CommonSuite: .DbFit.AcceptanceTests.CoreTests.CommonSuite
+  ObjectNames: .DbFit.AcceptanceTests.CoreTests.ObjectNames
+  StoredProcNoParams: .DbFit.AcceptanceTests.CoreTests.StoredProcNoParams
+saveId: 1208652118171
+ticketId: 778780122649681989
+---
+!contents -R

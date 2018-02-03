@@ -1,0 +1,21 @@
+---
+Suites
+Test
+saveId: 1204399695611
+ticketId: -2916918529138557195
+---
+|insert|Users|
+|Name|Username|
+|arthur dent|adent|
+|ford prefect|fpref|
+|zaphod beeblebrox|zaphod|
+
+|update|USERS|
+|USERNAME=|NAME|
+|adent2|arthur dent|
+
+|query|select * from Users|
+|name|username|
+|arthur dent|adent2|
+|ford prefect|fpref|
+|zaphod beeblebrox|zaphod|

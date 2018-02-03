@@ -1,0 +1,10 @@
+---
+saveId: 1203519319065
+ticketId: 706943049392670924
+---
+(override setup so that parent setup does not load)
+
+!|dbfit.MySqlTest|
+
+|Connect using file|MySQLConnection.properties|
+

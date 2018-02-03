@@ -1,0 +1,9 @@
+---
+Suites
+Test
+saveId: 1208656025406
+ticketId: 1921781780922433191
+---
+!|Query|Select 1 as x from sysibm.sysdummy1|
+|x|
+|1|

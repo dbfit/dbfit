@@ -1,0 +1,18 @@
+---
+Suites
+Test
+saveId: 1228861894872
+ticketId: 3050434965246507092
+---
+Parameter values persist between statements - they are not cleared after a statement is executed
+
+|Set parameter|p1|val1|
+
+|Query|select _:p1  as what|
+|what|
+|val1|
+
+
+|Query|select _:p1 as whatnext|
+|whatnext|
+|val1|

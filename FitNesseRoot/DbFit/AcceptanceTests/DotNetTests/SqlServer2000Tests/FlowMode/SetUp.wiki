@@ -1,0 +1,7 @@
+---
+saveId: 1199740269218
+ticketId: -222044497652178605
+---
+!|dbfit.SqlServer2000Test|
+
+!|Connect|LOCALHOST\SQLEXPRESS|FitNesseUser|FitNesseUser|FitNesseTestDB|

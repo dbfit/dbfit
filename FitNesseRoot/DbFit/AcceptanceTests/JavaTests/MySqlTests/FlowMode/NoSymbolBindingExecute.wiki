@@ -1,0 +1,15 @@
+---
+Help
+Suites
+Test
+saveId: 1218627583122
+ticketId: 8416496979834800156
+---
+
+|set option|bind symbols|false|
+
+|execute| insert into users (name, username) values ('@hey','uuu')|
+
+|query|select * from users|
+|name|username|
+|@hey|uuu|

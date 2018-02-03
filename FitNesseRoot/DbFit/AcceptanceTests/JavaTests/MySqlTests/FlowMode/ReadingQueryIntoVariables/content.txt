@@ -1,3 +1,0 @@
-!|query|select now() as currd|
-|currd?|
-|>>tsevt|
