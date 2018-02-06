@@ -8,6 +8,7 @@ public class Options {
     public static String OPTION_BIND_SYMBOLS = "bindsymbols";
     public static String OPTION_DEBUG_LOG = "debuglog";
     public static String OPTION_AUTO_COMMIT = "autocommit";
+    public static String OPTION_PARAMETER_PATTERN = "parameterpattern";
 
     private static Map<String, String> options = new HashMap<String, String>();
 
@@ -21,6 +22,7 @@ public class Options {
         setOption(OPTION_BIND_SYMBOLS, "true");
         setOption(OPTION_DEBUG_LOG, "false");
         setOption(OPTION_AUTO_COMMIT, "false");
+        setOption(OPTION_PARAMETER_PATTERN, "");
     }
 
     public static boolean isFixedLengthStringParsing() {

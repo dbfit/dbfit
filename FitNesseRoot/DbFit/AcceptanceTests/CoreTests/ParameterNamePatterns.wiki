@@ -1,0 +1,37 @@
+---
+Test
+---
+|Execute Ddl|CREATE TABLE testtbl(id INTEGER, val VARCHAR(100))|
+
+!define string1val {This is string one}
+
+|Set Parameter|integer1|1|java.lang.Integer|
+
+|Set Parameter|string1|${string1val}|
+
+|Execute|INSERT INTO testtbl(id, val) VALUES (${DEFAULT_PARAM1_NAME}, ${DEFAULT_PARAM2_NAME})|
+
+|Query|SELECT id, val FROM testtbl|
+|id|val|
+|1 |${string1val}|
+
+|Set Option|Parameter Pattern|!([A-Za-z0-9_]+)|
+
+|Execute|INSERT INTO testtbl(id, val) VALUES (!integer1, !string1)|
+
+|Query|SELECT id, val FROM testtbl|
+|id|val|
+|1 |${string1val}|
+|1 |${string1val}|
+
+|Set Option|Parameter Pattern||
+
+|Execute|INSERT INTO testtbl(id, val) VALUES (${DEFAULT_PARAM1_NAME}, ${DEFAULT_PARAM2_NAME})|
+
+|Query|SELECT id, val FROM testtbl|
+|id|val|
+|1 |${string1val}|
+|1 |${string1val}|
+|1 |${string1val}|
+
+|Execute Ddl|DROP TABLE testtbl|

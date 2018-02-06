@@ -13,12 +13,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.regex.Pattern;
 
 @DatabaseEnvironment(name="MySql", driver="com.mysql.jdbc.Driver")
 public class MySqlEnvironment extends AbstractDbEnvironment {
     public MySqlEnvironment(String driverClassName) {
         super(driverClassName);
+        defaultParamPatternString = "@([A-Za-z0-9_]+)";
     }
 
     public boolean supportsOuputOnInsert() {
@@ -31,20 +31,6 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
 
     protected String getConnectionString(String dataSource, String database) {
         return "jdbc:mysql://" + dataSource + "/" + database;
-    }
-
-    private static String paramNamePattern = "@([A-Za-z0-9_]+)";
-    private static Pattern paramRegex = Pattern.compile(paramNamePattern);
-
-    public Pattern getParameterPattern() {
-        return paramRegex;
-    }
-
-    // mysql jdbc driver does not support named parameters - so just map them
-    // to standard jdbc question marks
-    protected String parseCommandText(String commandText) {
-        commandText = commandText.replaceAll(paramNamePattern, "?");
-        return super.parseCommandText(commandText);
     }
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)

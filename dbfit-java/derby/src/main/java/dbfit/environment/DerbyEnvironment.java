@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 import static java.util.Objects.requireNonNull;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
@@ -34,6 +33,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
 
     public DerbyEnvironment(String driverClassName) {
         super(driverClassName);
+        defaultParamPatternString = "@([A-Za-z0-9_]+)";
     }
 
     @Override
@@ -44,14 +44,6 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
     @Override
     protected String getConnectionString(String dataSource, String database) {
         return String.format("jdbc:derby://%s/%s", dataSource, database);
-    }
-
-    private static final String paramNamePattern = "@([A-Za-z0-9_]+)";
-    private static final Pattern paramRegex = Pattern.compile(paramNamePattern);
-
-    @Override
-    public Pattern getParameterPattern() {
-        return paramRegex;
     }
 
     @Override

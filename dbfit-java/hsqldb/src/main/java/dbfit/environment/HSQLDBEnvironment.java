@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import dbfit.util.Direction;
 
@@ -32,6 +31,7 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
 
     public HSQLDBEnvironment(String driverClassName) {
         super(driverClassName);
+        defaultParamPatternString = "@([A-Za-z0-9_]+)";
     }
 
     /**
@@ -55,14 +55,6 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
     @Override
     protected String getConnectionString(String dataSource, String database) {
         throw new UnsupportedOperationException();
-    }
-
-    private static final String paramNamePattern = "@([A-Za-z0-9_]+)";
-    private static final Pattern paramRegex = Pattern.compile(paramNamePattern);
-
-    @Override
-    protected Pattern getParameterPattern() {
-        return paramRegex;
     }
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)

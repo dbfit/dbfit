@@ -15,12 +15,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.regex.Pattern;
 
 @DatabaseEnvironment(name="Postgres", driver="org.postgresql.Driver")
 public class PostgresEnvironment extends AbstractDbEnvironment {
     public PostgresEnvironment(String driverClassName) {
         super(driverClassName);
+        defaultParamPatternString = "_:([A-Za-z0-9_]+)";
     }
 
     protected String getConnectionString(String dataSource) {
@@ -29,20 +29,6 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
 
     protected String getConnectionString(String dataSource, String database) {
         return "jdbc:postgresql://" + dataSource + "/" + database;
-    }
-
-    private static String paramNamePattern = "_:([A-Za-z0-9_]+)";
-    private static Pattern paramsNames = Pattern.compile(paramNamePattern);
-
-    public Pattern getParameterPattern() {
-        return paramsNames;
-    }
-
-    // postgres jdbc driver does not support named parameters - so just map them
-    // to standard jdbc question marks
-    protected String parseCommandText(String commandText) {
-        commandText = commandText.replaceAll(paramNamePattern, "?");
-        return super.parseCommandText(commandText);
     }
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)

@@ -15,12 +15,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.regex.Pattern;
 
 @DatabaseEnvironment(name="Netezza", driver="org.netezza.Driver")
 public class NetezzaEnvironment extends AbstractDbEnvironment {
     public NetezzaEnvironment(String driverClassName) {
         super(driverClassName);
+        defaultParamPatternString = "_:([A-Za-z0-9_]+)";
     }
 
     protected String getConnectionString(String dataSource) {
@@ -31,25 +31,11 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
         return "jdbc:netezza://" + dataSource + "/" + database;
     }
 
-    private static String paramNamePattern = "_:([A-Za-z0-9_]+)";
-    private static Pattern paramsNames = Pattern.compile(paramNamePattern);
-
-    public Pattern getParameterPattern() {
-        return paramsNames;
-    }
-
     // override the buildInsertPreparedStatement to leave out RETURN_GENERATED_KEYS
     public PreparedStatement buildInsertPreparedStatement(String tableName,
             DbParameterAccessor[] accessors) throws SQLException {
         return getConnection().prepareStatement(
                 buildInsertCommand(tableName, accessors));
-    }
-
-    // netezza jdbc driver does not support named parameters - so just map them
-    // to standard jdbc question marks
-    protected String parseCommandText(String commandText) {
-        commandText = commandText.replaceAll(paramNamePattern, "?");
-        return super.parseCommandText(commandText);
     }
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
