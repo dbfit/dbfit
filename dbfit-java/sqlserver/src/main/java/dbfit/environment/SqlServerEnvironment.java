@@ -17,7 +17,6 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 import java.util.Properties;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
@@ -27,7 +26,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
 
     public SqlServerEnvironment(String driverClassName) {
         super(driverClassName);
-
+        defaultParamPatternString = "@([A-Za-z0-9_]+)";
         TypeNormaliserFactory.setNormaliser(java.sql.Time.class,
                 new MillisecondTimeNormaliser());
     }
@@ -51,18 +50,6 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
         // Add sendTimeAsDatetime=false option to enforce sending Time as
         // java.sql.Time (otherwise some precision is lost in conversions)
         super.connect(connectionString + ";sendTimeAsDatetime=false", info);
-    }
-
-    private static String paramNamePattern = "@([A-Za-z0-9_]+)";
-    private static Pattern paramRegex = Pattern.compile(paramNamePattern);
-
-    public Pattern getParameterPattern() {
-        return paramRegex;
-    }
-
-    protected String parseCommandText(String commandText) {
-        commandText = commandText.replaceAll(paramNamePattern, "?");
-        return super.parseCommandText(commandText);
     }
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)

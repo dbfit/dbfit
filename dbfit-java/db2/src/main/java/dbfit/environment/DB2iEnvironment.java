@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import dbfit.util.Direction;
 import static dbfit.util.Direction.*;
@@ -23,18 +22,7 @@ public class DB2iEnvironment extends AbstractDbEnvironment {
 
     public DB2iEnvironment(String driverClassName) {
         super(driverClassName);
-    }
-
-    protected String parseCommandText(String commandText) {
-        commandText = commandText.replaceAll(paramNamePattern, "?");
-        return super.parseCommandText(commandText);
-    }
-
-    private static String paramNamePattern = "[@:]([A-Za-z0-9_]+)";
-    private static Pattern paramRegex = Pattern.compile(paramNamePattern);
-
-    public Pattern getParameterPattern() {
-        return paramRegex;
+        defaultParamPatternString = "[@:]([A-Za-z0-9_]+)";
     }
 
     protected String getConnectionString(String dataSource) {
