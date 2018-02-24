@@ -35,12 +35,6 @@ public class ExecuteProcedureExpectException extends ExecuteProcedure {
 
     @Override
     protected int getExpectedErrorCode() {
-        if (!excNumberDefined) return ExpectedBehaviour.ANY_EXCEPTION;
-        return ExpectedBehaviour.SPECIFIC_EXCEPTION;
-    }
-
-    @Override
-    protected int getExpectedErrorCode() {
         return excNumberExpected;
     }
 

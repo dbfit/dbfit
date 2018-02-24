@@ -10,9 +10,6 @@ import java.sql.SQLException;
 public class ExecuteProcedure extends DbObjectExecutionFixture {
     protected DBEnvironment environment;
     protected String procName;
-    private boolean exceptionExpected = false;
-    private boolean excNumberDefined = false;
-    private String excNumberExpected;
 
     public ExecuteProcedure() {
         this.environment = DbEnvironmentFactory.getDefaultEnvironment();
@@ -21,9 +18,6 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
     public ExecuteProcedure(DBEnvironment dbEnvironment, String procName) {
         this.procName = procName;
         this.environment = dbEnvironment;
-        this.exceptionExpected = true;
-        this.excNumberDefined = true;
-        this.excNumberExpected = expectedErrorCode;
     }
 
     public ExecuteProcedure(DBEnvironment dbEnvironment, String procName,

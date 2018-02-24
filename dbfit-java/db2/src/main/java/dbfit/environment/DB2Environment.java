@@ -182,8 +182,8 @@ public class DB2Environment extends AbstractDbEnvironment {
     public String getActualErrorCode(SQLException e) {
 System.out.println("in DB2 getActualErrorCode");
 if (e.getNextException() != null) {
-	System.out.println("next exception: sqlstate: " + e.getNextException().getSQLState());
-	System.out.println("next exception: errorcode: " + e.getNextException().getErrorCode());	
+System.out.println("next exception: sqlstate: " + e.getNextException().getSQLState());
+System.out.println("next exception: errorcode: " + e.getNextException().getErrorCode());
 }
         //return Integer.toString(e.getErrorCode());
         return e.getSQLState();
