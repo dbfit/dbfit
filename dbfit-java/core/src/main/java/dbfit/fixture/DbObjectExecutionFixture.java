@@ -43,8 +43,8 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     /**
      * override this method and supply the expected exception number, if one is expected
      */
-    protected int getExpectedErrorCode() {
-        return 0;
+    protected String getExpectedErrorCode() {
+        return "0";
     }
 
     /**
@@ -60,6 +60,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     protected abstract DbObject getTargetDbObject() throws SQLException;
 
     private void runTable() throws Exception {
+System.out.println("DbObjectExecutionFixture: runTable");
         try (StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray())) {
             try {
                 preparedStatement.run();
@@ -67,9 +68,10 @@ public abstract class DbObjectExecutionFixture extends Fixture {
                     throw new SQLException("Expected exception but none thrown");
                 }
             } catch (SQLException e) {
+System.out.println("DbObjectExecutionFixture: runTable: message: " + e.getMessage() + ", errorCode: " + e.getErrorCode() + ", SQLState: " + e.getSQLState());
                 if (getExpectedBehaviour() != ExpectedBehaviour.ANY_EXCEPTION) {
-                    if (getExpectedErrorCode() != e.getErrorCode()) {
-                        throw new SQLException("Caught exception with error code " + e.getErrorCode());
+                    if (!getExpectedErrorCode().equals(e.getSQLState())) {
+                        throw new SQLException("Caught exception with error code " + e.getSQLState(), e.getSQLState());
                     }
                 }
             }
@@ -81,6 +83,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
      * the target object only once
      */
     public void doRows(Parse rows) {
+System.out.println("DbObjectExecutionFixture: doRows");
         try {
             dbObject = getTargetDbObject();
             if (dbObject == null) {
@@ -168,6 +171,7 @@ public abstract class DbObjectExecutionFixture extends Fixture {
      * execute a single row
      */
     private void runRow(Parse row) throws Throwable {
+System.out.println("DbObjectExecutionFixture: doRows");
         //first set input params
         Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(asCellList(row));
         for (DbParameterAccessor inputAccessor : accessors.getInputAccessors()) {

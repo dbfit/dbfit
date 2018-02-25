@@ -1,0 +1,15 @@
+|Rollback|
+
+|Execute Ddl|${DROPUSERTABLE}|
+
+|Execute Ddl|${DROPMAKEUSERPROC}|
+
+|Execute Ddl|${DROPCALCLENGTHPROC}|
+
+|Execute Ddl|${DROPMULTIPLYPROC}|
+
+|Execute Ddl|${DROPRAISEERRORWITHPARAMSPROC}|
+
+|Execute Ddl|${DROPRAISEERRORNOPARAMSPROC}|
+
+|Commit|

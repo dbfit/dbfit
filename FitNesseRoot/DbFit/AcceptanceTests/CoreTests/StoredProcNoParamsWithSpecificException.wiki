@@ -3,4 +3,6 @@ Test
 ---
 !3 Use an explicit error code with ''Execute Procedure Expect Exception'' to test for an explicit error code
 
-!|Execute Procedure Expect Exception|raise_error_no_params|20001|
+!|Execute Procedure Expect Exception|raise_error_no_params|38123|
+
+!|Execute Procedure Expect Exception|raise_error_no_params|
