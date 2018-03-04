@@ -16,4 +16,4 @@ create function Multiply(n1 int, n2 int) returns int deterministic return n1 * n
 
 CREATE PROCEDURE raise_error_no_params() BEGIN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'test exception'; END;
 
-CREATE PROCEDURE raise_error_with_params(IN name VARCHAR, OUT strlength INTEGER) BEGIN IF (name = 'xx') THEN SIGNAL SQLSTATE '20001' SET MESSAGE_TEXT = 'test exception'; END IF; SET strlength = LENGTH(name); END;
+CREATE PROCEDURE raise_error_with_params(IN name VARCHAR(100), OUT strlength INTEGER) BEGIN IF (name = 'xx') THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'test exception'; END IF; SET strlength = LENGTH(name); END;

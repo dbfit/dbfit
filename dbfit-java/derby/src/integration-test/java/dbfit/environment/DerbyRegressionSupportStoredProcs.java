@@ -27,7 +27,7 @@ public class DerbyRegressionSupportStoredProcs {
         return n1 * n2;
     }
 
-    public static void raise_error_with_params(String name, int strlength) throws SQLException {
+    public static void raise_error_with_params(String name, int[] strlength) throws SQLException {
         try (
             // "jdbc:default:connection" tells the DriverManager to use the existing connection.
             Connection conn = DriverManager.getConnection("jdbc:default:connection");

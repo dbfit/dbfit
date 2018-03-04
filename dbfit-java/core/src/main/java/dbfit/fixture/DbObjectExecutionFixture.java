@@ -70,7 +70,7 @@ System.out.println("DbObjectExecutionFixture: runTable");
             } catch (SQLException e) {
 System.out.println("DbObjectExecutionFixture: runTable: message: " + e.getMessage() + ", errorCode: " + e.getErrorCode() + ", SQLState: " + e.getSQLState());
                 if (getExpectedBehaviour() != ExpectedBehaviour.ANY_EXCEPTION) {
-                    if (!getExpectedErrorCode().equals(e.getSQLState())) {
+                    if (!getExpectedErrorCode().equals(getActualErrorCode(e))) {
                         throw new SQLException("Caught exception with error code " + e.getSQLState(), e.getSQLState());
                     }
                 }

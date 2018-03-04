@@ -41,7 +41,7 @@ System.out.println("ExecuteProcedureExpectException: ");
 
     @Override
     protected String getActualErrorCode(SQLException e) {
-System.out.println("in Execute projecure getActualErrorCode");
+System.out.println("ExecuteProcedureExpectException: getActualErrorCode");
         return environment.getActualErrorCode(e);
     }
 }

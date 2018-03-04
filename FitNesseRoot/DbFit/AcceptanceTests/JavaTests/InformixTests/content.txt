@@ -1,1 +1,3 @@
+!define EXCEPTION_NUMBER {-746}
+
 !contents -R2 -g -p -f -h
