@@ -2,5 +2,6 @@
 !define LONG_COLUMN_NAME {C234567890_234567890_234567890}
 !define DEFAULT_PARAM1_NAME {:integer1}
 !define DEFAULT_PARAM2_NAME {:string1}
+!define EXCEPTION_NUMBER {20001}
 
 !contents -R

@@ -197,6 +197,20 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE [dbo].[raise_error_no_params]
+AS
+BEGIN
+    THROW 51000, 'There was an error', 1;
+END;
+GO
+
+CREATE PROCEDURE [dbo].[raise_error_with_params](@name VARCHAR(100), @strlength INT OUTPUT)
+AS
+BEGIN
+    THROW 51000, 'There was an error', 1;
+END;
+GO
+
 USE FitNesseTestDB2
 GO
 

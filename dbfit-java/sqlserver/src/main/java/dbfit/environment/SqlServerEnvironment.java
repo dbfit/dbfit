@@ -244,5 +244,12 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
         sb.append(")");
         return sb.toString();
     }
+
+    //@Override
+    public String getActualErrorCode(SQLException e) {
+System.out.println("SqlServerEnvironment: getActualErrorCode");
+        return Integer.toString(e.getErrorCode());
+        //return e.getSQLState();
+    }
 }
 
