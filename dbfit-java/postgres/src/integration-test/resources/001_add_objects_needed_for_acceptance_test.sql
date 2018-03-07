@@ -86,7 +86,7 @@ LANGUAGE plpgsql
 ;
 
 CREATE OR REPLACE FUNCTION raise_error_with_params(name VARCHAR(100), OUT strlength INTEGER)
-RETURNS VOID
+RETURNS INTEGER
 AS
 $body$
 BEGIN
