@@ -115,11 +115,6 @@ begin
 end;
 /
 
-set define on
-
-connect / as sysdba
-
-set verify off
 
 create user dfsyntest identified by dfsyntest default tablespace &&tbs_data;
 
