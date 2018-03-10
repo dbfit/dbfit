@@ -20,7 +20,6 @@ public class ExecuteProcedureExpectException extends ExecuteProcedure {
         this.environment = dbEnvironment;
         this.excNumberDefined = true;
         this.excNumberExpected = expectedErrorCode;
-System.out.println("ExecuteProcedureExpectException: ");
     }
 
     public ExecuteProcedureExpectException(DBEnvironment dbEnvironment, String procName) {
@@ -41,7 +40,6 @@ System.out.println("ExecuteProcedureExpectException: ");
 
     @Override
     protected String getActualErrorCode(SQLException e) {
-System.out.println("ExecuteProcedureExpectException: getActualErrorCode");
         return environment.getActualErrorCode(e);
     }
 }

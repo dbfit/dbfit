@@ -17,7 +17,6 @@ public class PreparedStatements {
     }
 
     public static String buildFunctionCall(String procName, int numberOfParameters) {
-System.out.println("PreparedStatements: buildFunctionCall: name: " + procName);
         return "{ ? = call " + procName + "(" + buildParamList(numberOfParameters - 1) + ")}";
     }
 }

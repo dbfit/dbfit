@@ -60,7 +60,6 @@ public abstract class DbObjectExecutionFixture extends Fixture {
     protected abstract DbObject getTargetDbObject() throws SQLException;
 
     private void runTable() throws Exception {
-System.out.println("DbObjectExecutionFixture: runTable");
         try (StatementExecution preparedStatement = dbObject.buildPreparedStatement(accessors.toArray())) {
             try {
                 preparedStatement.run();
@@ -68,10 +67,8 @@ System.out.println("DbObjectExecutionFixture: runTable");
                     throw new SQLException("Expected exception but none thrown");
                 }
             } catch (SQLException e) {
-System.out.println("DbObjectExecutionFixture: runTable: message: " + e.getMessage() + ", errorCode: " + e.getErrorCode() + ", SQLState: " + e.getSQLState());
                 if (getExpectedBehaviour() != ExpectedBehaviour.ANY_EXCEPTION) {
                     if (!getExpectedErrorCode().equals(getActualErrorCode(e))) {
-System.out.println("DbObjectExecutionFixture: runTable: " + getExpectedErrorCode() + " vs " + getActualErrorCode(e));
                         throw new SQLException("Caught exception with error code " + e.getSQLState(), e.getSQLState());
                     }
                 }
@@ -84,7 +81,6 @@ System.out.println("DbObjectExecutionFixture: runTable: " + getExpectedErrorCode
      * the target object only once
      */
     public void doRows(Parse rows) {
-System.out.println("DbObjectExecutionFixture: doRows");
         try {
             dbObject = getTargetDbObject();
             if (dbObject == null) {
@@ -172,7 +168,6 @@ System.out.println("DbObjectExecutionFixture: doRows");
      * execute a single row
      */
     private void runRow(Parse row) throws Throwable {
-System.out.println("DbObjectExecutionFixture: doRows");
         //first set input params
         Map<DbParameterAccessor, Parse> cellMap = accessors.zipWith(asCellList(row));
         for (DbParameterAccessor inputAccessor : accessors.getInputAccessors()) {

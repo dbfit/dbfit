@@ -21,7 +21,7 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
     }
 
     public ExecuteProcedure(DBEnvironment dbEnvironment, String procName,
-                            boolean exceptionExpected) {
+            boolean exceptionExpected) {
         this.procName = procName;
         this.environment = dbEnvironment;
     }

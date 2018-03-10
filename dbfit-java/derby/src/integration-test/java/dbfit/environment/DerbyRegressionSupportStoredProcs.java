@@ -33,7 +33,6 @@ public class DerbyRegressionSupportStoredProcs {
             Connection conn = DriverManager.getConnection("jdbc:default:connection");
             Statement stmt = conn.createStatement();
         ) {
-System.out.println("DerbyRegressionSupportStoredProcs: raise_error_with_params");
             if (name.equals("xx")) {
                 throw new SQLException("test exception", "38123");
             }
@@ -41,13 +40,12 @@ System.out.println("DerbyRegressionSupportStoredProcs: raise_error_with_params")
     }
 
     public static void raise_error_no_params() throws SQLException {
-        //try (
-        //    // "jdbc:default:connection" tells the DriverManager to use the existing connection.
-        //    Connection conn = DriverManager.getConnection("jdbc:default:connection");
-        //    Statement stmt = conn.createStatement();
-        //) {
-System.out.println("DerbyRegressionSupportStoredProcs: raise_error_no_params");
+        try (
+            // "jdbc:default:connection" tells the DriverManager to use the existing connection.
+            Connection conn = DriverManager.getConnection("jdbc:default:connection");
+            Statement stmt = conn.createStatement();
+        ) {
             throw new SQLException("test exception", "38123");
-        //}
+        }
     }
 }
