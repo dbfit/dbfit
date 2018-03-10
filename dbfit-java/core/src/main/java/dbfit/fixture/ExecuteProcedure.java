@@ -20,12 +20,6 @@ public class ExecuteProcedure extends DbObjectExecutionFixture {
         this.environment = dbEnvironment;
     }
 
-    public ExecuteProcedure(DBEnvironment dbEnvironment, String procName,
-            boolean exceptionExpected) {
-        this.procName = procName;
-        this.environment = dbEnvironment;
-    }
-
     @Override
     protected DbObject getTargetDbObject() throws SQLException {
         if (procName==null) procName=args[0];
