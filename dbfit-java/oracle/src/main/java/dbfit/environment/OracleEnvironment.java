@@ -552,6 +552,5 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     @Override
     public String getActualErrorCode(SQLException e) {
         return Integer.toString(e.getErrorCode());
-        //return e.getSQLState();
     }
 }
