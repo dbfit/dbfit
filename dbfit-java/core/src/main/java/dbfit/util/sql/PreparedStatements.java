@@ -15,8 +15,4 @@ public class PreparedStatements {
         String voidInvocation = name + "(" + buildParamList(numArgs) + ")";
         return "{ " + resultAssignment + "call " + voidInvocation + " }";
     }
-
-    public static String buildFunctionCall(String procName, int numberOfParameters) {
-        return "{ ? = call " + procName + "(" + buildParamList(numberOfParameters - 1) + ")}";
-    }
 }
