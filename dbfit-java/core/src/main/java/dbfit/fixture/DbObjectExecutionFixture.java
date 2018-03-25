@@ -69,8 +69,9 @@ public abstract class DbObjectExecutionFixture extends Fixture {
             } catch (SQLException e) {
                 if (getExpectedBehaviour() != ExpectedBehaviour.ANY_EXCEPTION) {
                     if (!getExpectedErrorCode().equals(getActualErrorCode(e))) {
-                        throw new SQLException("Caught exception with SQLState: " + e.getSQLState()
-                            + " and Error Code: " + e.getErrorCode(), e.getSQLState(), e.getErrorCode());
+                        throw new SQLException("Caught exception with error code: " + getActualErrorCode(e)
+                            + " (SQLState: " + e.getSQLState() + ", Error Code: " + e.getErrorCode() + ")"
+                            + " but was expecting: " + getExpectedErrorCode(), e.getSQLState(), e.getErrorCode());
                     }
                 }
             }
