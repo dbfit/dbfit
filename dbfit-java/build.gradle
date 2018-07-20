@@ -1,5 +1,5 @@
 ext {
-    fitNesseVersion = '20161106'
+    fitNesseVersion = '20180127'
     mockitoVersion = '2.2.2'
     junitVersion = '4.12'
 }
@@ -31,13 +31,6 @@ allprojects {
         }
     }
 
-    dependencies {
-        compile "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
-    }
-}
-
-subprojects {
-    jar.baseName = "dbfit-" + project.archivesBaseName
     repositories {
         flatDir {
             dirs "${rootProject.projectDir}/custom_libs"
@@ -51,6 +44,14 @@ subprojects {
             ivyPattern "https://aws.amazon.com/s3/ivy.xml"
         }
     }
+
+    dependencies {
+        compile "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
+    }
+}
+
+subprojects {
+    jar.baseName = "dbfit-" + project.archivesBaseName
 
     task libs(type: Copy) {
         from configurations.runtime
@@ -103,7 +104,7 @@ subprojects {
         file(connectionPropertiesFile).withInputStream { props.load(it) }
         return [props.username, props.password, props.service, props.database]
     }
-        
+
     task connectionFileProperties {
         doLast {
             copyConnectionProperties '.'
@@ -245,7 +246,7 @@ task assembleAll(dependsOn: subprojects.assemble) { }
 task libs(dependsOn: subprojects.libs) { }
 
 def publicCoreCompileDeps = [
-    'org.reflections:reflections:0.9.10',
+    'org.reflections:reflections:0.9.11',
     'commons-codec:commons-codec:1.10',
     'org.apache.commons:commons-lang3:3.4',
     'com.github.dbfit:fitlibrary:20091020'
@@ -396,7 +397,7 @@ project('teradata') {
     ext.connectionPropertiesFiles = ['TestDbConnectionDbFitTeradata.properties']
     ext.adminConnectionPropertiesFile = 'TestDbConnectionTeradataAdmin.properties'
 
-    task deploymentProperties.doLast {
+    deploymentProperties.doLast {
         ext {
             jdbcDriverClass = 'com.teradata.jdbc.TeraDriver'
             jdbcDriverUrlPrefix = 'jdbc:teradata://'

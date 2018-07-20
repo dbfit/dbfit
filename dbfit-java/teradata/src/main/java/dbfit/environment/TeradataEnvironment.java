@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 @DatabaseEnvironment(name="Teradata", driver="com.teradata.jdbc.TeraDriver")
 public class TeradataEnvironment extends AbstractDbEnvironment {
@@ -91,7 +90,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
     public TeradataEnvironment(String driverClassName) {
         super(driverClassName);
-
+        defaultParamPatternString = ":([A-Za-z0-9_]+)";
         TypeAdapter.registerParseDelegate(TeradataDatePeriod.class,
                 TeradataDatePeriodParseDelegate.class);
         TypeAdapter.registerParseDelegate(TeradataTimestampPeriod.class,
@@ -139,18 +138,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                 getConnection().commit();
             }
         };
-    }
-
-    private static String paramNamePattern = ":([A-Za-z0-9_]+)";
-    private static Pattern paramsNames = Pattern.compile(":([A-Za-z0-9_]+)");
-
-    public Pattern getParameterPattern() {
-        return paramsNames;
-    }
-
-    protected String parseCommandText(String commandText) {
-        commandText = commandText.replaceAll(paramNamePattern, "?");
-        return super.parseCommandText(commandText);
     }
 
     public Map<String, DbParameterAccessor> getAllProcedureParameters(

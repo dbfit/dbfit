@@ -10,7 +10,6 @@ import oracle.jdbc.OracleTypes;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
-import java.util.regex.Pattern;
 
 import fit.TypeAdapter;
 
@@ -215,6 +214,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
     public OracleEnvironment(String driverClassName) {
         super(driverClassName);
+        defaultParamPatternString = ":([A-Za-z0-9_]+)";
 
         // TypeAdapter.registerParseDelegate(oracle.sql.TIMESTAMP.class,
         // OracleTimestampParser.class);
@@ -251,12 +251,6 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                     "data source should be in host:port format - " + dataSource
                             + " specified");
         return "jdbc:oracle:thin:@" + dataSource + ":" + databaseName;
-    }
-
-    private static Pattern paramsNames = Pattern.compile(":([A-Za-z0-9_]+)");
-
-    public Pattern getParameterPattern() {
-        return paramsNames;
     }
 
     public Map<String, DbParameterAccessor> getAllProcedureParameters(

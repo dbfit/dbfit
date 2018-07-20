@@ -12,7 +12,6 @@ import dbfit.util.DbParameterAccessorsMapBuilder;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
-import java.util.regex.Pattern;
 
 import static dbfit.util.Direction.*;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
@@ -23,21 +22,7 @@ public class InformixEnvironment extends AbstractDbEnvironment {
     public InformixEnvironment(String driverClassName) {
         super(driverClassName);
         dbfitToJdbcTransformerFactory.setTransformer(dbfit.util.NormalisedBigDecimal.class, new BigDecimalExactClassTransformer());
-    }
-
-    private static final String paramNamePattern = "[@:]([A-Za-z0-9_]+)";
-
-    @Override
-    protected String parseCommandText(String commandText) {
-        commandText = commandText.replaceAll(paramNamePattern, "?");
-        return super.parseCommandText(commandText);
-    }
-
-    private static final Pattern paramRegex = Pattern.compile(paramNamePattern);
-
-    @Override
-    public Pattern getParameterPattern() {
-        return paramRegex;
+        defaultParamPatternString = "[@:]([A-Za-z0-9_]+)";
     }
 
     @Override
