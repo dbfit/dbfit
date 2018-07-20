@@ -14,8 +14,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 import java.util.Properties;
+import dbfit.util.Options;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
@@ -24,6 +24,7 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
 
     public SybaseEnvironment(String driverClassName) {
         super(driverClassName);
+        Options.setOption(Options.OPTION_PARAMETER_PATTERN, paramNamePattern);
     }
 
     public boolean supportsOuputOnInsert() {
@@ -48,16 +49,6 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
     }
 
     private static String paramNamePattern = "@([A-Za-z0-9_]+)";
-    private static Pattern paramRegex = Pattern.compile(paramNamePattern);
-
-    public Pattern getParameterPattern() {
-        return paramRegex;
-    }
-
-    protected String parseCommandText(String commandText) {
-        commandText = commandText.replaceAll(paramNamePattern, "?");
-        return super.parseCommandText(commandText);
-    }
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {

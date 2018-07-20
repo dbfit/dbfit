@@ -1,0 +1,10 @@
+---
+Test
+---
+Null value should be accepted as parameter
+
+|Set Parameter|myid|null|
+
+|Query|select (case when @myid is null then -1 else 1 end) as val|
+|val|
+|-1|
