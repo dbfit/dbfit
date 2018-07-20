@@ -22,7 +22,7 @@ task cleanDist {
     }
 }
 
-task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAll', ':dbfit-java:libs']) {
+task copyLocal(dependsOn: [':dbfit-java:assembleAll', ':dbfit-java:libs']) {
     doLast {
         copy {
             from 'LICENSE', 'README.md'
@@ -196,6 +196,8 @@ task start(type: Exec, dependsOn: [copyLocal, copyExtraLibs, copyTestLibs, copyC
     commandLine = cmdLine()
 }
 
+task prep(dependsOn: [copyLocal, copyTestLibs, copyExtraLibs, copyConnections, wikiDocs])
+
 task starthere(type: Exec, dependsOn: [copyLocal, copyExtraLibs, copyTestLibs, copyConnections]) {
     workingDir './dist'
     description = 'starts fitness with dbfit on top of real tests sources'
@@ -256,7 +258,8 @@ def proprietaryLibs() {
      '**/tdgssconfig*.jar',
      '**/nzjdbc*.jar',
      '**/sqljdbc*.jar',
-     '**/ifxjdbc*.jar'
+     '**/ifxjdbc*.jar',
+     '**/jconn4*.jar'
     ] as Set
 }
 
@@ -267,4 +270,3 @@ def experimentalItems() {
 def keepUncommitedTests() {
     project.hasProperty('keepTests') && keepTests != 'false'
 }
-
