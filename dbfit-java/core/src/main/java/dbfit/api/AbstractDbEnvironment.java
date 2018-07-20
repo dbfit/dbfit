@@ -116,7 +116,10 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
             String paramNames[] = extractParamNames(commandText);
             for (int i = 0; i < paramNames.length; i++) {
                 Object value = testHost.getSymbolValue(paramNames[i]);
-                cs.setObject(i + 1, value);
+                if (value == null)
+                	cs.setNull(i + 1, java.sql.Types.VARCHAR);
+                else
+                	cs.setObject(i + 1, value);
             }
         }
         return cs;
