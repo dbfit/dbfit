@@ -1,0 +1,1 @@
+CREATE USER dbfit IDENTIFIED BY dbfituser;
