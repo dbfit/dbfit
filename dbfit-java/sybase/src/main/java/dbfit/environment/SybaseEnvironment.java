@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -110,6 +111,7 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
     private static List<String> timeTypes = Arrays.asList("TIME");
 
     private static int getSqlType(String dataType) {
+System.out.println("SybaseEnvironment: getSqlType: dataType: " + dataType);
         // todo:strip everything from first blank
         dataType = normaliseTypeName(dataType);
 
@@ -144,6 +146,7 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
     }
 
     public Class<?> getJavaClass(String dataType) {
+System.out.println("SybaseEnvironment: getJavaClass: " + dataType);
         dataType = normaliseTypeName(dataType);
         if (stringTypes.contains(dataType))
             return String.class;
@@ -204,6 +207,16 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
         }
 
         return params.toMap();
+    }
+
+    @Override
+    public void bindStatementParameter(PreparedStatement statement, int parameterIndex, Object value)
+            throws SQLException {
+        if (value == null) {
+            statement.setNull(parameterIndex, Types.CHAR);
+        } else {
+            statement.setObject(parameterIndex, value);
+        }
     }
 
     public String buildInsertCommand(String tableName,
