@@ -78,7 +78,6 @@ then
 fi
 
 DOSETUP=
-DORPM=
 
 # Check for presence of unzipped TAR installation package.
 if [ -d ${SYBASE_INST_ROOT} ]
@@ -102,29 +101,26 @@ then
     cd $OLDPWD
 fi
 
-if [ "$DOSETUP" ]
-then
-    cd ${SYBASE_INST_ROOT}/Linux64-iq*
-    if [ $? -ne 0 ]
-    then
-        echo "$EM cannot change to installer binary directory" 1>&2
-        exit 1
-    fi
-    # Install using a response file.
-    echo "$IM running setup.bin utility..."
-    ${PWD}/setup.bin -i silent -DAGREE_TO_SAP_LICENSE=true \
-	-f ${DBFIT_ROOT}/test_vm/scripts/sybase/sybaseiq_typical.rsp
-    if [ $? -ne 0 ]
-    then
-        echo "$EM executing setup.bin utility" 1>&2
-        exit 1
-    fi
-fi
-
-if [ ! "$DOSETUP" -a ! "$DORPM" ]
+if [ ! "$DOSETUP" ]
 then
     echo "$IM no Sybase IQ installer package files found. Exiting..."
     exit 3
+fi
+
+cd ${SYBASE_INST_ROOT}/Linux64-iq*
+if [ $? -ne 0 ]
+then
+    echo "$EM cannot change to installer binary directory" 1>&2
+    exit 1
+fi
+
+# Install using a response file.
+echo "$IM running setup.bin utility..."
+${PWD}/setup.bin -i silent -DAGREE_TO_SAP_LICENSE=true -f ${DBFIT_ROOT}/test_vm/scripts/sybase/sybaseiq_typical.rsp
+if [ $? -ne 0 ]
+then
+    echo "$EM executing setup.bin utility" 1>&2
+    exit 1
 fi
 
 $SYBASE_SCRIPTS/create_sybaseiq_database.sh
