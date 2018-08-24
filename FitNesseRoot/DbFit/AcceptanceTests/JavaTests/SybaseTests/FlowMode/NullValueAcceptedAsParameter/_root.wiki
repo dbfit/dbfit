@@ -8,3 +8,11 @@ Null value should be accepted as parameter
 |Query|select (case when @myid is null then -1 else 1 end) as val|
 |val|
 |-1|
+
+|Query|Select coalesce(@myid,-1) as val|
+|val|
+|-1|
+
+|Query|Select coalesce(@myid,CAST('2018-01-01' AS DATE)) as val|
+|val|
+|2018-01-01|

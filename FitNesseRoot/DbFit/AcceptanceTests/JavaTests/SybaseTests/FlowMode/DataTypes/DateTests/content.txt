@@ -2,7 +2,7 @@
 
 Following types map to Date/Time: "TIME", "DATE". Unfortunately Sybase driver is not working well with most of DATE+TIME types :(
 
-|Execute|Create table datatypetest (d1 date null, d2 time null)|
+|Execute Ddl|Create table datatypetest (d1 date null, d2 time null)|
 
 |Query| select cast(getdate() as date) as dt, cast(getdate() as time) as ts |
 |dt?|ts?|
@@ -25,3 +25,5 @@ Following types map to Date/Time: "TIME", "DATE". Unfortunately Sybase driver is
 |Query|select * from datatypetest|
 |d1|d2|
 |null|null|
+
+|Execute Ddl|Drop table datatypetest|
