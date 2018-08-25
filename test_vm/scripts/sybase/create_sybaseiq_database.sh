@@ -9,13 +9,13 @@ EM="$MODNAME: ERROR:"
 WM="$MODNAME: WARNING:"
 
 SYBASE_SCRIPTS=`dirname $0`
-SYBASE_DB_DIR=/var/dbfit/sybaseiq_db
+SYBASE_DB_DIR=/var/sybaseiq_db
 
 # Set Sybase IQ environment.
 . /opt/sap/IQ.sh
 
 # Start a server with no databases.
-start_iq -n dbfit -su sa,sybase
+start_iq -n dbfit -su sa,DbFit1
 if [ $? -ne 0 ]
 then
     echo "$EM starting basic server"
@@ -35,7 +35,7 @@ then
 fi
 
 # Connect to basic server's utility database to create dbfit database.
-dbisql -nogui -c "uid=sa;pwd=sybase;eng=dbfit;links=tcpip;dbn=utility_db" \
+dbisql -nogui -c "uid=sa;pwd=DbFit1;eng=dbfit;links=tcpip;dbn=utility_db" \
 	$SYBASE_SCRIPTS/create_sybaseiq_database.sql
 if [ $? -ne 0 ]
 then
@@ -44,7 +44,7 @@ then
 fi
 
 # Stop the basic server.
-dbstop dbfit -c "uid=sa;pwd=Wombat1;eng=dbfit;dbn=dbfit"
+dbstop dbfit -c "uid=sa;pwd=DbFit1;eng=dbfit;dbn=utility_db"
 if [ $? -ne 0 ]
 then
     echo "$EM stopping basic server"
@@ -58,7 +58,7 @@ then
     exit 1
 fi
 
-dbisql -nogui -c "uid=sa;pwd=Wombat1;eng=dbfit;links=tcpip;dbn=dbfit" \
+dbisql -nogui -c "uid=sa;pwd=DbFit1;eng=dbfit;links=tcpip;dbn=dbfit" \
 	$SYBASE_SCRIPTS/create_sybaseiq_objects.sql
 if [ $? -ne 0 ]
 then

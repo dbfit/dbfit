@@ -14,7 +14,7 @@ SYBASE_SCRIPTS=`dirname $0`
 . /opt/sap/IQ.sh
 
 # Start a server with no databases.
-start_iq -n dbfit /var/dbfit/sybaseiq_db/dbfit.db
+start_iq -n dbfit /var/sybaseiq_db/dbfit.db
 if [ $? -ne 0 ]
 then
     echo "$EM starting dbfit database server"
