@@ -9,6 +9,7 @@ EM="$MODNAME: ERROR:"
 WM="$MODNAME: WARNING:"
 
 SYBASE_SCRIPTS=`dirname $0`
+SYBASE_DB_DIR=/var/dbfit/sybaseiq_db
 
 # Set Sybase IQ environment.
 . /opt/sap/IQ.sh
@@ -21,6 +22,18 @@ then
     exit 1
 fi
 
+# Create database directory.
+if [ ! -d ${SYBASE_DB_DIR} ]
+then
+    echo "$IM creating Sybase IQ database directory"
+    mkdir ${SYBASE_DB_DIR}
+    if [ $? -ne 0 ]
+    then
+        echo "$EM creating Sybase IQ database directory: ${SYBASE_DB_DIR}"
+        exit 1
+    fi
+fi
+
 # Connect to basic server's utility database to create dbfit database.
 dbisql -nogui -c "uid=sa;pwd=sybase;eng=dbfit;links=tcpip;dbn=utility_db" \
 	$SYBASE_SCRIPTS/create_sybaseiq_database.sql
@@ -31,7 +44,7 @@ then
 fi
 
 # Stop the basic server.
-stop_iq -stop all
+dbstop dbfit -c "uid=sa;pwd=Wombat1;eng=dbfit;dbn=dbfit"
 if [ $? -ne 0 ]
 then
     echo "$EM stopping basic server"
