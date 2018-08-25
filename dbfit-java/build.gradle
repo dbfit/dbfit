@@ -381,8 +381,9 @@ project('sybase') {
 
     dependencies {
         compile project(':dbfit-java:core')
+        runtime 'com.sybase:jconn4:16.0.3@jar'
+        integrationTestRuntime 'com.sybase:jconn4:16.0.3@jar'
     }
-
 }
 
 project('teradata') {
