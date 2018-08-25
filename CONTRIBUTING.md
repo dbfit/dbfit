@@ -62,9 +62,11 @@ The fully-built VM includes:
  *  the pre-requisites to easily install Oracle
  *  the pre-requisites to easily install DB2
  *  the pre-requisites to easily install Informix
+ *  the pre-requisites to easily install Sybase IQ
 
 The VM doesn't include:
  *  a working Oracle installation (however there is a shell script to help with the installation described below)
+ *  a working Sybase IQ installation (however there is a shell script to help with the installation described below)
  *  a working Teradata installation (this can be created separately as a VMWare or EC2 installation)
  *  a working Netezza installation (this can be created separately as a pair of VMWare machines)
 
@@ -96,11 +98,14 @@ The VM doesn't include:
 7. If you want to provision Informix database - download the setup package as
    described in 1st bullet of [Informix file](INFORMIX.md).
 
-8. Run every subsequent command from the `test_vm` folder:
+7. If you want to provision Sybase IQ database - download the setup package as
+   described in 1st bullet of [Sybase IQ file](SYBASEIQ.md).
+
+9. Run every subsequent command from the `test_vm` folder:
 
         cd test_vm
 
-9. Provision and start the vagrant VM:
+10. Provision and start the vagrant VM:
 
         vagrant up
 
@@ -134,6 +139,13 @@ If you downloaded DB2 setup package before provisioning vagrant VM - the
 DB2 database is automatically installed and configured.
 
 For manual setup instructions see [DB2 file](DB2.md).
+
+#### Installing Sybase IQ Express
+
+If you downloaded Sybase IQ setup package before provisioning vagrant VM - the
+Sybase IQ database is automatically installed and configured.
+
+For manual setup instructions see [Sybase IQ file](SYBASEIQ.md).
 
 #### IDE Integration
 
