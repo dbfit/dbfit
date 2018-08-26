@@ -25,6 +25,7 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
 
     public SybaseEnvironment(String driverClassName) {
         super(driverClassName);
+        defaultParamPatternString = "@([A-Za-z0-9_]+)";
         Options.setOption(Options.OPTION_PARAMETER_PATTERN, paramNamePattern);
     }
 
