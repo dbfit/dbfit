@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import dbfit.util.Options;
-import dbfit.util.TypeNormaliserFactory;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
@@ -111,12 +110,12 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
         "CHAR" } );             // CHAR, java.lang.String
 
     private static List<String> numericBigDecimalTypes = Arrays.asList(new String[] {
-        "MONEY", "SMALLMONEY", "NUMERIC" } );	// MONEY/SMALLMONEY/NUMERIC, java.math.BigDecimal
+        "MONEY", "SMALLMONEY", "NUMERIC" } );    // MONEY/SMALLMONEY/NUMERIC, java.math.BigDecimal
 
     private static List<String> decimalBigDecimalTypes = Arrays.asList(new String[] {
         "DECIMAL" } );          // DECIMAL, java.math.BigDecimal
 
-    // For queries returning an UNSIGNED INT the Sybase JDBC driver says that ResultSetMetadata will 
+    // For queries returning an UNSIGNED INT the Sybase JDBC driver says that ResultSetMetadata will
     // create a Long but in fact it creates an Integer;
     private static List<String> integerIntegerTypes = Arrays.asList(new String[] {
         "INT", "INTEGER", "UNSIGNED INT" } );  // INTEGER, java.lang.Integer
@@ -146,7 +145,7 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
 System.out.println("SybaseEnvironment: getSqlType: dataType: " + dataType);
         // todo:strip everything from first blank
         dataType = normaliseTypeName(dataType);
-        
+
         if (bitBooleanTypes.contains(dataType))
             return Types.BIT;
         if (tinyintIntegerTypes.contains(dataType))
@@ -272,6 +271,7 @@ System.out.println("Found a time timeTimeTypes");
 
     public String buildInsertCommand(String tableName,
             DbParameterAccessor[] accessors) {
+System.out.println("SybaseEnvironment: buildInsertCommand");
         StringBuilder sb = new StringBuilder("insert into ");
         sb.append(tableName).append("(");
         String comma = "";
