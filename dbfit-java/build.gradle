@@ -384,6 +384,10 @@ project('sybase') {
         runtime 'com.sybase:jconn4:16.0.3@jar'
         integrationTestRuntime 'com.sybase:jconn4:16.0.3@jar'
     }
+
+    integrationTest.doFirst {
+        dbdeploy('com.sybase.jdbc4.jdbc.SybDriver', 'jdbc:sybase:Tds:127.0.0.1:2638?ServiceName=dbfit', 'dbfit', 'dbfituser', 'row', 'GO')
+    }
 }
 
 project('teradata') {

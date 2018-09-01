@@ -1,0 +1,5 @@
+|Import|
+|dbfit.fixture|
+
+|Database Environment|Sybase|
+|Connect|127.0.0.1:2638|dbfit|dbfituser|dbfit|

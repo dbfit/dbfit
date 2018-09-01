@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import dbfit.util.Options;
+import dbfit.util.TypeNormaliserFactory;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
@@ -84,96 +85,145 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
 
         return params.toMap();
     }
+/*
+    private static List<DataType> sybaseTypes2 = Arrays.asList(new DataType[] {
+        new DataType("BIT", Types.BIT, Boolean.class),
+        new DataType("TINYINT", Types.TINYINT, Integer.class)
+    }
+    );
+*/
+    private static List<String> bitBooleanTypes = Arrays.asList(new String[] {
+        "BIT" });               // BIT, java.lang.Boolean
 
-    // List interface has sequential search, so using list instead of array to
-    // map types
-    private static List<String> stringTypes = Arrays.asList(new String[] {
-            "VARCHAR", "NVARCHAR", "CHAR", "NCHAR", "TEXT", "NTEXT" });
-    private static List<String> intTypes = Arrays.asList(new String[] {
-            "INT", "INTN", "UNSIGNED INT", "UNSIGNED INTN", "INTEGER" });
-    private static List<String> booleanTypes = Arrays
-            .asList(new String[] { "BIT" });
-    private static List<String> floatTypes = Arrays
-            .asList(new String[] { "REAL" });
-    private static List<String> doubleTypes = Arrays
-            .asList(new String[] { "FLOAT", "FLOATN" });
-    private static List<String> longTypes = Arrays.asList(new String[] {
-            "BIGINT", "BIGINTN", "UNSIGNED BIGINT", "UNSIGNED BIGINTN" });
-    private static List<String> shortTypes = Arrays.asList(new String[] {
-            "TINYINT", "SMALLINT", "UNSIGNED SMALLINT", "UNSIGNED SMALLINTN" });
+    private static List<String> tinyintIntegerTypes = Arrays.asList(new String[] {
+        "TINYINT" });           // TINYINT, java.lang.Integer
 
-    private static List<String> numericTypes = Arrays.asList(new String[] {
-            "NUMERIC", "NUMERICN"});
-    private static List<String> decimalTypes = Arrays.asList(new String[] {
-            "DECIMAL", "DECIMALN", "MONEY", "MONEYN", "SMALLMONEY" });
-    private static List<String> timestampTypes = Arrays.asList(new String[] {
-            "SMALLDATETIME", "DATETIME", "DATETIMN", "TIMESTAMP" });
-    private static List<String> dateTypes = Arrays.asList("DATE");
-    private static List<String> timeTypes = Arrays.asList("TIME");
+    private static List<String> bigintLongTypes = Arrays.asList(new String[] {
+        "BIGINT" } );           // BIGINT, java.lang.Long;
+
+    private static List<String> bigintBigDecimalTypes = Arrays.asList(new String[] {
+        "UNSIGNED BIGINT" } );  // BIGINT, java.math.BigDecimal
+
+    private static List<String> longvarcharStringTypes = Arrays.asList(new String[] {
+        "TEXT" } );             // LONGVARCHAR, java.lang.String
+
+    private static List<String> charStringTypes = Arrays.asList(new String[] {
+        "CHAR" } );             // CHAR, java.lang.String
+
+    private static List<String> numericBigDecimalTypes = Arrays.asList(new String[] {
+        "MONEY", "SMALLMONEY", "NUMERIC" } );	// MONEY/SMALLMONEY/NUMERIC, java.math.BigDecimal
+
+    private static List<String> decimalBigDecimalTypes = Arrays.asList(new String[] {
+        "DECIMAL" } );          // DECIMAL, java.math.BigDecimal
+
+    // For queries returning an UNSIGNED INT the Sybase JDBC driver says that ResultSetMetadata will 
+    // create a Long but in fact it creates an Integer;
+    private static List<String> integerIntegerTypes = Arrays.asList(new String[] {
+        "INT", "INTEGER", "UNSIGNED INT" } );  // INTEGER, java.lang.Integer
+
+    private static List<String> smallintIntegerTypes = Arrays.asList(new String[] {
+        "SMALLINT" } );         // SMALLINT, java.lang.Integer
+
+    private static List<String> realFloatTypes = Arrays.asList(new String[] {
+        "REAL" } );             // REAL, java.lang.Float
+
+    private static List<String> doubleDoubleTypes = Arrays.asList(new String[] {
+        "FLOAT" } );            // DOUBLE, java.lang.Double
+
+    private static List<String> varcharStringTypes = Arrays.asList(new String[] {
+        "VARCHAR" } );          // VARCHAR, java.lang.String
+
+    private static List<String> dateDateTypes = Arrays.asList(new String[] {
+        "DATE" } );             // DATE, java.sql.Data
+
+    private static List<String> timeTimestampTypes = Arrays.asList(new String[] { // Sybase create a timestamp subtype of java.sql.Time;
+        "TIME" } );             // TIME, java.sql.Timestamp
+
+    private static List<String> timestampTimestampTypes = Arrays.asList(new String[] {
+        "TIMESTAMP", "DATETIME", "SMALLDATETIME" } ); // TIME, java.sql.Time
 
     private static int getSqlType(String dataType) {
 System.out.println("SybaseEnvironment: getSqlType: dataType: " + dataType);
         // todo:strip everything from first blank
         dataType = normaliseTypeName(dataType);
-
-        if (stringTypes.contains(dataType))
-            return java.sql.Types.VARCHAR;
-        if (numericTypes.contains(dataType))
-            return java.sql.Types.NUMERIC;
-        if (decimalTypes.contains(dataType))
-            return java.sql.Types.DECIMAL;
-        if (intTypes.contains(dataType))
-            return java.sql.Types.INTEGER;
-        if (timestampTypes.contains(dataType))
-            return java.sql.Types.TIMESTAMP;
-        if (dateTypes.contains(dataType))
-            return java.sql.Types.DATE;
-        if (timeTypes.contains(dataType))
-            return java.sql.Types.TIME;
-        if (booleanTypes.contains(dataType))
-            return java.sql.Types.BOOLEAN;
-        if (floatTypes.contains(dataType))
-            return java.sql.Types.FLOAT;
-        if (doubleTypes.contains(dataType))
-            return java.sql.Types.DOUBLE;
-
-        if (longTypes.contains(dataType))
-            return java.sql.Types.BIGINT;
-        if (shortTypes.contains(dataType))
-            return java.sql.Types.SMALLINT;
-
+        
+        if (bitBooleanTypes.contains(dataType))
+            return Types.BIT;
+        if (tinyintIntegerTypes.contains(dataType))
+            return Types.INTEGER;
+        if (bigintLongTypes.contains(dataType))
+            return Types.BIGINT;
+        if (bigintBigDecimalTypes.contains(dataType))
+            return Types.BIGINT;
+        if (longvarcharStringTypes.contains(dataType))
+            return Types.LONGVARCHAR;
+        if (charStringTypes.contains(dataType))
+            return Types.CHAR;
+        if (numericBigDecimalTypes.contains(dataType))
+            return Types.NUMERIC;
+        if (decimalBigDecimalTypes.contains(dataType))
+            return Types.DECIMAL;
+        if (integerIntegerTypes.contains(dataType))
+            return Types.INTEGER;
+        if (smallintIntegerTypes.contains(dataType))
+            return Types.SMALLINT;
+        if (realFloatTypes.contains(dataType))
+            return Types.REAL;
+        if (doubleDoubleTypes.contains(dataType))
+            return Types.DOUBLE;
+        if (varcharStringTypes.contains(dataType))
+            return Types.VARCHAR;
+        if (dateDateTypes.contains(dataType))
+            return Types.DATE;
+        if (timeTimestampTypes.contains(dataType)) {
+System.out.println("Found a time timeTimeTypes");
+            return Types.TIME;
+        }
+        if (timestampTimestampTypes.contains(dataType)) {
+            return Types.TIMESTAMP;
+        }
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
     }
 
-    public Class<?> getJavaClass(String dataType) {
+	public Class<?> getJavaClass(String dataType) {
 System.out.println("SybaseEnvironment: getJavaClass: " + dataType);
         dataType = normaliseTypeName(dataType);
-        if (stringTypes.contains(dataType))
-            return String.class;
-        if (numericTypes.contains(dataType))
-            return BigDecimal.class;
-        if (decimalTypes.contains(dataType))
-            return BigDecimal.class;
-        if (intTypes.contains(dataType))
-            return Integer.class;
-        if (timestampTypes.contains(dataType))
-            return java.sql.Timestamp.class;
-        if (dateTypes.contains(dataType))
-            return java.sql.Date.class;
-        if (timeTypes.contains(dataType))
-            return java.sql.Time.class;
-        if (booleanTypes.contains(dataType))
-            return Boolean.class;
-        if (floatTypes.contains(dataType))
-            return Float.class;
-        if (doubleTypes.contains(dataType))
-            return Double.class;
-        if (longTypes.contains(dataType))
-            return Long.class;
-        if (shortTypes.contains(dataType))
-            return Integer.class;
 
+        if (bitBooleanTypes.contains(dataType))
+            return Boolean.class;
+        if (tinyintIntegerTypes.contains(dataType))
+            return Integer.class;
+        if (bigintLongTypes.contains(dataType))
+            return Long.class;
+        if (bigintBigDecimalTypes.contains(dataType))
+            return BigDecimal.class;
+        if (longvarcharStringTypes.contains(dataType))
+            return String.class;
+        if (charStringTypes.contains(dataType))
+            return String.class;
+        if (numericBigDecimalTypes.contains(dataType))
+            return BigDecimal.class;
+        if (decimalBigDecimalTypes.contains(dataType))
+            return BigDecimal.class;
+        if (integerIntegerTypes.contains(dataType))
+            return Integer.class;
+        if (smallintIntegerTypes.contains(dataType))
+            return Integer.class;
+        if (realFloatTypes.contains(dataType))
+            return Float.class;
+        if (doubleDoubleTypes.contains(dataType))
+            return Double.class;
+        if (varcharStringTypes.contains(dataType))
+            return String.class;
+        if (dateDateTypes.contains(dataType))
+            return java.sql.Date.class;
+        if (timeTimestampTypes.contains(dataType)) {
+System.out.println("Found a time timeTimeTypes");
+            return java.sql.Timestamp.class;
+        }
+        if (timestampTimestampTypes.contains(dataType))
+            return java.sql.Timestamp.class;
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
     }
