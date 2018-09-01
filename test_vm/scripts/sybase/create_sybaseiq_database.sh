@@ -36,33 +36,10 @@ fi
 
 # Connect to basic server's utility database to create dbfit database.
 dbisql -nogui -c "uid=sa;pwd=DbFit1;eng=dbfit;links=tcpip;dbn=utility_db" \
-	$SYBASE_SCRIPTS/create_sybaseiq_database.sql
+	$SYBASE_SCRIPTS/sql/create-databases-sybase.sql
 if [ $? -ne 0 ]
 then
-    echo "$EM starting basic server"
-    exit 1
-fi
-
-# Stop the basic server.
-dbstop dbfit -c "uid=sa;pwd=DbFit1;eng=dbfit;dbn=utility_db"
-if [ $? -ne 0 ]
-then
-    echo "$EM stopping basic server"
-    exit 1
-fi
-
-$SYBASE_SCRIPTS/start_sybaseiq_database.sh
-if [ $? -ne 0 ]
-then
-    echo "$EM starting dbfit database server"
-    exit 1
-fi
-
-dbisql -nogui -c "uid=sa;pwd=DbFit1;eng=dbfit;links=tcpip;dbn=dbfit" \
-	$SYBASE_SCRIPTS/create_sybaseiq_objects.sql
-if [ $? -ne 0 ]
-then
-    echo "$EM creating database objects"
+    echo "$EM creating DBFIT database"
     exit 1
 fi
 
