@@ -1,6 +1,6 @@
-!|Execute Ddl|create table TESTTBL (N int, TWON int)|
+!|Execute Ddl|create table TESTTBL (N int null, TWON int null)|
 
-!|Execute Ddl|create table TESTTBLA (N int, TWON int)|
+!|Execute Ddl|create table TESTTBLA (N int null, TWON int null)|
 
 !|Insert|TESTTBL|
 |N      |TWON   |
