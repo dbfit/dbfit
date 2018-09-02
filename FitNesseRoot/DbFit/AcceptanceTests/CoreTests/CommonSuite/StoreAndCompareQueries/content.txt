@@ -1,6 +1,6 @@
-!|Execute Ddl|create table TESTTBL (N int null, TWON int null)|
+!|Execute Ddl|create table TESTTBL (N int ${DEFAULT_COLUMN_ALLOW_NULL_DDL}, TWON int ${DEFAULT_COLUMN_ALLOW_NULL_DDL})|
 
-!|Execute Ddl|create table TESTTBLA (N int null, TWON int null)|
+!|Execute Ddl|create table TESTTBLA (N int ${DEFAULT_COLUMN_ALLOW_NULL_DDL}, TWON int ${DEFAULT_COLUMN_ALLOW_NULL_DDL})|
 
 !|Insert|TESTTBL|
 |N      |TWON   |

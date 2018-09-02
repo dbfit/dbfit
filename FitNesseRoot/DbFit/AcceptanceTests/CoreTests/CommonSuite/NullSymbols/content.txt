@@ -1,4 +1,4 @@
-!|Execute Ddl|create table testtbl(id int null, val int null)|
+!|Execute Ddl|create table testtbl(id int ${DEFAULT_COLUMN_ALLOW_NULL_DDL}, val int ${DEFAULT_COLUMN_ALLOW_NULL_DDL})|
 
 !|Insert|testtbl|
 |id     |val    |
