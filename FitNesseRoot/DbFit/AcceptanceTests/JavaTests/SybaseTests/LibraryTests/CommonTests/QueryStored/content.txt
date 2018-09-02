@@ -1,6 +1,6 @@
 |Store query|!- SELECT ROW_NUM*5 n, 'T'||row_num name FROM sa_rowgenerator( 1, 5 ) -!|fromdual|
 
-|query|<<fromdual|
+|Query|<<fromdual|
 |n|name?|
 |5|T1|
 |10|T2|

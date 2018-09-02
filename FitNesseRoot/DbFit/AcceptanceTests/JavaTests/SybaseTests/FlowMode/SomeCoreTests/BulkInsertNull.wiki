@@ -1,0 +1,20 @@
+---
+Test
+---
+|Execute Ddl|Drop table if exists Test_DBFit|
+
+|Execute Ddl|Create table Test_DBFit(name varchar(50), luckyNumber int null)|
+
+|Insert|Test_DBFit|
+|name|luckyNumber|
+|pera|1|
+|nuja|2|
+|nnn|null|
+
+|Query|Select * from Test_DBFit|
+|name|lucky Number|
+|pera|1|
+|nuja|2|
+|nnn|null|
+
+|Execute Ddl|Drop table if exists Test_DBFit|

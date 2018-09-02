@@ -4,11 +4,11 @@ Following types map to Date/Time: "TIME", "DATE". Unfortunately Sybase driver is
 
 |Execute Ddl|Create table datatypetest (d1 date null, d2 time null)|
 
-|Query| select cast(getdate() as date) as dt, cast(getdate() as time) as ts |
+|Query|select cast(getdate() as date) as dt, cast(getdate() as time) as ts |
 |dt?|ts?|
 |>>dt1|>>ts1|
 
-|insert|datatypetest|
+|Insert|datatypetest|
 |d1|d2|
 |<<dt1|<<ts1|
 
@@ -16,9 +16,9 @@ Following types map to Date/Time: "TIME", "DATE". Unfortunately Sybase driver is
 |d1?|d2?|
 |fail[null]|fail[null]|
 
-|execute|delete from datatypetest|
+|Execute|delete from datatypetest|
 
-|insert|datatypetest|
+|Insert|datatypetest|
 |d1|d2|
 |null|null|
 

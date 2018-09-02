@@ -1,0 +1,9 @@
+---
+Suite
+SymbolicLinks
+  BulkInsert: .DbFit.AcceptanceTests.CoreTests.BulkInsert
+  CleanSuite: .DbFit.AcceptanceTests.CoreTests.CleanSuite
+  ObjectNames: .DbFit.AcceptanceTests.CoreTests.ObjectNames
+  StoreAndCompareQueriesHideMatchingRows: DbFit.AcceptanceTests.CoreTests.CommonSuite.StoreAndCompareQueriesHideMatchingRows
+---
+!contents -R
