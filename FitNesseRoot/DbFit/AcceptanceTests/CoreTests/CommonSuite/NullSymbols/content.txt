@@ -1,4 +1,4 @@
-!|Execute Ddl|create table testtbl(id int, val int)|
+!|Execute Ddl|create table testtbl(id int null, val int null)|
 
 !|Insert|testtbl|
 |id     |val    |
