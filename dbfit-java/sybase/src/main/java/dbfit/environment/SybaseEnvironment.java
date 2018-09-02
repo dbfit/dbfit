@@ -185,7 +185,7 @@ System.out.println("Found a time timeTimeTypes");
                 + " is not supported");
     }
 
-	public Class<?> getJavaClass(String dataType) {
+    public Class<?> getJavaClass(String dataType) {
 System.out.println("SybaseEnvironment: getJavaClass: " + dataType);
         dataType = normaliseTypeName(dataType);
 
