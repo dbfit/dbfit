@@ -98,7 +98,7 @@ The VM doesn't include:
 7. If you want to provision Informix database - download the setup package as
    described in 1st bullet of [Informix file](INFORMIX.md).
 
-7. If you want to provision Sybase IQ database - download the setup package as
+8. If you want to provision Sybase IQ database - download the setup package as
    described in 1st bullet of [Sybase IQ file](SYBASEIQ.md).
 
 9. Run every subsequent command from the `test_vm` folder:
