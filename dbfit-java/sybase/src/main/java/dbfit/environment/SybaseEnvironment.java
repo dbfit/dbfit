@@ -81,16 +81,9 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
                            getJavaClass(rs.getString("type")));
             }
         }
-
         return params.toMap();
     }
-/*
-    private static List<DataType> sybaseTypes2 = Arrays.asList(new DataType[] {
-        new DataType("BIT", Types.BIT, Boolean.class),
-        new DataType("TINYINT", Types.TINYINT, Integer.class)
-    }
-    );
-*/
+
     private static List<String> bitBooleanTypes = Arrays.asList(new String[] {
         "BIT" });               // BIT, java.lang.Boolean
 
@@ -251,7 +244,6 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
                            getJavaClass(paramDataType));
             }
         }
-
         return params.toMap();
     }
 

@@ -2,6 +2,6 @@ package dbfit.environment;
 
 public class SybaseTypeNameNormaliser {
     public static String normaliseTypeName(String dataType) {
-        return dataType.trim().toUpperCase(); //.split("[\\s(]")[0];
+        return dataType.trim().toUpperCase();
     }
 }
