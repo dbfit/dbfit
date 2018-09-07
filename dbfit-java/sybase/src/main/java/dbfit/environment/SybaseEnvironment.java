@@ -142,7 +142,6 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
         "TIMESTAMP", "DATETIME", "SMALLDATETIME" } ); // TIME, java.sql.Time
 
     private static int getSqlType(String dataType) {
-System.out.println("SybaseEnvironment: getSqlType: dataType: " + dataType);
         // todo:strip everything from first blank
         dataType = normaliseTypeName(dataType);
 
@@ -175,7 +174,6 @@ System.out.println("SybaseEnvironment: getSqlType: dataType: " + dataType);
         if (dateDateTypes.contains(dataType))
             return Types.DATE;
         if (timeTimestampTypes.contains(dataType)) {
-System.out.println("Found a time timeTimeTypes");
             return Types.TIME;
         }
         if (timestampTimestampTypes.contains(dataType)) {
@@ -186,7 +184,6 @@ System.out.println("Found a time timeTimeTypes");
     }
 
     public Class<?> getJavaClass(String dataType) {
-System.out.println("SybaseEnvironment: getJavaClass: " + dataType);
         dataType = normaliseTypeName(dataType);
 
         if (bitBooleanTypes.contains(dataType))
@@ -218,7 +215,6 @@ System.out.println("SybaseEnvironment: getJavaClass: " + dataType);
         if (dateDateTypes.contains(dataType))
             return java.sql.Date.class;
         if (timeTimestampTypes.contains(dataType)) {
-System.out.println("Found a time timeTimeTypes");
             return java.sql.Timestamp.class;
         }
         if (timestampTimestampTypes.contains(dataType))
@@ -271,7 +267,6 @@ System.out.println("Found a time timeTimeTypes");
 
     public String buildInsertCommand(String tableName,
             DbParameterAccessor[] accessors) {
-System.out.println("SybaseEnvironment: buildInsertCommand");
         StringBuilder sb = new StringBuilder("insert into ");
         sb.append(tableName).append("(");
         String comma = "";
