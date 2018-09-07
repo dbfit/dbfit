@@ -22,6 +22,9 @@ public class DataColumn {
         this.name = r.getColumnLabel(columnIndex);
         this.javaClassName = r.getColumnClassName(columnIndex);
         this.dbTypeName = r.getColumnTypeName(columnIndex);
+        if (this.dbTypeName == null) {
+            this.dbTypeName = JdbcTypeNames.getTypeName(r.getColumnType(columnIndex));
+        }
     }
 
     public String getDbTypeName() {

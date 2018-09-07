@@ -106,6 +106,11 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return commandText;
     }
 
+    protected void bindStatementParameter(PreparedStatement statement,
+            int parameterIndex, Object value) throws SQLException {
+        statement.setObject(parameterIndex, value);
+    }
+
     public final PreparedStatement createStatementWithBoundFixtureSymbols(
             TestHost testHost, String commandText) throws SQLException {
         String command = Options.isBindSymbols() ? parseCommandText(commandText) : commandText;
@@ -116,7 +121,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
             String paramNames[] = extractParamNames(commandText);
             for (int i = 0; i < paramNames.length; i++) {
                 Object value = testHost.getSymbolValue(paramNames[i]);
-                cs.setObject(i + 1, value);
+                bindStatementParameter(cs, i + 1, value);
             }
         }
         return cs;
