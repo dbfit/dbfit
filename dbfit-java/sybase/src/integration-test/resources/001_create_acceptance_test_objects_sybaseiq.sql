@@ -1,3 +1,29 @@
+CREATE TABLE data_types
+(
+  a_bigint                BIGINT
+, a_bit                   BIT
+, a_char                  CHAR
+, a_date                  DATE
+, a_decimal               DECIMAL
+, a_double                DOUBLE
+, a_integer               INTEGER
+, a_money                 MONEY
+, a_numeric               NUMERIC
+, a_real                  REAL
+, a_smallint              SMALLINT
+, a_smallmoney            SMALLMONEY
+, a_text                  TEXT
+, a_time                  TIME
+, a_tinyint               TINYINT
+, a_unsigned_bigint       UNSIGNED BIGINT
+, a_unsigned_int          UNSIGNED INT
+, a_varchar               VARCHAR
+, a_timestamp             TIMESTAMP
+, a_datetime              DATETIME
+, a_smalldatetime         SMALLDATETIME
+)
+GO
+
 CREATE TABLE users
 (
   Name          VARCHAR(50) NULL
@@ -19,5 +45,37 @@ BEGIN
            'user1'
          , 'fromproc'
            );
+END;
+GO
+
+CREATE PROCEDURE CalcLength
+(
+  @name          VARCHAR(50)
+, OUT @strlength NUMERIC
+)
+AS
+BEGIN
+    SELECT @strlength = length(@name);
+END;
+GO
+
+CREATE FUNCTION Multiply
+(
+  @n1 INT
+, @n2 INT
+)
+RETURNS INT
+AS
+    RETURN @n1 * @n2;
+GO
+
+CREATE PROCEDURE MultiplyIO
+(
+  @factor NUMERIC
+, OUT @val NUMERIC
+)
+AS
+BEGIN
+    SELECT @val = @val * @factor;
 END;
 GO

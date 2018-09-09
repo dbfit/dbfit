@@ -4,6 +4,8 @@ START DATABASE '/var/sybaseiq_db/dbfit.db' AUTOSTOP OFF;
 
 CONNECT TO dbfit DATABASE dbfit USER "sa" IDENTIFIED BY DbFit1;
 
+sp_iqlmconfig 'allow', 'IQ_LOB', 1;
+
 CREATE USER dbfit IDENTIFIED BY dbfituser;
 
 GRANT RESOURCE TO dbfit;
