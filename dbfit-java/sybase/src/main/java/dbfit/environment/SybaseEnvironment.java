@@ -84,55 +84,57 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
         return params.toMap();
     }
 
+    // Types.BIT, java.lang.Boolean
     private static List<String> bitBooleanTypes = Arrays.asList(new String[] {
-        "BIT" });               // BIT, java.lang.Boolean
-
+        "BIT" } );
+    // Types.TINYINT, java.lang.Integer
     private static List<String> tinyintIntegerTypes = Arrays.asList(new String[] {
-        "TINYINT" });           // TINYINT, java.lang.Integer
-
+        "TINYINT" } );
+    // Types.BIGINT, java.lang.Long;
     private static List<String> bigintLongTypes = Arrays.asList(new String[] {
-        "BIGINT" } );           // BIGINT, java.lang.Long;
-
+        "BIGINT" } );
+    // Types.BIGINT, java.math.BigDecimal
     private static List<String> bigintBigDecimalTypes = Arrays.asList(new String[] {
-        "UNSIGNED BIGINT" } );  // BIGINT, java.math.BigDecimal
-
+        "UNSIGNED BIGINT" } );
+    // Types.LONGVARCHAR, java.lang.String
     private static List<String> longvarcharStringTypes = Arrays.asList(new String[] {
-        "TEXT" } );             // LONGVARCHAR, java.lang.String
-
+        "TEXT" } );
+    // Types.CHAR, java.lang.String
     private static List<String> charStringTypes = Arrays.asList(new String[] {
-        "CHAR" } );             // CHAR, java.lang.String
-
+        "CHAR" } );
+    // Types.MONEY/SMALLMONEY/NUMERIC, java.math.BigDecimal
     private static List<String> numericBigDecimalTypes = Arrays.asList(new String[] {
-        "MONEY", "SMALLMONEY", "NUMERIC" } );    // MONEY/SMALLMONEY/NUMERIC, java.math.BigDecimal
-
+        "MONEY", "SMALLMONEY", "NUMERIC" } );
+    // Types.DECIMAL, java.math.BigDecimal
     private static List<String> decimalBigDecimalTypes = Arrays.asList(new String[] {
-        "DECIMAL" } );          // DECIMAL, java.math.BigDecimal
-
+        "DECIMAL" } );
+    // Types.INTEGER, java.lang.Integer
     // For queries returning an UNSIGNED INT the Sybase JDBC driver says that ResultSetMetadata will
     // create a Long but in fact it creates an Integer;
     private static List<String> integerIntegerTypes = Arrays.asList(new String[] {
-        "INT", "INTEGER", "UNSIGNED INT" } );  // INTEGER, java.lang.Integer
-
+        "INT", "INTEGER", "UNSIGNED INT" } );
+    // Types.SMALLINT, java.lang.Integer
     private static List<String> smallintIntegerTypes = Arrays.asList(new String[] {
-        "SMALLINT" } );         // SMALLINT, java.lang.Integer
-
+        "SMALLINT" } );
+    // Types.REAL, java.lang.Float
     private static List<String> realFloatTypes = Arrays.asList(new String[] {
-        "REAL" } );             // REAL, java.lang.Float
-
+        "REAL" } );
+    // Types.DOUBLE, java.lang.Double
     private static List<String> doubleDoubleTypes = Arrays.asList(new String[] {
-        "FLOAT" } );            // DOUBLE, java.lang.Double
-
+        "FLOAT" } );
+    // Types.VARCHAR, java.lang.String
     private static List<String> varcharStringTypes = Arrays.asList(new String[] {
-        "VARCHAR" } );          // VARCHAR, java.lang.String
-
+        "VARCHAR" } );
+    // Types.DATE, java.sql.Data
     private static List<String> dateDateTypes = Arrays.asList(new String[] {
-        "DATE" } );             // DATE, java.sql.Data
-
-    private static List<String> timeTimestampTypes = Arrays.asList(new String[] { // Sybase create a timestamp subtype of java.sql.Time;
-        "TIME" } );             // TIME, java.sql.Timestamp
-
+        "DATE" } );
+    // Types.TIME, java.sql.Timestamp
+    // Sybase creates a timestamp subtype of java.sql.Time;
+    private static List<String> timeTimestampTypes = Arrays.asList(new String[] {
+        "TIME" } );
+    // Types.TIME, java.sql.Time
     private static List<String> timestampTimestampTypes = Arrays.asList(new String[] {
-        "TIMESTAMP", "DATETIME", "SMALLDATETIME" } ); // TIME, java.sql.Time
+        "TIMESTAMP", "DATETIME", "SMALLDATETIME" } );
 
     private static int getSqlType(String dataType) {
         // todo:strip everything from first blank
@@ -255,6 +257,12 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
         } else {
             statement.setObject(parameterIndex, value);
         }
+    }
+
+    @Override
+    public PreparedStatement buildInsertPreparedStatement(String tableName,
+            DbParameterAccessor[] accessors) throws SQLException {
+        return getConnection().prepareStatement(buildInsertCommand(tableName, accessors));
     }
 
     public String buildInsertCommand(String tableName,

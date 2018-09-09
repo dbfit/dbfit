@@ -1,4 +1,4 @@
-|Execute Ddl|Create table Test_DBFit(name varchar(50), luckyNumber int)|
+|Execute Ddl|Create table Test_DBFit(name varchar(50) ${DEFAULT_COLUMN_ALLOW_NULL_DDL}, luckyNumber int ${DEFAULT_COLUMN_ALLOW_NULL_DDL})|
 
 |Insert|Test_DBFit|
 |name|luckyNumber|
