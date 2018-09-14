@@ -36,7 +36,7 @@ fi
 
 # Connect to basic server's utility database to create dbfit database.
 dbisql -nogui -c "uid=sa;pwd=DbFit1;eng=dbfit;links=tcpip;dbn=utility_db" \
-	$SYBASE_SCRIPTS/sql/create-databases-sybase.sql
+	$SYBASE_SCRIPTS/sql/create-databases-sybaseiq.sql
 if [ $? -ne 0 ]
 then
     echo "$EM creating DBFIT database"
