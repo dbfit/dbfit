@@ -2,7 +2,7 @@ CREATE TABLE data_types
 (
   a_bigint                BIGINT
 , a_bit                   BIT
-, a_char                  CHAR
+, a_char                  CHAR(1)
 , a_date                  DATE
 , a_decimal               DECIMAL
 , a_double                DOUBLE
@@ -17,7 +17,7 @@ CREATE TABLE data_types
 , a_tinyint               TINYINT
 , a_unsigned_bigint       UNSIGNED BIGINT
 , a_unsigned_int          UNSIGNED INT
-, a_varchar               VARCHAR
+, a_varchar               VARCHAR(1)
 , a_timestamp             TIMESTAMP
 , a_datetime              DATETIME
 , a_smalldatetime         SMALLDATETIME
