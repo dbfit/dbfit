@@ -4,6 +4,7 @@ import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessorsMapBuilder;
+import dbfit.util.DdlStatementExecution;
 import dbfit.util.Direction;
 import static dbfit.environment.SybaseTypeNameNormaliser.normaliseTypeName;
 
@@ -44,6 +45,18 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
+    public DdlStatementExecution createDdlStatementExecution(String ddl)
+            throws SQLException {
+        return new DdlStatementExecution(getConnection().createStatement(), ddl) {
+            @Override
+            public void run() throws SQLException {
+                getConnection().commit();
+                super.run();
+            }
+        };
+    }
+
+    @Override
     public void connect(String connectionString, Properties info) throws SQLException {
         // Add sendTimeAsDatetime=false option to enforce sending Time as
         // java.sql.Time (otherwise some precision is lost in conversions)
@@ -62,7 +75,7 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
                 + " from dbo.sysobjects o "
                 + " join dbo.sysusers u on u.uid = o.uid "
                 + " join dbo.syscolumns c on c.id = o.id "
-                + " join dbo.systypes t on t.type = c.type and t.usertype = c.usertype "
+                + " join dbo.systypes t on t.usertype = c.usertype "
                 + " where o.type in ('U', 'V') "
                 + check
                 + " order by colid";
@@ -120,6 +133,7 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
     private static List<String> realFloatTypes = Arrays.asList(new String[] {
         "REAL" } );
     // Types.DOUBLE, java.lang.Double
+// HAVE WE MISSED THE "DOUBLE" DATA TYPE?
     private static List<String> doubleDoubleTypes = Arrays.asList(new String[] {
         "FLOAT" } );
     // Types.VARCHAR, java.lang.String
@@ -239,7 +253,6 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
                 if ("IN".equals(paramType)) direction = Direction.INPUT;
                     else if ("INOUT".equals(paramType)) direction = Direction.INPUT_OUTPUT;
                     else direction = Direction.RETURN_VALUE;
-
                 params.add(("RETURN_VALUE".equals(paramName))? "" : paramName,
                            direction,
                            getSqlType(paramDataType),
