@@ -1,0 +1,8 @@
+---
+SymbolicLinks
+  CommitAndRollback: .DbFit.AcceptanceTests.LibraryTests.CommitAndRollback
+  CommonTests: .DbFit.AcceptanceTests.JavaTests.SybaseTests.LibraryTests.CommonTests
+  CoreTests: .DbFit.AcceptanceTests.CoreTests
+Test
+---
+!contents -R3

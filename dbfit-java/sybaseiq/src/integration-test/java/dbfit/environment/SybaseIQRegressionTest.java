@@ -8,7 +8,7 @@ import static fitnesse.junit.FitNesseRunner.*;
 
 public class SybaseIQRegressionTest {
     @RunWith(FitNesseRunner.class)
-    @Suite("DbFit.AcceptanceTests.JavaTests.SybaseIQTests.FlowMode")
+    @Suite("DbFit.AcceptanceTests.JavaTests.SybaseTests.SybaseIQTests.FlowMode")
     @FitnesseDir("../..")
     @OutputDir("../../tmp")
     public static class FlowModeTest {
@@ -18,7 +18,7 @@ public class SybaseIQRegressionTest {
     }
 
     @RunWith(FitNesseRunner.class)
-    @Suite("DbFit.AcceptanceTests.JavaTests.SybaseIQTests.StandaloneFixtures")
+    @Suite("DbFit.AcceptanceTests.JavaTests.SybaseTests.SybaseIQTests.StandaloneFixtures")
     @FitnesseDir("../..")
     @OutputDir("../../tmp")
     public static class StandaloneFixturesTest {
