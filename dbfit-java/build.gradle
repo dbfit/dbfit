@@ -382,6 +382,16 @@ project('sybase') {
     dependencies {
         compile project(':dbfit-java:core')
         runtime 'com.sybase:jconn4:16.0.3@jar'
+        //integrationTestRuntime 'com.sybase:jconn4:16.0.3@jar'
+    }
+}
+
+project('sybaseiq') {
+    description = 'DBFit Sybase IQ engine'
+
+    dependencies {
+        compile project(':dbfit-java:sybase')
+        //runtime 'com.sybase:jconn4:16.0.3@jar'
         integrationTestRuntime 'com.sybase:jconn4:16.0.3@jar'
     }
 
