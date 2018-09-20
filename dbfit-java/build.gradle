@@ -382,21 +382,32 @@ project('sybase') {
     dependencies {
         compile project(':dbfit-java:core')
         runtime 'com.sybase:jconn4:16.0.3@jar'
-        //integrationTestRuntime 'com.sybase:jconn4:16.0.3@jar'
     }
 }
 
 project('sybaseiq') {
-    description = 'DBFit Sybase IQ engine'
+    description = 'DBFit Sybase IQ test project'
 
     dependencies {
         compile project(':dbfit-java:sybase')
-        //runtime 'com.sybase:jconn4:16.0.3@jar'
         integrationTestRuntime 'com.sybase:jconn4:16.0.3@jar'
     }
 
     integrationTest.doFirst {
         dbdeploy('com.sybase.jdbc4.jdbc.SybDriver', 'jdbc:sybase:Tds:127.0.0.1:2638?ServiceName=dbfit', 'dbfit', 'dbfituser', 'row', 'GO')
+    }
+}
+
+project('sybasease') {
+    description = 'DBFit Sybase ASE test project'
+
+    dependencies {
+        compile project(':dbfit-java:sybase')
+        integrationTestRuntime 'com.sybase:jconn4:16.0.3@jar'
+    }
+
+    integrationTest.doFirst {
+        dbdeploy('com.sybase.jdbc4.jdbc.SybDriver', 'jdbc:sybase:Tds:127.0.0.1:5000?ServiceName=dbfit', 'DbFit', 'DbFit000!', 'row', 'GO')
     }
 }
 

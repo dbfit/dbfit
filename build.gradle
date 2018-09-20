@@ -218,6 +218,7 @@ task fastbuild(dependsOn: [
     ':dbfit-java:teradata:check',
     ':dbfit-java:sybase:check',
     ':dbfit-java:sybaseiq:check',
+    ':dbfit-java:sybasease:check',
     ':dbfit-java:derby:integrationTest',
     ':dbfit-java:hsqldb:integrationTest'
     ])

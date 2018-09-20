@@ -1,6 +1,6 @@
 rootProject.name = 'dbfit'
 
-include ':dbfit-java', ':dbfit-java:core', ':dbfit-java:informix' ,':dbfit-java:mysql', ':dbfit-java:oracle', ':dbfit-java:derby', ':dbfit-java:db2', ':dbfit-java:postgres', ':dbfit-java:hsqldb', ':dbfit-java:sqlserver', ':dbfit-java:teradata', ':dbfit-java:netezza', ':dbfit-java:sybase', ':dbfit-java:sybaseiq'
+include ':dbfit-java', ':dbfit-java:core', ':dbfit-java:informix' ,':dbfit-java:mysql', ':dbfit-java:oracle', ':dbfit-java:derby', ':dbfit-java:db2', ':dbfit-java:postgres', ':dbfit-java:hsqldb', ':dbfit-java:sqlserver', ':dbfit-java:teradata', ':dbfit-java:netezza', ':dbfit-java:sybase', ':dbfit-java:sybaseiq', ':dbfit-java:sybasease'
 
 project(':dbfit-java').projectDir = "$rootDir/dbfit-java" as File
 
@@ -17,3 +17,4 @@ project(':dbfit-java:teradata').projectDir = "$rootDir/dbfit-java/teradata" as F
 project(':dbfit-java:netezza').projectDir = "$rootDir/dbfit-java/netezza" as File
 project(':dbfit-java:sybase').projectDir = "$rootDir/dbfit-java/sybase" as File
 project(':dbfit-java:sybaseiq').projectDir = "$rootDir/dbfit-java/sybaseiq" as File
+project(':dbfit-java:sybasease').projectDir = "$rootDir/dbfit-java/sybasease" as File
