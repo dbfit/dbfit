@@ -24,9 +24,9 @@ import dbfit.util.Options;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 @DatabaseEnvironment(name="Sybase", driver="com.sybase.jdbc4.jdbc.SybDriver")
-public class SybaseEnvironment extends AbstractDbEnvironment {
+public class SybaseASEEnvironment extends AbstractDbEnvironment {
 
-    public SybaseEnvironment(String driverClassName) {
+    public SybaseASEEnvironment(String driverClassName) {
         super(driverClassName);
         defaultParamPatternString = "@([A-Za-z0-9_]+)";
         Options.setOption(Options.OPTION_PARAMETER_PATTERN, paramNamePattern);
