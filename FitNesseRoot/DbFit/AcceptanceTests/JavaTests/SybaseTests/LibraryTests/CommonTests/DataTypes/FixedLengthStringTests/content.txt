@@ -1,6 +1,6 @@
 !3 use fixed string length parsing to test blank-padded chars
 
-|Execute|Create table datatypetest (s1 char(10))|
+|Execute Ddl|Create table datatypetest (s1 char(10))|
 
 |Set option|fixed length string parsing|true|
 

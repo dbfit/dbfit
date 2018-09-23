@@ -2,14 +2,16 @@
 
 |Query Stats|
 |query|row count?|is empty?|
-|SELECT row_num FROM sa_rowgenerator( 1, 5 )|5|false|
+|SELECT 1 AS n|1|false|
 
+|Query Stats|
+|query|row count?|is empty?|
+|SELECT 1 AS n UNION SELECT 2|2|false|
 
-!|Query Stats|
-|query | row count? |is empty?|
-| select 1 as n |1|false|
+|Query Stats|
+|query|row count?|is empty?|
+|SELECT 1 AS n WHERE 1 = 0|0|true|
 
-
-!|Query Stats|
+|Query Stats|
 |table name| where|row count? |is empty?|
-| users |1=1|0|true|
+|users|1 = 1|0|true|

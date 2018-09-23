@@ -1,4 +1,17 @@
-|Store query|!- SELECT ROW_NUM*5 n, 'T'||row_num name FROM sa_rowgenerator( 1, 5 ) -!|fromdual|
+|Store query|!-
+SELECT i * 5 AS n
+     , 'T' || CAST(i AS VARCHAR(1)) AS name
+  FROM (
+       SELECT 1 AS i
+        UNION
+       SELECT 2
+        UNION
+       SELECT 3
+        UNION
+       SELECT 4
+        UNION
+       SELECT 5
+       ) x-!|fromdual|
 
 |Query|<<fromdual|
 |n|name?|

@@ -1,5 +1,5 @@
 |Import|
 |dbfit.fixture|
 
-|Database Environment|Sybase|
+|Database Environment|SybaseIQ|
 |Connect|127.0.0.1:2638|dbfit|dbfituser|dbfit|

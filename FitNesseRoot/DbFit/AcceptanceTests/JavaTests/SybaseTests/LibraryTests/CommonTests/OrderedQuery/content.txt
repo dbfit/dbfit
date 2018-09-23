@@ -1,15 +1,16 @@
 This will fail because the order is wrong
 
 |Ordered Query|!-
-with a as (
-select 1 as n
-union all
-select 2 as n
-union all
-select 3 as n
-)
-select * from a
-order by n-!|
+SELECT n
+  FROM (
+       SELECT 1 AS n
+        UNION
+       SELECT 2
+        UNION
+       SELECT 3
+       ) x
+ ORDER
+    BY n-!|
 |n|
 |fail[2]|
 |fail[1]|
@@ -18,15 +19,16 @@ order by n-!|
 This will pass because the order is correct
 
 |Ordered Query|!-
-with a as (
-select 1 as n
-union all
-select 2 as n
-union all
-select 3 as n
-)
-select * from a
-order by n-!|
+SELECT n
+  FROM (
+       SELECT 1 AS n
+        UNION
+       SELECT 2
+        UNION
+       SELECT 3
+       ) x
+ ORDER
+    BY n-!|
 |n|
 |1|
 |2|

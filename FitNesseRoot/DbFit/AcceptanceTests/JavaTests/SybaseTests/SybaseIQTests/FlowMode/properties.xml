@@ -12,6 +12,7 @@
 <CommitAndRollback>.DbFit.AcceptanceTests.LibraryTests.CommitAndRollback</CommitAndRollback>
 <CommonTests>.DbFit.AcceptanceTests.JavaTests.SybaseTests.LibraryTests.CommonTests</CommonTests>
 <CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
+<SybaseIQTypes>.DbFit.AcceptanceTests.JavaTests.SybaseTests.LibraryTests.IQTests.SybaseIQTypes</SybaseIQTypes>
 </SymbolicLinks>
 <Versions/>
 <WhereUsed/>

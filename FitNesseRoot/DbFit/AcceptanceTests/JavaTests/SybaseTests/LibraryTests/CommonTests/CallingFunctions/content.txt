@@ -1,19 +1,9 @@
 !3 Functions are tested like procedures, with ? used for the result
 
-|Inspect Procedure|sp_sproc_columns|
-
-|Query|exec sp_sproc_columns 'dbo.CalcLength'|
-|column_name|
-#mode|
-
 |Execute procedure|Multiply|
 |n1|n2|?|
 |10|15|150|
 |2|8|16|
-
-|Query|select db_name() as dbn|
-|dbn|
-|dbfit|
 
 !3 Order of parameters in table should not be important (does not have to match db order)
 

@@ -3,14 +3,13 @@
 newlines are replaced with blanks - so don't use them in string values. edit page source to see that query is multi-line
 
 |Ordered Query|!-
-with a as (
+select * from (
 select 1 as n
 union all
 select 2 as n
 union all
 select 3 as n
-)
-select * from a
+) x
 order by n
 -!|
 |n|
