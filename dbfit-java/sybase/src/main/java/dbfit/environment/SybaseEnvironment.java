@@ -65,7 +65,7 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
         super.connect(connectionString, info);
     }
 
-    private static String paramNamePattern = "@([A-Za-z0-9_]+)";
+    protected static String paramNamePattern = "@([A-Za-z0-9_]+)";
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
@@ -240,21 +240,21 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
         // IQ:  sp_iqprocparm
         // ASE: sp_sproc_columns
         String query = "SELECT CASE c.name"
-        		     + "            WHEN 'Return Type'"
-        		     + "            THEN ''"
-        		     + "            ELSE c.name"
-        		     + "        END"
-        		     + "           AS paramname"
+                     + "            WHEN 'Return Type'"
+                     + "            THEN ''"
+                     + "            ELSE c.name"
+                     + "        END"
+                     + "           AS paramname"
                      + "     , t.name"
-        		     + "           AS paramtype"
+                     + "           AS paramtype"
                      + "     , CASE WHEN c.name = 'Return Type'"
-        		     + "            THEN 'RETURN_VALUE'"
+                     + "            THEN 'RETURN_VALUE'"
                      + "            WHEN c.status2 = 1"
-        		     + "            THEN 'IN'"
+                     + "            THEN 'IN'"
                      + "            WHEN c.status2 = 2"
-        		     + "            THEN 'INOUT'"
-        		     + "        END"
-        		     + "           AS paramdirection"
+                     + "            THEN 'INOUT'"
+                     + "        END"
+                     + "           AS paramdirection"
                      + "  FROM dbo.sysobjects o"
                      + "  JOIN dbo.sysusers u"
                      + "    ON u.uid = o.uid"
@@ -290,11 +290,11 @@ System.out.println("qualifiers[0]: " + qualifiers[0]);
                 if ("IN".equals(paramType)) {
                     direction = Direction.INPUT;
                 } else {
-                	if ("INOUT".equals(paramType)) {
-                		direction = Direction.INPUT_OUTPUT;
-                	} else {
+                    if ("INOUT".equals(paramType)) {
+                        direction = Direction.INPUT_OUTPUT;
+                } else {
 System.out.println("It's a return value");
-                	    direction = Direction.RETURN_VALUE;
+                    direction = Direction.RETURN_VALUE;
                     }
                 }
                 params.add(("RETURN_VALUE".equals(paramName)) ? "" : paramName,
