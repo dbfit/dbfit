@@ -1,12 +1,10 @@
 package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
-import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessorsMapBuilder;
-import dbfit.util.DdlStatementExecution;
 import dbfit.util.Direction;
-import dbfit.util.NameNormaliser;
+import dbfit.util.SqlTimestampNormaliser;
 
 import static dbfit.environment.SybaseTypeNameNormaliser.normaliseTypeName;
 
@@ -18,54 +16,21 @@ import java.sql.Types;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import dbfit.util.Options;
+import dbfit.util.TypeNormaliserFactory;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
-@DatabaseEnvironment(name="Sybase", driver="com.sybase.jdbc4.jdbc.SybDriver")
-public class SybaseASEEnvironment extends AbstractDbEnvironment {
+@DatabaseEnvironment(name="SybaseASE", driver="com.sybase.jdbc4.jdbc.SybDriver")
+public class SybaseASEEnvironment extends SybaseEnvironment {
 
     public SybaseASEEnvironment(String driverClassName) {
         super(driverClassName);
         defaultParamPatternString = "@([A-Za-z0-9_]+)";
         Options.setOption(Options.OPTION_PARAMETER_PATTERN, paramNamePattern);
+        TypeNormaliserFactory.setNormaliser(com.sybase.jdbc4.tds.SybTimestamp.class,
+            new SqlTimestampNormaliser());
     }
-
-    public boolean supportsOuputOnInsert() {
-        return false;
-    }
-
-    @Override
-    protected String getConnectionString(String dataSource) {
-        return "jdbc:sybase:Tds:" + dataSource;
-    }
-
-    @Override
-    protected String getConnectionString(String dataSource, String database) {
-        return getConnectionString(dataSource) + "?ServiceName=" + database;
-    }
-
-    @Override
-    public DdlStatementExecution createDdlStatementExecution(String ddl)
-            throws SQLException {
-        return new DdlStatementExecution(getConnection().createStatement(), ddl) {
-            @Override
-            public void run() throws SQLException {
-                getConnection().commit();
-                super.run();
-            }
-        };
-    }
-
-    @Override
-    public void connect(String connectionString, Properties info) throws SQLException {
-        // Add sendTimeAsDatetime=false option to enforce sending Time as
-        // java.sql.Time (otherwise some precision is lost in conversions)
-        super.connect(connectionString, info);
-    }
-
-    private static String paramNamePattern = "@([A-Za-z0-9_]+)";
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
@@ -110,7 +75,7 @@ public class SybaseASEEnvironment extends AbstractDbEnvironment {
         "BIGINT" } );
     // Types.BIGINT, java.math.BigDecimal
     private static List<String> bigintBigDecimalTypes = Arrays.asList(new String[] {
-        "UNSIGNED BIGINT" } );
+        "UBIGINT", "UNSIGNED BIGINT" } );
     // Types.LONGVARCHAR, java.lang.String
     private static List<String> longvarcharStringTypes = Arrays.asList(new String[] {
         "TEXT" } );
@@ -127,7 +92,7 @@ public class SybaseASEEnvironment extends AbstractDbEnvironment {
     // For queries returning an UNSIGNED INT the Sybase JDBC driver says that ResultSetMetadata will
     // create a Long but in fact it creates an Integer;
     private static List<String> integerIntegerTypes = Arrays.asList(new String[] {
-        "INT", "INTEGER", "UNSIGNED INT" } );
+        "INT", "INTEGER", "UINT", "UNSIGNED INT" } );
     // Types.SMALLINT, java.lang.Integer
     private static List<String> smallintIntegerTypes = Arrays.asList(new String[] {
         "SMALLINT" } );
@@ -135,22 +100,21 @@ public class SybaseASEEnvironment extends AbstractDbEnvironment {
     private static List<String> realFloatTypes = Arrays.asList(new String[] {
         "REAL" } );
     // Types.DOUBLE, java.lang.Double
-// HAVE WE MISSED THE "DOUBLE" DATA TYPE?
     private static List<String> doubleDoubleTypes = Arrays.asList(new String[] {
-        "FLOAT" } );
+        "DOUBLE PRECISION", "FLOAT" } );
     // Types.VARCHAR, java.lang.String
     private static List<String> varcharStringTypes = Arrays.asList(new String[] {
         "VARCHAR" } );
-    // Types.DATE, java.sql.Data
+    // Types.DATE, java.sql.Date
     private static List<String> dateDateTypes = Arrays.asList(new String[] {
         "DATE" } );
     // Types.TIME, java.sql.Timestamp
     // Sybase creates a timestamp subtype of java.sql.Time;
-    private static List<String> timeTimestampTypes = Arrays.asList(new String[] {
+    private static List<String> timeTimeTypes = Arrays.asList(new String[] {
         "TIME" } );
     // Types.TIME, java.sql.Time
     private static List<String> timestampTimestampTypes = Arrays.asList(new String[] {
-        "TIMESTAMP", "DATETIME", "SMALLDATETIME" } );
+        "DATETIME", "SMALLDATETIME", "BIGDATETIME" } );
 
     private static int getSqlType(String dataType) {
         // todo:strip everything from first blank
@@ -184,7 +148,7 @@ public class SybaseASEEnvironment extends AbstractDbEnvironment {
             return Types.VARCHAR;
         if (dateDateTypes.contains(dataType))
             return Types.DATE;
-        if (timeTimestampTypes.contains(dataType)) {
+        if (timeTimeTypes.contains(dataType)) {
             return Types.TIME;
         }
         if (timestampTimestampTypes.contains(dataType)) {
@@ -225,124 +189,56 @@ public class SybaseASEEnvironment extends AbstractDbEnvironment {
             return String.class;
         if (dateDateTypes.contains(dataType))
             return java.sql.Date.class;
-        if (timeTimestampTypes.contains(dataType)) {
-            return java.sql.Timestamp.class;
+        if (timeTimeTypes.contains(dataType)) {
+            return java.sql.Time.class;
         }
         if (timestampTimestampTypes.contains(dataType))
             return java.sql.Timestamp.class;
+//return com.sybase.jdbc4.tds.SybTimestamp.class;
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
     }
 
     public Map<String, DbParameterAccessor> getAllProcedureParameters(
             String procName) throws SQLException {
-        String[] qualifiers = NameNormaliser.normaliseName(procName).split("\\.");
-        // IQ:  sp_iqprocparm
-        // ASE: sp_sproc_columns
-        String query = "SELECT CASE c.name"
-        		     + "            WHEN 'Return Type'"
-        		     + "            THEN ''"
-        		     + "            ELSE c.name"
-        		     + "        END"
-        		     + "           AS paramname"
-                     + "     , t.name"
-        		     + "           AS paramtype"
-                     + "     , CASE WHEN c.name = 'Return Type'"
-        		     + "            THEN 'RETURN_VALUE'"
-                     + "            WHEN c.status2 = 1"
-        		     + "            THEN 'IN'"
-                     + "            WHEN c.status2 = 2"
-        		     + "            THEN 'INOUT'"
-        		     + "        END"
-        		     + "           AS paramdirection"
-                     + "  FROM dbo.sysobjects o"
-                     + "  JOIN dbo.sysusers u"
-                     + "    ON u.uid = o.uid"
-                     + "  JOIN dbo.syscolumns c"
-                     + "    ON o.id = c.id"
-                     + "  JOIN systypes t"
-                     + "    ON t.usertype = c.usertype"
-                     + " WHERE o.type IN ('P', 'SF')"
-                     + "   AND o.name = ?"
-                     + "   AND u.name = "
-                     + ((qualifiers.length > 1) ? ("'" + qualifiers[0] + "'") : "user_name()");
-        //select id, name from sysobjects where name = 'CalcLength'
-        //1888006726
-        //select name from dbo.syscolumns where id = 1888006726
-        //select * from dbo.syscolumns where id = 1888006726
-        //select * from dbo.syscolumns where id = 1888006726 and name = '@strlength'
-        // Adding current user_name if it's not provided
-//        if (procName.indexOf('.') == -1)
-//            query = "exec sp_sproc_columns user_name() || '.' || ?";
-System.out.println("query: " + query);
-System.out.println("qualifiers.length: " + qualifiers.length);
-System.out.println("qualifiers[0]: " + qualifiers[0]);
+        String query = "sp_sproc_columns ?";
+    	String qualifiers[] = procName.split("\\.");
+        if (qualifiers.length > 1) {
+            query += ", ?";   
+        }
         DbParameterAccessorsMapBuilder params = new DbParameterAccessorsMapBuilder(dbfitToJdbcTransformerFactory);
         try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
-            dc.setString(1, (qualifiers.length > 1 ? qualifiers[1] : qualifiers[0]));
+            if (qualifiers.length > 1) {
+            	dc.setString(1, qualifiers[1]);
+                dc.setString(2, qualifiers[0]);
+            } else {
+            	dc.setString(1, qualifiers[0]);
+            }
             ResultSet rs = dc.executeQuery();
             while (rs.next()) {
-                String paramName = rs.getString("paramname");
-                String paramType = rs.getString("paramdirection");
-                String paramDataType = rs.getString("paramtype");
-
+                String paramName = rs.getString("column_name");
+                String paramType = rs.getString("mode").trim();
+                String paramDataType = rs.getString("type_name");
                 Direction direction;
-                if ("IN".equals(paramType)) {
+                if ("in".equals(paramType)) {
                     direction = Direction.INPUT;
                 } else {
-                	if ("INOUT".equals(paramType)) {
-                		direction = Direction.INPUT_OUTPUT;
-                	} else {
-System.out.println("It's a return value");
-                	    direction = Direction.RETURN_VALUE;
+                    if ("out".equals(paramType)) {
+                        direction = Direction.INPUT_OUTPUT;
+                    } else {
+                        if ("Return Type".equals(paramType)) {
+                            direction = Direction.RETURN_VALUE;
+                        } else {
+                        	throw new SQLException("Unpexpected parm_mode value: " + paramType);
+                        }
                     }
                 }
-                params.add(("RETURN_VALUE".equals(paramName)) ? "" : paramName,
+                params.add("Return Type".equals(paramType) ? "" : paramName,
                            direction,
                            getSqlType(paramDataType),
                            getJavaClass(paramDataType));
             }
         }
         return params.toMap();
-    }
-
-    @Override
-    public void bindStatementParameter(PreparedStatement statement, int parameterIndex, Object value)
-            throws SQLException {
-        if (value == null) {
-            statement.setNull(parameterIndex, Types.CHAR);
-        } else {
-            statement.setObject(parameterIndex, value);
-        }
-    }
-
-    @Override
-    public PreparedStatement buildInsertPreparedStatement(String tableName,
-            DbParameterAccessor[] accessors) throws SQLException {
-        return getConnection().prepareStatement(buildInsertCommand(tableName, accessors));
-    }
-
-    public String buildInsertCommand(String tableName,
-            DbParameterAccessor[] accessors) {
-        StringBuilder sb = new StringBuilder("insert into ");
-        sb.append(tableName).append("(");
-        String comma = "";
-
-        StringBuilder values = new StringBuilder();
-
-        for (DbParameterAccessor accessor : accessors) {
-            if (accessor.hasDirection(Direction.INPUT)) {
-                sb.append(comma);
-                values.append(comma);
-                //This will allow column names that have spaces or are keywords.
-                sb.append("[" + accessor.getName() + "]");
-                values.append("?");
-                comma = ",";
-            }
-        }
-        sb.append(") values (");
-        sb.append(values);
-        sb.append(")");
-        return sb.toString();
     }
 }
