@@ -24,10 +24,10 @@ DBISQL_BIN=$(dirname "$DBISQL_EXE")
 export PATH=$PATH:$DBISQL_BIN
 
 # Create dbfit database.
-dbisql -nogui -host localhost -port 5000 -c "UID=sa;PWD=dbfitvm" $SYBASE_SCRIPTS/sql/create-databases-sybasease.sql
+dbisql -nogui -host localhost -port 5000 -c "UID=sa;PWD=dbfitvm"
 if [ $? -ne 0 ]
 then
-    echo "$EM creating DBFIT database"
+    echo "$EM starting dbisql"
     exit 1
 fi
 

@@ -1,3 +1,5 @@
 DROP DATABASE [DbFit]
 GO
 
+DROP LOGIN [DbFit]
+GO

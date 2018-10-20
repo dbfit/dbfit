@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Run as root to set up DbFit database.
+# Run as root to tear down DbFit database.
 # Exit statuses: -
 # 0 - completed successfully.
 # 1 - error occured.
@@ -23,8 +23,8 @@ fi
 DBISQL_BIN=$(dirname "$DBISQL_EXE")
 export PATH=$PATH:$DBISQL_BIN
 
-# Create dbfit database.
-dbisql -nogui -host localhost -port 5000 -c "UID=sa;PWD=dbfitvm" $SYBASE_SCRIPTS/sql/create-databases-sybasease.sql
+# Drop dbfit database.
+dbisql -nogui -host localhost -port 5000 -c "UID=sa;PWD=dbfitvm" $SYBASE_SCRIPTS/sql/drop-databases-sybasease.sql
 if [ $? -ne 0 ]
 then
     echo "$EM creating DBFIT database"
