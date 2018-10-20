@@ -2,6 +2,6 @@ package dbfit;
 
 public class SybaseASETest extends DatabaseTest {
     public SybaseASETest(){
-        super(dbfit.api.DbEnvironmentFactory.newEnvironmentInstance("Sybase"));
+        super(dbfit.api.DbEnvironmentFactory.newEnvironmentInstance("SybaseASE"));
     }
 }
