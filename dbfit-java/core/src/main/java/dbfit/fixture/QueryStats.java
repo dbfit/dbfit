@@ -49,7 +49,7 @@ public class QueryStats extends fit.ColumnFixture {
         try (PreparedStatement st =
                 environment.createStatementWithBoundFixtureSymbols(
                     FitNesseTestHost.getInstance(),
-                    "select count(*) from (" + query + ") temp")) {
+                    "select count(*) from (" + query + ") tmp")) {
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
                 _rows = rs.getInt(1);
