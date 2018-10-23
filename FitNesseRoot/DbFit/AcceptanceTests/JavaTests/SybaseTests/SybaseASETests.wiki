@@ -1,4 +1,6 @@
 ---
 Suite
 ---
+!define FUNCTION_OWNER_PREFIX {dbo.}
+
 !contents -R2 -g -p -f -h

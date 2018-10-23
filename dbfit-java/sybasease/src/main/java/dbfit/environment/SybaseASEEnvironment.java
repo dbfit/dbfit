@@ -1,6 +1,9 @@
 package dbfit.environment;
 
 import dbfit.annotations.DatabaseEnvironment;
+import dbfit.api.DbStoredProcedureCall;
+import dbfit.fixture.StatementExecution;
+import dbfit.fixture.StatementExecutionCapturingResultSetValue;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessorsMapBuilder;
 import dbfit.util.Direction;
@@ -201,19 +204,10 @@ public class SybaseASEEnvironment extends SybaseEnvironment {
 
     public Map<String, DbParameterAccessor> getAllProcedureParameters(
             String procName) throws SQLException {
-        String query = "sp_sproc_columns ?";
-    	String qualifiers[] = procName.split("\\.");
-        if (qualifiers.length > 1) {
-            query += ", ?";   
-        }
+        String procQuery = "sp_sproc_columns ?";
         DbParameterAccessorsMapBuilder params = new DbParameterAccessorsMapBuilder(dbfitToJdbcTransformerFactory);
-        try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
-            if (qualifiers.length > 1) {
-            	dc.setString(1, qualifiers[1]);
-                dc.setString(2, qualifiers[0]);
-            } else {
-            	dc.setString(1, qualifiers[0]);
-            }
+        try (PreparedStatement dc = currentConnection.prepareStatement(procQuery)) {
+            dc.setString(1, procName);
             ResultSet rs = dc.executeQuery();
             while (rs.next()) {
                 String paramName = rs.getString("column_name");
@@ -222,15 +216,88 @@ public class SybaseASEEnvironment extends SybaseEnvironment {
                 Direction direction;
                 if ("in".equals(paramType)) {
                     direction = Direction.INPUT;
+System.out.println("SybaseASEEnvironment: getAllProcedureParameters: PROC: found in param: " + paramName);
                 } else {
                     if ("out".equals(paramType)) {
                         direction = Direction.INPUT_OUTPUT;
+System.out.println("SybaseASEEnvironment: getAllProcedureParameters: PROC: found output param: " + paramName);
                     } else {
                         if ("Return Type".equals(paramType)) {
                             direction = Direction.RETURN_VALUE;
+System.out.println("SybaseASEEnvironment: getAllProcedureParameters: PROC: found return_value param: " + paramName);
                         } else {
-                        	throw new SQLException("Unpexpected parm_mode value: " + paramType);
+                            throw new SQLException("Unpexpected parm_mode value: " + paramType);
                         }
+                    }
+                }
+                // Ignore stored procedure return value so that functions can be identified by the presence of a return value.
+                if (direction != Direction.RETURN_VALUE) {
+                    params.add(paramName, direction, getSqlType(paramDataType), getJavaClass(paramDataType));
+                }
+            }
+        }
+        String qualifiers[] = procName.split("\\.");
+        String funcOwner = "";
+        if (qualifiers.length < 2) {
+            String ownerQry = "SELECT u.name"
+                            + "  FROM dbo.sysobjects o"
+                            + " INNER"
+                            + "  JOIN dbo.sysusers u"
+                            + "    ON o.uid = u.uid"
+                            + " WHERE o.type = 'SF'"
+                            + "   AND o.name = ?"
+                            + "   AND u.name = USER";
+            try (PreparedStatement dc = currentConnection.prepareStatement(ownerQry)) {
+                dc.setString(1, procName);
+                ResultSet rs = dc.executeQuery();
+                while (rs.next()) {
+                    funcOwner = rs.getString("name");
+System.out.println("SybaseASEEnvironment: getAllProcedureParameters: drived owner: " + funcOwner);
+                }
+            }
+        } else {
+            funcOwner = qualifiers[qualifiers.length - 2];
+        }
+        String funcQuery = "SELECT c.name"
+                         + "           AS column_name"
+                         + "     , CASE WHEN c.name = 'Return Type'"
+                         + "            THEN 'Return Type'"
+                         + "            ELSE 'in'"
+                         + "        END"
+                         + "           AS mode"
+                         + "     , t.name"
+                         + "           AS type_name"
+                         + "  FROM " + (qualifiers.length > 2 ? (qualifiers[0] + ".") : "") + "dbo.sysobjects o"
+                         + " INNER"
+                         + "  JOIN " + (qualifiers.length > 2 ? (qualifiers[0] + ".") : "") + "dbo.sysusers u"
+                         + "    ON o.uid = u.uid"
+                         + " INNER"
+                         + "  JOIN " + (qualifiers.length > 2 ? (qualifiers[0] + ".") : "") + "dbo.syscolumns c"
+                         + "    ON o.id = c.id"
+                         + " INNER"
+                         + "  JOIN " + (qualifiers.length > 2 ? (qualifiers[0] + ".") : "") + "dbo.systypes t"
+                         + "    ON t.usertype = c.usertype"
+                         + " WHERE o.type = 'SF'"
+                         + "   AND o.name = '" + qualifiers[(qualifiers.length - 1)] + "'"
+                         + "   AND u.name = '" + funcOwner + "'";
+        try (PreparedStatement dc = currentConnection.prepareStatement(funcQuery)) {
+System.out.println("SybaseASEEnvironment: getAllProcedureParameters: FUNC: going to bind: " + qualifiers[(qualifiers.length - 1)]);
+            //dc.setString(1, qualifiers[(qualifiers.length - 1)]);
+            ResultSet rs = dc.executeQuery();
+            while (rs.next()) {
+                String paramName = rs.getString("column_name");
+                String paramType = rs.getString("mode").trim();
+                String paramDataType = rs.getString("type_name");
+                Direction direction;
+                if ("in".equals(paramType)) {
+                    direction = Direction.INPUT;
+System.out.println("SybaseASEEnvironment: getAllProcedureParameters: FUNC: found in param: " + paramName);
+                } else {
+                    if ("Return Type".equals(paramType)) {
+                        direction = Direction.RETURN_VALUE;
+System.out.println("SybaseASEEnvironment: getAllProcedureParameters: FUNC: found return_value param: " + paramName);
+                    } else {
+                        throw new SQLException("Unpexpected parm_mode value: " + paramType);
                     }
                 }
                 params.add("Return Type".equals(paramType) ? "" : paramName,
@@ -239,6 +306,17 @@ public class SybaseASEEnvironment extends SybaseEnvironment {
                            getJavaClass(paramDataType));
             }
         }
+
         return params.toMap();
+    }
+
+    @Override
+    public boolean executeFunctionAsQuery() {
+        return true;
+    }
+
+    @Override
+    public StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
+        return new StatementExecutionCapturingResultSetValue(statement);
     }
 }

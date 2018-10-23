@@ -1,6 +1,9 @@
 CREATE DATABASE [DbFit]
 GO
 
+sp_dboption [DbFit], "trunc log on chkpt", true
+GO
+
 CREATE LOGIN [DbFit] WITH PASSWORD 'DbFit000!' DEFAULT DATABASE [DbFit]
 GO
 

@@ -36,7 +36,7 @@ public class DbStoredProcedureCall {
     }
 
     public String toSqlString() {
-        return buildStoredRoutineCallText(getName(), getNumberOfParameters(), hasReturnValue());
+        return buildStoredRoutineCallText(getName(), getNumberOfParameters(), hasReturnValue(), environment.executeFunctionAsQuery());
     }
 
     void bindParametersTo(StatementExecution cs) throws SQLException {
@@ -44,12 +44,15 @@ public class DbStoredProcedureCall {
     }
 
     public StatementExecution toStatementExecution() throws SQLException {
+System.out.println("DbStoredProcedureCall: toStatementExecution");
         String sql = toSqlString();
         PreparedStatement ps = environment.getConnection().prepareCall(sql);
         StatementExecution cs;
         if (hasReturnValue()) {
+System.out.println("DbStoredProcedureCall: toStatementExecution: it has a return value");
             cs = environment.createFunctionStatementExecution(ps);
         } else {
+System.out.println("DbStoredProcedureCall: toStatementExecution: it has NO return value");
             cs = environment.createStatementExecution(ps);
         }
         bindParametersTo(cs);
