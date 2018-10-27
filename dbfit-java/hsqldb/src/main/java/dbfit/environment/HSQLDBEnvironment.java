@@ -298,5 +298,5 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
             }
         }
         return foundFunction;
-   	}
+    }
 }

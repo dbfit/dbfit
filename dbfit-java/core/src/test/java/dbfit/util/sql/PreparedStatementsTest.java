@@ -15,11 +15,11 @@ public class PreparedStatementsTest {
     }
 
     @Test public void functionExecutedAsQueryWithoutParameters() {
-        assertEquals("{ SELECT func() }", buildStoredRoutineCallText("func", 1, true, true, true));
+        assertEquals("SELECT func()", buildStoredRoutineCallText("func", 1, true, true, true));
     }
 
     @Test public void functionExecutedAsQueryWithParameters() {
-        assertEquals("{ SELECT func(?, ?) }", buildStoredRoutineCallText("func", 3, true, true, true));
+        assertEquals("SELECT func(?, ?)", buildStoredRoutineCallText("func", 3, true, true, true));
     }
 
     @Test public void procedureWithoutParameters() {

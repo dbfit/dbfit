@@ -6,7 +6,6 @@ import dbfit.util.DbParameterAccessorsMapBuilder;
 import dbfit.util.Direction;
 
 import static dbfit.environment.SybaseTypeNameNormaliser.normaliseTypeName;
-import static dbfit.util.LangUtils.enquoteAndJoin;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;

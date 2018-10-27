@@ -9,7 +9,6 @@ import dbfit.util.Direction;
 import dbfit.util.SqlTimestampNormaliser;
 
 import static dbfit.environment.SybaseTypeNameNormaliser.normaliseTypeName;
-import static dbfit.util.LangUtils.enquoteAndJoin;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;

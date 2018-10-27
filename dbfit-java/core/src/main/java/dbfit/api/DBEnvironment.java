@@ -192,7 +192,7 @@ public interface DBEnvironment {
 
     /**
      * Indicates whether the stored routine is a function (as opposed to a procedure).
-     * @throws SQLException 
+     * @throws SQLException
      */
     boolean routineIsFunction(String routineName) throws SQLException;
 

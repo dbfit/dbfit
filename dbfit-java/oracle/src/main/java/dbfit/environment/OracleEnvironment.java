@@ -573,8 +573,6 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             qry += "(owner = USER AND package_name IS NULL AND object_name = ?) ";
         }
         qry += " AND object_name = ?";
-        
-        
         if (qualifiers.length == 3) {
             qry += "owner = ? AND package_name = ? AND object_name = ? ";
         } else {
@@ -598,10 +596,6 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                 qry += " package_name is null and object_name=table_name and synonym_name=? ";
             }
         }
-
-        
-        
-        
         String query = "SELECT 1"
                      + "  FROM sysprocparms"
                      + " WHERE creator = " + ((qualifiers.length > 1) ? ("'" + qualifiers[qualifiers.length - 2] + "'") : "USER")
