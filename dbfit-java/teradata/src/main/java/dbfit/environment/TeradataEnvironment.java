@@ -8,6 +8,7 @@ import fit.TypeAdapter;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Clob;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -427,5 +428,30 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         throw new UnsupportedOperationException(
                 "TeradataEnvironment: Direction " + direction
                         + " is not supported");
+    }
+
+    @Override
+    public boolean routineIsFunction(String routineName) throws SQLException {
+        String[] qualifiers = NameNormaliser.normaliseName(routineName).split("\\.");
+        String qry = "SELECT 1"
+                   + "  FROM dbc.functions"
+                   + " WHERE ";
+        if (qualifiers.length == 2) {
+            qry += "TRIM(TRAILING FROM c.databasename) = TRIM(TRAILING FROM ?) AND TRIM(TRAILING FROM c.tablename) = TRIM(TRAILING FROM ?)";
+        } else {
+            // User names are always stored as upper case. For ANSI mode this is significant.
+            qry += "TRIM(TRAILING FROM UPPER(c.databasename)) = USER AND TRIM(TRAILING FROM c.tablename) = TRIM(TRAILING FROM ?)";
+        }
+        boolean foundFunction = false;
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
+            for (int i = 0; i < qualifiers.length; i++) {
+                ps.setString(i + 1, qualifiers[i]);
+            }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                foundFunction = true;
+            }
+        }
+        return foundFunction;
     }
 }

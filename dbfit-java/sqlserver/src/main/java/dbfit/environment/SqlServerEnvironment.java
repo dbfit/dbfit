@@ -64,6 +64,8 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
 
     private Map<String, DbParameterAccessor> readIntoParams(String objname,
             String query) throws SQLException {
+//Do function params get captured by our queries?
+//Are *procedure* return values implicit (not included in dictionary params)?
         DbParameterAccessorsMapBuilder params = new DbParameterAccessorsMapBuilder(dbfitToJdbcTransformerFactory);
 
         objname = objname.replaceAll("[^a-zA-Z0-9_.#$]", "");
@@ -127,6 +129,28 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
             objectDatabasePrefix = objnameParts[0] + ".";
         }
         return objectDatabasePrefix;
+    }
+
+    private String objectSchemaPrefix(String dbObjectName) {
+        String objectDatabasePrefix = "";
+        String[] objnameParts = dbObjectName.split("\\.");
+        if (objnameParts.length == 3) {
+            objectDatabasePrefix = objnameParts[1] + ".";
+        } else {
+            if (objnameParts.length == 2) {
+                objectDatabasePrefix = objnameParts[0] + ".";
+            }
+        }
+        return objectDatabasePrefix;
+    }
+
+    private String objectName(String dbObjectName) {
+        String objectName = "";
+        String[] objnameParts = dbObjectName.split("\\.");
+        if (objnameParts.length > 0) {
+            objectName = objnameParts[objnameParts.length - 1];
+        }
+        return objectName;
     }
 
     private static Direction getParameterDirection(int isOutput, String name) {
@@ -243,6 +267,29 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
         sb.append(values);
         sb.append(")");
         return sb.toString();
+    }
+
+    @Override
+    public boolean routineIsFunction(String routineName) throws SQLException {
+        String objname = routineName.replaceAll("[^a-zA-Z0-9_.#$]", "");
+        String bracketedName = enquoteAndJoin(objname.split("\\."), ".", "[", "]");
+        String query = "SELECT 1"
+                     + "  FROM " + objectDatabasePrefix(bracketedName) + "dbo.sysobjects o"
+                     + " INNER"
+                     + "  JOIN " + objectDatabasePrefix(bracketedName) + "dbo.sysusers u"
+                     + "    ON o.uid = u.uid"
+                     + " WHERE u.name = " + (objectSchemaPrefix(bracketedName).equals("") ? "USER" : objectSchemaPrefix(bracketedName))
+                     + "   AND o.type IN ('IF','TF','FN')"
+                     + "   AND o.name = ?";
+        boolean foundFunction = false;
+        try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
+            dc.setString(1, objectName(bracketedName));
+            ResultSet rs = dc.executeQuery();
+            if (rs.next()) {
+                foundFunction =true;
+            }
+        }
+        return foundFunction;
     }
 }
 

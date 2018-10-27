@@ -281,4 +281,27 @@ public class InformixEnvironment extends AbstractDbEnvironment {
     public StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
         return new StatementExecutionCapturingResultSetValue(statement);
     }
+
+    @Override
+    public boolean routineIsFunction(String routineName) throws SQLException {
+        String[] qualifiers = NameNormaliser.normaliseName(routineName).split("\\.");
+        String qry = "SELECT 1"
+                   + "  FROM informix.sysprocedures"
+                   + " WHERE ";
+         if (qualifiers.length == 2) {
+             qry += "LOWER(p.owner) = ? AND ";
+         }
+         qry += "LOWER(p.procname = ?";
+         boolean foundRoutine = false;
+         try (PreparedStatement dc = currentConnection.prepareStatement(qry)) {
+             for (int i = 0; i < qualifiers.length; i++) {
+                 dc.setString(i + 1, NameNormaliser.normaliseName(qualifiers[i]));
+             }
+             ResultSet rs = dc.executeQuery();
+             if (rs.next()) {
+                foundRoutine = true;
+             }
+         }
+         return foundRoutine;
+    }
 }

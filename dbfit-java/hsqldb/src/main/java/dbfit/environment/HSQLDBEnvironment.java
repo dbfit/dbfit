@@ -271,5 +271,32 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
     public StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
         return new StatementExecutionCapturingResultSetValue(statement);
     }
-}
 
+    @Override
+    public boolean routineIsFunction(String objName) throws SQLException {
+        String query = "SELECT 1"
+                     + "  FROM information_schema.routines"
+                     + " WHERE routine_type = 'FUNCTION'"
+                     + "   AND routine_name = ?"
+                     + "   AND routine_schema = ?";
+        String[] nameParts = objName.toUpperCase().split("\\.");
+        String schemaName = nameParts.length == 2 ? nameParts[0] : getConnection().getSchema();
+        String objectName = nameParts.length == 2 ? nameParts[1] : nameParts[0];
+        boolean foundFunction = false;
+        try (PreparedStatement dc = getConnection().prepareStatement(query)) {
+            if (objectName.trim().startsWith("\"") && objectName.trim().endsWith("\"")) {
+                // Remove double quotes.
+                objectName = objectName.replaceFirst("\"", "");
+                int i = objectName.lastIndexOf("\"");
+                objectName = objName.substring(0, i) + objName.substring(i + 1);
+            }
+            dc.setString(1, objectName);
+            dc.setString(2, schemaName);
+            ResultSet rs = dc.executeQuery();
+            if (rs.next()) {
+                foundFunction = true;
+            }
+        }
+        return foundFunction;
+   	}
+}

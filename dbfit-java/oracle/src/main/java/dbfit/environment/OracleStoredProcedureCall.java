@@ -21,9 +21,9 @@ public class OracleStoredProcedureCall extends DbStoredProcedureCall {
     }
 
     @Override
-    public String toSqlString() {
+    public String toSqlString(boolean routineIsFunction) {
         if (!containsBooleanType()) {
-            return super.toSqlString();
+            return super.toSqlString(routineIsFunction);
         }
 
         OracleBooleanSpCommand command = initSpCommand();

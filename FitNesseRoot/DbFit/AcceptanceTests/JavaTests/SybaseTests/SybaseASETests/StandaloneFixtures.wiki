@@ -1,0 +1,9 @@
+---
+Suite
+SymbolicLinks
+  CommitAndRollback: .DbFit.AcceptanceTests.LibraryTests.CommitAndRollback
+  CommonTests: .DbFit.AcceptanceTests.JavaTests.SybaseTests.LibraryTests.CommonTests
+  CoreTests: .DbFit.AcceptanceTests.CoreTests
+  SybaseASETypes: .DbFit.AcceptanceTests.JavaTests.SybaseTests.LibraryTests.ASETests.SybaseASETypes
+---
+!contents -R2 -g -p -f -h

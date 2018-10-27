@@ -4,7 +4,6 @@ import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.api.DbStoredProcedureCall;
 import dbfit.util.*;
-import dbfit.util.OracleDbParameterAccessor;
 import oracle.jdbc.OracleTypes;
 
 import java.math.BigDecimal;
@@ -547,5 +546,74 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     @Override
     public DbStoredProcedureCall newStoredProcedureCall(String name, DbParameterAccessor[] accessors) {
         return new OracleStoredProcedureCall(this, name, accessors);
+    }
+
+    @Override
+    public boolean routineIsFunction(String routineName) throws SQLException {
+        boolean foundFunction = false;
+        Map<String, DbParameterAccessor> parms = getAllProcedureParameters(routineName);
+        for (DbParameterAccessor dbpa : parms.values()) {
+            if (dbpa.isReturnValueAccessor()) {
+                foundFunction = true;
+            }
+        }
+/*        }
+        String[] qualifiers = NameNormaliser.normaliseName(procName).split("\\.");
+        String qry = "SELECT 1"
+                   + "  FROM all_arguments"
+                   + " WHERE data_level = 0";
+        if (qualifiers.length == 3) {
+            qry += " AND package_name = ? AND owner = ?";
+        }
+        if (qualifiers.length == 2) {
+            qry += " AND ((package_name = ? AND owner = USER)";
+            qry += "OR (package_name IS NULL AND owner = ?)) ";
+        }
+        if (qualifiers.length == 1) {
+            qry += "(owner = USER AND package_name IS NULL AND object_name = ?) ";
+        }
+        qry += " AND object_name = ?";
+        
+        
+        if (qualifiers.length == 3) {
+            qry += "owner = ? AND package_name = ? AND object_name = ? ";
+        } else {
+            if (qualifiers.length == 2) {
+                qry += "((((owner = ? AND package_name IS NULL AND object_name = ?)"
+                    + " OR (owner = USER AND package_name = ? AND object_name = ?)) ";
+        } else {
+            qry += "(owner = USER AND package_name IS NULL AND object_name = ?) ";
+        }
+
+        // map to public synonyms also
+        if (qualifiers.length < 3 && (!Options.is(SKIP_ORACLE_SYNONYMS))) {
+            qry += " union all "
+                    + " select "
+                    + cols
+                    + " from all_arguments, all_synonyms "
+                    + " where data_level=0 and all_synonyms.owner='PUBLIC' and all_arguments.owner=table_owner and ";
+            if (qualifiers.length == 2) { // package
+                qry += " package_name=table_name and synonym_name=? and object_name=? ";
+            } else {
+                qry += " package_name is null and object_name=table_name and synonym_name=? ";
+            }
+        }
+
+        
+        
+        
+        String query = "SELECT 1"
+                     + "  FROM sysprocparms"
+                     + " WHERE creator = " + ((qualifiers.length > 1) ? ("'" + qualifiers[qualifiers.length - 2] + "'") : "USER")
+                     + "   AND parmmode = 'OUT'"
+                     + "   AND parmname = '" + qualifiers[qualifiers.length - 2] + "'";
+        boolean foundFunction = false;
+        try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
+            ResultSet rs = dc.executeQuery();
+            if (rs.next()) {
+                foundFunction =true;
+            }
+        }
+*/        return foundFunction;
     }
 }

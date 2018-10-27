@@ -9,11 +9,12 @@ public class PreparedStatements {
     }
 
     public static String buildStoredRoutineCallText(
-            String name, int numberOfParams, boolean hasReturnValueParam, boolean execFuncAsQuery) {
+            String name, int numberOfParams, boolean hasReturnValueParam, boolean execFuncAsQuery,
+            boolean routineIsFunction) {
         String sql = "";
         int numArgs = numberOfParams - (hasReturnValueParam ? 1 : 0);
         String voidInvocation = name + "(" + buildParamList(numArgs) + ")";
-        if (hasReturnValueParam && execFuncAsQuery) {
+        if (routineIsFunction && execFuncAsQuery) {
             sql += "SELECT " + voidInvocation;
         } else {
             sql += "{ ";

@@ -204,16 +204,36 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
 
     private PreparedStatement getProcedureParametersStatement(String procName) throws SQLException {
         String[] qualifiers = NameNormaliser.normaliseName(procName).split("\\.");
-        String qry = "select btrim(btrim(arguments,'('),')') as param_list, returns from _v_procedure where 1 = 1";
-
-        if (qualifiers.length == 3) {
-            qry += " and lower(database) = ? and lower(schema) = ? and lower(procedure) = ? ";
-        } else if (qualifiers.length == 2) {
-            qry += " and lower(schema) = ? and lower(procedure) = ? ";
-        } else {
-            qry += " and lower(procedure)=? ";
+        String qry = "SELECT routine_name"
+                   + "     , param_list"
+                   + "     , returns"
+                   + "  FROM ("
+                   + "       SELECT database"
+                   + "            , schema"
+                   + "            , procedure"
+                   + "                  AS routine_name"
+                   + "            , BTRIM(BTRIM(arguments,'('),')')"
+                   + "                  AS param_list"
+                   + "            , returns"
+                   + "         FROM _v_procedure"
+                   + "        UNION"
+                   + "       SELECT database"
+                   + "            , schema"
+                   + "            , function"
+                   + "                  AS routine_name"
+                   + "            , BTRIM(BTRIM(arguments,'('),')')"
+                   + "                  AS param_list"
+                   + "            , returns"
+                   + "         FROM _v_function"
+                   + "       ) x"
+                   + " WHERE ";
+        if (qualifiers.length > 2) {
+            qry += "LOWER(database) = ? AND ";
         }
-
+        if (qualifiers.length > 1) {
+            qry += "LOWER(schema) = ? AND ";
+        }
+        qry += "LOWER(routine_name)= ?";
         return prepareStatement(qry, qualifiers);
     }
 
@@ -276,5 +296,27 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
         private String reduceType(String paramType) {
             return paramType.split("\\(")[0].trim();
         }
+    }
+
+    @Override
+    public boolean routineIsFunction(String routineName) throws SQLException {
+        String[] qualifiers = NameNormaliser.normaliseName(routineName).split("\\.");
+        String qry = "SELECT 1"
+                   + "  FROM _v_function";
+        if (qualifiers.length > 2) {
+            qry += "LOWER(database) = ? AND ";
+        }
+        if (qualifiers.length > 1) {
+            qry += "LOWER(schema) = ? AND ";
+        }
+        qry += "LOWER(routine_name)= ?";
+        boolean foundFunction = false;
+        try (PreparedStatement ps = prepareStatement(qry, qualifiers);
+                ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                foundFunction = true;
+            }
+        }
+        return foundFunction;
     }
 }

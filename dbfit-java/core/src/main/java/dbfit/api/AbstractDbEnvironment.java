@@ -259,6 +259,8 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return new DbStoredProcedureCall(this, name, accessors);
     }
 
+    abstract public boolean routineIsFunction(String routineName) throws SQLException;
+
     public boolean executeFunctionAsQuery() {
         return false;
     }

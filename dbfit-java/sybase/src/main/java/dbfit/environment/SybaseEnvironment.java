@@ -24,7 +24,7 @@ import dbfit.util.Options;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 @DatabaseEnvironment(name="Sybase", driver="com.sybase.jdbc4.jdbc.SybDriver")
-public class SybaseEnvironment extends AbstractDbEnvironment {
+abstract public class SybaseEnvironment extends AbstractDbEnvironment {
 
     public SybaseEnvironment(String driverClassName) {
         super(driverClassName);
@@ -345,4 +345,7 @@ System.out.println("It's a return value");
         sb.append(")");
         return sb.toString();
     }
+
+    @Override
+    abstract public boolean routineIsFunction(String routineName) throws SQLException;
 }

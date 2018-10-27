@@ -1,3 +1,6 @@
 !|dbfit.SybaseASETest|
 
-!|Connect|127.0.0.1:5000|DbFit|DbFit000!|DbFit|
+
+...!|Connect|127.0.0.1:5000|DbFit|DbFit000!|DbFit|
+
+|Connect|jdbc:sybase:Tds:127.0.0.1:5000/DbFit?USER=DbFit&PASSWORD=DbFit000!|

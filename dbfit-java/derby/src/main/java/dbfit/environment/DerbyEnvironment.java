@@ -328,4 +328,9 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
             }
         }
     }
+
+    @Override
+    public boolean routineIsFunction(String routineName) throws SQLException {
+        return new DatabaseFunction(buildDatabaseObjectName(routineName)).exists();
+    }
 }

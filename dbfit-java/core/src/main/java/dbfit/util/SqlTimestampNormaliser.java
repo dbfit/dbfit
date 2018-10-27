@@ -3,11 +3,9 @@ package dbfit.util;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-import dbfit.util.TypeTransformer;
-
 public class SqlTimestampNormaliser implements TypeTransformer {
 
-	@Override
+    @Override
     public Object transform(Object o) throws SQLException {
         if (o == null) {
             return null;

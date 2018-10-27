@@ -218,5 +218,29 @@ public class MySqlEnvironment extends AbstractDbEnvironment {
 
         return allParams;
     }
-}
 
+    @Override
+    public boolean routineIsFunction(String routineName) throws SQLException {
+        String[] qualifiers = NameNormaliser.normaliseName(routineName).split("\\.");
+        String qry = "SELECT type"
+                   + "  FROM mysql.proc"
+                   + " WHERE ";
+        if (qualifiers.length == 2) {
+            qry += "LOWER(db)= ?";
+        } else {
+            qry += "db = DATABASE()";
+        }
+        qry += " AND LOWER(name) = ?";
+        String routineType = "";
+        try (PreparedStatement dc = currentConnection.prepareStatement(qry)) {
+            for (int i = 0; i < qualifiers.length; i++) {
+                dc.setString(i + 1, qualifiers[i]);
+            }
+            ResultSet rs = dc.executeQuery();
+            if (rs.next()) {
+                routineType = rs.getString(1);
+            }
+        }
+        return routineType.equals("FUNCTION");
+    }
+}

@@ -189,4 +189,15 @@ public interface DBEnvironment {
             FileNotFoundException;
 
     DbStoredProcedureCall newStoredProcedureCall(String name, DbParameterAccessor[] accessors);
+
+    /**
+     * Indicates whether the stored routine is a function (as opposed to a procedure).
+     * @throws SQLException 
+     */
+    boolean routineIsFunction(String routineName) throws SQLException;
+
+    /**
+     * Indicates whether the database must execute functions via a query (as opposed to directly).
+     */
+    boolean executeFunctionAsQuery();
 }

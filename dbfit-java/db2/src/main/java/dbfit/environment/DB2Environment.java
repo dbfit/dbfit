@@ -177,5 +177,31 @@ public class DB2Environment extends AbstractDbEnvironment {
         qry += " order by ordinal";
         return readIntoParams(qualifiers, qry);
     }
+
+    @Override
+    public boolean routineIsFunction(String procName)
+            throws SQLException {
+        String[] qualifiers = NameNormaliser.normaliseName(procName).split("\\.");
+        String qry = "SELECT routine_type"
+                   + "  FROM sysibm.routines"
+                   + " WHERE ";
+        if (qualifiers.length == 2) {
+            qry += " LOWER(routine_schema)= ? ";
+            qry += "   AND LOWER(routine_name)=? ";
+        } else {
+            qry += " LOWER(routine_name) = ?";
+        }
+        String routineType = "";
+        try (PreparedStatement dc = currentConnection.prepareStatement(qry)) {
+            for (int i = 0; i < qualifiers.length; i++) {
+                dc.setString(i + 1, qualifiers[i]);
+            }
+            ResultSet rs = dc.executeQuery();
+            if (rs.next()) {
+                routineType = rs.getString(1);
+            }
+        }
+        return routineType.equals("FUNCTION");
+    }
 }
 

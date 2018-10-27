@@ -291,4 +291,30 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
             }
         }
     }
+
+    @Override
+    public boolean routineIsFunction(String routineName) throws SQLException {
+        DatabaseObjectName objName = buildProcedureName(routineName);
+        String query = "SELECT 1"
+                     + "  FROM pg_proc p"
+                     + " INNER"
+                     + "  JOIN pg_type t"
+                     + "    ON p.prorettype = t.oid"
+                     + " INNER"
+                     + "  JOIN pg_namespace n"
+                     + "    ON p.pronamespace = n.oid"
+                     + " WHERE t.typname <> 'void'"
+                     + "   AND LOWER(n.nspname) = ?"
+                     + "   AND LOWER(p.proname) = ?";
+        boolean foundFunction = false;
+        try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
+            dc.setString(1, objName.getSchemaName());
+            dc.setString(2, objName.getObjectName());
+            ResultSet rs = dc.executeQuery();
+            if (rs.next()) {
+                foundFunction =true;
+            }
+        }
+        return foundFunction;
+    }
 }

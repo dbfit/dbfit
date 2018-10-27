@@ -10,14 +10,17 @@ public class StatementExecution implements AutoCloseable {
     }
 
     public void run() throws SQLException {
+System.out.println("StatementExecution: registerOutParameter");
         statement.execute();
     }
 
     public void registerOutParameter(int index, int sqlType, boolean isReturnValue) throws SQLException {
+System.out.println("StatementExecution: registerOutParameter");
         convertStatementToCallable().registerOutParameter(index, sqlType);
     }
 
     public void setObject(int index, Object value, int sqlType, String userDefinedTypeName) throws SQLException {
+System.out.println("StatementExecution: setObject: index: " + index);
         if (value == null) {
             if (userDefinedTypeName == null) {
                 statement.setNull(index, sqlType);

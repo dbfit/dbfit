@@ -35,8 +35,9 @@ public class DbStoredProcedureCall {
         return getAccessors().getNumberOfParameters();
     }
 
-    public String toSqlString() {
-        return buildStoredRoutineCallText(getName(), getNumberOfParameters(), hasReturnValue(), environment.executeFunctionAsQuery());
+    public String toSqlString(boolean routineIsFunction) {
+        return buildStoredRoutineCallText(getName(), getNumberOfParameters(), hasReturnValue(),
+            environment.executeFunctionAsQuery(), routineIsFunction);
     }
 
     void bindParametersTo(StatementExecution cs) throws SQLException {
@@ -45,7 +46,8 @@ public class DbStoredProcedureCall {
 
     public StatementExecution toStatementExecution() throws SQLException {
 System.out.println("DbStoredProcedureCall: toStatementExecution");
-        String sql = toSqlString();
+        boolean routineIsFunction = environment.routineIsFunction(getName());
+        String sql = toSqlString(routineIsFunction);
         PreparedStatement ps = environment.getConnection().prepareCall(sql);
         StatementExecution cs;
         if (hasReturnValue()) {
