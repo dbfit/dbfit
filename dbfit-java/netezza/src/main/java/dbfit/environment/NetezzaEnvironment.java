@@ -299,10 +299,16 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
+    public boolean executeFunctionAsQuery() {
+        return true;
+    }
+
+    @Override
     public boolean routineIsFunction(String routineName) throws SQLException {
         String[] qualifiers = NameNormaliser.normaliseName(routineName).split("\\.");
         String qry = "SELECT 1"
-                   + "  FROM _v_function";
+                   + "  FROM _v_function"
+                   + " WHERE ";
         if (qualifiers.length > 2) {
             qry += "LOWER(database) = ? AND ";
         }
