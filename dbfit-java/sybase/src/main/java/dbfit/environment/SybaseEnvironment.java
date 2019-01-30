@@ -1,11 +1,7 @@
 package dbfit.environment;
 
-import dbfit.annotations.DatabaseEnvironment;
-import dbfit.api.AbstractDbEnvironment;
-import dbfit.util.DbParameterAccessor;
-import dbfit.util.DbParameterAccessorsMapBuilder;
-import dbfit.util.Direction;
 import static dbfit.environment.SybaseTypeNameNormaliser.normaliseTypeName;
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
@@ -14,17 +10,19 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import dbfit.util.Options;
 
-import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+import dbfit.annotations.DatabaseEnvironment;
+import dbfit.api.AbstractDbEnvironment;
+import dbfit.util.DbParameterAccessor;
+import dbfit.util.DbParameterAccessorsMapBuilder;
+import dbfit.util.Direction;
 
 @DatabaseEnvironment(name="Sybase", driver="com.sybase.jdbc4.jdbc.SybDriver")
 public class SybaseEnvironment extends AbstractDbEnvironment {
 
     public SybaseEnvironment(String driverClassName) {
         super(driverClassName);
-        Options.setOption(Options.OPTION_PARAMETER_PATTERN, paramNamePattern);
+        defaultParamPatternString = "@([A-Za-z0-9_]+)";
     }
 
     public boolean supportsOuputOnInsert() {
@@ -40,15 +38,6 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
     protected String getConnectionString(String dataSource, String database) {
         return getConnectionString(dataSource) + "?ServiceName=" + database;
     }
-
-    @Override
-    public void connect(String connectionString, Properties info) throws SQLException {
-        // Add sendTimeAsDatetime=false option to enforce sending Time as
-        // java.sql.Time (otherwise some precision is lost in conversions)
-        super.connect(connectionString, info);
-    }
-
-    private static String paramNamePattern = "@([A-Za-z0-9_]+)";
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
@@ -76,7 +65,7 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
                 params.add(paramName,
                            Direction.INPUT,
                            getSqlType(rs.getString("type")),
-                           getJavaClass(rs.getString("type")));
+                           getTableJavaClass(rs.getString("type")));
             }
         }
 
@@ -141,6 +130,20 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
 
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
+    }
+
+    protected Class<?> getTableJavaClass(String dataType) {
+        /*
+        Sybase workaround.
+        Using Double for inserts as Sybase looses fractional of a number if inserted as BigDecimal.
+        */
+        dataType = normaliseTypeName(dataType);
+        if (numericTypes.contains(dataType))
+            return Double.class;
+        if (decimalTypes.contains(dataType))
+            return Double.class;
+        /* Other types are same for inserted and select */
+        return getJavaClass(dataType);
     }
 
     public Class<?> getJavaClass(String dataType) {
