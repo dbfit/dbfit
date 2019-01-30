@@ -2,6 +2,8 @@
 
 Following types map to Date/Time: "TIME", "DATE". Unfortunately Sybase driver is not working well with most of DATE+TIME types :(
 
+|Execute Ddl|Drop table if exists datatypetest|
+
 |Execute Ddl|Create table datatypetest (d1 date null, d2 time null)|
 
 |Query|select cast(getdate() as date) as dt, cast(getdate() as time) as ts |

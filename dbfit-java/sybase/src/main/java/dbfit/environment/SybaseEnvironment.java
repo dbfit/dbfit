@@ -27,7 +27,6 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
     public SybaseEnvironment(String driverClassName) {
         super(driverClassName);
         defaultParamPatternString = "@([A-Za-z0-9_]+)";
-        Options.setOption(Options.OPTION_PARAMETER_PATTERN, paramNamePattern);
     }
 
     public boolean supportsOuputOnInsert() {
@@ -91,7 +90,7 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
                 params.add(paramName,
                            Direction.INPUT,
                            getSqlType(rs.getString("type")),
-                           getJavaClass(rs.getString("type")));
+                           getTableJavaClass(rs.getString("type")));
             }
         }
         return params.toMap();
@@ -190,6 +189,20 @@ public class SybaseEnvironment extends AbstractDbEnvironment {
         }
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
+    }
+
+    protected Class<?> getTableJavaClass(String dataType) {
+        /*
+        Sybase workaround.
+        Using Double for inserts as Sybase looses fractional of a number if inserted as BigDecimal.
+        */
+        dataType = normaliseTypeName(dataType);
+        if (numericBigDecimalTypes.contains(dataType))
+            return Double.class;
+        if (decimalBigDecimalTypes.contains(dataType))
+            return Double.class;
+        /* Other types are same for inserted and select */
+        return getJavaClass(dataType);
     }
 
     public Class<?> getJavaClass(String dataType) {

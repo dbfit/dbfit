@@ -1,5 +1,33 @@
 !3 If there are no parameters, Execute Procedure needs just one row
 
+|execute ddl|drop table if exists users|
+
+|execute ddl|!-
+CREATE TABLE users
+(
+  Name          VARCHAR(50) NULL
+, UserName      VARCHAR(50) NULL
+, UserId        INT IDENTITY NOT NULL
+)
+-!|
+
+|execute ddl|!-
+CREATE OR REPLACE PROCEDURE MakeUser
+AS
+BEGIN
+    INSERT
+      INTO users
+           (
+           Name
+         , UserName
+           )
+    VALUES (
+           'user1'
+         , 'fromproc'
+           )
+END;
+-!|
+
 !|Execute Procedure|MakeUser|
 
 |Query|select * from users|
