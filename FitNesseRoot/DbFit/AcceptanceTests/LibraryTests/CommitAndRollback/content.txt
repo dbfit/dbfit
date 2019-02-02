@@ -2,8 +2,6 @@
 
 !|set option|autocommit|false|
 
-!|Execute Ddl|drop table if exists TESTTBL|
-
 !|Execute Ddl|create table TESTTBL(ID int, VAL int)|
 
 !|Commit|

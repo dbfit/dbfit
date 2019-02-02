@@ -1,35 +1,6 @@
 ---
 Test
 ---
-|execute ddl|drop table if exists data_types|
-
-|execute ddl|!-
-CREATE TABLE data_types
-(
-  a_bigint                BIGINT
-, a_bit                   BIT
-, a_char                  CHAR(1)
-, a_date                  DATE
-, a_decimal               DECIMAL
-, a_double                DOUBLE
-, a_integer               INTEGER
-, a_money                 MONEY
-, a_numeric               NUMERIC
-, a_real                  REAL
-, a_smallint              SMALLINT
-, a_smallmoney            SMALLMONEY
-, a_text                  TEXT
-, a_time                  TIME
-, a_tinyint               TINYINT
-, a_unsigned_bigint       UNSIGNED BIGINT
-, a_unsigned_int          UNSIGNED INT
-, a_varchar               VARCHAR(1)
-, a_timestamp             TIMESTAMP
-, a_datetime              DATETIME
-, a_smalldatetime         SMALLDATETIME
-)
--!|
-
 |Insert|data_types|
 |a_bigint|a_bit|a_char|a_date    |a_decimal|a_double|a_integer|a_money|a_numeric|a_real|a_smallint|a_smallmoney|a_text|a_time                 |a_tinyint|a_unsigned_bigint|a_unsigned_int|a_varchar|a_timestamp            |a_datetime             |a_smalldatetime        |
 |1       |true |a     |2001-01-01|1        |1.0     |1        |1.0000 |1        |1.0   |1         |1.0000      |a     |0001-01-01 23:59:59.999|1        |1                |1             |a        |7910-12-31 23:59:59.999|7910-12-31 23:59:59.999|7910-12-31 23:59:59.999|

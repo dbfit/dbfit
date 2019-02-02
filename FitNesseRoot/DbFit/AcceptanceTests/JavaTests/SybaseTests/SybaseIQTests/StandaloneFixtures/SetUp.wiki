@@ -1,3 +1,5 @@
-!|dbfit.SybaseTest|
+|Import|
+|dbfit.fixture|
 
-!|Connect|127.0.0.1:2638|dbfit|dbfituser|dbfit|
+|Database Environment|Sybase|
+|Connect|127.0.0.1:2638|dbfit|dbfituser|dbfit|
