@@ -1,0 +1,20 @@
+---
+Test
+---
+
+|Execute ddl|Create table datatypetest (s1 varchar(10) null)|
+
+|insert|datatypetest|
+|s1|
+|testch|
+|null|
+|''|
+
+
+|query|select * from datatypetest|
+|s1|
+|testch|
+|null|
+|''|
+
+|Execute ddl|drop table datatypetest|
