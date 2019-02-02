@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import dbfit.util.Options;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
