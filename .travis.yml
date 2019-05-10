@@ -3,7 +3,6 @@ sudo: required
 services:
   - docker
   - postgresql
-
 language: java
 before_install:
 install: "./gradlew assemble"
@@ -15,11 +14,7 @@ jdk:
 - openjdk7
 - oraclejdk8
 addons:
-  artifacts:
-    paths:
-    - zips/
-    target_paths: artifacts/$TRAVIS_REPO_SLUG/$TRAVIS_BUILD_NUMBER/$TRAVIS_JOB_NUMBER
-    s3_region: us-east-1
+  artifacts: true
 env:
   matrix:
     secure: gOEl7TFI3RH0cMkSNOXeSwC0ZCF60/JSftuTK0Y7UZtSS4yEYkn4o2RX/PO3I+3kQdpkbx9pe+lnd1+C1to1QJqd4AhOGwoy/7KvTE+qCP0bdOLSWUbWJ92SmI/ZPijnODfcFWWkCDIhQBK0SEinVokjD5PPobDwGMosDMS2Qzo=
