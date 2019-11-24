@@ -2,6 +2,12 @@
 !2 !-Set-up Script-!
 !-Here is a simple script to create the objects required for examples in this chapter (you'll also find it in the scripts directory of the -!'''!-dbfit-complete-!'''!- package): -!
 
+.#mysql
+.#postgresql
+
+!anchor mysql
+
+for MySQL
 {{{
 create database dbfit;
 
@@ -32,6 +38,65 @@ create procedure makeuser() insert into users (name,username) values ('user1','f
 create procedure createuser(IN newname varchar(100), IN newusername varchar(100)) insert into users (name,username) values (newname, newusername);
 
 create procedure Multiply(IN factor int, INOUT val int) set val =val*factor;
+}}}
+
+!anchor postgresql
+
+for PostgreSQL
+{{{
+CREATE DATABASE dbfit;
+CREATE USER dbfit PASSWORD dbfit;
+GRANT ALL PRIVILEGES ON DATABASE dbfit TO dbfit ;
+GRANT USAGE ON SCHEMA public TO dbfit;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO dbfit;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO dbfit;
+
+USE dbfit;
+
+CREATE TABLE users( userid SERIAL PRIMARY KEY, name VARCHAR(50) UNIQUE , username VARCHAR(50))
+
+CREATE OR REPLACE FUNCTION ConcatenateStrings(
+    firststring varchar(100), 
+    secondstring varchar(100),
+    OUT concatenated varchar(200)
+) LANGUAGE plpgsql
+AS $$
+BEGIN
+    concatenated :=  concat(firststring , concat( ' ' , secondstring ));
+END $$;
+
+CREATE OR REPLACE FUNCTION CalcLength(name varchar(100),  OUT strlength int)
+AS $$
+BEGIN
+   strlength := length(name);
+END;$$ 
+LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION ConcatenateF (firststring  VARCHAR(100), secondstring varchar(100)) 
+RETURNS VARCHAR(200) AS $$
+BEGIN 
+    RETURN CONCAT(firststring,' ',secondstring);
+END;$$
+LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE PROCEDURE makeuser() LANGUAGE plpgsql 
+AS $$
+DECLARE
+BEGIN
+    INSERT INTO users (name,username) VALUES ('user1','fromproc');
+ END $$;
+
+CREATE OR REPLACE PROCEDURE createuser(newname varchar(100), newusername varchar(100)) LANGUAGE plpgsql  
+AS $$
+BEGIN
+    INSERT INTO users (name,username) VALUES ($1, $2);
+END $$;
+
+CREATE OR REPLACE FUNCTION Multiply(factor int, INOUT val int) LANGUAGE plpgsql
+AS $$
+BEGIN
+   val := factor*val;
+END $$;
 }}}
 
 ''Next page: [[!-Query-!][.DbFit.DbFitReference.CommandReference.QueryCommand]] Parent page: [[!-Command reference-!][.DbFit.DbFitReference.CommandReference]]''
