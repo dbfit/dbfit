@@ -139,5 +139,9 @@ grant select,insert,update on dfsyntest.animals to dftest;
 create or replace synonym dftest.prv_syn_animals for dfsyntest.animals;
 create or replace public synonym pub_syn_animals for dfsyntest.animals;
 
+spool /tmp/dbfit-ora-setup-done.flag
+prompt DBIFT ORACLE SETUP DONE
+spool off
+
 exit
 
