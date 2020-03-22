@@ -16,7 +16,7 @@ before_script:
   - mysql -u root -v < dbfit-java/mysql/src/integration-test/resources/create-db-mysql.sql
   - ./test_vm/scripts/postgresql/install_postgresql.sh
   - for i in {1..60}; do echo "$i waiting for Oracle server startup"; docker exec dbfitora test -f /tmp/dbfit-ora-setup-done.flag && echo "[Oracle UP]" && break || sleep 6; done
-  - for i in {1..60}; do echo "$i waiting for DB2 server startup"; docker logs dbfitdb2 | grep 'Setup has completed' && break || sleep 6; done
+  - for i in {1..60}; do echo "$i waiting for DB2 server startup"; docker logs dbfitdb2 | grep 'Setup has completed' && echo "[DB2 UP]" && break || sleep 6; done
   - docker exec dbfitdb2 /scripts/create_db_schema.sh
 script:
   - ./gradlew --continue clean travisbuild
