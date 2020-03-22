@@ -8,7 +8,7 @@ services:
 
 language: java
 before_install:
-  - docker run --name dbfitdb2 -p 50000:50000 -v "`pwd`/test_vm/scripts/db2:/scripts" -e DB2INST1_PASSWORD=db2inst1-pwd -e LICENSE=accept ibmcom/db2:latest db2start &
+  - docker run --privileged --name dbfitdb2 -p 50000:50000 -v "`pwd`/test_vm/scripts/db2:/scripts" -e DB2INST1_PASSWORD=db2inst1-pwd -e LICENSE=accept -e DBNAME=db2inst1 ibmcom/db2:latest &
   - docker run --name dbfitora -p 1521:1521 -v "`pwd`/test_vm/scripts/oracle/sql:/docker-entrypoint-initdb.d:ro" wnameless/oracle-xe-11g-r2 &
   - "./gradlew -version"
 install: "./gradlew assemble"
@@ -16,7 +16,7 @@ before_script:
   - mysql -u root -v < dbfit-java/mysql/src/integration-test/resources/create-db-mysql.sql
   - ./test_vm/scripts/postgresql/install_postgresql.sh
   - for i in {1..60}; do echo "$i waiting for Oracle server startup"; docker exec dbfitora test -f /tmp/dbfit-ora-setup-done.flag && echo "[Oracle UP]" && break || sleep 6; done
-  - for i in {1..60}; do echo "$i waiting for DB2 server startup"; docker exec dbfitdb2 /scripts/detect_dbstart.sh 2 && break || sleep 6; done
+  - for i in {1..60}; do echo "$i waiting for DB2 server startup"; docker logs dbfitdb2 | grep 'Setup has completed' && break || sleep 6; done
   - docker exec dbfitdb2 /scripts/create_db_schema.sh
 script:
   - ./gradlew --continue clean travisbuild
