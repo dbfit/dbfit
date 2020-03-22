@@ -8,7 +8,11 @@ services:
 
 language: java
 before_install:
-  - docker run --privileged --name dbfitdb2 -p 50000:50000 -v "`pwd`/test_vm/scripts/db2:/scripts" -e DB2INST1_PASSWORD=db2inst1-pwd -e LICENSE=accept -e DBNAME=db2inst1 ibmcom/db2:latest &
+  - >
+    docker run
+    --privileged --name dbfitdb2 -p 50000:50000 -v "`pwd`/test_vm/scripts/db2:/scripts"
+    -e DB2INST1_PASSWORD=db2inst1-pwd -e LICENSE=accept -e DBNAME=db2inst1 ibmcom/db2:latest
+    | tee -a /tmp/run-db2.log | grep -E '^(DB2|SQL|LIC|\(\*\))' &
   - docker run --name dbfitora -p 1521:1521 -v "`pwd`/test_vm/scripts/oracle/sql:/docker-entrypoint-initdb.d:ro" wnameless/oracle-xe-11g-r2 &
   - "./gradlew -version"
 install: "./gradlew assemble"
