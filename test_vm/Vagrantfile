@@ -19,10 +19,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.omnibus.chef_version = :latest
   config.vbguest.auto_update = true
 
-  #config.vm.box = "centos/7"
-  #config.vm.box_url = "centos/7"
-  config.vm.box = "centos7-base"
-  config.vm.box_url = "centos7-base"
+  config.vm.box = "centos/7"
+  config.vm.box_url = "centos/7"
+  #config.vm.box = "centos7-base"
+  #config.vm.box_url = "centos7-base"
   config.vm.host_name = "dbfitvm"
   config.vm.network "private_network", ip: "192.168.33.10"
   # dbfit(8085), oracle(1521), postgresql(5432), netezza(5480), informix(16466), mysql(3306), sqlserver(1433), db2(50000)
