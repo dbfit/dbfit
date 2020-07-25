@@ -61,6 +61,20 @@ if [ "$DOLIBS" ]
 then
 	echo "$IM installing library packages..."
 	
+	yum -y install libstdc++.x86_64 libstdc++.i686
+	if [ $? -ne 0 ]
+	then
+		echo "$EM installing libstdc libraries" 1>&2
+		exit 1
+	fi
+
+	yum -y install pam-devel.x86_64 pam-devel.i686
+	if [ $? -ne 0 ]
+	then
+		echo "$EM installing pam libraries" 1>&2
+		exit 1
+	fi
+
 	# IBM docs (for v9.5 at least) say that db2setup needs 32 and 64-bit libaio.
 	# See: http://publib.boulder.ibm.com/infocenter/db2luw/v9r5/index.jsp?topic=%2Fcom.ibm.db2.luw.qb.server.doc%2Fdoc%2Fr0008865.html
 	# This appears to be untrue by v10.5. We install 64-bit here.
@@ -96,11 +110,13 @@ then
 	echo "$IM found installation directory"
 # Check for presence of zipped tarball installation package.
 # NOTE: the zipped tarball must have been renamed to the fixed name "db2_linuxx64_expc.tar.gz".
+# Download here: https://www-01.ibm.com/marketing/iwm/mrs/?source=swg-db2expressc (last check 20200723)
+# Last test with version v11.1_linuxx64_expc.tar.gz
 elif [ -f ${DBFIT_ROOT}/db2_linuxx64_expc.tar.gz ]
 then
 	DOSETUP=true
 	echo "$IM found gzipped installation tarball. Unpacking..."
-	tar --no-same-owner -zxf ${DBFIT_ROOT}/db2_linuxx64_expc.tar.gz
+	tar --no-same-owner -zxf ${DBFIT_ROOT}/db2_linuxx64_expc.tar.gz -C ${DB2_INST_ROOT}
 	if [ $? -ne 0 ]
 	then
 		echo "$EM unpacking gzipped installation tarball" 1>&2

@@ -10,6 +10,7 @@ grant create procedure to dftest;
 grant create table to dftest;
 grant resource to dftest;
 grant create procedure to dftest;
+alter user dftest QUOTA UNLIMITED ON users;
 
 alter session set current_schema = dftest;
 

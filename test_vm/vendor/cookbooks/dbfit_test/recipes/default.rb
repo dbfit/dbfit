@@ -1,4 +1,4 @@
-include_recipe "dbfit_test::diskspace"
+#include_recipe "dbfit_test::diskspace"
 include_recipe "firewalld::disable"
 include_recipe "iptables::disabled"
 include_recipe "dbfit_test::tools"

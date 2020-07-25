@@ -1,9 +1,3 @@
-include_recipe "postgresql::server"
-include_recipe "postgresql::client"
-include_recipe "postgresql::ruby"
-
-include_recipe "database::postgresql"
-
 postgresql_connection_info = {:host => "127.0.0.1",
                               :port => 5432,
                               :username => 'postgres',
@@ -11,31 +5,37 @@ postgresql_connection_info = {:host => "127.0.0.1",
 
 sql_dir = File.join(node['dbfit']['project_root'], "test_vm/scripts/postgresql/sql")
 
-postgresql_database 'dbfit' do
-  connection postgresql_connection_info
+postgresql_server_install 'PostgreSQL Server install' do
+  action :install
+end
+
+postgresql_server_install 'Setup my PostgreSQL server' do
+  password node['postgresql']['password']['postgres']
+  port 5432
   action :create
 end
 
-postgresql_database_user 'create dbfit user' do
-  connection postgresql_connection_info
-  username 'dbfit'
+postgresql_user 'dbfit' do
   password 'dbfit'
+  createdb true
   action :create
 end
 
-postgresql_database_user 'dbfit grants' do
-  connection postgresql_connection_info
-  username 'dbfit'
-  database_name 'dbfit'
-  privileges [:all]
-  action :grant
+postgresql_database 'dbfit' do
+  owner 'dbfit'
+  action :create
 end
 
-# needed to support DbDeploy
-postgresql_database 'dbfit.changelog' do
-  connection postgresql_connection_info
-  database_name 'dbfit'
-  sql { ::File.open("#{sql_dir}/create-db-schema-postgresql.sql").read }
-  action :query
+execute 'update env to allow access from host' do
+  project_root = node['dbfit']['project_root']
+
+  user 'postgres'
+  command "#{project_root}/test_vm/scripts/postgresql/update_env.sh"
+  not_if { ::File.exist?('/etc/vm_provision_on_postgres_timestamp') }
+  action :run
+  returns [0, 2]
 end
 
+service 'postgresql-9.6.service' do
+  action :restart
+end

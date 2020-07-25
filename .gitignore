@@ -29,6 +29,7 @@ test_vm/*.box
 oracle-xe-*.rpm.zip
 db2_linuxx64_expc.tar.gz
 ids-linux-x86_64.tar
+Disk1
 
 # the documentation
 website/_site
