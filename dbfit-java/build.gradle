@@ -248,7 +248,7 @@ task libs(dependsOn: subprojects.libs) { }
 
 def publicCoreCompileDeps = [
     'org.reflections:reflections:0.9.11',
-    'org.apache.commons-codec:commons-codec:1.10',
+    'commons-codec:commons-codec:1.10',
     'org.apache.commons:commons-lang3:3.5',
     'com.github.dbfit:fitlibrary:20091020'
 ]
