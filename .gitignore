@@ -9,6 +9,7 @@ dbfit-java/derby/dbfit/
 .project
 .classpath
 out
+.vscode
 
 dist
 /zips/
@@ -24,6 +25,7 @@ test_vm/Disk1
 test_vm/vagrant_config_custom.rb
 test_vm/disk1.vdi
 test_vm/.Vagrantfile.swp
+test_vm/*.box
 oracle-xe-*.rpm.zip
 db2_linuxx64_expc.tar.gz
 ids-linux-x86_64.tar
@@ -49,3 +51,4 @@ target
 dbfit-complete-*.zip
 dbfit-java/*/TestDbConnection*.properties
 dbfit-java/*/TestDbConnection*.properties.custom
+
