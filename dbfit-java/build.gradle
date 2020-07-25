@@ -308,7 +308,7 @@ project('informix') {
     dependencies {
         implementation project(':dbfit-java:core')
         implementation 'org.apache.commons:commons-lang3:3.4'
-        implementation 'com.informix:ifxjdbc:4.10.JC4W1@jar'
+        implementation 'com.ibm.informix:jdbc:4.50.4.1@jar'
     }
 }
 
