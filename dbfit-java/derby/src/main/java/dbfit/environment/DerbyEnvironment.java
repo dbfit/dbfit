@@ -28,7 +28,7 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
  * @see EmbeddedDerbyEnvironment
  * @author P&aring;l Brattberg, pal.brattberg@acando.com
  */
-@DatabaseEnvironment(name="Derby", driver="org.apache.derby.jdbc.ClientDriver")
+@DatabaseEnvironment(name = "Derby", driver = "org.apache.derby.jdbc.ClientDriver")
 public class DerbyEnvironment extends AbstractDbEnvironment {
     private TypeMapper typeMapper = new DerbyTypeMapper();
 
@@ -55,8 +55,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
-    public Map<String, DbParameterAccessor> getAllColumns(String tableName)
-            throws SQLException {
+    public Map<String, DbParameterAccessor> getAllColumns(String tableName) throws SQLException {
         return new DatabaseTable(buildDatabaseObjectName(tableName)).getParams();
     }
 
@@ -92,12 +91,11 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
             return allParams;
         }
 
-        protected DbParameterAccessor createColumnAccessor(ResultSet rs)
-                throws SQLException {
+        protected DbParameterAccessor createColumnAccessor(ResultSet rs) throws SQLException {
             String paramTypeName = rs.getString("TYPE_NAME");
             return createDbParameterAccessor(getColumnName(rs), columnDirection(rs),
-                           typeMapper.getJDBCSQLTypeForDBType(paramTypeName),
-                           getJavaClass(paramTypeName), rs.getInt("ORDINAL_POSITION") - 1);
+                    typeMapper.getJDBCSQLTypeForDBType(paramTypeName), getJavaClass(paramTypeName),
+                    rs.getInt("ORDINAL_POSITION") - 1);
         }
 
         protected String getColumnName(ResultSet rs) throws SQLException {
@@ -105,8 +103,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
         }
 
         protected Direction columnDirection(ResultSet rs) throws SQLException {
-            return requireNonNull(getColumnDirection(rs),
-                            "Invalid type for column/parameter " + getColumnName(rs));
+            return requireNonNull(getColumnDirection(rs), "Invalid type for column/parameter " + getColumnName(rs));
         }
 
         abstract protected Direction getColumnDirection(ResultSet rs) throws SQLException;
@@ -153,14 +150,14 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
         @Override
         protected Direction getColumnDirection(ResultSet rs) throws SQLException {
             switch (rs.getInt("COLUMN_TYPE")) {
-                case DatabaseMetaData.procedureColumnIn:
-                    return Direction.INPUT;
-                case DatabaseMetaData.procedureColumnInOut:
-                    return Direction.INPUT_OUTPUT;
-                case DatabaseMetaData.procedureColumnOut:
-                    return Direction.OUTPUT;
-                default:
-                    return null;
+            case DatabaseMetaData.procedureColumnIn:
+                return Direction.INPUT;
+            case DatabaseMetaData.procedureColumnInOut:
+                return Direction.INPUT_OUTPUT;
+            case DatabaseMetaData.procedureColumnOut:
+                return Direction.OUTPUT;
+            default:
+                return null;
             }
         }
     }
@@ -184,25 +181,23 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
         @Override
         protected Direction getColumnDirection(ResultSet rs) throws SQLException {
             switch (rs.getInt("COLUMN_TYPE")) {
-                case DatabaseMetaData.functionColumnIn:
-                    return Direction.INPUT;
-                case DatabaseMetaData.functionReturn:
-                    return Direction.RETURN_VALUE;
-                default:
-                    return null;
+            case DatabaseMetaData.functionColumnIn:
+                return Direction.INPUT;
+            case DatabaseMetaData.functionReturn:
+                return Direction.RETURN_VALUE;
+            default:
+                return null;
             }
         }
     }
 
     DatabaseObjectName buildDatabaseObjectName(String objName) throws SQLException {
-        return DatabaseObjectName.splitWithDelimiter(
-                objName.toUpperCase(), "\\.", getConnection().getSchema());
+        return DatabaseObjectName.splitWithDelimiter(objName.toUpperCase(), "\\.", getConnection().getSchema());
     }
 
     DatabaseObject findStoredRoutine(DatabaseObjectName objName) throws SQLException {
-        List<DatabaseObject> prioritisedCandidates = Arrays.asList(
-            new DatabaseProcedure(objName),
-            new DatabaseFunction(objName));
+        List<DatabaseObject> prioritisedCandidates = Arrays.asList(new DatabaseProcedure(objName),
+                new DatabaseFunction(objName));
         for (DatabaseObject object : prioritisedCandidates) {
             if (object.exists()) {
                 return object;
@@ -212,8 +207,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(String callableName)
-            throws SQLException {
+    public Map<String, DbParameterAccessor> getAllProcedureParameters(String callableName) throws SQLException {
         return findStoredRoutine(buildDatabaseObjectName(callableName)).getParams();
     }
 
@@ -236,27 +230,18 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
      */
     public static class DerbyTypeMapper implements TypeMapper {
         private static final List<String> stringTypes = Arrays
-                .asList(new String[] { "CHAR", "CHARACTER", "LONG VARCHAR",
-                        "VARCHAR", "XML", "CHAR VARYING", "CHARACTER VARYING",
-                        "LONG VARCHAR FOR BIT DATA", "VARCHAR FOR BIT DATA" });
-        private static final List<String> intTypes = Arrays
-                .asList(new String[] { "INTEGER", "INT" });
-        private static final List<String> longTypes = Arrays
-                .asList(new String[] { "BIGINT", });
+                .asList(new String[] { "CHAR", "CHARACTER", "LONG VARCHAR", "VARCHAR", "XML", "CHAR VARYING",
+                        "CHARACTER VARYING", "LONG VARCHAR FOR BIT DATA", "VARCHAR FOR BIT DATA" });
+        private static final List<String> intTypes = Arrays.asList(new String[] { "INTEGER", "INT" });
+        private static final List<String> longTypes = Arrays.asList(new String[] { "BIGINT", });
         private static final List<String> doubleTypes = Arrays
                 .asList(new String[] { "DOUBLE", "DOUBLE PRECISION", "FLOAT" });
-        private static final List<String> floatTypes = Arrays
-                .asList(new String[] { "REAL" });
-        private static final List<String> shortTypes = Arrays
-                .asList(new String[] { "SMALLINT" });
-        private static final List<String> decimalTypes = Arrays
-                .asList(new String[] { "DECIMAL", "DEC", "NUMERIC" });
-        private static final List<String> dateTypes = Arrays
-                .asList(new String[] { "DATE" });
-        private static final List<String> timestampTypes = Arrays
-                .asList(new String[] { "TIMESTAMP", });
-        private static final List<String> timeTypes = Arrays
-                .asList(new String[] { "TIME" });
+        private static final List<String> floatTypes = Arrays.asList(new String[] { "REAL" });
+        private static final List<String> shortTypes = Arrays.asList(new String[] { "SMALLINT" });
+        private static final List<String> decimalTypes = Arrays.asList(new String[] { "DECIMAL", "DEC", "NUMERIC" });
+        private static final List<String> dateTypes = Arrays.asList(new String[] { "DATE" });
+        private static final List<String> timestampTypes = Arrays.asList(new String[] { "TIMESTAMP", });
+        private static final List<String> timeTypes = Arrays.asList(new String[] { "TIME" });
 
         @Override
         public Class<?> getJavaClassForDBType(final String dbDataType) {
@@ -281,8 +266,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
                 return Long.class;
             if (timestampTypes.contains(dataType))
                 return java.sql.Timestamp.class;
-            throw new UnsupportedOperationException("Type '" + dbDataType
-                    + "' is not supported for Derby");
+            throw new UnsupportedOperationException("Type '" + dbDataType + "' is not supported for Derby");
         }
 
         @Override
@@ -306,8 +290,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
                 return java.sql.Types.TIME;
             if (dateTypes.contains(dataType))
                 return java.sql.Types.DATE;
-            throw new UnsupportedOperationException("Type '" + dbDataType
-                    + "' is not supported for Derby");
+            throw new UnsupportedOperationException("Type '" + dbDataType + "' is not supported for Derby");
         }
 
         private static String normaliseTypeName(String type) {
@@ -331,8 +314,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
                 }
                 return dataType;
             } else {
-                throw new IllegalArgumentException(
-                        "You must specify a valid type for conversions");
+                throw new IllegalArgumentException("You must specify a valid type for conversions");
             }
         }
     }

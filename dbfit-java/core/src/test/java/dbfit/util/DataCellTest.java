@@ -3,7 +3,6 @@ package dbfit.util;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import org.mockito.runners.MockitoJUnitRunner;
@@ -13,9 +12,12 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class DataCellTest {
 
-    @Mock private DataRow row;
-    @Mock private DataRow row2;
-    @Mock private DataRow row3;
+    @Mock
+    private DataRow row;
+    @Mock
+    private DataRow row2;
+    @Mock
+    private DataRow row3;
     private DataCell cell;
     private DataCell nullValueCell;
     private DataCell nullValueCell2;

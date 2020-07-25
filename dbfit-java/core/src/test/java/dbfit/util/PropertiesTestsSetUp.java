@@ -1,7 +1,6 @@
 package dbfit.util;
 
 import java.util.List;
-import java.util.ArrayList;
 
 public class PropertiesTestsSetUp {
 
@@ -26,8 +25,8 @@ public class PropertiesTestsSetUp {
     }
 
     /**
-     * Generate dummy configuration settings with the given password in
-     * encrypted format
+     * Generate dummy configuration settings with the given password in encrypted
+     * format
      */
     public static List<String> prepareEncryptedSettings(String encPwd) {
         List<String> lines = prepareGeneralSettings();
@@ -39,4 +38,3 @@ public class PropertiesTestsSetUp {
         return "ENC(" + value + ")";
     }
 }
-

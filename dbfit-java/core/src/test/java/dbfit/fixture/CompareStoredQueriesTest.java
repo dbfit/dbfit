@@ -17,14 +17,14 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class CompareStoredQueriesTest {
 
-    @Mock ReportingSystem reportingSystem; // wrapper for reporting via fit.Fixture
+    @Mock
+    ReportingSystem reportingSystem; // wrapper for reporting via fit.Fixture
 
     @Test
     public void shouldReportCellSuccessToReportingSystem() {
-        DiffListener reporter = new CompareStoredQueries.FitFixtureReporter(
-                reportingSystem);
+        DiffListener reporter = new CompareStoredQueries.FitFixtureReporter(reportingSystem);
 
-        MatchResult cellResult = createCellResult("*demo-1*", SUCCESS);
+        MatchResult<?, ?> cellResult = createCellResult("*demo-1*", SUCCESS);
 
         reporter.onEvent(cellResult);
 

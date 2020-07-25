@@ -25,9 +25,9 @@ public class TypeTransformerFactoryTest {
         };
     }
 
-    private final Class ctop = AbstractCollection.class;
-    private final Class cmid = AbstractList.class;
-    private final Class clow = ArrayList.class;
+    private final Class<?> ctop = AbstractCollection.class;
+    private final Class<?> cmid = AbstractList.class;
+    private final Class<?> clow = ArrayList.class;
 
     private final TypeTransformer normaliserTop = createTypeTransformerFake("normaliser Top");
     private final TypeTransformer normaliserMid = createTypeTransformerFake("normaliser Mid");

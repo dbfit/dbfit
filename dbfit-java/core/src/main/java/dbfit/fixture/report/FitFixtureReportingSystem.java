@@ -1,7 +1,6 @@
 package dbfit.fixture.report;
 
 import dbfit.util.MatchResult;
-import static dbfit.util.MatchStatus.*;
 
 import fit.Fixture;
 import fit.Parse;
@@ -35,8 +34,8 @@ public class FitFixtureReportingSystem implements ReportingSystem {
     }
 
     /*
-     * Ensure new row is attached (but still not closed)
-     * OK to call that several times.
+     * Ensure new row is attached (but still not closed) OK to call that several
+     * times.
      */
     protected Parse newRowAttached() {
         lastClosedRow.more = newRow;
@@ -59,7 +58,7 @@ public class FitFixtureReportingSystem implements ReportingSystem {
     }
 
     @Override
-    public void endRow(final MatchResult res, final String description) {
+    public void endRow(final MatchResult<?, ?> res, final String description) {
         String descr = description;
 
         switch (res.getStatus()) {
@@ -71,6 +70,8 @@ public class FitFixtureReportingSystem implements ReportingSystem {
             descr = Objects.toString(descr, "surplus");
             fixture.wrong(newRow);
             break;
+        default:
+            // none
         }
 
         if (!isEmpty(descr)) {
@@ -81,12 +82,12 @@ public class FitFixtureReportingSystem implements ReportingSystem {
     }
 
     @Override
-    public void endRow(final MatchResult res) {
+    public void endRow(final MatchResult<?, ?> res) {
         endRow(res, null);
     }
 
     @Override
-    public void addCell(final MatchResult res) {
+    public void addCell(final MatchResult<?, ?> res) {
         Parse cell = new Parse("td", res.getStringValue1(), null, null);
 
         switch (res.getStatus()) {
@@ -107,8 +108,8 @@ public class FitFixtureReportingSystem implements ReportingSystem {
             fixture.exception(cell, res.getException());
             break;
         /*
-            // TODO: ignored
-        */
+         * // TODO: ignored
+         */
         default:
             throw new UnsupportedOperationException("Not implemented yet");
         }

@@ -11,7 +11,7 @@ public abstract class DiffBase<T1, T2> implements Diff<T1, T2> {
 
     protected Collection<DiffListener> listeners;
 
-    protected abstract Class getType();
+    protected abstract Class<?> getType();
 
     protected abstract DiffRunner getDiffRunner(MatchResult<T1, T2> request);
 
@@ -52,8 +52,8 @@ public abstract class DiffBase<T1, T2> implements Diff<T1, T2> {
         listeners.removeAll(removed);
     }
 
-    protected void notifyListeners(final MatchResult result) {
-        for (DiffListener listener: listeners) {
+    protected void notifyListeners(final MatchResult<T1, T2> result) {
+        for (DiffListener listener : listeners) {
             listener.onEvent(result);
         }
     }
@@ -83,12 +83,15 @@ public abstract class DiffBase<T1, T2> implements Diff<T1, T2> {
             }
         }
 
-        public final MatchResult getResult() {
+        public final MatchResult<T1, T2> getResult() {
             return result;
         }
 
-        protected void beforeDiff() {}
-        protected void afterDiff() {}
+        protected void beforeDiff() {
+        }
+
+        protected void afterDiff() {
+        }
     }
 
 }

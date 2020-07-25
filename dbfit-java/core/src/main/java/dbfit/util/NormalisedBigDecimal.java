@@ -4,6 +4,11 @@ import java.math.BigDecimal;
 
 public class NormalisedBigDecimal extends BigDecimal {
 
+    /**
+     * generated ID
+     */
+    private static final long serialVersionUID = 2431086524011308737L;
+
     public NormalisedBigDecimal(final BigDecimal bd) {
         super(bd.unscaledValue(), bd.scale());
     }

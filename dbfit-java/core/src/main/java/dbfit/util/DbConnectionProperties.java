@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 public class DbConnectionProperties {
 
@@ -22,7 +21,7 @@ public class DbConnectionProperties {
     private static DbConnectionProperties createFrom(Map<String, String> map) {
         DbConnectionProperties props = new DbConnectionProperties();
 
-        for (Map.Entry<String, String> entry: map.entrySet()) {
+        for (Map.Entry<String, String> entry : map.entrySet()) {
             String key = entry.getKey();
             String val = entry.getValue();
 
@@ -37,8 +36,7 @@ public class DbConnectionProperties {
             } else if ("connection-string".equals(key)) {
                 props.FullConnectionString = val;
             } else {
-                throw new UnsupportedOperationException(
-                        "Unsupported key in properties file:" + key);
+                throw new UnsupportedOperationException("Unsupported key in properties file:" + key);
             }
         }
 
@@ -46,8 +44,7 @@ public class DbConnectionProperties {
             return props;
         }
 
-        if (props.Service != null && props.Username != null
-                && props.Password != null) {
+        if (props.Service != null && props.Username != null && props.Password != null) {
             return props;
         }
 
@@ -59,13 +56,11 @@ public class DbConnectionProperties {
         return CreateFromString(lines, null);
     }
 
-    public static DbConnectionProperties CreateFromString(List<String> lines,
-            CryptoService crypto) {
+    public static DbConnectionProperties CreateFromString(List<String> lines, CryptoService crypto) {
         return createFrom(getLoader(crypto).loadFromList(lines));
     }
 
-    public static DbConnectionProperties CreateFromFile(String path)
-            throws FileNotFoundException, IOException {
+    public static DbConnectionProperties CreateFromFile(String path) throws FileNotFoundException, IOException {
 
         return createFrom(getLoader(null).loadFromFile(path));
     }
@@ -78,4 +73,3 @@ public class DbConnectionProperties {
         }
     }
 }
-

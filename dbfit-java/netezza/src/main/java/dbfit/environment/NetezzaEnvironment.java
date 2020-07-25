@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-@DatabaseEnvironment(name="Netezza", driver="org.netezza.Driver")
+@DatabaseEnvironment(name = "Netezza", driver = "org.netezza.Driver")
 public class NetezzaEnvironment extends AbstractDbEnvironment {
     public NetezzaEnvironment(String driverClassName) {
         super(driverClassName);
@@ -39,10 +39,9 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
     }
 
     // override the buildInsertPreparedStatement to leave out RETURN_GENERATED_KEYS
-    public PreparedStatement buildInsertPreparedStatement(String tableName,
-            DbParameterAccessor[] accessors) throws SQLException {
-        return getConnection().prepareStatement(
-                buildInsertCommand(tableName, accessors));
+    public PreparedStatement buildInsertPreparedStatement(String tableName, DbParameterAccessor[] accessors)
+            throws SQLException {
+        return getConnection().prepareStatement(buildInsertCommand(tableName, accessors));
     }
 
     // netezza jdbc driver does not support named parameters - so just map them
@@ -52,10 +51,8 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
         return super.parseCommandText(commandText);
     }
 
-    public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
-            throws SQLException {
-        String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
-                .split("\\.");
+    public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName) throws SQLException {
+        String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName).split("\\.");
         String qry = " select ATTNAME, FORMAT_TYPE, ATTLEN from _v_relation_column where ";
 
         if (qualifiers.length == 2) {
@@ -67,12 +64,11 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
         return readIntoParams(qualifiers, qry);
     }
 
-    private Map<String, DbParameterAccessor> readIntoParams(
-            String[] queryParameters, String query) throws SQLException {
+    private Map<String, DbParameterAccessor> readIntoParams(String[] queryParameters, String query)
+            throws SQLException {
         try (PreparedStatement dc = currentConnection.prepareStatement(query)) {
             for (int i = 0; i < queryParameters.length; i++) {
-                dc.setString(i + 1,
-                        NameNormaliser.normaliseName(queryParameters[i]));
+                dc.setString(i + 1, NameNormaliser.normaliseName(queryParameters[i]));
             }
             ResultSet rs = dc.executeQuery();
             Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
@@ -83,9 +79,7 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
                     paramName = "";
                 }
                 String dataType = rs.getString(2);
-                DbParameterAccessor dbp = createDbParameterAccessor(
-                        paramName,
-                        Direction.INPUT, getSqlType(dataType),
+                DbParameterAccessor dbp = createDbParameterAccessor(paramName, Direction.INPUT, getSqlType(dataType),
                         getJavaClass(dataType), position++);
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }
@@ -96,38 +90,28 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
 
     // List interface has sequential search, so using list instead of array to
     // map types
-    private static List<String> stringTypes = Arrays.asList(new String[] {
-            "VARCHAR", "CHAR", "CHARACTER", "CHARACTER VARYING", "VARYING", "TEXT",
-            "NAME", "XML", "BPCHAR", "UNKNOWN", "NVCHAR" ,"NCHAR", "NATIONAL CHARACTER VARYING", "NATIONAL CHARACTER"});
-    private static List<String> intTypes = Arrays.asList(new String[] {
-            "INT", "INT4", "INTEGER", "SERIAL" });
-    private static List<String> tinyintTypes = Arrays.asList(new String[] {
-            "BYTEINT","INT1"});
-    private static List<String> smallintTypes = Arrays.asList(new String[] {
-            "SMALLINT", "INT2"});
-    private static List<String> longTypes = Arrays.asList(new String[] {
-            "BIGINT", "BIGSERIAL", "INT8" });
-    private static List<String> floatTypes = Arrays.asList(new String[] {
-            "REAL", "FLOAT4" });
-    private static List<String> doubleTypes = Arrays.asList(new String[] {
-            "DOUBLE PRECISION", "FLOAT8", "FLOAT","DOUBLE" });
-    private static List<String> decimalTypes = Arrays.asList(new String[] {
-            "DECIMAL", "NUMERIC" });
-    private static List<String> dateTypes = Arrays
-            .asList(new String[] { "DATE" });
-    private static List<String> timestampTypes = Arrays.asList(new String[] {
-            "TIMESTAMP", "TIMESTAMP WITHOUT TIME ZONE",
-            "TIMESTAMP WITH TIME ZONE", "TIMESTAMPTZ" });
-    private static List<String> refCursorTypes = Arrays
-        .asList(new String[] { "REFTABLE" });
-    private static List<String> booleanTypes = Arrays.asList(new String[] {
-            "BOOL", "BOOLEAN" });
+    private static List<String> stringTypes = Arrays.asList(
+            new String[] { "VARCHAR", "CHAR", "CHARACTER", "CHARACTER VARYING", "VARYING", "TEXT", "NAME", "XML",
+                    "BPCHAR", "UNKNOWN", "NVCHAR", "NCHAR", "NATIONAL CHARACTER VARYING", "NATIONAL CHARACTER" });
+    private static List<String> intTypes = Arrays.asList(new String[] { "INT", "INT4", "INTEGER", "SERIAL" });
+    private static List<String> tinyintTypes = Arrays.asList(new String[] { "BYTEINT", "INT1" });
+    private static List<String> smallintTypes = Arrays.asList(new String[] { "SMALLINT", "INT2" });
+    private static List<String> longTypes = Arrays.asList(new String[] { "BIGINT", "BIGSERIAL", "INT8" });
+    private static List<String> floatTypes = Arrays.asList(new String[] { "REAL", "FLOAT4" });
+    private static List<String> doubleTypes = Arrays
+            .asList(new String[] { "DOUBLE PRECISION", "FLOAT8", "FLOAT", "DOUBLE" });
+    private static List<String> decimalTypes = Arrays.asList(new String[] { "DECIMAL", "NUMERIC" });
+    private static List<String> dateTypes = Arrays.asList(new String[] { "DATE" });
+    private static List<String> timestampTypes = Arrays.asList(
+            new String[] { "TIMESTAMP", "TIMESTAMP WITHOUT TIME ZONE", "TIMESTAMP WITH TIME ZONE", "TIMESTAMPTZ" });
+    private static List<String> refCursorTypes = Arrays.asList(new String[] { "REFTABLE" });
+    private static List<String> booleanTypes = Arrays.asList(new String[] { "BOOL", "BOOLEAN" });
 
     private static String normaliseTypeName(String dataType) {
         if (dataType.indexOf("(") <= 0) {
-           dataType = dataType.toUpperCase().trim();
+            dataType = dataType.toUpperCase().trim();
         } else {
-           dataType = dataType.toUpperCase().trim().substring(0,dataType.indexOf("("));
+            dataType = dataType.toUpperCase().trim().substring(0, dataType.indexOf("("));
         }
         return dataType;
     }
@@ -160,11 +144,10 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
             return java.sql.Types.REF;
         if (booleanTypes.contains(dataType))
             return java.sql.Types.BOOLEAN;
-        throw new UnsupportedOperationException("Type " + dataType
-                + " is not supported");
+        throw new UnsupportedOperationException("Type " + dataType + " is not supported");
     }
 
-    public Class getJavaClass(String dataType) {
+    public Class<?> getJavaClass(String dataType) {
         dataType = normaliseTypeName(dataType);
         if (stringTypes.contains(dataType))
             return String.class;
@@ -190,8 +173,7 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
             return java.sql.Timestamp.class;
         if (booleanTypes.contains(dataType))
             return Boolean.class;
-        throw new UnsupportedOperationException("Type " + dataType
-                + " is not supported");
+        throw new UnsupportedOperationException("Type " + dataType + " is not supported");
     }
 
     @Override
@@ -200,11 +182,8 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(
-            String procName) throws SQLException {
-        try (PreparedStatement ps = getProcedureParametersStatement(procName);
-             ResultSet rs = ps.executeQuery()
-        ) {
+    public Map<String, DbParameterAccessor> getAllProcedureParameters(String procName) throws SQLException {
+        try (PreparedStatement ps = getProcedureParametersStatement(procName); ResultSet rs = ps.executeQuery()) {
             if (!rs.next()) {
                 throw new SQLException("Unknown procedure " + procName);
             }
@@ -276,11 +255,9 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
             return createAccessor("", RETURN_VALUE, returnType, -1);
         }
 
-        private DbParameterAccessor createAccessor(
-                String name, Direction direction, String type, int pos) {
+        private DbParameterAccessor createAccessor(String name, Direction direction, String type, int pos) {
             String dataType = reduceType(type);
-            return createDbParameterAccessor(
-                    name, direction, getSqlType(dataType), getJavaClass(dataType), pos);
+            return createDbParameterAccessor(name, direction, getSqlType(dataType), getJavaClass(dataType), pos);
         }
 
         private void addSingleParam(Map<String, DbParameterAccessor> allParams, DbParameterAccessor dbp) {

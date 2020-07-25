@@ -19,14 +19,16 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class DataCellDiffTest {
 
-    @Mock private DiffHandler handler;
-    @Mock private DataCell c1;
-    @Mock private DataCell c2;
+    @Mock
+    private DiffHandler handler;
+    @Mock
+    private DataCell c1;
+    @Mock
+    private DataCell c2;
 
-    private ArgumentCaptor<MatchResult> captor =
-        ArgumentCaptor.forClass(MatchResult.class);
+    private ArgumentCaptor<MatchResult<?, ?>> captor = ArgumentCaptor.forClass(MatchResult.class);
 
-    private MatchResult getResult() {
+    private MatchResult<?, ?> getResult() {
         return captor.getValue();
     }
 
@@ -37,7 +39,7 @@ public class DataCellDiffTest {
 
         diff.diff(c1, c2);
 
-        verify(handler).endCell(captor.capture());
+        verify(handler).endCell((MatchResult<DataCell, DataCell>) captor.capture());
     }
 
     @Test
@@ -84,8 +86,7 @@ public class DataCellDiffTest {
         runDiff();
 
         assertThat(getResult().getStatus(), is(EXCEPTION));
-        assertThat(getResult().getException(),
-                instanceOf(IllegalArgumentException.class));
+        assertThat(getResult().getException(), instanceOf(IllegalArgumentException.class));
     }
 
     @Test

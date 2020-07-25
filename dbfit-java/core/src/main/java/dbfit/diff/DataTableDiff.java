@@ -23,12 +23,12 @@ public class DataTableDiff extends CompositeDiff<DataTable, DataRow> {
     }
 
     @Override
-    protected Class getType() {
+    protected Class<?> getType() {
         return DataTable.class;
     }
 
     @Override
-    protected Class getChildType() {
+    protected Class<?> getChildType() {
         return DataRow.class;
     }
 
@@ -51,7 +51,7 @@ public class DataTableDiff extends CompositeDiff<DataTable, DataRow> {
         protected void uncheckedDiff() {
             new DefaultDataTableProcessor(this).process(obj1);
 
-            for (DataRow dr: mdt2.getUnprocessedRows()) {
+            for (DataRow dr : mdt2.getUnprocessedRows()) {
                 getChildDiff().diff(null, dr);
             }
         }

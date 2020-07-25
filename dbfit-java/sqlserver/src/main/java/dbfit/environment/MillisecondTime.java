@@ -8,6 +8,11 @@ import java.text.SimpleDateFormat;
  * (java.sql.Time defaults to second-level only)
  */
 class MillisecondTime extends Time {
+    /**
+     * generated
+     */
+    private static final long serialVersionUID = 3077183065282928350L;
+
     public MillisecondTime(final Time time) {
         this(time.getTime());
     }

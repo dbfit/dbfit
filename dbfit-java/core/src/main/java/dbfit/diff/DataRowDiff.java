@@ -18,12 +18,12 @@ public class DataRowDiff extends CompositeDiff<DataRow, DataCell> {
     }
 
     @Override
-    protected Class getType() {
+    protected Class<?> getType() {
         return DataRow.class;
     }
 
     @Override
-    protected Class getChildType() {
+    protected Class<?> getChildType() {
         return DataCell.class;
     }
 
@@ -39,10 +39,8 @@ public class DataRowDiff extends CompositeDiff<DataRow, DataCell> {
 
         @Override
         protected void uncheckedDiff() {
-            for (String column: columnNames) {
-                getChildDiff().diff(
-                            createDataCell(obj1, column),
-                            createDataCell(obj2, column));
+            for (String column : columnNames) {
+                getChildDiff().diff(createDataCell(obj1, column), createDataCell(obj2, column));
             }
         }
     }

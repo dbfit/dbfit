@@ -13,15 +13,13 @@ public class CryptoApp {
     private CryptoServiceFactory cryptoServiceFactory;
     private PrintStream out = System.out;
 
-    public CryptoApp(
-            CryptoKeyStoreFactory ksFactory, CryptoServiceFactory csFactory) {
+    public CryptoApp(CryptoKeyStoreFactory ksFactory, CryptoServiceFactory csFactory) {
         this.ksFactory = ksFactory;
         this.cryptoServiceFactory = csFactory;
     }
 
     public CryptoApp() {
-        this(CryptoFactories.getCryptoKeyStoreFactory(),
-                CryptoFactories.getCryptoServiceFactory());
+        this(CryptoFactories.getCryptoKeyStoreFactory(), CryptoFactories.getCryptoServiceFactory());
     }
 
     private void updateStatus(String msg) {
@@ -39,8 +37,7 @@ public class CryptoApp {
         }
     }
 
-    private int encryptPassword(final String password, final CryptoKeyStore ks)
-                                                    throws Exception {
+    private int encryptPassword(final String password, final CryptoKeyStore ks) throws Exception {
         if (!ks.keyStoreExists()) {
             createKeyStore(ks);
         }
@@ -52,8 +49,7 @@ public class CryptoApp {
         return EXIT_SUCCESS;
     }
 
-    private int encryptPassword(final String password, final String path)
-                                                    throws Exception {
+    private int encryptPassword(final String password, final String path) throws Exception {
         return encryptPassword(password, ksFactory.newInstance(new File(path)));
     }
 
@@ -71,7 +67,7 @@ public class CryptoApp {
     }
 
     public int execute(String[] args) throws Exception {
-        String cmd = (args.length == 0) ? "" : args[0];
+        // String cmd = (args.length == 0) ? "" : args[0];
 
         if (args.length == 1) {
             return encryptPassword(args[0]);

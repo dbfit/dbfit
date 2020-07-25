@@ -11,7 +11,6 @@ import dbfit.util.MatchResult;
 import dbfit.util.NoOpDiffListenerAdapter;
 import dbfit.util.SymbolUtil;
 import static dbfit.util.RowStructureLoader.loadRowStructure;
-import static dbfit.util.MatchStatus.*;
 
 import fit.Parse;
 
@@ -32,7 +31,8 @@ public class CompareStoredQueries extends fit.Fixture {
     private void initialiseDataTables() {
         if (symbol1 == null || symbol2 == null) {
             if (args.length < 2) {
-                throw new UnsupportedOperationException("No symbols specified to CompareStoreQueries constructor or argument list");
+                throw new UnsupportedOperationException(
+                        "No symbols specified to CompareStoreQueries constructor or argument list");
             }
 
             symbol1 = args[0];
@@ -58,8 +58,7 @@ public class CompareStoredQueries extends fit.Fixture {
     }
 
     protected FitFixtureReporter getReporter(final Parse table) {
-        return new FitFixtureReporter(
-                new FitFixtureReportingSystem(this, table));
+        return new FitFixtureReporter(new FitFixtureReportingSystem(this, table));
     }
 
     public static class FitFixtureReporter extends NoOpDiffListenerAdapter {
@@ -80,4 +79,3 @@ public class CompareStoredQueries extends fit.Fixture {
         }
     }
 }
-

@@ -5,7 +5,7 @@ ext {
 }
 
 allprojects {
-    apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'checkstyle'
     apply plugin: 'idea'
     apply plugin: 'eclipse'
@@ -36,9 +36,6 @@ allprojects {
             dirs "${rootProject.projectDir}/custom_libs"
         }
         mavenCentral()
-        maven {
-            url "http://mvnrepository.com"
-        }
         ivy {
             artifactPattern "https://s3.amazonaws.com/dbfit/[artifact]-[revision].[ext]"
             ivyPattern "https://aws.amazon.com/s3/ivy.xml"
@@ -46,7 +43,10 @@ allprojects {
     }
 
     dependencies {
+        // TODO Replace deprecated compile with api/implementation but 
+        // Heads up: we have to copy fitness*.jar to /dist/lib by other means then
         compile "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
+        //implementation 'org.fitnesse:fitnesse:${fitNesseVersion}'
     }
 }
 
@@ -54,10 +54,11 @@ subprojects {
     jar.baseName = "dbfit-" + project.archivesBaseName
 
     task libs(type: Copy) {
-        from configurations.runtime
+        from configurations.runtimeClasspath
+
         into "$buildDir/libs"
     }
-
+        
     sourceSets {
         integrationTest {
             java {
@@ -70,17 +71,17 @@ subprojects {
     }
 
     dependencies {
-        testCompile "junit:junit:${junitVersion}"
-        testCompile "org.hamcrest:java-hamcrest:2.0.0.0"
-        testCompile "commons-io:commons-io:2.4"
-        testRuntime 'com.dbdeploy:dbdeploy-ant:3.0M3'
-        integrationTestCompile "junit:junit:${junitVersion}"
-        integrationTestCompile "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
+        testImplementation "junit:junit:${junitVersion}"
+        testImplementation "org.hamcrest:java-hamcrest:2.0.0.0"
+        testImplementation "commons-io:commons-io:2.4"
+        testRuntimeOnly 'com.dbdeploy:dbdeploy-ant:3.0M3'
+        integrationTestImplementation "junit:junit:${junitVersion}"
+        integrationTestImplementation "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
     }
 
     task integrationTestJar(type: Jar) {
         from sourceSets.integrationTest.output
-        baseName = "dbfit-" + project.archivesBaseName + "-integration-test"
+        archiveBaseName = "dbfit-" + project.archivesBaseName + "-integration-test"
         include('**/*Support*')
     }
 
@@ -159,7 +160,7 @@ subprojects {
         dir = "$projectDir/src/integration-test/resources" ->
         ant.taskdef(name: 'dbdeploy',
                 classname: 'com.dbdeploy.AntTarget',
-                classpath: configurations.testRuntime.asPath)
+                classpath: configurations.testRuntimeOnly.asPath)
         ant.dbdeploy(driver: dbDriver,
                 url: url,
                 userid: userid,
@@ -246,9 +247,9 @@ task assembleAll(dependsOn: subprojects.assemble) { }
 task libs(dependsOn: subprojects.libs) { }
 
 def publicCoreCompileDeps = [
-    'org.reflections:reflections:0.9.10',
-    'commons-codec:commons-codec:1.10',
-    'org.apache.commons:commons-lang3:3.4',
+    'org.reflections:reflections:0.9.11',
+    'org.apache.commons-codec:commons-codec:1.10',
+    'org.apache.commons:commons-lang3:3.5',
     'com.github.dbfit:fitlibrary:20091020'
 ]
 
@@ -256,8 +257,8 @@ project('core') {
     description = 'DBFit core api and fixtures'
 
     dependencies {
-        compile publicCoreCompileDeps
-        testCompile "org.mockito:mockito-core:${mockitoVersion}"
+        api publicCoreCompileDeps
+        testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     }
 }
 
@@ -265,8 +266,8 @@ project('db2') {
     description = 'DBFit db2 engine'
 
     dependencies {
-        compile project(':dbfit-java:core')
-        runtime 'com.ibm.db2:db2jcc4:4.17.29@jar'
+        implementation project(':dbfit-java:core')
+        runtimeOnly 'com.ibm.db2.jcc:db2jcc:db2jcc4@jar'
     }
 }
 
@@ -275,10 +276,10 @@ project('derby') {
     configurations {
         derby
         testRuntime.extendsFrom derby
-        integrationTestRuntime.extendsFrom derby
-    }
+        integrationTestRuntime.extendsFrom derby    }
     dependencies {
-        compile project(':dbfit-java:core')
+        implementation project(':dbfit-java:core')
+        implementation 'org.apache.commons:commons-lang3:3.4'
         derby group: 'org.apache.derby', name: 'derby', version: '10.12.1.1'
         derby group: 'org.apache.derby', name: 'derbyclient', version: '10.12.1.1'
     }
@@ -292,8 +293,8 @@ project('hsqldb') {
     description = 'DBFit HSQLDB engine'
 
     dependencies {
-        compile project(':dbfit-java:core')
-        runtime publicHsqldbRuntimeDeps
+        implementation project(':dbfit-java:core')
+        runtimeOnly publicHsqldbRuntimeDeps
     }
 }
 
@@ -305,23 +306,24 @@ project('informix') {
         'TestDbConnectionDbFitInformixINFORMIX.properties']
 
     dependencies {
-        compile project(':dbfit-java:core')
-        compile 'com.informix:ifxjdbc:4.10.JC4W1@jar'
+        implementation project(':dbfit-java:core')
+        implementation 'org.apache.commons:commons-lang3:3.4'
+        implementation 'com.informix:ifxjdbc:4.10.JC4W1@jar'
     }
 }
 
 def publicOracleCompileDeps = [
-    'commons-io:commons-io:2.4'
+    'commons-io:commons-io:2.4@jar'
 ]
 
 project('oracle') {
     description = 'DBFit Oracle engine'
 
     dependencies {
-        compile project(':dbfit-java:core')
-        compile 'dummy:ojdbc6:11.2.0.3.0@jar'
-        compile publicOracleCompileDeps
-        testCompile "org.mockito:mockito-core:${mockitoVersion}"
+        implementation project(':dbfit-java:core')
+		implementation 'dummy:ojdbc8:18.3.0.0.0@jar'		
+        api publicOracleCompileDeps
+        testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     }
 
     ext.connectionPropertiesFiles = ['TestDbConnectionDbFitOracle.properties']
@@ -335,9 +337,9 @@ project('mysql') {
     description = 'DBFit MySQL engine'
 
     dependencies {
-        compile project(':dbfit-java:core')
-        compile publicMysqlCompileDeps
-        testCompile project(':dbfit-java:core').sourceSets.test.output
+        implementation project(':dbfit-java:core')
+        implementation publicMysqlCompileDeps
+        testImplementation project(':dbfit-java:core').sourceSets.test.output
     }
 
     integrationTest.doFirst {
@@ -353,8 +355,8 @@ project('postgres') {
     description = 'DBFit PostGreSQL engine'
 
     dependencies {
-        compile project(':dbfit-java:core')
-        compile publicPostgresCompileDeps
+        implementation project(':dbfit-java:core')
+        implementation publicPostgresCompileDeps
     }
 
     integrationTest.doFirst {
@@ -366,9 +368,9 @@ project('sqlserver') {
     description = 'DBFit sqlserver engine'
 
     dependencies {
-        compile project(':dbfit-java:core')
-        runtime 'com.microsoft:sqljdbc:4.1.5605@jar'
-        integrationTestRuntime 'com.microsoft:sqljdbc:4.1.5605@jar'
+        implementation project(':dbfit-java:core')
+        implementation group: 'com.microsoft.azure', name: 'msal4j', version: '1.6.1'
+        implementation group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '8.2.2.jre8'
     }
 
     integrationTest.doFirst {
@@ -380,9 +382,9 @@ project('teradata') {
     description = 'DBFit Teradata engine'
 
     dependencies {
-        compile project(':dbfit-java:core')
-        runtime 'com.teradata:terajdbc4:15.0.0.15@jar'
-        runtime 'com.teradata:tdgssconfig:15.0.0.15@jar'
+        implementation project(':dbfit-java:core')
+        runtimeOnly 'com.teradata:terajdbc4:15.0.0.15@jar'
+        runtimeOnly 'com.teradata:tdgssconfig:15.0.0.15@jar'
     }
 
     ext.connectionPropertiesFiles = ['TestDbConnectionDbFitTeradata.properties']
@@ -409,8 +411,8 @@ project('netezza') {
     description = 'DBFit netezza engine'
 
     dependencies {
-        compile project(':dbfit-java:core')
-        runtime 'org.netezza:nzjdbc3:7.2@jar'
+        implementation project(':dbfit-java:core')
+        runtimeOnly 'org.netezza:nzjdbc3:7.2@jar'
     }
 
     ext.connectionPropertiesFiles = ['TestDbConnectionDbFitNetezza.properties']
@@ -434,11 +436,11 @@ project('netezza') {
 
 // Aggregated dependencies to include in the POM file when publishing.
 dependencies {
-    compile publicCoreCompileDeps
-    runtime publicHsqldbRuntimeDeps
-    compile publicOracleCompileDeps
-    compile publicMysqlCompileDeps
-    compile publicPostgresCompileDeps
+    implementation publicCoreCompileDeps
+    runtimeOnly publicHsqldbRuntimeDeps
+    implementation publicOracleCompileDeps
+    implementation publicMysqlCompileDeps
+    implementation publicPostgresCompileDeps
 }
 
 // Remove the default artifact as there are no Java sources for this project.
@@ -451,19 +453,19 @@ task allJavadoc(type: Javadoc) {
 }
 
 task allJavadocJar(type: Jar) {
-    baseName = 'dbfit'
+    archiveBaseName = 'dbfit'
     classifier = 'javadoc'
     from allJavadoc
 }
 
 task allSourcesJar(type: Jar) {
-    baseName = 'dbfit'
+    archiveBaseName = 'dbfit'
     classifier = 'sources'
     subprojects.each { from it.sourceSets.main.allSource }
 }
 
 task allJar(type: Jar, dependsOn: subprojects.build) {
-    baseName = 'dbfit'
+    archiveBaseName = 'dbfit'
     subprojects.each { from it.configurations.archives.allArtifacts.files.collect { zipTree(it) } }
 }
 

@@ -4,10 +4,10 @@ import static dbfit.util.MatchStatus.*;
 
 public class DiffResultsSummarizer implements DiffListener {
 
-    private Class childType;
-    private MatchResult result;
+    private Class<?> childType;
+    private MatchResult<?, ?> result;
 
-    public DiffResultsSummarizer(final MatchResult initialResult, final Class childType) {
+    public DiffResultsSummarizer(final MatchResult<?, ?> initialResult, final Class<?> childType) {
         this.childType = childType;
         this.result = initialResult;
         initStatus();
@@ -23,12 +23,13 @@ public class DiffResultsSummarizer implements DiffListener {
         }
     }
 
-    protected void onChildEvent(final MatchResult childResult) {
+    protected void onChildEvent(final MatchResult<?, ?> childResult) {
         switch (getStatus()) {
         case EXCEPTION:
         case MISSING:
         case SURPLUS:
             return; // Cannot overwrite exceptions or missing
+        default:
         }
 
         switch (childResult.getStatus()) {
@@ -40,17 +41,18 @@ public class DiffResultsSummarizer implements DiffListener {
         case MISSING:
             result.setStatus(WRONG);
             break;
+        default:
         }
     }
 
     @Override
-    public void onEvent(final MatchResult childResult) {
+    public void onEvent(final MatchResult<?, ?> childResult) {
         if (childType.equals(childResult.getType())) {
             onChildEvent(childResult);
         }
     }
 
-    public MatchResult getResult() {
+    public MatchResult<?, ?> getResult() {
         return result;
     }
 

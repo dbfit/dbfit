@@ -15,7 +15,7 @@ public class OracleSpParameterTest {
     private Map<Direction, String> expectedDirections;
     private SpGeneratorOutput output;
     private OracleBooleanSpTestsFactory factory;
-    private OracleSpParameter pin;
+    // private OracleSpParameter pin;
     private Map<String, OracleSpParameter> spParams;
 
     public void initExpectedDirections() {
@@ -44,7 +44,7 @@ public class OracleSpParameterTest {
         HashMap<Integer, String> expectedNames = new HashMap<Integer, String>();
 
         int i = 1;
-        for (Map.Entry<Direction, String> entry: expectedDirections.entrySet()) {
+        for (Map.Entry<Direction, String> entry : expectedDirections.entrySet()) {
             OracleSpParameter p = factory.makeSpParameter("p_" + i, entry.getKey());
             assertEquals(entry.getValue(), p.getDirectionName());
             ++i;
@@ -115,14 +115,13 @@ public class OracleSpParameterTest {
 
     @Test
     public void variableDeclareBooleanOutTest() {
-        checkVariableDeclaration(SP_ARG_BOOL_OUT,
-            "z_v_" + SP_ARG_BOOL_OUT + "_out BOOLEAN;");
+        checkVariableDeclaration(SP_ARG_BOOL_OUT, "z_v_" + SP_ARG_BOOL_OUT + "_out BOOLEAN;");
     }
 
     @Test
     public void variableDeclareBooleanInoutTest() {
         checkVariableDeclaration(SP_ARG_BOOL_INOUT,
-            "z_v_" + SP_ARG_BOOL_INOUT + "_inout BOOLEAN := z_chr2bool( z_" + SP_ARG_BOOL_INOUT + " );");
+                "z_v_" + SP_ARG_BOOL_INOUT + "_inout BOOLEAN := z_chr2bool( z_" + SP_ARG_BOOL_INOUT + " );");
     }
 
     @Test
@@ -144,7 +143,7 @@ public class OracleSpParameterTest {
         assertEquals("?", arg.getCallArgument());
     }
 
-   @Test
+    @Test
     public void testAssignVariable() {
         OracleSpParameter p = factory.makeSpParameter("p", OUTPUT, "BOOLEAN", "z");
 
@@ -152,4 +151,3 @@ public class OracleSpParameterTest {
         assertEquals("z_p := z_bool2chr( z_v_p_out );", p.toString().trim());
     }
 }
-

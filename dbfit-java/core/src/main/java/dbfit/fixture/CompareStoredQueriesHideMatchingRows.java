@@ -31,7 +31,7 @@ public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries {
     private void addSummary(Parse table) {
         Parse summary = getSummary();
         summary.parts.addToTag(" colspan=\"" + numColumns(table) + "\"");
-        Parse lastRow = table.parts.last().more = summary;
+        table.parts.last().more = summary;
     }
 
     public Parse getSummary() {
@@ -58,7 +58,7 @@ public class CompareStoredQueriesHideMatchingRows extends CompareStoredQueries {
 
             @Override
             public void endRow(MatchResult<DataRow, DataRow> result) {
-                for (MatchResult cellRes: lastRow) {
+                for (MatchResult<DataCell, DataCell> cellRes : lastRow) {
                     if (result.getStatus() != SUCCESS) {
                         reportingSystem.addCell(cellRes);
                     } else {

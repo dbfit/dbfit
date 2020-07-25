@@ -1,3 +1,6 @@
-service=localhost:1521/xe
+# use this for oracle > 12
+# service=localhost:1521/xepdb1
+# use this for legacy oracle databases without pluggable databases (like 11g)
+service=localhost:1521/xe 
 username=dftest
 password=dftest

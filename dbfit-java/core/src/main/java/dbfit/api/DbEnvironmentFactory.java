@@ -10,21 +10,20 @@ import java.util.Map;
 public class DbEnvironmentFactory {
     private void initDefaultEnvironments() {
         Reflections reflections = new Reflections("dbfit");
-        for (Class<?> c: reflections.getTypesAnnotatedWith(DatabaseEnvironment.class)) {
-            DatabaseEnvironment envAnnotation =
-                c.getAnnotation(DatabaseEnvironment.class);
+        for (Class<?> c : reflections.getTypesAnnotatedWith(DatabaseEnvironment.class)) {
+            DatabaseEnvironment envAnnotation = c.getAnnotation(DatabaseEnvironment.class);
             registerEnv(envAnnotation.name(), envAnnotation.driver());
         }
     }
 
     private static DBEnvironment environment;
 
-    public static DBEnvironment getDefaultEnvironment(){
+    public static DBEnvironment getDefaultEnvironment() {
         return environment;
     }
 
-    public static void setDefaultEnvironment(DBEnvironment newDefaultEnvironment){
-        environment=newDefaultEnvironment;
+    public static void setDefaultEnvironment(DBEnvironment newDefaultEnvironment) {
+        environment = newDefaultEnvironment;
     }
 
     public static DbEnvironmentFactory newFactoryInstance() {
@@ -42,8 +41,8 @@ public class DbEnvironmentFactory {
             try {
                 Class.forName(driverClassName);
             } catch (Exception e) {
-                throw new Error("Cannot load " + environmentName
-                        + " database driver " + driverClassName + ". Is the JDBC driver on the classpath?", e);
+                throw new Error("Cannot load " + environmentName + " database driver " + driverClassName
+                        + ". Is the JDBC driver on the classpath?", e);
             }
         }
 
@@ -61,7 +60,7 @@ public class DbEnvironmentFactory {
 
             try {
                 Class<?> envClass = Class.forName(getEnvironmentClassName());
-                Constructor ctor = envClass.getConstructor(String.class);
+                Constructor<?> ctor = envClass.getConstructor(String.class);
                 DBEnvironment oe = (DBEnvironment) ctor.newInstance(driverClassName);
                 return oe;
             } catch (Exception e) {
@@ -70,8 +69,7 @@ public class DbEnvironmentFactory {
         }
     }
 
-    private Map<String, EnvironmentDescriptor> environments =
-        new HashMap<String, EnvironmentDescriptor>();
+    private Map<String, EnvironmentDescriptor> environments = new HashMap<String, EnvironmentDescriptor>();
 
     private DbEnvironmentFactory() {
     }
@@ -81,8 +79,7 @@ public class DbEnvironmentFactory {
     }
 
     public void registerEnv(String environmentName, String driverClassName) {
-        environments.put(normalise(environmentName),
-                new EnvironmentDescriptor(environmentName, driverClassName));
+        environments.put(normalise(environmentName), new EnvironmentDescriptor(environmentName, driverClassName));
     }
 
     public EnvironmentDescriptor unregisterEnv(String environmentName) {
@@ -106,4 +103,3 @@ public class DbEnvironmentFactory {
         return newFactoryInstance().createEnvironmentInstance(requestedEnv);
     }
 }
-

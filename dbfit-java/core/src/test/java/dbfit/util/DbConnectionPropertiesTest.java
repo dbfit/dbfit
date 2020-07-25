@@ -13,8 +13,6 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 
-import static org.hamcrest.CoreMatchers.*;
-
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
 import static org.mockito.Mockito.*;
@@ -26,16 +24,17 @@ public class DbConnectionPropertiesTest {
 
     private static final String DB_PASSWORD = "Test Password";
 
-    @Rule public TemporaryFolder tempKeyStoreFolder = new TemporaryFolder();
-    @Mock private CryptoService mockedCryptoService;
+    @Rule
+    public TemporaryFolder tempKeyStoreFolder = new TemporaryFolder();
+    @Mock
+    private CryptoService mockedCryptoService;
 
     @Before
     public void prepare() {
         when(mockedCryptoService.decrypt(anyString())).thenReturn("NonEmptyRet");
     }
 
-    private static DbConnectionProperties loadConnProps(
-            List<String> lines, CryptoService crypto) {
+    private static DbConnectionProperties loadConnProps(List<String> lines, CryptoService crypto) {
         return DbConnectionProperties.CreateFromString(lines, crypto);
     }
 
@@ -93,4 +92,3 @@ public class DbConnectionPropertiesTest {
     }
 
 }
-

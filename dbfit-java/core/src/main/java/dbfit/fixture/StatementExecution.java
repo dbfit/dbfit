@@ -22,7 +22,8 @@ public class StatementExecution implements AutoCloseable {
             statement.setNull(index, sqlType, userDefinedTypeName);
         } else {
             // Don't use the variant that takes sqlType.
-            // Derby (at least) assumes no decimal places for Types.DECIMAL and truncates the source data.
+            // Derby (at least) assumes no decimal places for Types.DECIMAL and truncates
+            // the source data.
             statement.setObject(index, value);
         }
     }
@@ -31,15 +32,19 @@ public class StatementExecution implements AutoCloseable {
         return convertStatementToCallable().getObject(index);
     }
 
-    //really ugly, but a hack to support mysql, because it will not execute inserts with a callable statement
+    // really ugly, but a hack to support mysql, because it will not execute inserts
+    // with a callable statement
     protected CallableStatement convertStatementToCallable() throws SQLException {
-        if (statement instanceof CallableStatement) return (CallableStatement) statement;
-        throw new SQLException("This operation requires a callable statement instead of "+ statement.getClass().getName());
+        if (statement instanceof CallableStatement)
+            return (CallableStatement) statement;
+        throw new SQLException(
+                "This operation requires a callable statement instead of " + statement.getClass().getName());
     }
 
     public Object getGeneratedKey(Class<?> type) throws SQLException, IllegalAccessException {
         ResultSet rs = statement.getGeneratedKeys();
-        if (rs.next()) {//todo: first try to find by name (mysql does not support name-based return keys)
+        if (rs.next()) {// todo: first try to find by name (mysql does not support name-based return
+                        // keys)
             Object value;
             if (type == Integer.class) {
                 value = rs.getInt(1);

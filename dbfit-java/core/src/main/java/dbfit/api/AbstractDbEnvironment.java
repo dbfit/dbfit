@@ -23,6 +23,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     private boolean driverRegistered = false;
+    private Class<?> javaType;
 
     protected AbstractDbEnvironment(String driverClassName) {
         this.driverClassName = driverClassName;
@@ -33,8 +34,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         try {
             if (driverRegistered)
                 return;
-            DriverManager.registerDriver((Driver) Class.forName(driverName)
-                    .newInstance());
+            DriverManager.registerDriver((Driver) Class.forName(driverName).getDeclaredConstructor().newInstance());
             driverRegistered = true;
         } catch (Exception e) {
             throw new Error("Cannot register SQL driver " + driverName);
@@ -61,18 +61,15 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     @Override
-    public void connect(String dataSource, String username, String password)
-            throws SQLException {
+    public void connect(String dataSource, String username, String password) throws SQLException {
         connect(dataSource, username, password, null);
     }
 
     @Override
-    public void connect(String dataSource, String username, String password,
-            String database) throws SQLException {
+    public void connect(String dataSource, String username, String password, String database) throws SQLException {
 
-        String connectionString = (database == null)
-            ? getConnectionString(dataSource)
-            : getConnectionString(dataSource, database);
+        String connectionString = (database == null) ? getConnectionString(dataSource)
+                : getConnectionString(dataSource, database);
 
         Properties props = new Properties();
         props.put("user", username);
@@ -82,10 +79,8 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     @Override
-    public void connectUsingFile(String file) throws SQLException, IOException,
-            FileNotFoundException {
-        DbConnectionProperties dbp = DbConnectionProperties
-                .CreateFromFile(file);
+    public void connectUsingFile(String file) throws SQLException, IOException, FileNotFoundException {
+        DbConnectionProperties dbp = DbConnectionProperties.CreateFromFile(file);
         if (dbp.FullConnectionString != null)
             connect(dbp.FullConnectionString);
         else if (dbp.DbName != null)
@@ -105,11 +100,10 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return commandText;
     }
 
-    public final PreparedStatement createStatementWithBoundFixtureSymbols(
-            TestHost testHost, String commandText) throws SQLException {
+    public final PreparedStatement createStatementWithBoundFixtureSymbols(TestHost testHost, String commandText)
+            throws SQLException {
         String command = Options.isBindSymbols() ? parseCommandText(commandText) : commandText;
-        PreparedStatement cs = getConnection().prepareStatement(
-                command);
+        PreparedStatement cs = getConnection().prepareStatement(command);
 
         if (Options.isBindSymbols()) {
             String paramNames[] = extractParamNames(commandText);
@@ -122,8 +116,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
     @Override
-    public DdlStatementExecution createDdlStatementExecution(String ddl)
-            throws SQLException {
+    public DdlStatementExecution createDdlStatementExecution(String ddl) throws SQLException {
         return new DdlStatementExecution(getConnection().createStatement(), ddl);
     }
 
@@ -137,7 +130,9 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return new StatementExecution(statement);
     }
 
-    protected DbParameterAccessor createDbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position) {
+    protected DbParameterAccessor createDbParameterAccessor(String name, Direction direction, int sqlType,
+            Class<?> javaType, int position) {
+        this.javaType = javaType;
         return new DbParameterAccessor(name, direction, sqlType, javaType, position, dbfitToJdbcTransformerFactory);
     }
 
@@ -174,8 +169,7 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     /*****/
     protected abstract String getConnectionString(String dataSource);
 
-    protected abstract String getConnectionString(String dataSource,
-            String database);
+    protected abstract String getConnectionString(String dataSource, String database);
 
     public Connection getConnection() throws SQLException {
         checkConnectionValid(currentConnection);
@@ -184,8 +178,8 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
 
     /**
      * MUST RETURN PARAMETER NAMES IN EXACT ORDER AS IN STATEMENT. IF SINGLE
-     * PARAMETER APPEARS MULTIPLE TIMES, MUST BE LISTED MULTIPLE TIMES IN THE
-     * ARRAY ALSO
+     * PARAMETER APPEARS MULTIPLE TIMES, MUST BE LISTED MULTIPLE TIMES IN THE ARRAY
+     * ALSO
      */
     public String[] extractParamNames(String commandText) {
         ArrayList<String> hs = new ArrayList<String>();
@@ -203,21 +197,19 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
      * by default, uses a string generated by buildInsertCommand and creates a
      * statement that returns generated keys via JDBC
      */
-    public PreparedStatement buildInsertPreparedStatement(String tableName,
-            DbParameterAccessor[] accessors) throws SQLException {
-        return getConnection().prepareStatement(
-                buildInsertCommand(tableName, accessors),
+    public PreparedStatement buildInsertPreparedStatement(String tableName, DbParameterAccessor[] accessors)
+            throws SQLException {
+        return getConnection().prepareStatement(buildInsertCommand(tableName, accessors),
                 Statement.RETURN_GENERATED_KEYS);
     }
 
     /**
      * This method should generate a valid insert statement which is used by
-     * buildInsertPreparedStatement to create the actual statement. It is
-     * isolated into a separate method so that subclasses can override one or
-     * the other depending on db specifics
+     * buildInsertPreparedStatement to create the actual statement. It is isolated
+     * into a separate method so that subclasses can override one or the other
+     * depending on db specifics
      */
-    public String buildInsertCommand(String tableName,
-            DbParameterAccessor[] accessors) {
+    public String buildInsertCommand(String tableName, DbParameterAccessor[] accessors) {
         StringBuilder sb = new StringBuilder("insert into ");
         sb.append(tableName).append("(");
         String comma = "";
@@ -244,18 +236,15 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return new DbStoredProcedureCall(this, name, accessors);
     }
 
-    public DbParameterAccessor createAutogeneratedPrimaryKeyAccessor(
-            DbParameterAccessor template) {
+    public DbParameterAccessor createAutogeneratedPrimaryKeyAccessor(DbParameterAccessor template) {
         return new DbAutoGeneratedKeyAccessor(template);
     }
 
     /** Check the validity of the supplied connection. */
-    public static void checkConnectionValid(final Connection conn)
-            throws SQLException {
-        if (! isConnected(conn)) {
-            throw new IllegalArgumentException(
-                    "No open connection to a database is available. "
-                            + "Make sure your database is running and that you have connected before performing any queries.");
+    public static void checkConnectionValid(final Connection conn) throws SQLException {
+        if (!isConnected(conn)) {
+            throw new IllegalArgumentException("No open connection to a database is available. "
+                    + "Make sure your database is running and that you have connected before performing any queries.");
         }
     }
 
@@ -264,4 +253,3 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
     }
 
 }
-

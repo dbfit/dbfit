@@ -1,7 +1,6 @@
 package dbfit.fixture.report;
 
 // Test utilities
-import dbfit.test.matchers.*;
 import static dbfit.test.matchers.IsParseWithTag.*;
 import static dbfit.test.matchers.IsParseWithBody.*;
 import static dbfit.test.matchers.IsParseThat.*;
@@ -35,7 +34,8 @@ public class FitFixtureReportingSystemTest {
     // The system under test
     private FitFixtureReportingSystem reportingSystem;
 
-    @Mock private Fixture fixture;
+    @Mock
+    private Fixture fixture;
     private Parse table;
     private ArgumentCaptor<Parse> captor;
 
@@ -100,34 +100,26 @@ public class FitFixtureReportingSystemTest {
         reportingSystem.addCell(createCellResult(null, "*S-1*", SURPLUS));
         reportingSystem.endRow(createNullRowResult(SURPLUS));
 
-        assertThat(table, numPartsThat(1, allOf(
-                hasTagThat(allOf(
-                        containsString("<tr"),
-                        containsString("fail"))),
-                hasDescriptionThat(containsString("surplus")),
-                numPartsThat(1, allOf(
-                        hasTagThat(allOf(
-                                containsString("<td"),
-                                containsString("fail"))),
-                        hasBodyThat(containsString("*S-1*")))))));
+        assertThat(table,
+                numPartsThat(1,
+                        allOf(hasTagThat(allOf(containsString("<tr"), containsString("fail"))),
+                                hasDescriptionThat(containsString("surplus")),
+                                numPartsThat(1, allOf(hasTagThat(allOf(containsString("<td"), containsString("fail"))),
+                                        hasBodyThat(containsString("*S-1*")))))));
     }
 
     @Test
     public void shouldReportExceptionCells() {
         reportingSystem = new FitFixtureReportingSystem(new Fixture(), table);
 
-        reportingSystem.addCell(createCellException("*E-1*", "*E-1*",
-                    new Exception("Cruel World!")));
+        reportingSystem.addCell(createCellException("*E-1*", "*E-1*", new Exception("Cruel World!")));
         reportingSystem.endRow(createNullRowResult(EXCEPTION));
 
         assertThat(table, numCellsWith(1, "*E-1*", "error"));
-        assertThat(table, isParseThat()
-                       .withRecursiveChildren()
-                       .withRecursiveSiblings()
-                       .which(allOf(
-                               hasTagThat(containsString("<td")),
-                               hasBodyThat(containsString("Cruel World!")),
-                               hasBodyThat(containsString("stacktrace")))));
+        assertThat(table,
+                isParseThat().withRecursiveChildren().withRecursiveSiblings()
+                        .which(allOf(hasTagThat(containsString("<td")), hasBodyThat(containsString("Cruel World!")),
+                                hasBodyThat(containsString("stacktrace")))));
     }
 
     @Test
@@ -136,14 +128,10 @@ public class FitFixtureReportingSystemTest {
 
         reportingSystem.addException(new Exception("Cruel World!"));
 
-        assertThat(table, isParseThat()
-                       .withRecursiveChildren()
-                       .withRecursiveSiblings()
-                       .which(allOf(
-                           hasTagThat(containsString("<td")),
-                           hasBodyThat(allOf(
-                                   containsString("Cruel World!"),
-                                   containsString("stacktrace"))))));
+        assertThat(table,
+                isParseThat().withRecursiveChildren().withRecursiveSiblings()
+                        .which(allOf(hasTagThat(containsString("<td")),
+                                hasBodyThat(allOf(containsString("Cruel World!"), containsString("stacktrace"))))));
     }
 
     @Test
@@ -153,22 +141,16 @@ public class FitFixtureReportingSystemTest {
 
         reportingSystem.addException(new Exception("Cruel World!"));
 
-        assertThat(table, isParseThat()
-                       .withRecursiveChildren()
-                       .withRecursiveSiblings()
-                       .which(allOf(
-                               hasTagThat(containsString("<td")),
-                               hasBodyThat(allOf(
-                                       containsString("Cruel World!"),
-                                       containsString("stacktrace"))))));
+        assertThat(table,
+                isParseThat().withRecursiveChildren().withRecursiveSiblings()
+                        .which(allOf(hasTagThat(containsString("<td")),
+                                hasBodyThat(allOf(containsString("Cruel World!"), containsString("stacktrace"))))));
     }
 
     /*------ Setup helpers ----- */
 
     private Parse createTestTableParse() throws Exception {
-        return new Parse("<table>" +
-            "<tr><td>Fake Fixture</td></tr>" +
-            "<tr><td>arg1</td><td>arg2</td></tr>" +
-            "</table>");
+        return new Parse(
+                "<table>" + "<tr><td>Fake Fixture</td></tr>" + "<tr><td>arg1</td><td>arg2</td></tr>" + "</table>");
     }
 }

@@ -40,9 +40,8 @@ public class Query extends RowSetFixture {
         }
 
         Log.log("Query: '%s'", queryOrSymbol);
-        try (PreparedStatement st =
-                dbEnvironment.createStatementWithBoundFixtureSymbols(
-                    FitNesseTestHost.getInstance(), queryOrSymbol)) {
+        try (PreparedStatement st = dbEnvironment.createStatementWithBoundFixtureSymbols(FitNesseTestHost.getInstance(),
+                queryOrSymbol)) {
             return new MatchableDataTable(new DataTable(st.executeQuery()));
         }
     }
@@ -63,10 +62,8 @@ public class Query extends RowSetFixture {
         return isOrdered;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    protected Class getJavaClassForColumn(DataColumn col) throws ClassNotFoundException, SQLException {
+    protected Class<?> getJavaClassForColumn(DataColumn col) throws ClassNotFoundException, SQLException {
         return dbEnvironment.getJavaClass(col.getDbTypeName());
     }
 }
-

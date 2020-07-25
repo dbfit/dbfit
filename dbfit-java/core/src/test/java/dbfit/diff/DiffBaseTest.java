@@ -14,16 +14,19 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class DiffBaseTest {
 
-    @Mock private DiffListener listener1;
-    @Mock private DiffListener listener2;
-    @Mock private MatchResult matchResult;
+    @Mock
+    private DiffListener listener1;
+    @Mock
+    private DiffListener listener2;
+    @Mock
+    private MatchResult<Object, Object> matchResult;
     private DiffBase<Object, Object> diffBase;
 
     @Before
     public void prepare() {
         diffBase = new DiffBase<Object, Object>() {
             @Override
-            protected Class getType() {
+            protected Class<?> getType() {
                 return Object.class;
             }
 

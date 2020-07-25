@@ -4,7 +4,6 @@ import dbfit.util.MatchResult;
 import dbfit.util.DiffListener;
 import dbfit.util.DataRow;
 import dbfit.util.DataCell;
-import static dbfit.util.MatchStatus.*;
 
 import static dbfit.util.DiffTestUtils.createDataRowBuilder;
 
@@ -26,13 +25,19 @@ import java.util.ArrayList;
 @RunWith(MockitoJUnitRunner.class)
 public class DataRowDiffTest {
 
-    @Mock DataCellDiff childDiff;
-    @Mock MatchResult<DataRow, DataRow> mockResult;
-    @Mock DiffListener listener;
+    @Mock
+    DataCellDiff childDiff;
+    @Mock
+    MatchResult<DataRow, DataRow> mockResult;
+    @Mock
+    DiffListener listener;
 
-    @Captor ArgumentCaptor<MatchResult> resultCaptor;
-    @Captor ArgumentCaptor<DataCell> arg1Captor;
-    @Captor ArgumentCaptor<DataCell> arg2Captor;
+    @Captor
+    ArgumentCaptor<MatchResult> resultCaptor;
+    @Captor
+    ArgumentCaptor<DataCell> arg1Captor;
+    @Captor
+    ArgumentCaptor<DataCell> arg2Captor;
 
     private List<MatchResult> allResults;
 
@@ -57,8 +62,7 @@ public class DataRowDiffTest {
 
         diff.diff(row1, row2);
 
-        verify(childDiff, times(columns.length)).diff(
-                arg1Captor.capture(), arg2Captor.capture());
+        verify(childDiff, times(columns.length)).diff(arg1Captor.capture(), arg2Captor.capture());
     }
 
     @Test
@@ -89,7 +93,7 @@ public class DataRowDiffTest {
 
     @Test
     public void shouldEmitChildrenDiffEventsOfTypeDataCell() {
-        Class expectedType = DataCell.class;
+        Class<?> expectedType = DataCell.class;
         runUnadaptedDiff(createRow(2, 4), createRow(2, 4));
 
         assertThat(allResults.get(0).getType(), equalTo(expectedType));
@@ -98,7 +102,7 @@ public class DataRowDiffTest {
 
     @Test
     public void shouldEmitDiffEventOfTypeDataRow() {
-        Class expectedType = DataRow.class;
+        Class<?> expectedType = DataRow.class;
         runUnadaptedDiff(createRow(2, 4), createRow(2, 4));
 
         assertThat(allResults.get(2).getType(), equalTo(expectedType));
