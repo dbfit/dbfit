@@ -12,6 +12,10 @@ allprojects {
     apply plugin: 'maven'
     apply plugin: 'signing'
 
+    // Build against Java 8
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
     group = 'com.github.dbfit'
     version = rootProject.dbfitVersion
 
