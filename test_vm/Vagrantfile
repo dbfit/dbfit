@@ -35,16 +35,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :chef_solo do |chef|
     chef.add_recipe("dbfit_test")
     chef.arguments = "--chef-license accept"
-    chef.run_list = ["recipe[firewalld::disable]", "recipe[iptables::disabled]",
-                    "recipe[dbfit_test::tools]", "recipe[dbfit_test::selinux]",
-                    "recipe[dbfit_test::sqlserver]",
-                    "recipe[dbfit_test::mysql]",
-                    "recipe[dbfit_test::postgres]",
-                    "recipe[dbfit_test::oracle]",
-                    "recipe[dbfit_test::db2]",
-                    #"recipe[dbfit_test::informix]",
-                    "recipe[dbfit_test::gradle]"
-                  ]
+    chef.run_list = ["recipe[dbfit_test]"]
     chef.json = {
       "mysql" => {
         "server_root_password" => "password",

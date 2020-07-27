@@ -60,6 +60,6 @@ bash "Create testobjects" do
   not_if("/usr/bin/mysql -uroot -p#{node['mysql']['server_root_password']} -e'use dbfit; show tables;' | grep users", :user => 'root')
   user "root"
   code <<-EOM
-    mysql -uroot -p#{node['mysql']['server_root_password']} < /var/dbfit/dbfit-java/mysql/build/resources/integrationTest/001_add_objects_needed_for_acceptance_test.sql
+    mysql -uroot -p#{node['mysql']['server_root_password']} < /var/dbfit/dbfit-java/mysql/src/integration-Test/resources/001_add_objects_needed_for_acceptance_test.sql
   EOM
 end
