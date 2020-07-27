@@ -20,7 +20,7 @@ script:
   - ./gradlew --continue clean travisbuild
   - ./gradlew bundle
 jdk:
-- Java 8
+- oraclejdk8
 - openjdk13
 - openjdk14
 addons:
