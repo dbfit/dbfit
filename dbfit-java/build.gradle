@@ -42,6 +42,10 @@ allprojects {
         ivy {
             artifactPattern "https://s3.amazonaws.com/dbfit/[artifact]-[revision].[ext]"
             ivyPattern "https://aws.amazon.com/s3/ivy.xml"
+            metadataSources {
+                ivyDescriptor()
+                artifact()
+            }
         }
     }
 
