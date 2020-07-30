@@ -45,6 +45,7 @@ allprojects {
             ivyPattern "https://aws.amazon.com/s3/ivy.xml"
             metadataSources {
                 ivyDescriptor()
+                artifact()
             }
         }
     }
