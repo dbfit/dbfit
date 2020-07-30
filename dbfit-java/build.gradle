@@ -330,7 +330,8 @@ project('oracle') {
 
     dependencies {
         implementation project(':dbfit-java:core')
-		implementation 'dummy:ojdbc8:18.3.0.0.0@jar'		
+        implementation 'dummy:ojdbc6:11.2.0.3.0@jar'
+		// implementation 'dummy:ojdbc8:18.3.0.0.0@jar'		
         api publicOracleCompileDeps
         testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     }
