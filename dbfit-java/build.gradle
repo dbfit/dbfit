@@ -43,6 +43,9 @@ allprojects {
         ivy {
             artifactPattern "https://s3.amazonaws.com/dbfit/[artifact]-[revision].[ext]"
             ivyPattern "https://aws.amazon.com/s3/ivy.xml"
+            metadataSources {
+                ivyDescriptor()
+            }
         }
     }
 
@@ -252,7 +255,7 @@ task libs(dependsOn: subprojects.libs) { }
 
 def publicCoreCompileDeps = [
     'org.reflections:reflections:0.9.11',
-    'commons-codec:commons-codec:1.10',
+    'commons-codec:commons-codec:1.14',
     'org.apache.commons:commons-lang3:3.5',
     'com.github.dbfit:fitlibrary:20091020'
 ]
@@ -280,7 +283,8 @@ project('derby') {
     configurations {
         derby
         testRuntime.extendsFrom derby
-        integrationTestRuntime.extendsFrom derby    }
+        integrationTestRuntime.extendsFrom derby
+    }
     dependencies {
         implementation project(':dbfit-java:core')
         implementation 'org.apache.commons:commons-lang3:3.4'
