@@ -350,7 +350,7 @@ project('mysql') {
     dependencies {
         implementation project(':dbfit-java:core')
         implementation publicMysqlCompileDeps
-        //testImplementation project(':dbfit-java:core').sourceSets.test.output
+        testImplementation project(':dbfit-java:core').sourceSets.test.output
     }
 
     integrationTest.doFirst {
