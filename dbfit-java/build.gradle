@@ -169,7 +169,9 @@ subprojects {
         ant.taskdef(name: 'dbdeploy',
                 classname: 'com.dbdeploy.AntTarget',
                 //classpath: configurations.testRuntimeOnly.asPath)
-                classpath: configurations.testRuntimeClasspath)
+                //classpath: configurations.testRuntimeClasspath)
+                classpath: sourceSets.integrationTest.runtimeClasspath
+                )
         ant.dbdeploy(driver: dbDriver,
                 url: url,
                 userid: userid,
