@@ -1,3 +1,6 @@
+// find some general documentation here: 
+// https://docs.gradle.org/current/userguide/java_library_plugin.html#sec:java_library_configurations_graph
+
 ext {
     fitNesseVersion = '20180127'
     mockitoVersion = '2.2.2'
@@ -173,7 +176,7 @@ subprojects {
                 //classpath: configurations.testRuntimeOnly.asPath
                 //classpath: configurations.testRuntimeClasspath
                 //classpath: sourceSets.integrationTest.runtimeClasspath
-                configurations.testCompileClasspath
+                classpath: configurations.testCompileClasspath
                 )
         ant.dbdeploy(driver: dbDriver,
                 url: url,
