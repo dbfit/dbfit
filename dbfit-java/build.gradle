@@ -85,8 +85,8 @@ subprojects {
         testImplementation "junit:junit:${junitVersion}"
         testImplementation "org.hamcrest:java-hamcrest:2.0.0.0"
         testImplementation "commons-io:commons-io:2.4"
-        //testRuntimeOnly 'com.dbdeploy:dbdeploy-ant:3.0M3'
-        integrationTestImplementation "com.dbdeploy:dbdeploy-ant:3.0M3"
+        testRuntimeOnly 'com.dbdeploy:dbdeploy-ant:3.0M3'
+        //integrationTestImplementation "com.dbdeploy:dbdeploy-ant:3.0M3"
         integrationTestImplementation "junit:junit:${junitVersion}"
         integrationTestImplementation "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
     }
@@ -174,9 +174,8 @@ subprojects {
                 classname: 'com.dbdeploy.AntTarget',
                 //not working
                 //classpath: configurations.testRuntimeOnly.asPath
-                //classpath: configurations.testRuntimeClasspath
-                //classpath: sourceSets.integrationTest.runtimeClasspath
-                classpath: configurations.testCompileClasspath
+                classpath: configurations.testRuntimeClasspath.asPath
+                //classpath: configurations.testCompileClasspath
                 )
         ant.dbdeploy(driver: dbDriver,
                 url: url,
