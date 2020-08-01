@@ -172,10 +172,7 @@ subprojects {
         dir = "$projectDir/src/integration-test/resources" ->
         ant.taskdef(name: 'dbdeploy',
                 classname: 'com.dbdeploy.AntTarget',
-                //not working
-                //classpath: configurations.testRuntimeOnly.asPath
                 classpath: configurations.testRuntimeClasspath.asPath
-                //classpath: configurations.testCompileClasspath
                 )
         ant.dbdeploy(driver: dbDriver,
                 url: url,
