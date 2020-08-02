@@ -1,0 +1,3 @@
+service=localhost:5432/dbfit
+username=dbfit
+password=dbfit

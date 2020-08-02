@@ -15,17 +15,17 @@ public class DbParameterAccessor {
     private int sqlType;
     private String userDefinedTypeName;
     private Class<?> javaType;
-    private int position; // zero-based index of parameter in procedure (-1 for ret value) or column in table
+    private int position; // zero-based index of parameter in procedure (-1 for ret value) or column in
+                          // table
     protected StatementExecution cs;
     private TypeTransformerFactory dbfitToJdbcTransformerFactory;
 
     /*
-     * Create an exact copy of this object. Normally this should be
-     * overridden in favour of the clone template method
+     * Create an exact copy of this object. Normally this should be overridden in
+     * favour of the clone template method
      */
     protected DbParameterAccessor copy() {
-        return new DbParameterAccessor(name, direction,
-                sqlType, javaType, position, dbfitToJdbcTransformerFactory);
+        return new DbParameterAccessor(name, direction, sqlType, javaType, position, dbfitToJdbcTransformerFactory);
     }
 
     @Override
@@ -35,14 +35,13 @@ public class DbParameterAccessor {
         return copy;
     }
 
-    @SuppressWarnings("unchecked")
-    public DbParameterAccessor(String name, Direction direction, int sqlType, Class javaType, int position,
-                               TypeTransformerFactory dbfitToJdbcTransformerFactory) {
+    public DbParameterAccessor(String name, Direction direction, int sqlType, Class<?> javaType, int position,
+            TypeTransformerFactory dbfitToJdbcTransformerFactory) {
         this(name, direction, sqlType, null, javaType, position, dbfitToJdbcTransformerFactory);
     }
 
-    public DbParameterAccessor(String name, Direction direction, int sqlType, String userDefinedTypeName, Class javaType, int position,
-                               TypeTransformerFactory dbfitToJdbcTransformerFactory) {
+    public DbParameterAccessor(String name, Direction direction, int sqlType, String userDefinedTypeName,
+            Class<?> javaType, int position, TypeTransformerFactory dbfitToJdbcTransformerFactory) {
         if (direction == RETURN_VALUE && position != -1) {
             throw new IllegalArgumentException("Position of return value should be -1");
         }
@@ -116,8 +115,7 @@ public class DbParameterAccessor {
                 throw new UnsupportedOperationException("Trying to get value of input parameter " + name);
             }
             return normaliseValue(cs.getObject(index));
-        }
-        catch (SQLException sqle) {
+        } catch (SQLException sqle) {
             throw new InvocationTargetException(sqle);
         }
     }

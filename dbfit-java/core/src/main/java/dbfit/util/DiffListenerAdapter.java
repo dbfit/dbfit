@@ -8,7 +8,8 @@ public class DiffListenerAdapter implements DiffListener {
         return new DiffListenerAdapter(handler);
     }
 
-    protected DiffListenerAdapter() {}
+    protected DiffListenerAdapter() {
+    }
 
     public DiffListenerAdapter(final DiffHandler delegate) {
         setDiffHandler(delegate);
@@ -20,8 +21,8 @@ public class DiffListenerAdapter implements DiffListener {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void onEvent(final MatchResult res) {
-        Class type = res.getType();
+    public void onEvent(final MatchResult<?, ?> res) {
+        Class<?> type = res.getType();
 
         if (type.equals(DataCell.class)) {
             delegate.endCell((MatchResult<DataCell, DataCell>) res);

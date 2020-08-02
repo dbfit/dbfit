@@ -10,21 +10,21 @@ import static dbfit.util.DiffTestUtils.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner ;
 import org.mockito.Mock;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompareStoredQueriesTest {
 
-    @Mock ReportingSystem reportingSystem; // wrapper for reporting via fit.Fixture
+    @Mock
+    ReportingSystem reportingSystem; // wrapper for reporting via fit.Fixture
 
     @Test
     public void shouldReportCellSuccessToReportingSystem() {
-        DiffListener reporter = new CompareStoredQueries.FitFixtureReporter(
-                reportingSystem);
+        DiffListener reporter = new CompareStoredQueries.FitFixtureReporter(reportingSystem);
 
-        MatchResult cellResult = createCellResult("*demo-1*", SUCCESS);
+        MatchResult<?, ?> cellResult = createCellResult("*demo-1*", SUCCESS);
 
         reporter.onEvent(cellResult);
 

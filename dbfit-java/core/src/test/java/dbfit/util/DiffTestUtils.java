@@ -2,8 +2,6 @@ package dbfit.util;
 
 import static dbfit.util.MatchStatus.*;
 
-import static org.mockito.Mockito.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.LinkedList;
@@ -13,7 +11,7 @@ public class DiffTestUtils {
 
     public static List<DataColumn> createColumns(RowStructure rowStructure) {
         List<DataColumn> columns = new LinkedList<DataColumn>();
-        for (String s: rowStructure.getColumnNames()) {
+        for (String s : rowStructure.getColumnNames()) {
             columns.add(new DataColumn(s, s.getClass().getName(), ""));
         }
         return columns;
@@ -31,59 +29,63 @@ public class DiffTestUtils {
         return createCellResult(s1, s2, EXCEPTION, e);
     }
 
-    public static MatchResult createCellResult(String s, MatchStatus status) {
+    public static MatchResult<?, ?> createCellResult(String s, MatchStatus status) {
         return createCellResult(s, s, status, null);
     }
 
-    public static MatchResult createCellResult(final String s1, final String s2,
-                                               final MatchStatus status) {
+    public static MatchResult<?, ?> createCellResult(final String s1, final String s2, final MatchStatus status) {
         return createCellResult(s1, s2, status, null);
     }
 
     @SuppressWarnings("unchecked")
-    public static MatchResult createCellResult(final String s1, final String s2,
-            final MatchStatus status, final Exception ex) {
+    public static MatchResult<?, ?> createCellResult(final String s1, final String s2, final MatchStatus status,
+            final Exception ex) {
         DataCell o1 = fakeDataCell(s1);
         DataCell o2 = fakeDataCell(s2);
 
-        MatchResult res = new MatchResult(o1, o2, status, DataCell.class, ex);
+        MatchResult<?, ?> res = new MatchResult(o1, o2, status, DataCell.class, ex);
 
         return res;
     }
 
-    public static MatchResult createNullRowResult(final MatchStatus status) {
+    public static MatchResult<?, ?> createNullRowResult(final MatchStatus status) {
         return createRowResult(null, null, status, null);
     }
 
-    public static MatchResult createRowResult(String s, final MatchStatus status) {
+    public static MatchResult<?, ?> createRowResult(String s, final MatchStatus status) {
         return createRowResult(s, s, status, null);
     }
 
-    public static MatchResult createRowResult(final String s1, final String s2,
-                                               final MatchStatus status) {
+    public static MatchResult<?, ?> createRowResult(final String s1, final String s2, final MatchStatus status) {
         return createRowResult(s1, s2, status, null);
     }
 
     @SuppressWarnings("unchecked")
-    public static MatchResult createRowResult(final String s1, final String s2,
-            final MatchStatus status, final Exception ex) {
+    public static MatchResult<?, ?> createRowResult(final String s1, final String s2, final MatchStatus status,
+            final Exception ex) {
         DataRow o1 = fakeDataRow(s1);
         DataRow o2 = fakeDataRow(s2);
 
-        MatchResult res = new MatchResult(o1, o2, status, DataRow.class, ex);
+        MatchResult<?, ?> res = new MatchResult(o1, o2, status, DataRow.class, ex);
 
         return res;
     }
 
     public static DataCell fakeDataCell(final String stringValue) {
         return new DataCell(null, null) {
-            @Override public String toString() { return stringValue; }
+            @Override
+            public String toString() {
+                return stringValue;
+            }
         };
     }
 
     public static DataRow fakeDataRow(final String stringValue) {
         return new DataRow(null) {
-            @Override public String toString() { return stringValue; }
+            @Override
+            public String toString() {
+                return stringValue;
+            }
         };
     }
 
@@ -101,6 +103,7 @@ public class DiffTestUtils {
 
     public static interface DataRowBuilder {
         public DataRow createRow(Integer... items);
+
         public DataRow createRow(List items);
     }
 
@@ -136,7 +139,8 @@ public class DiffTestUtils {
     public static class DefaultDataRowBuilder extends AbstractDataRowBuilder {
         private String prefix = "c";
 
-        @Override protected String getColumnName(int index) {
+        @Override
+        protected String getColumnName(int index) {
             return prefix + index;
         }
     }
@@ -148,7 +152,8 @@ public class DiffTestUtils {
             this.columns = columnNames;
         }
 
-        @Override protected String getColumnName(int index) {
+        @Override
+        protected String getColumnName(int index) {
             return columns[index];
         }
     }

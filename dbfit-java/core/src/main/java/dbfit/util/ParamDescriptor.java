@@ -1,7 +1,5 @@
 package dbfit.util;
 
-import static dbfit.util.Direction.*;
-
 public class ParamDescriptor {
     public final String name;
     public final Direction direction;

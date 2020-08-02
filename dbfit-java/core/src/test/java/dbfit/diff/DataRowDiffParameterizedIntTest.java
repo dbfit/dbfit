@@ -4,6 +4,7 @@ import dbfit.util.MatchResult;
 import dbfit.util.DiffHandler;
 import dbfit.util.DiffListenerAdapter;
 import dbfit.util.DataRow;
+import dbfit.util.DataCell;
 import dbfit.util.MatchStatus;
 import static dbfit.util.MatchStatus.*;
 
@@ -33,8 +34,8 @@ public class DataRowDiffParameterizedIntTest {
     private DataRowDiff diff;
 
     private DiffHandler handler;
-    private ArgumentCaptor<MatchResult> rowResultCaptor = forClass(MatchResult.class);
-    private ArgumentCaptor<MatchResult> cellResultCaptor = forClass(MatchResult.class);
+    private ArgumentCaptor<MatchResult<?, ?>> rowResultCaptor = forClass(MatchResult.class);
+    private ArgumentCaptor<MatchResult<?, ?>> cellResultCaptor = forClass(MatchResult.class);
 
     // parameterized tests arguments
     private DataRow row1;
@@ -43,8 +44,7 @@ public class DataRowDiffParameterizedIntTest {
     private MatchStatus expectedRowStatus;
     private List<MatchStatus> expectedCellStatuses;
 
-    public DataRowDiffParameterizedIntTest(
-            List<List<Integer>> rows, List<String> colNames,
+    public DataRowDiffParameterizedIntTest(List<List<Integer>> rows, List<String> colNames,
             MatchStatus expectedRowStatus, List<MatchStatus> expectedCellStatuses) {
         this.row1 = createDataRowBuilder(allColumnsArr).createRow(rows.get(0));
         this.row2 = createDataRowBuilder(allColumnsArr).createRow(rows.get(1));
@@ -62,21 +62,20 @@ public class DataRowDiffParameterizedIntTest {
 
     @Parameters(name = "({index}): rows {0}/{1} -> expecting {2} -- {3}")
     public static Collection<Object[]> data() throws Exception {
-        return java.util.Arrays.asList(new Object[][] {
-            {asList(r(2, 4), r(2, 4)), allColumns, SUCCESS, asList(SUCCESS, SUCCESS)},
-            {asList(r(2, 4), r(2, 5)), allColumns, WRONG,   asList(SUCCESS, WRONG)},
-            {asList(r(2, 4), r(3, 4)), allColumns, WRONG,   asList(WRONG, SUCCESS)},
-            {asList(r(2, 4),    null), allColumns, MISSING, asList(MISSING, MISSING)},
-            {asList(   null, r(2, 4)), allColumns, SURPLUS, asList(SURPLUS, SURPLUS)},
-            {asList(r(2, 4), r(2, 9)), cols("n"),  SUCCESS, asList(SUCCESS)},
-        });
+        return java.util.Arrays
+                .asList(new Object[][] { { asList(r(2, 4), r(2, 4)), allColumns, SUCCESS, asList(SUCCESS, SUCCESS) },
+                        { asList(r(2, 4), r(2, 5)), allColumns, WRONG, asList(SUCCESS, WRONG) },
+                        { asList(r(2, 4), r(3, 4)), allColumns, WRONG, asList(WRONG, SUCCESS) },
+                        { asList(r(2, 4), null), allColumns, MISSING, asList(MISSING, MISSING) },
+                        { asList(null, r(2, 4)), allColumns, SURPLUS, asList(SURPLUS, SURPLUS) },
+                        { asList(r(2, 4), r(2, 9)), cols("n"), SUCCESS, asList(SUCCESS) }, });
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testRowDiffStatus() {
         diff.diff(row1, row2);
-        verify(handler).endRow(rowResultCaptor.capture());
+        verify(handler).endRow((MatchResult<DataRow, DataRow>) rowResultCaptor.capture());
         verifyResults(rowResultCaptor, asList(expectedRowStatus));
     }
 
@@ -84,12 +83,11 @@ public class DataRowDiffParameterizedIntTest {
     @SuppressWarnings("unchecked")
     public void testCellDiffStatuses() {
         diff.diff(row1, row2);
-        verify(handler, times(colNames.size())).endCell(cellResultCaptor.capture());
+        verify(handler, times(colNames.size())).endCell((MatchResult<DataCell, DataCell>) cellResultCaptor.capture());
         verifyResults(cellResultCaptor, expectedCellStatuses);
     }
 
-    private void verifyResults(ArgumentCaptor<MatchResult> captor,
-            List<MatchStatus> expectedStatuses) {
+    private void verifyResults(ArgumentCaptor<MatchResult<?, ?>> captor, List<MatchStatus> expectedStatuses) {
         assertThat(captor.getAllValues(), haveItemsStatuses(expectedStatuses));
     }
 

@@ -19,9 +19,9 @@ public class DbParameterAccessorsMapBuilder {
         return parameterAccessors;
     }
 
-    public void add(String name, Direction direction, int sqlType, Class javaType) {
+    public void add(String name, Direction direction, int sqlType, Class<?> javaType) {
         int position = (direction == RETURN_VALUE) ? -1 : nextPosition++;
-        parameterAccessors.put(normaliseName(name), new DbParameterAccessor(
-                    name, direction,sqlType, javaType, position, dbfitToJdbcTransformerFactory));
+        parameterAccessors.put(normaliseName(name),
+                new DbParameterAccessor(name, direction, sqlType, javaType, position, dbfitToJdbcTransformerFactory));
     }
 }

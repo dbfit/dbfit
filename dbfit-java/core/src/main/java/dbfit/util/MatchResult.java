@@ -7,30 +7,27 @@ import java.util.Objects;
 public class MatchResult<T1, T2> {
     protected final T1 object1;
     protected final T2 object2;
-    protected final Class type;
+    protected final Class<?> type;
     protected MatchStatus status;
     protected Exception exception = null;
 
-    public MatchResult(T1 object1, T2 object2, MatchStatus status, Class type,
-                Exception ex) {
+    public MatchResult(T1 object1, T2 object2, MatchStatus status, Class<?> type, Exception ex) {
         this(object1, object2, status, type);
         setException(ex);
     }
 
-    public MatchResult(T1 object1, T2 object2, MatchStatus status, Class type) {
+    public MatchResult(T1 object1, T2 object2, MatchStatus status, Class<?> type) {
         this.object1 = object1;
         this.object2 = object2;
         this.status = status;
         this.type = type;
     }
 
-    public static <T1, T2> MatchResult<T1, T2> create(T1 object1, T2 object2,
-            Class type) {
+    public static <T1, T2> MatchResult<T1, T2> create(T1 object1, T2 object2, Class<?> type) {
         return create(object1, object2, UNVERIFIED, type);
     }
 
-    public static <T1, T2> MatchResult<T1, T2> create(T1 object1, T2 object2,
-            MatchStatus status, Class type) {
+    public static <T1, T2> MatchResult<T1, T2> create(T1 object1, T2 object2, MatchStatus status, Class<?> type) {
         return new MatchResult<T1, T2>(object1, object2, status, type);
     }
 
@@ -67,7 +64,7 @@ public class MatchResult<T1, T2> {
         return exception;
     }
 
-    public Class getType() {
+    public Class<?> getType() {
         return type;
     }
 

@@ -15,13 +15,13 @@ public abstract class RowSetFixture extends ColumnFixture {
     private String[] keyColumns;
 
     protected abstract MatchableDataTable getDataTable() throws SQLException;
+
     protected abstract boolean isOrdered();
 
     private class CurrentDataRowTypeAdapter extends TypeAdapter {
         public String key;
 
-        @SuppressWarnings("unchecked")
-        public CurrentDataRowTypeAdapter(String key, Class type) throws NoSuchMethodException {
+        public CurrentDataRowTypeAdapter(String key, Class<?> type) throws NoSuchMethodException {
             this.fixture = RowSetFixture.this;
             target = null;
             method = CurrentDataRowTypeAdapter.class.getMethod("get", new Class[] {});
@@ -51,7 +51,7 @@ public abstract class RowSetFixture extends ColumnFixture {
     }
 
     private int findColumn(String name) throws Exception {
-        //todo: implement non-key
+        // todo: implement non-key
         String normalisedName = NameNormaliser.normaliseName(name);
         for (int i = 0; i < dt.getColumns().size(); i++) {
             String colName = dt.getColumns().get(i).getName();
@@ -69,17 +69,15 @@ public abstract class RowSetFixture extends ColumnFixture {
             columnBindings = new Binding[heads.size()];
             keyColumns = new String[heads.size()];
             for (int i = 0; heads != null; i++, heads = heads.more) {
-                  String name = heads.text();
-                  columnBindings[i] = new SymbolAccessQueryBinding();
-                  int idx = findColumn(name);
-                  String columnName = dt.getColumns().get(idx).getName();
-                  if (!name.endsWith("?")) {
-                      keyColumns[i] = columnName;
-                  }
-                  columnBindings[i].adapter = new CurrentDataRowTypeAdapter(
-                                    columnName,
-                                    getJavaClassForColumn(dt.getColumns().get(idx))
-                                );
+                String name = heads.text();
+                columnBindings[i] = new SymbolAccessQueryBinding();
+                int idx = findColumn(name);
+                String columnName = dt.getColumns().get(idx).getName();
+                if (!name.endsWith("?")) {
+                    keyColumns[i] = columnName;
+                }
+                columnBindings[i].adapter = new CurrentDataRowTypeAdapter(columnName,
+                        getJavaClassForColumn(dt.getColumns().get(idx)));
             }
         } catch (Exception sqle) {
             exception(heads, sqle);
@@ -133,20 +131,18 @@ public abstract class RowSetFixture extends ColumnFixture {
 
     private void addSurplusRows(Parse rows) {
         Parse lastRow = rows;
-        for (DataRow dr: dt.getUnprocessedRows()) {
+        for (DataRow dr : dt.getUnprocessedRows()) {
             Parse newRow = new Parse("tr", null, null, null);
             lastRow.more = newRow;
             lastRow = newRow;
             try {
                 currentRow = dr; // for getting
-                Parse firstCell = new Parse("td",
-                        String.valueOf(columnBindings[0].adapter.invoke()), null, null);
+                Parse firstCell = new Parse("td", String.valueOf(columnBindings[0].adapter.invoke()), null, null);
                 newRow.parts = firstCell;
                 firstCell.addToBody(Fixture.gray(" surplus"));
                 wrong(firstCell);
                 for (int i = 1; i < columnBindings.length; i++) {
-                    Parse nextCell = new Parse("td",
-                            String.valueOf(columnBindings[i].adapter.invoke()), null, null);
+                    Parse nextCell = new Parse("td", String.valueOf(columnBindings[i].adapter.invoke()), null, null);
                     firstCell.more = nextCell;
                     firstCell = nextCell;
                 }
@@ -156,9 +152,7 @@ public abstract class RowSetFixture extends ColumnFixture {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    protected Class getJavaClassForColumn(DataColumn col) throws ClassNotFoundException, SQLException {
+    protected Class<?> getJavaClassForColumn(DataColumn col) throws ClassNotFoundException, SQLException {
         return Class.forName(col.getJavaClassName());
     }
 }
-

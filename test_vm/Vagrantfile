@@ -7,6 +7,9 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider "virtualbox" do |vb|
+    # support for newer cpus speculation control bug. raises kernel panic if not set
+    # https://docs.oracle.com/cd/E97728_01/E97727/html/vboxmanage-modifyvm.html
+    vb.customize ["modifyvm", :id, "--spec-ctrl", "on"] 
     vb.customize ["modifyvm", :id, "--memory", CONFIG['memory']]
   end
 
@@ -18,14 +21,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.box = "centos/7"
   config.vm.box_url = "centos/7"
+  #config.vm.box = "centos7-base"
+  #config.vm.box_url = "centos7-base"
   config.vm.host_name = "dbfitvm"
   config.vm.network "private_network", ip: "192.168.33.10"
-  config.vm.network "forwarded_port", guest: 8085, host: 8085
+  # dbfit(8085), oracle(1521), postgresql(5432), netezza(5480), informix(16466), mysql(3306), sqlserver(1433), db2(50000)
+  %w{8085 1521 5432 5480 16466 3306 1433 50000}.each do |ip|
+    config.vm.network "forwarded_port", guest_ip: '127.0.0.1', host_ip: '127.0.0.1', guest: ip, host: ip 
+  end
+  
   config.vm.synced_folder "..", "/var/dbfit", CONFIG['synced_folder_options']
 
   config.vm.provision :chef_solo do |chef|
-    chef.add_recipe "dbfit_test"
-
+    chef.add_recipe("dbfit_test")
+    chef.arguments = "--chef-license accept"
+    chef.run_list = ["recipe[dbfit_test]"]
     chef.json = {
       "mysql" => {
         "server_root_password" => "password",
@@ -66,8 +76,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         "version" => "2.11.0",
         "url" => "https://www.kernel.org/pub/software/scm/git/git-2.11.0.tar.gz",
         "checksum" => "d3be9961c799562565f158ce5b836e2b90f38502d3992a115dfb653d7825fd7e"
-      },
-      "run_list" => ["recipe[dbfit_test]"]
+      }
     }
 
     DbFit.apply_custom_config(:chef, chef)

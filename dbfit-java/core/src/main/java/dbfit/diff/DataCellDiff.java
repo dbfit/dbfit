@@ -7,7 +7,7 @@ import static dbfit.util.MatchStatus.*;
 public class DataCellDiff extends DiffBase<DataCell, DataCell> {
 
     @Override
-    protected Class getType() {
+    protected Class<?> getType() {
         return DataCell.class;
     }
 

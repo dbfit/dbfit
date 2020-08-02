@@ -8,7 +8,7 @@ public abstract class CompositeDiff<P, C> extends DiffBase<P, P> {
 
     protected Diff<C, C> childDiff;
 
-    protected abstract Class getChildType();
+    protected abstract Class<?> getChildType();
 
     public CompositeDiff(final Diff<C, C> childDiff) {
         this.childDiff = childDiff;
