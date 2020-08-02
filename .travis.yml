@@ -20,7 +20,6 @@ before_script:
   - ./test_vm/scripts/postgresql/install_postgresql.sh
   - docker ps -a
   - docker images ls
-  - docker logs dbfitdb2
   - for i in {1..60}; do echo "$i waiting for Oracle server startup"; echo | nc -w1 localhost 49160 >/dev/null 2>&1 ;echo $? | grep 0 && echo "[Oracle UP]" && break || sleep 6; done
   - for i in {1..60}; do echo "$i waiting for DB2 server startup"; docker exec dbfitdb2 /scripts/detect_dbstart.sh 2 && echo "[DB2 UP]" && break || sleep 6; done
   - docker exec dbfitdb2 /scripts/create_db_schema.sh
