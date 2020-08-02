@@ -112,7 +112,7 @@ task wikiDocsDir {
 }
 
 def fitnesseJar() {
-    fileTree(dir: 'custom_libs', include: 'fitnesse-*.jar').getSingleFile()
+    fileTree(dir: 'dist/lib', include: 'fitnesse-*-standalone.jar').getSingleFile()
 }
 
 task fitnesseUpdateList {

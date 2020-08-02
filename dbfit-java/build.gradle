@@ -54,10 +54,7 @@ allprojects {
     }
 
     dependencies {
-        // TODO Replace deprecated compile with api/implementation but 
-        // Heads up: we have to copy fitness*.jar to /dist/lib by other means then
-        compile "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
-        //implementation 'org.fitnesse:fitnesse:${fitNesseVersion}'
+        implementation "org.fitnesse:fitnesse:${fitNesseVersion}:standalone"
     }
 }
 
@@ -86,9 +83,8 @@ subprojects {
         testImplementation "org.hamcrest:java-hamcrest:2.0.0.0"
         testImplementation "commons-io:commons-io:2.4"
         testRuntimeOnly 'com.dbdeploy:dbdeploy-ant:3.0M3'
-        //integrationTestImplementation "com.dbdeploy:dbdeploy-ant:3.0M3"
         integrationTestImplementation "junit:junit:${junitVersion}"
-        integrationTestImplementation "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
+        integrationTestImplementation "org.fitnesse:fitnesse:${fitNesseVersion}:standalone"
     }
 
     task integrationTestJar(type: Jar) {
