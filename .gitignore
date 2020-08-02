@@ -9,6 +9,7 @@ dbfit-java/derby/dbfit/
 .project
 .classpath
 out
+.vscode
 
 dist
 /zips/
