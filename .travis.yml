@@ -9,8 +9,8 @@ services:
 language: java
 
 before_install:
-  - docker run -d -p 50000:50000 -v "`pwd`/test_vm/scripts/db2:/scripts" -e DB2INST1_PASSWORD=db2inst1-pwd -e LICENSE=accept --name dbfitdb2 --privileged=true cwds/db2 &
-  - docker run -d -p 1521:1521 -p 49160:22 -v "`pwd`/test_vm/scripts/oracle/sql:/docker-entrypoint-initdb.d:ro" wnameless/oracle-xe-11g-r2 &
+  - docker run -p 50000:50000 -v "`pwd`/test_vm/scripts/db2:/scripts" -e DB2INST1_PASSWORD=db2inst1-pwd -e LICENSE=accept --name dbfitdb2 --privileged=true cwds/db2 &
+  - docker run -p 1521:1521 -p 49160:22 -v "`pwd`/test_vm/scripts/oracle/sql:/docker-entrypoint-initdb.d:ro" wnameless/oracle-xe-11g-r2 &
   - "./gradlew -version"
 
 install: "./gradlew assemble"
