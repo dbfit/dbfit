@@ -111,6 +111,10 @@ task wikiDocsDir {
     }
 }
 
+def fitnesseJar() {
+    fileTree(dir: 'dist/lib', include: 'fitnesse-*-standalone.jar').getSingleFile()
+}
+
 task fitnesseUpdateList {
     doLast {
         copy {
@@ -154,10 +158,6 @@ task wikiDocs(dependsOn: [wikiDocsUpdateList]) {
     }
 }
 
-def fitnesseJar() {
-    fileTree(dir: 'dist/lib', include: 'fitnesse-*standalone.jar').getSingleFile()
-}
-
 def flattenPath(def path) {
     path.replaceAll('.*/([^/]*?\\.jar)', {"${it[1]}"})
 }
@@ -181,7 +181,7 @@ task bundleFitsharp(dependsOn: copyLocal) {
 task bundle(type: Zip, dependsOn: [copyLocal, wikiDocs, bundleFitsharp]) {
     description = 'creates the zip file for distributing dbfit'
     from 'dist'
-    baseName 'dbfit-complete'
+    archiveName 'dbfit-complete'
     version dbfitVersion
     destinationDir new File('zips')
 }
@@ -255,7 +255,7 @@ def proprietaryLibs() {
      '**/tdgssconfig*.jar',
      '**/nzjdbc*.jar',
      '**/sqljdbc*.jar',
-     '**/ifxjdbc*.jar'
+     '**/ifxjdbc*.jar',
     ] as Set
 }
 
