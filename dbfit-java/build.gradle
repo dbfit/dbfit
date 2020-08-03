@@ -266,7 +266,7 @@ project('core') {
     description = 'DBFit core api and fixtures'
 
     dependencies {
-        api publicCoreCompileDeps
+        implementation publicCoreCompileDeps
         testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     }
 }
@@ -280,6 +280,11 @@ project('db2') {
     }
 }
 
+def publicDerbyRuntimeDeps = [
+    'org.apache.derby:derby:10.12.1.1',
+    'org.apache.derby:derbyclient:10.12.1.1'
+]
+
 project('derby') {
     description = 'DBFit derby engine'
     configurations {
@@ -290,8 +295,7 @@ project('derby') {
     dependencies {
         implementation project(':dbfit-java:core')
         implementation 'org.apache.commons:commons-lang3:3.4'
-        derby group: 'org.apache.derby', name: 'derby', version: '10.12.1.1'
-        derby group: 'org.apache.derby', name: 'derbyclient', version: '10.12.1.1'
+        derby publicDerbyRuntimeDeps
     }
 }
 
@@ -308,6 +312,11 @@ project('hsqldb') {
     }
 }
 
+def publicInformixCompileDeps = [
+    'org.apache.commons:commons-lang3:3.4',
+    'com.ibm.informix:jdbc:4.50.4.1@jar'
+]
+
 project('informix') {
     description = 'DBFit Informix engine'
 
@@ -317,8 +326,7 @@ project('informix') {
 
     dependencies {
         implementation project(':dbfit-java:core')
-        implementation 'org.apache.commons:commons-lang3:3.4'
-        implementation 'com.ibm.informix:jdbc:4.50.4.1@jar'
+        implementation publicInformixCompileDeps
     }
 }
 
@@ -332,8 +340,7 @@ project('oracle') {
     dependencies {
         implementation project(':dbfit-java:core')
         implementation 'dummy:ojdbc6:11.2.0.3.0@jar'
-		// implementation 'dummy:ojdbc8:18.3.0.0.0@jar'		
-        api publicOracleCompileDeps
+        implementation publicOracleCompileDeps
         testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     }
 
@@ -374,14 +381,18 @@ project('postgres') {
         dbdeploy('org.postgresql.Driver', 'jdbc:postgresql:dbfit', 'dbfit', 'dbfit', 'row')
     }
 }
+def publicSqlserverCompileDeps = [
+    'com.microsoft.azure:msal4j:1.6.1',
+    'com.microsoft.sqlserver:mssql-jdbc:8.2.2.jre8',
+    'org.apache.commons:commons-lang3:3.4'
+]
 
 project('sqlserver') {
     description = 'DBFit sqlserver engine'
 
     dependencies {
         implementation project(':dbfit-java:core')
-        implementation group: 'com.microsoft.azure', name: 'msal4j', version: '1.6.1'
-        implementation group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '8.2.2.jre8'
+        implementation publicSqlserverCompileDeps
     }
 
     integrationTest.doFirst {
