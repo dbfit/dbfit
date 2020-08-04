@@ -3,12 +3,11 @@ package dbfit.environment;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
 
 import java.sql.SQLException;
 
-import oracle.sql.CLOB;
+import java.sql.Clob;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,7 +32,7 @@ public class OracleClobNormaliserTest {
 
     @Test
     public void shouldThrowCorrectExceptionIfClobIsLargerThanMaximum() throws SQLException {
-        CLOB clob = mock(CLOB.class);
+        Clob clob = mock(Clob.class);
 
         when(clob.length()).thenReturn(10001l);
         expectedEx.expect(UnsupportedOperationException.class);
@@ -44,13 +43,13 @@ public class OracleClobNormaliserTest {
 
     @Test
     public void shouldReturnContentsOfClobIFAllOkay() throws SQLException {
-        CLOB clob = mock(CLOB.class);
+        Clob clob = mock(Clob.class);
 
         when(clob.length()).thenReturn(Long.valueOf("CLOB contents".length()));
-        when(clob.getChars(eq(1l), eq(10000), any(char[].class))).thenReturn("CLOB contents".length());
+        when(clob.getSubString(eq(1l), eq(10000))).thenReturn("CLOB contents");
 
         // can't do this as we don't fill up the passed buffer
-        //assertEquals("CLOB contents", new OracleClobNormaliser().normalise(clob));
+        // assertEquals("CLOB contents", new OracleClobNormaliser().normalise(clob));
         new OracleClobNormaliser().transform(clob);
     }
 }
