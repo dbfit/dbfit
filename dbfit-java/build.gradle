@@ -15,6 +15,9 @@ allprojects {
     group = 'com.github.dbfit'
     version = rootProject.dbfitVersion
 
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
     checkstyle {
         configFile = new File(parent.projectDir, "config/checkstyle/checkstyle.xml")
     }
