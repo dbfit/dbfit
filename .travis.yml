@@ -31,9 +31,6 @@ script:
 jdk:
   - oraclejdk8
   - openjdk8
-  - openjdk11
-  - openjdk13
-  - openjdk14
 
 addons:
   artifacts:
