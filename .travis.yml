@@ -26,8 +26,8 @@ script:
   - ./gradlew --continue clean travisbuild
   - ./gradlew bundle
 jdk:
-- openjdk7
-- oraclejdk8
+  - openjdk8
+  - oraclejdk8
 addons:
   artifacts:
     paths:
