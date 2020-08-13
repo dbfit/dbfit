@@ -13,7 +13,8 @@ public class OracleClobNormaliser implements TypeTransformer {
         if (o == null)
             return null;
         if (!(o instanceof java.sql.Clob)) {
-            throw new UnsupportedOperationException("OracleClobNormaliser cannot work with " + o.getClass());
+            throw new UnsupportedOperationException(
+                    "OracleClobNormaliser cannot work with " + o.getClass());
         }
         java.sql.Clob clob = (java.sql.Clob) o;
         if (clob.length() > MAX_CLOB_LENGTH)
