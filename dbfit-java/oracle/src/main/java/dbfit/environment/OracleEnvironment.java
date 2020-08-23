@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 import fit.TypeAdapter;
 
-@DatabaseEnvironment(name="Oracle", driver="oracle.jdbc.OracleDriver")
+@DatabaseEnvironment(name = "Oracle", driver = "oracle.jdbc.OracleDriver")
 public class OracleEnvironment extends AbstractDbEnvironment {
     private static String SKIP_ORACLE_SYNONYMS = "SKIPORACLESYNONYMS";
 
@@ -26,8 +26,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     }
 
     private static enum InfoSource {
-        DB_DICTIONARY,
-        JDBC_RESULT_SET_META_DATA
+        DB_DICTIONARY, JDBC_RESULT_SET_META_DATA
     }
 
     private static class DbParameterOrColumnInfo {
@@ -42,7 +41,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         return (paramName == null) || paramName.trim().isEmpty();
     }
 
-    static abstract class AbstractParamsOrColumnsIterator implements Iterator<DbParameterOrColumnInfo> {
+    static abstract class AbstractParamsOrColumnsIterator
+            implements Iterator<DbParameterOrColumnInfo> {
         protected int position;
         protected DbParameterOrColumnInfo info;
 
@@ -97,7 +97,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
      */
     static class DbDictionaryParamsOrColumnsIterator extends AbstractParamsOrColumnsIterator
             implements Iterator<DbParameterOrColumnInfo> {
-    private ResultSet rs;
+        private ResultSet rs;
 
         private DbDictionaryParamsOrColumnsIterator(ResultSet rs) {
             this.rs = rs;
@@ -146,7 +146,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             this.columnCount = md.getColumnCount();
         }
 
-        public static JdbcRsMetaParamsOrColumnsIterator newInstance(ResultSetMetaData md) throws SQLException {
+        public static JdbcRsMetaParamsOrColumnsIterator newInstance(ResultSetMetaData md)
+                throws SQLException {
             return new JdbcRsMetaParamsOrColumnsIterator(md);
         }
 
@@ -191,8 +192,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         }
     }
 
-    private static Iterator<DbParameterOrColumnInfo> createParamsOrColumnsIterator(
-            ResultSet rs, InfoSource infoSrc) throws SQLException {
+    private static Iterator<DbParameterOrColumnInfo> createParamsOrColumnsIterator(ResultSet rs,
+            InfoSource infoSrc) throws SQLException {
 
         switch (infoSrc) {
             case DB_DICTIONARY:
@@ -220,14 +221,12 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         // OracleTimestampParser.class);
         TypeNormaliserFactory.setNormaliser(oracle.sql.TIMESTAMP.class,
                 new OracleTimestampNormaliser());
-        TypeNormaliserFactory.setNormaliser(oracle.sql.DATE.class,
-                new OracleDateNormaliser());
-        TypeNormaliserFactory.setNormaliser(oracle.sql.CLOB.class,
+        TypeNormaliserFactory.setNormaliser(oracle.sql.DATE.class, new OracleDateNormaliser());
+        TypeNormaliserFactory.setNormaliser(oracle.jdbc.OracleClob.class,
                 new OracleClobNormaliser());
         TypeNormaliserFactory.setNormaliser(oracle.jdbc.rowset.OracleSerialClob.class,
                 new OracleSerialClobNormaliser());
-        TypeNormaliserFactory.setNormaliser(java.sql.Date.class,
-                new SqlDateNormaliser());
+        TypeNormaliserFactory.setNormaliser(java.sql.Date.class, new SqlDateNormaliser());
         try {
             TypeNormaliserFactory.setNormaliser(java.sql.ResultSet.class,
                     new OracleRefNormaliser());
@@ -248,8 +247,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     protected String getConnectionString(String dataSource, String databaseName) {
         if (dataSource.indexOf(":") == -1)
             throw new UnsupportedOperationException(
-                    "data source should be in host:port format - " + dataSource
-                            + " specified");
+                    "data source should be in host:port format - " + dataSource + " specified");
         return "jdbc:oracle:thin:@" + dataSource + ":" + databaseName;
     }
 
@@ -259,14 +257,13 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         return paramsNames;
     }
 
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(
-            String procName) throws SQLException {
-        String[] qualifiers = NameNormaliser.normaliseName(procName).split(
-                "\\.");
-        String cols = " argument_name, data_type, data_length,  IN_OUT, sequence, " +
-                "(case when type_name is null then null else type_owner ||'.'|| type_name end) as type";
-        String qry = "select " + cols
-                + "  from all_arguments where data_level=0 and ";
+    public Map<String, DbParameterAccessor> getAllProcedureParameters(String procName)
+            throws SQLException {
+        String[] qualifiers = NameNormaliser.normaliseName(procName).split("\\.");
+        String cols = " argument_name, data_type, data_length,  IN_OUT, sequence, "
+                + "(case when type_name is null then null "
+                + "else type_owner ||'.'|| type_name end) as type";
+        String qry = "select " + cols + "  from all_arguments where data_level=0 and ";
         if (qualifiers.length == 3) {
             qry += " owner=? and package_name=? and object_name=? ";
         } else if (qualifiers.length == 2) {
@@ -278,11 +275,9 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
         // map to public synonyms also
         if (qualifiers.length < 3 && (!Options.is(SKIP_ORACLE_SYNONYMS))) {
-            qry += " union all "
-                    + " select "
-                    + cols
-                    + " from all_arguments, all_synonyms "
-                    + " where data_level=0 and all_synonyms.owner='PUBLIC' and all_arguments.owner=table_owner and ";
+            qry += " union all " + " select " + cols + " from all_arguments, all_synonyms "
+                    + " where data_level=0 and all_synonyms.owner='PUBLIC' "
+                    + " and all_arguments.owner=table_owner and ";
             if (qualifiers.length == 2) { // package
                 qry += " package_name=table_name and synonym_name=? and object_name=? ";
             } else {
@@ -311,7 +306,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
         String query = "select * from " + tableOrViewName + " where 1 = 2";
-        return readIntoParams(new String[]{}, query, InfoSource.JDBC_RESULT_SET_META_DATA);
+        return readIntoParams(new String[] {}, query, InfoSource.JDBC_RESULT_SET_META_DATA);
     }
 
     private DbParameterAccessor addSingleParam(Map<String, DbParameterAccessor> allParams,
@@ -326,11 +321,12 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     }
 
     private DbParameterAccessor makeSingleParam(DbParameterOrColumnInfo info) {
-        return makeSingleParam(info.name, info.dataType, info.userDefinedTypeName, info.direction, info.position);
+        return makeSingleParam(info.name, info.dataType, info.userDefinedTypeName, info.direction,
+                info.position);
     }
 
-    private DbParameterAccessor makeSingleParam(
-            String paramName, String dataType, String userTypeName, String direction, int position) {
+    private DbParameterAccessor makeSingleParam(String paramName, String dataType,
+            String userTypeName, String direction, int position) {
         if (paramName == null)
             paramName = "";
         Direction paramDirection;
@@ -338,31 +334,26 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         if (isReturnValueParameter(paramName)) {
             paramDirection = Direction.RETURN_VALUE;
             paramPosition = -1;
-        }
-        else {
+        } else {
             paramDirection = getParameterDirection(direction);
         }
 
-        DbParameterAccessor dbp = createOracleDbParameterAcccessor(
-                paramName,
-                paramDirection, getSqlType(dataType), getJavaClass(dataType),
-                paramPosition, normaliseTypeName(dataType), userTypeName);
+        DbParameterAccessor dbp = createOracleDbParameterAcccessor(paramName, paramDirection,
+                getSqlType(dataType), getJavaClass(dataType), paramPosition,
+                normaliseTypeName(dataType), userTypeName);
 
         return dbp;
     }
 
-    private OracleDbParameterAccessor createOracleDbParameterAcccessor(
-            String name, Direction direction,
-            int sqlType, Class<?> javaType, int position,
+    private OracleDbParameterAccessor createOracleDbParameterAcccessor(String name,
+            Direction direction, int sqlType, Class<?> javaType, int position,
             String originalTypeName, String userTypeName) {
-        return new OracleDbParameterAccessor(
-                name, direction,
-                sqlType, javaType, position,
+        return new OracleDbParameterAccessor(name, direction, sqlType, javaType, position,
                 dbfitToJdbcTransformerFactory, originalTypeName, userTypeName);
     }
 
-    private Map<String, DbParameterAccessor> readIntoParams(
-            String[] queryParameters, String query, InfoSource infoSrc) throws SQLException {
+    private Map<String, DbParameterAccessor> readIntoParams(String[] queryParameters, String query,
+            InfoSource infoSrc) throws SQLException {
 
         try (CallableStatement dc = openDbCallWithParameters(query, queryParameters)) {
             Log.log("executing query");
@@ -378,13 +369,13 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         }
     }
 
-    private Map<String, DbParameterAccessor> readIntoParams(
-            String[] queryParameters, String query) throws SQLException {
+    private Map<String, DbParameterAccessor> readIntoParams(String[] queryParameters, String query)
+            throws SQLException {
         return readIntoParams(queryParameters, query, InfoSource.DB_DICTIONARY);
     }
 
-    private CallableStatement openDbCallWithParameters(String query,
-            String[] queryParameters) throws SQLException {
+    private CallableStatement openDbCallWithParameters(String query, String[] queryParameters)
+            throws SQLException {
         Log.log("preparing call " + query, (Object[]) queryParameters);
         CallableStatement dc = currentConnection.prepareCall(query);
         Log.log("setting parameters");
@@ -395,25 +386,18 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         return dc;
     }
 
-
     // List interface has sequential search, so using list instead of array to
     // map types
-    private static List<String> stringTypes = Arrays.asList(new String[] {
-            "VARCHAR", "VARCHAR2", "NVARCHAR2", "CHAR", "NCHAR", "CLOB",
-            "NCLOB", "ROWID", "BOOLEAN"
-        });
-    private static List<String> decimalTypes = Arrays.asList(new String[] {
-            "BINARY_INTEGER", "NUMBER", "FLOAT" });
+    private static List<String> stringTypes = Arrays.asList(new String[] {"VARCHAR", "VARCHAR2",
+            "NVARCHAR2", "CHAR", "NCHAR", "CLOB", "NCLOB", "ROWID", "BOOLEAN"});
+    private static List<String> decimalTypes =
+            Arrays.asList(new String[] {"BINARY_INTEGER", "NUMBER", "FLOAT"});
     private static List<String> dateTypes = Arrays.asList(new String[] {});
-    private static List<String> timestampTypes = Arrays.asList(new String[] {
-            "DATE", "TIMESTAMP" });
-    private static List<String> refCursorTypes = Arrays
-            .asList(new String[] { "REF" });
-    private static List<String> objectTypes = Arrays.asList(new String[] {
-            "OBJECT", "MDSYS.SDO_GEOMETRY" });
-
-    private static List<String> recordTypes = Arrays.asList(new String[] {
-            "VARRAY", "TABLE" });
+    private static List<String> timestampTypes = Arrays.asList(new String[] {"DATE", "TIMESTAMP"});
+    private static List<String> refCursorTypes = Arrays.asList(new String[] {"REF"});
+    private static List<String> objectTypes =
+            Arrays.asList(new String[] {"OBJECT", "MDSYS.SDO_GEOMETRY"});
+    private static List<String> recordTypes = Arrays.asList(new String[] {"VARRAY", "TABLE"});
 
     private static String normaliseTypeName(String dataType) {
         dataType = dataType.toUpperCase().trim();
@@ -449,8 +433,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         if (recordTypes.contains(dataTypeNormalised))
             return OracleTypes.ARRAY;
 
-        throw new UnsupportedOperationException("Type " + dataType
-                + " is not supported");
+        throw new UnsupportedOperationException("Type " + dataType + " is not supported");
     }
 
     public Class<?> getJavaClass(String dataType) {
@@ -470,8 +453,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         if (recordTypes.contains(dataType))
             return java.sql.Array.class;
 
-        throw new UnsupportedOperationException("Type " + dataType
-                + " is not supported");
+        throw new UnsupportedOperationException("Type " + dataType + " is not supported");
     }
 
     private static Direction getParameterDirection(String direction) {
@@ -482,20 +464,16 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         if ("IN/OUT".equals(direction))
             return Direction.INPUT_OUTPUT;
         // todo return val
-        throw new UnsupportedOperationException("Direction " + direction
-                + " is not supported");
+        throw new UnsupportedOperationException("Direction " + direction + " is not supported");
     }
 
-    public String buildInsertCommand(String tableName,
-            DbParameterAccessor[] accessors) {
+    public String buildInsertCommand(String tableName, DbParameterAccessor[] accessors) {
         Log.log("buiding insert command for " + tableName);
 
         /*
-         * oracle jdbc interface with callablestatement has problems with
-         * returning into...
-         * http://forums.oracle.com/forums/thread.jspa?threadID
-         * =438204&tstart=0&messageID=1702717 so begin/end block has to be built
-         * around it
+         * oracle jdbc interface with callablestatement has problems with returning into...
+         * http://forums.oracle.com/forums/thread.jspa?threadID =438204&tstart=0&messageID=1702717
+         * so begin/end block has to be built around it
          */
         StringBuilder sb = new StringBuilder("begin insert into ");
         sb.append(tableName).append("(");
@@ -527,8 +505,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         sb.append(values);
         sb.append(")");
         if (retValues.length() > 0) {
-            sb.append(" returning ").append(retNames).append(" into ")
-                    .append(retValues);
+            sb.append(" returning ").append(retNames).append(" into ").append(retValues);
         }
         sb.append("; end;");
         Log.log("built " + sb.toString());
@@ -536,8 +513,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     }
 
     @Override
-    public DbParameterAccessor createAutogeneratedPrimaryKeyAccessor(
-            DbParameterAccessor template) {
+    public DbParameterAccessor createAutogeneratedPrimaryKeyAccessor(DbParameterAccessor template) {
         DbParameterAccessor accessor2 = template.clone();
         accessor2.setDirection(Direction.OUTPUT);
         return accessor2;
@@ -546,12 +522,12 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     @Override
     public PreparedStatement buildInsertPreparedStatement(String tableName,
             DbParameterAccessor[] accessors) throws SQLException {
-        return getConnection().prepareCall(
-                buildInsertCommand(tableName, accessors));
+        return getConnection().prepareCall(buildInsertCommand(tableName, accessors));
     }
 
     @Override
-    public DbStoredProcedureCall newStoredProcedureCall(String name, DbParameterAccessor[] accessors) {
+    public DbStoredProcedureCall newStoredProcedureCall(String name,
+            DbParameterAccessor[] accessors) {
         return new OracleStoredProcedureCall(this, name, accessors);
     }
 }

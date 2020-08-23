@@ -29,7 +29,7 @@ script:
   - ./gradlew bundle
 
 jdk:
-  - openjdk7
+  - oraclejdk8
   - openjdk8
 
 addons:
