@@ -51,6 +51,18 @@ allprojects {
     dependencies {
         compile "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
     }
+	eclipse {
+		classpath {
+            defaultOutputDir = file('build/eclipse') // this should be enough
+		    file.whenMerged {
+			   entries.each { entry ->
+					if (entry instanceof org.gradle.plugins.ide.eclipse.model.Output) {
+					   entry.path = entry.path.replace('bin', 'build/eclipse')
+					}
+			   }
+		   }
+		}
+	}
 }
 
 subprojects {
