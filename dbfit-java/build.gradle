@@ -55,6 +55,24 @@ allprojects {
     dependencies {
         compile "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
     }
+    
+    // fix gradle .classpath generation for bin folders and put it under /build/eclipse
+    eclipse {
+        classpath {
+            defaultOutputDir = file('build/eclipse') // this should be enough, but it's not
+            file.whenMerged {
+                entries.each { entry ->
+                    if (entry instanceof org.gradle.plugins.ide.eclipse.model.Output) {
+                        entry.path = entry.path.replaceFirst('^bin', 'build/eclipse')
+                    }
+
+                    if (entry instanceof org.gradle.plugins.ide.eclipse.model.SourceFolder) {
+                        entry.output = entry.output.replaceFirst('^bin', 'build/eclipse')
+                    }
+                }
+            }
+        }
+    }
 }
 
 subprojects {
