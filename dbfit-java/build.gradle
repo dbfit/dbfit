@@ -55,7 +55,7 @@ allprojects {
     dependencies {
         compile "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
     }
-    
+
     // fix gradle .classpath generation for bin folders and put it under /build/eclipse
     eclipse {
         classpath {
