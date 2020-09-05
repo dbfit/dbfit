@@ -1,0 +1,5 @@
+---
+Prune
+Static
+---
+!contents -R

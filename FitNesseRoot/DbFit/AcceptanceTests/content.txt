@@ -4,5 +4,6 @@
 !define CALCLENGTH_IN_COLUMN {name}
 !define DEFAULT_PARAM1_NAME {@integer1}
 !define DEFAULT_PARAM2_NAME {@string1}
+!define DEFAULT_COLUMN_ALLOW_NULL_DDL {}
 
 !contents

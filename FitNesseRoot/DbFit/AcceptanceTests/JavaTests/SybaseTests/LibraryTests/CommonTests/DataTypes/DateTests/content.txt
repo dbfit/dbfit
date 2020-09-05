@@ -1,0 +1,29 @@
+!3 Dates
+
+Following types map to Date/Time: "TIME", "DATE". Unfortunately Sybase driver is not working well with most of DATE+TIME types :(
+
+|Execute Ddl|Create table datatypetest (d1 date null, d2 time null)|
+
+|Query|select cast(getdate() as date) as dt, cast(getdate() as time) as ts |
+|dt?|ts?|
+|>>dt1|>>ts1|
+
+|Insert|datatypetest|
+|d1|d2|
+|<<dt1|<<ts1|
+
+|Query| select * from datatypetest|
+|d1?|d2?|
+|fail[null]|fail[null]|
+
+|Execute|delete from datatypetest|
+
+|Insert|datatypetest|
+|d1|d2|
+|null|null|
+
+|Query|select * from datatypetest|
+|d1|d2|
+|null|null|
+
+|Execute Ddl|Drop table datatypetest|

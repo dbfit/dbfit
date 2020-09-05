@@ -1,0 +1,17 @@
+!3 Query Results do not have to be in the same order as table data
+
+|Query|!-select 5 as n
+union all
+select 10 as n
+union all
+select 15 as n
+union all
+select 20 as n
+union all
+select 25 as n-!|
+|n|
+|5|
+|25|
+|10|
+|20|
+|15|

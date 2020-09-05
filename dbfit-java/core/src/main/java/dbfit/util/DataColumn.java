@@ -11,6 +11,7 @@ public class DataColumn {
     private String name;
     private String javaClassName;
     private String dbTypeName;
+    private int sqlType;
 
     public DataColumn(String name, String javaClassName, String dbTypeName) {
         this.name = name;
@@ -37,6 +38,10 @@ public class DataColumn {
 
     public String getName() {
         return name;
+    }
+
+    public int getSqlType() {
+        return sqlType;
     }
 }
 

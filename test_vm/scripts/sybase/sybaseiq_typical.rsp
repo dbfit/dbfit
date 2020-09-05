@@ -1,0 +1,49 @@
+# Tue Aug 07 15:10:15 UTC 2018
+# Replay feature output
+# ---------------------
+# This file was built by the Replay feature of InstallAnywhere.
+# It contains variables that were set by Panels, Consoles or Custom Code.
+
+
+
+#Validate Response File
+#----------------------
+RUN_SILENT=true
+
+#Choose Install Folder
+#---------------------
+USER_INSTALL_DIR=/opt/sap
+
+#Install older version
+#---------------------
+
+#Choose Install Set
+#------------------
+CHOSEN_FEATURE_LIST=fiq_client_common,fiq_odbc,fiq_server,fconn_add_lm,fiq_shared,fiq_client_web,fiq_cfw,fiq_cmap,fsysam_util,fiq_cockpit_agent,fjconnect70
+CHOSEN_INSTALL_FEATURE_LIST=fiq_client_common,fiq_odbc,fiq_server,fconn_add_lm,fiq_shared,fiq_client_web,fiq_cfw,fiq_cmap,fsysam_util,fiq_cockpit_agent,fjconnect70
+CHOSEN_INSTALL_SET=Typical
+
+#Choose Product License Type
+#---------------------------
+SYBASE_PRODUCT_LICENSE_TYPE=evaluate
+
+#Install
+#-------
+-fileOverwrite_/opt/sap/sybuninstall/IQSuite/uninstall.lax=Yes
+
+#Cockpit - Configure HTTP/HTTPS Ports
+#------------------------------------
+CONFIG_COCKPIT_HTTP_PORT=4282
+CONFIG_COCKPIT_HTTPS_PORT=4283
+
+#Cockpit - Configure RMI Port
+#----------------------------
+COCKPIT_RMI_PORT_NUMBER=4992
+
+#Cockpit - Configure TDS Port
+#----------------------------
+COCKPIT_TDS_PORT_NUMBER=4998
+
+#Start Cockpit
+#-------------
+START_COCKPIT_SERVER=No

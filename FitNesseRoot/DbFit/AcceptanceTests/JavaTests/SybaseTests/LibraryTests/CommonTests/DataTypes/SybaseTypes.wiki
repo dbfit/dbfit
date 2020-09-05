@@ -1,0 +1,10 @@
+---
+Test
+---
+|Insert|data_types|
+|a_bigint|a_bit|a_char|a_date    |a_decimal|a_double|a_integer|a_money|a_numeric|a_real|a_smallint|a_smallmoney|a_text|a_time                 |a_tinyint|a_unsigned_bigint|a_unsigned_int|a_varchar|a_timestamp            |a_datetime             |a_smalldatetime        |
+|1       |true |a     |2001-01-01|1        |1.0     |1        |1.0000 |1        |1.0   |1         |1.0000      |a     |0001-01-01 23:59:59.999|1        |1                |1             |a        |7910-12-31 23:59:59.999|7910-12-31 23:59:59.999|7910-12-31 23:59:59.999|
+
+|Query|SELECT a_bigint, a_bit, a_char, a_date, a_decimal, a_double, a_integer, a_money, a_numeric, a_real, a_smallint, a_smallmoney, a_text, a_time, a_tinyint, a_unsigned_bigint, a_unsigned_int, a_varchar, a_timestamp, a_datetime, a_smalldatetime FROM data_types|
+|a_bigint|a_bit?|a_char?|a_date?    |a_decimal?|a_double?|a_integer?|a_money?|a_numeric?|a_real?|a_smallint?|a_smallmoney?|a_text?|a_time?             |a_tinyint?|a_unsigned_bigint?|a_unsigned_int?|a_varchar?|a_timestamp?|a_datetime?             |a_smalldatetime?        |
+|1       |true |a     |2001-01-01|1        |1.0     |1        |1.0000 |1        |1.0   |1         |1.0000      |a     |0001-01-01 23:59:59.999|1        |1                |1             |a         |7910-12-31 23:59:59.999|7910-12-31 23:59:59.999|7910-12-31 23:59:59.999|

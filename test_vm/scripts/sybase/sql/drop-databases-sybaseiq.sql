@@ -1,0 +1,5 @@
+CONNECT;
+
+STOP DATABASE dbfit UNCONDITIONALLY;
+
+DROP DATABASE '/var/sybaseiq_db/dbfit.db';
