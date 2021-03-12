@@ -387,6 +387,20 @@ project('postgres') {
     }
 }
 
+project('snowflake') {
+    description = 'DBFit snowflake engine'
+
+    dependencies {
+        compile project(':dbfit-java:core')
+        compile 'net.snowflake:snowflake-jdbc:3.13.0'
+        testCompile project(':dbfit-java:core').sourceSets.test.output
+    }
+
+    integrationTest.doFirst {
+        dbdeploy('net.snowflake.snowflake-jdbc', 'jdbc:snowflake://127.0.0.1', 'dbfit', 'DbFit000!', 'normal', 'GO')
+    }
+}
+
 project('sqlserver') {
     description = 'DBFit sqlserver engine'
 

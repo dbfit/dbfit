@@ -212,6 +212,7 @@ task fastbuild(dependsOn: [
     ':dbfit-java:netezza:check',
     ':dbfit-java:oracle:check',
     ':dbfit-java:postgres:check',
+    ':dbfit-java:snowflake:check',
     ':dbfit-java:sqlserver:check',
     ':dbfit-java:teradata:check',
     ':dbfit-java:derby:integrationTest',
