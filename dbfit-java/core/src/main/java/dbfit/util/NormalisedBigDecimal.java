@@ -10,6 +10,10 @@ public class NormalisedBigDecimal extends BigDecimal {
 
     @Override
     public boolean equals(final Object o2) {
+        if ((o2 != null) && (o2.getClass() == Long.class)) {
+            return (0 == compareTo(BigDecimal.valueOf((Long) o2)));
+        }
+
         return (o2 != null) && (0 == compareTo((BigDecimal) o2));
     }
 }
