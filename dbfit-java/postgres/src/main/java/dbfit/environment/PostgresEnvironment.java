@@ -9,6 +9,8 @@ import dbfit.util.NameNormaliser;
 import dbfit.util.DatabaseObjectName;
 import static dbfit.util.Direction.*;
 
+import org.postgresql.util.PGobject;
+
 import javax.sql.RowSet;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
