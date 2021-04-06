@@ -34,11 +34,11 @@ public class BigDecimalParseDelegateLocaleTest {
     }
 
     private BigDecimal normalise(BigDecimal val) {
-        return (BigDecimal) normaliser.normalise(val);
+        return (BigDecimal) normaliser.transform(val);
     }
 
     private BigDecimal normalise(Object val) {
-        return (BigDecimal) normaliser.normalise(val);
+        return (BigDecimal) normaliser.transform(val);
     }
 
 }
