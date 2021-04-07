@@ -222,7 +222,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                 new OracleTimestampNormaliser());
         TypeNormaliserFactory.setNormaliser(oracle.sql.DATE.class,
                 new OracleDateNormaliser());
-        TypeNormaliserFactory.setNormaliser(oracle.sql.CLOB.class,
+        TypeNormaliserFactory.setNormaliser(oracle.jdbc.OracleClob.class,
                 new OracleClobNormaliser());
         TypeNormaliserFactory.setNormaliser(oracle.jdbc.rowset.OracleSerialClob.class,
                 new OracleSerialClobNormaliser());
