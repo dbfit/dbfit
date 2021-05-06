@@ -4,6 +4,3 @@ Following types map to Date/Time: "JSONB" ,"JSON"
 
 |Execute|Create table jsontypetest (field jsonb)|
 
-!|Insert |jsontypetest |
-|field |
-|{"field":"value"}|
