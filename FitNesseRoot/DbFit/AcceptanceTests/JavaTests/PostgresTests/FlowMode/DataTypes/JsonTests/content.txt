@@ -6,4 +6,4 @@ Following types map to Date/Time: "JSONB" ,"JSON"
 
 !|Insert |jsontypetest |
 |field |
-|!-{"field" : "value"}-!|
+|{"field":"value"}|
