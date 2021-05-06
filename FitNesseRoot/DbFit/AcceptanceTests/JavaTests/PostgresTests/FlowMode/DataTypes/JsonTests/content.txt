@@ -2,5 +2,5 @@
 
 Following types map to Date/Time: "JSONB" ,"JSON"
 
-|Execute|Create table jsontypetest (field jsonb)|
+|Execute|Create table datatypetest (field jsonb)|
 
