@@ -6,3 +6,7 @@ Following types map to Date/Time: "JSONB" ,"JSON"
 
 |Query|select * from datatypetest|
 |field|
+
+!|Insert|datatypetest|
+|field|
+|!-{"attribute":"value"}-!|
