@@ -4,3 +4,5 @@ Following types map to Date/Time: "JSONB" ,"JSON"
 
 |Execute|Create table datatypetest (field jsonb)|
 
+|Query|select * from datatypetest|
+|field|
