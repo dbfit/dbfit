@@ -1,0 +1,13 @@
+!3 Json types
+
+Following types map to Date/Time: "JSONB" ,"JSON"
+
+|Execute|Create table datatypetest (json1 jsonb, json2 json)|
+
+|Insert|datatypetest|
+|json1|json2|
+|{"field1":"string", "field2":2}|{"field1":"string", "field2":2}|
+
+|Query|select * from datatypetest|
+|json1|json2|
+|{"field1":"string", "field2":2}|{"field1":"string", "field2":2}|
