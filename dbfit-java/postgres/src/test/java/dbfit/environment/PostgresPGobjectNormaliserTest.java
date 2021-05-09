@@ -1,7 +1,5 @@
 package dbfit.environment;
 
-import dbfit.util.TypeTransformer;
-import org.junit.Assert;
 import org.junit.Test;
 import org.postgresql.util.PGobject;
 

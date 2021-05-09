@@ -1,10 +1,7 @@
 package dbfit.environment;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.postgresql.util.PGobject;
-
-import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 
