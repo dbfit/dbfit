@@ -3,12 +3,12 @@ package dbfit.environment;
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.environment.postgres.NameNormaliserPostgres;
-import dbfit.util.DbParameterAccessor;
-import dbfit.util.Direction;
-import dbfit.util.NameNormaliser;
-import dbfit.util.DatabaseObjectName;
+import dbfit.util.*;
+
 import static dbfit.util.Direction.*;
 
+import fit.TypeAdapter;
+import fitlibrary.parser.lookup.ParseDelegation;
 import org.postgresql.util.PGobject;
 
 import javax.sql.RowSet;
@@ -23,6 +23,9 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
     public PostgresEnvironment(String driverClassName) {
         super(driverClassName);
         defaultParamPatternString = "_:([A-Za-z0-9_]+)";
+        TypeNormaliserFactory.setNormaliser(PGobject.class, new PostgresPGobjectNormaliser());
+        TypeAdapter.registerParseDelegate(PGobject.class, new PGobjectParseDelegate());
+        ParseDelegation.registerParseDelegate(PGobject.class, new PGobjectParseDelegate());
     }
 
     protected String getConnectionString(String dataSource) {
@@ -161,8 +164,9 @@ public class PostgresEnvironment extends AbstractDbEnvironment {
             return java.sql.Timestamp.class;
         if (booleanTypes.contains(dataType))
             return Boolean.class;
-        if (jsonTypes.contains(dataType))
+        if (jsonTypes.contains(dataType)) {
             return PGobject.class;
+        }
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
     }
