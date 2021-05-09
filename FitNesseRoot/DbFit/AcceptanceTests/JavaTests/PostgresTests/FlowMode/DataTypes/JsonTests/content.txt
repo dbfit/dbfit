@@ -9,6 +9,7 @@ Following types map to Date/Time: "JSONB" ,"JSON"
 |{"string": "something", "optional": 123}|{"string": "something", "optional": 123}|
 |{"string": "anything"}|{"string": "anything"}|
 
+{{{
 To query json columns, you can either use ->> operator to check attribute values :
 
 !|Query|select field1 ->> 'string' as field1, field2 ->> 'string' as field2 from datatypetest|
@@ -22,7 +23,7 @@ Or convert json column to text :
 |field2|
 |{"string": "something", "optional": 123}|
 |{"string": "anything"}|
-
+}}}
 But (for now) you cannot compare json structures like that :
 
 {{{
