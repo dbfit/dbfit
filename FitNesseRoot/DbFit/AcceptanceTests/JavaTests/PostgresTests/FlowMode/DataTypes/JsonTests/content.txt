@@ -2,16 +2,12 @@
 
 Following types map to Date/Time: "JSONB" ,"JSON"
 
-|Execute|Create table datatypetest (s1 varchar(20))|
-
-{{{
 |Execute|Create table datatypetest (field1 jsonb, field2 json)|
 
 !|Insert|datatypetest|
 |field1|field2|
 |{"string": "something", "optional": 123}|{"string": "something", "optional": 123}|
 |{"string": "anything"}|{"string": "anything"}|
-
 
 To query json columns, you can either use ->> operator to check attribute values :
 
@@ -26,7 +22,7 @@ Or convert json column to text :
 |field2|
 |{"string": "something", "optional": 123}|
 |{"string": "anything"}|
-}}}
+
 But (for now) you cannot compare json structures like that :
 
 {{{
