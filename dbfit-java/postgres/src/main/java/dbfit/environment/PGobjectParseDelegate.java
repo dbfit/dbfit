@@ -6,6 +6,9 @@ import java.sql.SQLException;
 
 public class PGobjectParseDelegate {
     public static Object parse(String s) throws Exception {
+        if (s == null) {
+            return null;
+        }
         try {
             PGobject pGobject = new PGobject();
             pGobject.setType("JSONB");
