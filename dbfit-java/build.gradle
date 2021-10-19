@@ -1,7 +1,7 @@
 ext {
     fitNesseVersion = '20211006'
     mockitoVersion = '2.2.2'
-    junitVersion = '4.12'
+    junitVersion = '4.13.2'
 }
 
 allprojects {
