@@ -11,7 +11,7 @@ WM="$MODNAME: WARNING:"
 DB2_SCRIPTS=`dirname $0`
 
 # Set DB2 environment.
-DB2PROFILE=/database/config/db2inst1/sqllib/db2profile
+DB2PROFILE=`find / -print | grep db2inst1/sqllib/db2profile | head -1`
 
 # Create dftest OS user for dbfit tests.
 echo "$IM creating OS user 'dftest'..."
