@@ -1,0 +1,5 @@
+|dbfit.SnowflakeTest|
+
+|Connect Using File|DbConnectionDbFitSnowflake.properties|
+
+...!|Connect|YC91938.eu-west-2.aws|dbfit|Dbfit123!|FitNesseTestDB| 
