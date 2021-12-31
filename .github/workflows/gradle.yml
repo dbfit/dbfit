@@ -11,6 +11,20 @@ jobs:
         java: [ '8', '11' ]
     name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) sample
     services:
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_USER: dbfit
+          POSTGRES_PASSWORD: dbfit
+          POSTGRES_DB: dbfit
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
       oracle-db:
         image: wnameless/oracle-xe-11g-r2
         ports:
