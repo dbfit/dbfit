@@ -25,23 +25,12 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          #oracle-db:
-          #image: wnameless/oracle-xe-11g-r2
-          #ports:
-          #- 1521:1521
-          #options: >-
-          #-v "${PWD}:/docker-entrypoint-initdb.d:ro"
-          #          --health-cmd "'test -f /tmp/dbfit-ora-setup-done.flag'"
-          #--health-start-period 60s
-          #--health-interval 10s
-          #--health-timeout 5s
-          #--health-retries 60
     steps:
+    - uses: actions/checkout@v2
     - name: Setup Oracle database
-      run: docker run --name dbfitora -p 1521:1521 -v "`pwd`/test_vm/scripts/oracle/sql:/docker-entrypoint-initdb.d:ro" wnameless/oracle-xe-11g-r2 &
+      run: docker run --name dbfitora -p 1521:1521 -v "${PWD}/test_vm/scripts/oracle/sql:/docker-entrypoint-initdb.d:ro" wnameless/oracle-xe-11g-r2 &
     - name: Wait until oracle is up
       run: for i in {1..60}; do echo "$i waiting for Oracle server startup"; docker exec dbfitora test -f /tmp/dbfit-ora-setup-done.flag && echo "[Oracle UP]" && break || sleep 6; done
-    - uses: actions/checkout@v2
     - name: Set up java
       uses: actions/setup-java@v2
       with:
