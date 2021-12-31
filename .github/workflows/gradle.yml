@@ -10,6 +10,18 @@ jobs:
         distribution: [ 'zulu', 'temurin' ]
         java: [ '8', '11' ]
     name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) sample
+    services:
+      oracle-db:
+        image: wnameless/oracle-xe-11g-r2
+        ports:
+          - 1521:1521
+        options: >-
+          -v "`pwd`/test_vm/scripts/oracle/sql:/docker-entrypoint-initdb.d:ro"
+          --health-cmd 'test -f /tmp/dbfit-ora-setup-done.flag && echo "[Oracle UP]"'
+          --health-start-period 60s
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 60
     steps:
     - uses: actions/checkout@v2
     - name: Set up java
@@ -21,3 +33,5 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew clean fastbuild
+    - name: Oracle integration tests
+      run: ./gradlew :dbfit-java:oracle:integrationTest
