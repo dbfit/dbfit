@@ -16,7 +16,7 @@ jobs:
         ports:
           - 1521:1521
         options: >-
-          -v "`pwd`/test_vm/scripts/oracle/sql:/docker-entrypoint-initdb.d:ro"
+          -v "$(pwd)/test_vm/scripts/oracle/sql:/docker-entrypoint-initdb.d:ro"
           --health-cmd 'test -f /tmp/dbfit-ora-setup-done.flag && echo "[Oracle UP]"'
           --health-start-period 60s
           --health-interval 10s
