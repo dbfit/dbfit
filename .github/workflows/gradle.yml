@@ -11,6 +11,7 @@ jobs:
         java: [ '8', '11' ]
     name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) sample
     services:
+    - uses: actions/checkout@v2
       postgres:
         # Docker Hub image
         image: postgres
@@ -29,7 +30,8 @@ jobs:
         image: wnameless/oracle-xe-11g-r2
         ports:
           - 1521:1521
-          #options: -v "$(pwd)/test_vm/scripts/oracle/sql:/docker-entrypoint-initdb.d:ro"
+        options: >-
+         -v "${PWD}:/docker-entrypoint-initdb.d:ro"
           #          --health-cmd "'test -f /tmp/dbfit-ora-setup-done.flag'"
           #--health-start-period 60s
           #--health-interval 10s
