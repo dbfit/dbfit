@@ -1,6 +1,6 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
-name: build
+name: test-oracle
 on:
   push:
   pull_request:
@@ -54,30 +54,19 @@ jobs:
         java-version: ${{ matrix.java }}
 
     - name: Oracle integration tests
-      run: ./gradlew :dbfit-java:oracle:integrationTest
+      run: ./gradlew fastbuild :dbfit-java:oracle:integrationTest
 
     - name: Setup diag logs
       if: always()
       run: |
-        mkdir diag
+        test -d diag || mkdir diag
         test -d tmp || mkdir tmp
-        docker logs mysql > diag/mysql.log 2>&1
         docker logs dbfitora > diag/dbfitora.log 2>&1
-
-    - name: Upload test Artifact
-      uses: actions/upload-artifact@v2
-      if: always()
-      with:
-        name: test-artifact
-        path: |
-          ${{ github.workspace }}/diag
-          ${{ github.workspace }}/tmp
-        retention-days: 1
 
     - name: Upload diags artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ env.project_bundle }}
+        name: diagnostics
         path: |
           ${{ github.workspace }}/diag
           ${{ github.workspace }}/tmp
