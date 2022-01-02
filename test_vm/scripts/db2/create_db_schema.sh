@@ -3,12 +3,14 @@
 # Exit statuses: -
 # 0 - completed successfully.
 # 1 - error occured.
+set -ev
+
 MODNAME=`basename $0`
 IM="$MODNAME: INFO:"
 EM="$MODNAME: ERROR:"
 WM="$MODNAME: WARNING:"
 
-DB2_SCRIPTS=`dirname $0`
+DB2_SCRIPTS=`dirname $(realpath $0)`
 
 # Set DB2 environment.
 DB2PROFILE=`find / -print | grep db2inst1/sqllib/db2profile | head -1`
