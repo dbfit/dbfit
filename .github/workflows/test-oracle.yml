@@ -1,0 +1,83 @@
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+name: build
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 5 * * *"
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        distribution: [ 'zulu' ]
+        java: [ '8', '11' ]
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) sample
+
+    services:
+
+      oracle:
+        image: gvenzl/oracle-xe:21
+        ports:
+          - 1521:1521
+        env:
+          ORACLE_URL: localhost:1521/XEPDB1
+          ORACLE_PASSWORD: Oracle18
+          ORACLE_ADMIN_PASSWORD: Oracle18
+          ORACLE_ADMIN_USER: system
+          NLS_LANG: AMERICAN_AMERICA.AL32UTF8
+        options: >-
+          --name dbfitora
+          --health-cmd healthcheck.sh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 20
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Copy database scripts
+      run: |
+        docker ps -a
+        docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" dbfitora
+        docker cp test_vm/scripts/oracle dbfitora:/tmp/dbfit_setup
+
+    - name: Oracle schemas setup
+      run: docker exec -w /tmp/dbfit_setup dbfitora /bin/bash -i ./create_db_schema.sh
+
+    - name: Set up java
+      uses: actions/setup-java@v2
+      with:
+        distribution: ${{ matrix.distribution }}
+        java-version: ${{ matrix.java }}
+
+    - name: Oracle integration tests
+      run: ./gradlew :dbfit-java:oracle:integrationTest
+
+    - name: Setup diag logs
+      if: always()
+      run: |
+        mkdir diag
+        test -d tmp || mkdir tmp
+        docker logs mysql > diag/mysql.log 2>&1
+        docker logs dbfitora > diag/dbfitora.log 2>&1
+
+    - name: Upload test Artifact
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: test-artifact
+        path: |
+          ${{ github.workspace }}/diag
+          ${{ github.workspace }}/tmp
+        retention-days: 1
+
+    - name: Upload diags artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.project_bundle }}
+        path: |
+          ${{ github.workspace }}/diag
+          ${{ github.workspace }}/tmp
