@@ -128,7 +128,7 @@ jobs:
       run: ./gradlew :dbfit-java:db2:integrationTest
 
     - name: Build and test
-      run: ./gradlew --continue clean travisbuild
+      run: ./gradlew --continue clean cibuild
 
     - name: Bundle
       run: ./gradlew bundle

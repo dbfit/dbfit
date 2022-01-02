@@ -219,13 +219,15 @@ task fastbuild(dependsOn: [
     ':dbfit-java:hsqldb:integrationTest'
     ])
 
-task travisbuild(dependsOn: [
+task cibuild(dependsOn: [
     fastbuild,
     ':dbfit-java:db2:integrationTest',
     ':dbfit-java:mysql:integrationTest',
     ':dbfit-java:oracle:integrationTest',
     ':dbfit-java:postgres:integrationTest'
     ])
+
+task travisbuild(dependsOn: [cibuild])
 
 if (!project.hasProperty('excludeIntegrationTests')) {
     project.ext.set('excludeIntegrationTests', '')
