@@ -1,0 +1,33 @@
+name: fast-build
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 5 * * *"
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        distribution: [ 'zulu' ]
+        java: [ '8' ]
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) sample
+
+    steps:
+    - name: Fast build
+      uses: actions/checkout@v2
+
+    - name: Fast build
+      run: ./gradlew clean fastbuild
+
+    - name: Bundle
+      run: ./gradlew bundle
+
+    - name: Determine bundle name
+      run: echo "project_bundle=`basename zips/*.zip`" >> $GITHUB_ENV
+
+    - name: Upload zips artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.project_bundle }}
+        path: ${{ github.workspace }}/zips/${{ env.project_bundle}}
