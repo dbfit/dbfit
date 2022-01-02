@@ -43,8 +43,7 @@ allprojects {
             url "http://mvnrepository.com"
         }
         ivy {
-            artifactPattern "https://s3.amazonaws.com/dbfit/[artifact]-[revision].[ext]"
-            ivyPattern "https://aws.amazon.com/s3/ivy.xml"
+            artifactPattern "https://raw.githubusercontent.com/dbfit/dbfit-dependencies/main/[artifact]-[revision].[ext]"
             metadataSources {
                 ivyDescriptor()
                 artifact()
