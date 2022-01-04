@@ -1,5 +1,3 @@
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 name: build
 on:
   push:
@@ -7,16 +5,47 @@ on:
   schedule:
     - cron: "0 5 * * *"
 jobs:
-  build:
+
+  test_postgres:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
         distribution: [ 'zulu' ]
         java: [ '8', '11' ]
-    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) sample
-
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) postgres
     services:
+      postgres:
+        image: postgres
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: dbfit
+          POSTGRES_PASSWORD: dbfit
+          POSTGRES_DB: dbfit
+          PGPASSWORD: dbfit
+        options: >-
+          --name postgres
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
+      - name: Db Integration tests
+        uses: ./.github/actions/db-integration-test
+        with:
+          database_kind: postgres
+
+  test_mysql:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        distribution: [ 'zulu' ]
+        java: [ '8', '11' ]
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) mysql
+    services:
       mysql:
         image: mysql:5.7
         env:
@@ -32,22 +61,55 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      postgres:
-        image: postgres
+      - name: Db Integration tests
+        uses: ./.github/actions/db-integration-test
+        with:
+          database_kind: mysql
+
+  test_db2:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        distribution: [ 'zulu' ]
+        java: [ '8', '11' ]
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) db2
+    services:
+      db2:
+        image: ibmcom/db2:latest
         ports:
-          - 5432:5432
+          - 50000:50000
         env:
-          POSTGRES_USER: dbfit
-          POSTGRES_PASSWORD: dbfit
-          POSTGRES_DB: dbfit
+          DB2INST1_PASSWORD: db2inst1-pwd
+          LICENSE: accept
+          DBNAME: db2inst1
         options: >-
-          --name postgres
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --name db2
+          --privileged
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
+      - name: Wait for database containers initialization
+        run: |
+          for i in {1..60}; do echo "$i waiting for DB2 server startup"; docker logs db2 2>&1 | grep 'Setup has completed' && echo "[DB2 UP]" && break || sleep 6; done
+
+      - name: Db Integration tests
+        uses: ./.github/actions/db-integration-test
+        with:
+          database_kind: db2
+
+  test_oracle:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        distribution: [ 'zulu' ]
+        java: [ '8', '11' ]
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) oracle
+    services:
       oracle:
         image: gvenzl/oracle-xe:21
         ports:
@@ -59,105 +121,43 @@ jobs:
           ORACLE_ADMIN_USER: system
           NLS_LANG: AMERICAN_AMERICA.AL32UTF8
         options: >-
-          --name dbfitora
+          --name oracle
           --health-cmd healthcheck.sh
           --health-interval 10s
           --health-timeout 5s
           --health-retries 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      db2:
-        image: ibmcom/db2:latest
-        ports:
-          - 50000:50000
-        env:
-          DB2INST1_PASSWORD: db2inst1-pwd
-          LICENSE: accept
-          DBNAME: db2inst1
-        options: >-
-          --name dbfitdb2
-          --privileged
+      - name: Db Integration tests
+        uses: ./.github/actions/db-integration-test
+        with:
+          database_kind: oracle
+
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        distribution: [ 'zulu' ]
+        java: [ '8', '11' ]
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) fastbuild
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Fast build
+        uses: actions/checkout@v2
 
-    - name: Wait for database containers initialization
-      run: |
-        for i in {1..60}; do echo "$i waiting for DB2 server startup"; docker logs dbfitdb2 2>&1 | grep 'Setup has completed' && echo "[DB2 UP]" && break || sleep 6; done
+      - name: Fast build
+        run: ./gradlew clean fastbuild
 
-    - name: Copy database scripts
-      run: |
-        docker ps -a
-        docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" dbfitora
-        docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" dbfitdb2
-        docker cp test_vm/scripts/oracle dbfitora:/tmp/dbfit_setup
-        docker cp test_vm/scripts/db2 dbfitdb2:/tmp/dbfit_setup
-        docker cp test_vm/scripts/postgresql postgres:/tmp/dbfit_setup
-        docker cp test_vm/scripts/mysql mysql:/tmp/dbfit_setup
+      - name: Bundle
+        run: ./gradlew bundle
 
-    - name: MySQL schemas setup
-      run: docker exec -w /tmp/dbfit_setup mysql /bin/bash -i ./create_db_schema.sh
+      - name: Determine bundle name
+        run: echo "project_bundle=`basename zips/*.zip`" >> $GITHUB_ENV
 
-    - name: PostgreSQL schemas setup
-      env:
-        PGPASSWORD: dbfit
-      run: docker exec -w /tmp/dbfit_setup postgres /bin/bash -i ./create_db_schema.sh
-
-    - name: Db2 schemas setup
-      run: docker exec -w /tmp/dbfit_setup dbfitdb2 /bin/bash -i ./create_db_schema.sh
-
-    - name: Oracle schemas setup
-      run: docker exec -w /tmp/dbfit_setup dbfitora /bin/bash -i ./create_db_schema.sh
-
-    - name: Set up java
-      uses: actions/setup-java@v2
-      with:
-        distribution: ${{ matrix.distribution }}
-        java-version: ${{ matrix.java }}
-
-    - name: MySQL integration tests
-      run: ./gradlew :dbfit-java:mysql:integrationTest
-
-    - name: PostgreSQL integration tests
-      run: ./gradlew :dbfit-java:postgres:integrationTest
-
-    - name: Oracle integration tests
-      run: ./gradlew :dbfit-java:oracle:integrationTest
-
-    - name: Db2 integration tests
-      run: ./gradlew :dbfit-java:db2:integrationTest
-
-    - name: Build and test
-      run: ./gradlew --continue clean cibuild
-
-    - name: Bundle
-      run: ./gradlew bundle
-
-    - name: Setup diag logs
-      if: always()
-      run: |
-        mkdir diag
-        test -d tmp || mkdir tmp
-        docker logs mysql > diag/mysql.log 2>&1
-        docker logs dbfitora > diag/dbfitora.log 2>&1
-        docker logs dbfitdb2 > diag/dbfitdb2.log 2>&1
-        docker logs postgres > diag/postgres.log 2>&1
-
-    - name: Upload test Artifact
-      uses: actions/upload-artifact@v2
-      if: always()
-      with:
-        name: test-artifact
-        path: |
-          ${{ github.workspace }}/diag
-          ${{ github.workspace }}/tmp
-        retention-days: 1
-
-    - name: Determine bundle name
-      run: echo "project_bundle=`basename zips/*.zip`" >> $GITHUB_ENV
-
-    - name: Upload zips artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: ${{ env.project_bundle }}
-        path: ${{ github.workspace }}/zips/${{ env.project_bundle}}
+      - name: Upload zips artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.project_bundle }}
+          path: ${{ github.workspace }}/zips/${{ env.project_bundle}}

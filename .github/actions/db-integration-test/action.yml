@@ -1,0 +1,41 @@
+name: db-integration-test
+description: "Database Integration Test"
+
+inputs:
+  database_kind:
+    required: true
+    description: "Database kind (oracle, db2, mysql, ...)"
+runs:
+  using: "composite"
+  steps:
+
+  - name: Copy database scripts
+    shell: bash
+    run: |
+      docker ps -a
+      docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" ${{ inputs.database_kind }}
+      docker cp test_vm/scripts/${{ inputs.database_kind }} ${{ inputs.database_kind }}:/tmp/dbfit_setup
+
+  - name: ${{ inputs.database_kind }} schemas setup
+    shell: bash
+    run: docker exec -w /tmp/dbfit_setup ${{ inputs.database_kind }} /bin/bash -i ./create_db_schema.sh
+
+  - name: ${{ inputs.database_kind }} integration tests
+    shell: bash
+    run: ./gradlew fastbuild :dbfit-java:${{ inputs.database_kind }}:integrationTest
+
+  - name: Setup diag logs
+    shell: bash
+    if: always()
+    run: |
+      test -d diag || mkdir diag
+      test -d tmp || mkdir tmp
+      docker logs ${{ inputs.database_kind }} > diag/${{ inputs.database_kind }}.log 2>&1
+
+  - name: Upload diags artifacts
+    uses: actions/upload-artifact@v2
+    with:
+      name: diagnostics
+      path: |
+        ${{ github.workspace }}/diag
+        ${{ github.workspace }}/tmp
