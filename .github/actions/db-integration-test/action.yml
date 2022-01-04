@@ -9,6 +9,14 @@ runs:
   using: "composite"
   steps:
 
+  - name: Setup diag logs dirs
+    shell: bash
+    if: always()
+    run: |
+      test -d diag || mkdir diag
+      test -d tmp || mkdir tmp
+      docker logs ${{ inputs.database_kind }} > diag/${{ inputs.database_kind }}_before.log 2>&1
+
   - name: Copy database scripts
     shell: bash
     run: |
@@ -24,13 +32,10 @@ runs:
     shell: bash
     run: ./gradlew fastbuild :dbfit-java:${{ inputs.database_kind }}:integrationTest
 
-  - name: Setup diag logs
+  - name: Collect logs after
     shell: bash
     if: always()
-    run: |
-      test -d diag || mkdir diag
-      test -d tmp || mkdir tmp
-      docker logs ${{ inputs.database_kind }} > diag/${{ inputs.database_kind }}.log 2>&1
+    run: docker logs ${{ inputs.database_kind }} > diag/${{ inputs.database_kind }}.log 2>&1
 
   - name: Upload diags artifacts
     uses: actions/upload-artifact@v2
