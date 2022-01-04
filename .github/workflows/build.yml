@@ -3,7 +3,7 @@ on:
   push:
   pull_request:
   schedule:
-    - cron: "0 5 * * *"
+    - cron: "15 5 * * *"
 jobs:
 
   test_postgres:
