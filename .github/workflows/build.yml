@@ -1,0 +1,163 @@
+name: build
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "15 5 * * *"
+jobs:
+
+  test_postgres:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        distribution: [ 'zulu' ]
+        java: [ '8', '11' ]
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) postgres
+    services:
+      postgres:
+        image: postgres
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: dbfit
+          POSTGRES_PASSWORD: dbfit
+          POSTGRES_DB: dbfit
+          PGPASSWORD: dbfit
+        options: >-
+          --name postgres
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Db Integration tests
+        uses: ./.github/actions/db-integration-test
+        with:
+          database_kind: postgres
+
+  test_mysql:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        distribution: [ 'zulu' ]
+        java: [ '8', '11' ]
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) mysql
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: dbfit
+          MYSQL_USER: dbfit
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: rootpassword
+        ports:
+          - 3306:3306
+        options: >-
+          --name mysql
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Db Integration tests
+        uses: ./.github/actions/db-integration-test
+        with:
+          database_kind: mysql
+
+  test_db2:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        distribution: [ 'zulu' ]
+        java: [ '8', '11' ]
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) db2
+    services:
+      db2:
+        image: ibmcom/db2:latest
+        ports:
+          - 50000:50000
+        env:
+          DB2INST1_PASSWORD: db2inst1-pwd
+          LICENSE: accept
+          DBNAME: db2inst1
+        options: >-
+          --name db2
+          --privileged
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Wait for database containers initialization
+        run: |
+          for i in {1..60}; do echo "$i waiting for DB2 server startup"; docker logs db2 2>&1 | grep 'Setup has completed' && echo "[DB2 UP]" && break || sleep 6; done
+
+      - name: Db Integration tests
+        uses: ./.github/actions/db-integration-test
+        with:
+          database_kind: db2
+
+  test_oracle:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        distribution: [ 'zulu' ]
+        java: [ '8', '11' ]
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) oracle
+    services:
+      oracle:
+        image: gvenzl/oracle-xe:21
+        ports:
+          - 1521:1521
+        env:
+          ORACLE_URL: localhost:1521/XEPDB1
+          ORACLE_PASSWORD: Oracle18
+          ORACLE_ADMIN_PASSWORD: Oracle18
+          ORACLE_ADMIN_USER: system
+          NLS_LANG: AMERICAN_AMERICA.AL32UTF8
+        options: >-
+          --name oracle
+          --health-cmd healthcheck.sh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Db Integration tests
+        uses: ./.github/actions/db-integration-test
+        with:
+          database_kind: oracle
+
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        distribution: [ 'zulu' ]
+        java: [ '8', '11' ]
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) fastbuild
+
+    steps:
+      - name: Fast build
+        uses: actions/checkout@v2
+
+      - name: Fast build
+        run: ./gradlew clean fastbuild
+
+      - name: Bundle
+        run: ./gradlew bundle
+
+      - name: Determine bundle name
+        run: echo "project_bundle=`basename zips/*.zip`" >> $GITHUB_ENV
+
+      - name: Upload zips artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.project_bundle }}
+          path: ${{ github.workspace }}/zips/${{ env.project_bundle}}

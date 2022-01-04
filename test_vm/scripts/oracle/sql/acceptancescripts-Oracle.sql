@@ -3,7 +3,7 @@ whenever oserror exit 9
 
 define tbs_data = USERS
 
-create user dftest identified by dftest;
+create user dftest identified by dftest default tablespace &&tbs_data quota unlimited on &&tbs_data.;
 grant connect to dftest;
 grant create session to dftest;
 grant create procedure to dftest;

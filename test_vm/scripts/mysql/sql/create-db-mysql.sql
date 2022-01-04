@@ -9,6 +9,6 @@ CREATE TABLE IF NOT EXISTS changelog (
     CONSTRAINT Pkchangelog PRIMARY KEY (change_number)
 );
 
-create user 'dbfit_user'@'localhost' identified by 'password';
-grant all privileges on dbfit.* to 'dbfit_user'@'localhost';
-grant select on mysql.proc to 'dbfit_user'@'localhost';
+create user 'dbfit_user'@'%' identified by 'password';
+grant all privileges on dbfit.* to 'dbfit_user'@'%';
+grant select on mysql.proc to 'dbfit_user'@'%';
