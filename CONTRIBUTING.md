@@ -2,7 +2,7 @@
 
 ### Documentation changes
 
-Please raise pull requests against master; the `gh-pages` branch is used only for publishing.
+Please raise pull requests against `main`; the `gh-pages` branch is used only for publishing.
 
 ### Code changes
 
