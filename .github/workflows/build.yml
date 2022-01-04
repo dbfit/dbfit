@@ -89,13 +89,13 @@ jobs:
         options: >-
           --name db2
           --privileged
+          --health-cmd "test -f /database/config/.shared-data/setup_complete"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 40
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Wait for database containers initialization
-        run: |
-          for i in {1..60}; do echo "$i waiting for DB2 server startup"; docker logs db2 2>&1 | grep 'Setup has completed' && echo "[DB2 UP]" && break || sleep 6; done
 
       - name: Db Integration tests
         uses: ./.github/actions/db-integration-test
