@@ -50,7 +50,7 @@ show_comments: false
 
 ### [The team behind DbFit](/dbfit/docs/the-team-behind-dbfit.html) <small>Which part of DbFit is maintained by whom.</small>
 
-### [Contributing]({{ site.repository }}/blob/master/CONTRIBUTING.md) <small>Contributing code or documentation improvements to DbFit.</small>
+### [Contributing]({{ site.repository }}/blob/main/CONTRIBUTING.md) <small>Contributing code or documentation improvements to DbFit.</small>
 
 ### [DbFit: past and present](http://quickpeople.wordpress.com/2013/03/21/dbfit-the-past-and-present/) <small>A brief history of the project and its variants.</small>
 
