@@ -148,10 +148,16 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Fast build
-        run: ./gradlew clean fastbuild
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            clean
+            fastbuild
 
       - name: Bundle
-        run: ./gradlew bundle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: bundle
 
       - name: Determine bundle name
         run: echo "project_bundle=`basename zips/*.zip`" >> $GITHUB_ENV

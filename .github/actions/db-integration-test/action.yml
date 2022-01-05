@@ -29,8 +29,11 @@ runs:
     run: docker exec -w /tmp/dbfit_setup ${{ inputs.database_kind }} /bin/bash -i ./create_db_schema.sh
 
   - name: ${{ inputs.database_kind }} integration tests
-    shell: bash
-    run: ./gradlew fastbuild :dbfit-java:${{ inputs.database_kind }}:integrationTest
+    uses: gradle/gradle-build-action@v2
+    with:
+      arguments: |
+        fastbuild
+        :dbfit-java:${{ inputs.database_kind }}:integrationTest
 
   - name: Collect logs after
     shell: bash
