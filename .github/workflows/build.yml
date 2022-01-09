@@ -168,3 +168,41 @@ jobs:
         uses: ./.github/actions/db-integration-test
         with:
           database_kind: oracle
+
+  test_sqlserver:
+    strategy:
+      matrix:
+        os: [ 'ubuntu-20.04' ]
+        distribution: [ 'zulu' ]
+        java: [ '8' ]
+        db_kind: [ 'sqlserver' ]
+    runs-on: ${{ matrix.os }}
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) ${{ matrix.db_kind }}
+    env:
+      DB_ADMIN_PASSWORD: yourStrongP@ssword
+
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: ${{ env.DB_ADMIN_PASSWORD }}
+          MSSQL_PID: Express
+        ports:
+          - 1433:1433
+        options: >-
+          --name ${{ matrix.db_kind }}
+          --health-cmd "/opt/mssql-tools/bin/sqlcmd -U sa -P $SA_PASSWORD -Q 'select 1' -b -o /dev/null"
+          --health-interval 60s
+          --health-timeout 30s
+          --health-start-period 20s
+          --health-retries 3
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Db Integration tests
+        uses: ./.github/actions/db-integration-test
+        with:
+          database_kind: ${{ matrix.db_kind }}
