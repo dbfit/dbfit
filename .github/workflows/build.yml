@@ -9,9 +9,9 @@ jobs:
   fast-build:
     strategy:
       matrix:
-        os: [ 'ubuntu-latest' ]
-        distribution: [ 'zulu' ]
-        java: [ '8' ]
+        os: ['ubuntu-latest']
+        distribution: ['zulu']
+        java: ['8']
     runs-on: ${{ matrix.os }}
     name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) fastbuild
 
@@ -41,12 +41,14 @@ jobs:
           path: ${{ github.workspace }}/zips/${{ env.project_bundle}}
 
   test_postgres:
-    runs-on: ubuntu-20.04
     strategy:
       matrix:
-        distribution: [ 'zulu' ]
-        java: [ '8', '11' ]
-    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) postgres
+        os: ['ubuntu-20.04']
+        distribution: ['zulu']
+        java: ['8', '11']
+        db_kind: ['postgres']
+    runs-on: ${{ matrix.os }}
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) ${{ matrix.db_kind }}
     services:
       postgres:
         image: postgres
@@ -58,7 +60,7 @@ jobs:
           POSTGRES_DB: dbfit
           PGPASSWORD: dbfit
         options: >-
-          --name postgres
+          --name ${{ matrix.db_kind }}
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
@@ -70,15 +72,17 @@ jobs:
       - name: Db Integration tests
         uses: ./.github/actions/db-integration-test
         with:
-          database_kind: postgres
+          database_kind: ${{ matrix.db_kind }}
 
   test_mysql:
-    runs-on: ubuntu-20.04
     strategy:
       matrix:
-        distribution: [ 'zulu' ]
-        java: [ '8', '11' ]
-    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) mysql
+        os: ['ubuntu-20.04']
+        distribution: ['zulu']
+        java: ['8', '11']
+        db_kind: ['mysql']
+    runs-on: ${{ matrix.os }}
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) ${{ matrix.db_kind }}
     services:
       mysql:
         image: mysql:5.7
@@ -90,7 +94,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --name mysql
+          --name ${{ matrix.db_kind }}
           --health-cmd="mysqladmin ping"
           --health-interval=10s
           --health-timeout=5s
@@ -105,12 +109,14 @@ jobs:
           database_kind: mysql
 
   test_db2:
-    runs-on: ubuntu-20.04
     strategy:
       matrix:
-        distribution: [ 'zulu' ]
-        java: [ '8', '11' ]
-    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) db2
+        os: ['ubuntu-20.04']
+        distribution: ['zulu']
+        java: ['8', '11']
+        db_kind: ['db2']
+    runs-on: ${{ matrix.os }}
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) ${{ matrix.db_kind }}
     services:
       db2:
         image: ibmcom/db2:latest
@@ -121,7 +127,7 @@ jobs:
           LICENSE: accept
           DBNAME: db2inst1
         options: >-
-          --name db2
+          --name ${{ matrix.db_kind }}
           --privileged
           --health-cmd "test -f /database/config/.shared-data/setup_complete"
           --health-interval 10s
@@ -134,15 +140,17 @@ jobs:
       - name: Db Integration tests
         uses: ./.github/actions/db-integration-test
         with:
-          database_kind: db2
+          database_kind: ${{ matrix.db_kind }}
 
   test_oracle:
-    runs-on: ubuntu-20.04
     strategy:
       matrix:
-        distribution: [ 'zulu' ]
-        java: [ '8', '11' ]
-    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) oracle
+        os: ['ubuntu-20.04']
+        distribution: ['zulu']
+        java: ['8', '11']
+        db_kind: ['oracle']
+    runs-on: ${{ matrix.os }}
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) ${{ matrix.db_kind }}
     services:
       oracle:
         image: gvenzl/oracle-xe:21
@@ -167,22 +175,22 @@ jobs:
       - name: Db Integration tests
         uses: ./.github/actions/db-integration-test
         with:
-          database_kind: oracle
+          database_kind: ${{ matrix.db_kind }}
 
   test_sqlserver:
     strategy:
       matrix:
-        os: [ 'ubuntu-20.04' ]
-        distribution: [ 'zulu' ]
-        java: [ '8' ]
-        db_kind: [ 'sqlserver' ]
+        os: ['ubuntu-20.04']
+        distribution: ['zulu']
+        java: ['8']
+        db_kind: ['sqlserver']
     runs-on: ${{ matrix.os }}
     name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) ${{ matrix.db_kind }}
     env:
       DB_ADMIN_PASSWORD: yourStrongP@ssword
 
     services:
-      mssql:
+      sqlserver:
         image: mcr.microsoft.com/mssql/server:2019-latest
         env:
           ACCEPT_EULA: Y
