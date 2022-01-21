@@ -15,6 +15,7 @@ jobs:
         java: ['8']
     runs-on: ${{ matrix.os }}
     name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) fastbuild
+    timeout-minutes: 12
 
     steps:
       - name: Checkout
@@ -50,6 +51,7 @@ jobs:
         db_kind: ['postgres']
     runs-on: ${{ matrix.os }}
     name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) ${{ matrix.db_kind }}
+    timeout-minutes: 12
     services:
       postgres:
         image: postgres
@@ -84,6 +86,7 @@ jobs:
         db_kind: ['mysql']
     runs-on: ${{ matrix.os }}
     name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) ${{ matrix.db_kind }}
+    timeout-minutes: 12
     services:
       mysql:
         image: mysql:5.7
@@ -118,6 +121,7 @@ jobs:
         db_kind: ['db2']
     runs-on: ${{ matrix.os }}
     name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) ${{ matrix.db_kind }}
+    timeout-minutes: 12
     services:
       db2:
         image: ibmcom/db2:latest
@@ -152,6 +156,7 @@ jobs:
         db_kind: ['oracle']
     runs-on: ${{ matrix.os }}
     name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) ${{ matrix.db_kind }}
+    timeout-minutes: 12
     services:
       oracle:
         image: gvenzl/oracle-xe:21
@@ -187,6 +192,7 @@ jobs:
         db_kind: ['sqlserver']
     runs-on: ${{ matrix.os }}
     name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) ${{ matrix.db_kind }}
+    timeout-minutes: 12
     env:
       DB_ADMIN_PASSWORD: yourStrongP@ssword
 
