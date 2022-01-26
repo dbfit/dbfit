@@ -1,6 +1,6 @@
 This stored proc tests output parameters - CalcLength returns string length as second output param
 {{{
-CREATE PROCEDURE CalcLength_P
+CREATE PROCEDURE CalcLength
 @name VARCHAR(255)
 , @strlength INT OUTPUT
 AS
@@ -10,7 +10,7 @@ END;
 GO
 }}}
 
-!|Execute Procedure|CalcLength_P|
+!|Execute Procedure|CalcLength|
 |name|str length?|
 |mika|4|
 |paradajz|8|
@@ -18,6 +18,24 @@ GO
 
 Caputure the implicit return value
 
-!|Execute Procedure|CalcLength_P|
+!|Execute Procedure|CalcLength|
 |name|str length?|?|
 |mika|4|0|
+
+SQL Server OUTPUT parameters behave like INOUT
+{{{
+CREATE PROCEDURE Increment_P
+	@counter INT OUTPUT
+AS
+BEGIN
+	SET @counter = ISNULL(@counter, 1) + 1
+END;
+}}}
+
+!|Execute Procedure|Increment_P|
+|counter?|
+|2|
+
+!|Execute Procedure|Increment_P|
+|counter|counter?|
+|7|8|

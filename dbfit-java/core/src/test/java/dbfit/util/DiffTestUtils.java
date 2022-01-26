@@ -1,14 +1,7 @@
 package dbfit.util;
 
-import dbfit.util.DataColumn;
-import dbfit.util.DataCell;
-import dbfit.util.DataRow;
-import dbfit.util.MatchResult;
-import dbfit.util.MatchStatus;
-import dbfit.util.DiffListener;
 import static dbfit.util.MatchStatus.*;
 
-import org.mockito.Mockito;
 import static org.mockito.Mockito.*;
 
 import java.util.HashMap;

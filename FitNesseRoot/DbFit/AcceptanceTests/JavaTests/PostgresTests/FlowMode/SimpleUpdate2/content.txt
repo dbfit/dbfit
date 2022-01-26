@@ -1,0 +1,15 @@
+|insert|Users|
+|Name|Username|
+|arthur dent|adent|
+|ford prefect|fpref|
+|zaphod beeblebrox|zaphod|
+
+|update|USERS|
+|USERNAME=|NAME|
+|adent2|arthur dent|
+
+|query|select * from Users|
+|name|username|
+|arthur dent|adent2|
+|ford prefect|fpref|
+|zaphod beeblebrox|zaphod|

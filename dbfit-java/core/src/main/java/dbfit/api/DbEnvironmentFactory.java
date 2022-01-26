@@ -32,7 +32,7 @@ public class DbEnvironmentFactory {
         factory.initDefaultEnvironments();
 
         return factory;
-    } 
+    }
 
     public static class EnvironmentDescriptor {
         public String environmentName;

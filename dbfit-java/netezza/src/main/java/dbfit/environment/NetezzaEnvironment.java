@@ -5,6 +5,9 @@ import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.Direction;
 import dbfit.util.NameNormaliser;
+import dbfit.fixture.StatementExecution;
+import dbfit.fixture.StatementExecutionCapturingResultSetValue;
+import static dbfit.util.Direction.*;
 
 import javax.sql.RowSet;
 import java.math.BigDecimal;
@@ -12,12 +15,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.regex.Pattern;
 
 @DatabaseEnvironment(name="Netezza", driver="org.netezza.Driver")
 public class NetezzaEnvironment extends AbstractDbEnvironment {
     public NetezzaEnvironment(String driverClassName) {
         super(driverClassName);
+        defaultParamPatternString = "_:([A-Za-z0-9_]+)";
     }
 
     protected String getConnectionString(String dataSource) {
@@ -28,25 +31,11 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
         return "jdbc:netezza://" + dataSource + "/" + database;
     }
 
-    private static String paramNamePattern = "_:([A-Za-z0-9_]+)";
-    private static Pattern paramsNames = Pattern.compile(paramNamePattern);
-
-    public Pattern getParameterPattern() {
-        return paramsNames;
-    }
-
     // override the buildInsertPreparedStatement to leave out RETURN_GENERATED_KEYS
     public PreparedStatement buildInsertPreparedStatement(String tableName,
             DbParameterAccessor[] accessors) throws SQLException {
         return getConnection().prepareStatement(
                 buildInsertCommand(tableName, accessors));
-    }
-
-    // netezza jdbc driver does not support named parameters - so just map them
-    // to standard jdbc question marks
-    protected String parseCommandText(String commandText) {
-        commandText = commandText.replaceAll(paramNamePattern, "?");
-        return super.parseCommandText(commandText);
     }
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
@@ -80,7 +69,8 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
                     paramName = "";
                 }
                 String dataType = rs.getString(2);
-                DbParameterAccessor dbp = new DbParameterAccessor(paramName,
+                DbParameterAccessor dbp = createDbParameterAccessor(
+                        paramName,
                         Direction.INPUT, getSqlType(dataType),
                         getJavaClass(dataType), position++);
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
@@ -190,90 +180,101 @@ public class NetezzaEnvironment extends AbstractDbEnvironment {
                 + " is not supported");
     }
 
+    @Override
+    public StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
+        return new StatementExecutionCapturingResultSetValue(statement, 0);
+    }
+
+    @Override
     public Map<String, DbParameterAccessor> getAllProcedureParameters(
             String procName) throws SQLException {
+        try (PreparedStatement ps = getProcedureParametersStatement(procName);
+             ResultSet rs = ps.executeQuery()
+        ) {
+            if (!rs.next()) {
+                throw new SQLException("Unknown procedure " + procName);
+            }
 
-        String[] qualifiers = NameNormaliser.normaliseName(procName).split(
-                "\\.");
-        String qry = "select btrim(btrim(arguments,'('),')') as param_list from _v_procedure where 1=1";
+            String[] paramList = rs.getString(1).split(",");
+            String returnType = rs.getString(2);
+
+            return new ProcedureParameters(paramList, returnType).getAllProcedureParameters();
+        }
+    }
+
+    private PreparedStatement getProcedureParametersStatement(String procName) throws SQLException {
+        String[] qualifiers = NameNormaliser.normaliseName(procName).split("\\.");
+        String qry = "select btrim(btrim(arguments,'('),')') as param_list, returns from _v_procedure where 1 = 1";
+
         if (qualifiers.length == 3) {
-            qry += " and lower(database)=? and lower(schema)=? and lower(procedure)=? ";
+            qry += " and lower(database) = ? and lower(schema) = ? and lower(procedure) = ? ";
         } else if (qualifiers.length == 2) {
-            qry += " and lower(schema)=? and lower(procedure)=? ";
+            qry += " and lower(schema) = ? and lower(procedure) = ? ";
         } else {
             qry += " and lower(procedure)=? ";
         }
 
-        String paramList;
-
-        try (PreparedStatement dc = currentConnection.prepareStatement(qry)) {
-            for (int i = 0; i < qualifiers.length; i++) {
-                dc.setString(i + 1, NameNormaliser.normaliseName(qualifiers[i]));
-            }
-            ResultSet rs = dc.executeQuery();
-            if (!rs.next()) {
-                throw new SQLException("Unknown procedure " + procName);
-            }
-            paramList = rs.getString(1);
-            rs.close();
-        }
-
-        int position = 0;
-        Direction direction = Direction.INPUT;
-        String paramName;
-        String dataType;
-        String token;
-        Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-
-        if (paramList.length() != 0) {
-            for (String param : paramList.split(",")) {
-
-                StringTokenizer s = new StringTokenizer(param.trim().toLowerCase(),
-                        " ()");
-
-                token = s.nextToken();
-                paramName = "$" + (position + 1);
-
-                dataType = normaliseTypeName(param);
-
-                DbParameterAccessor dbp = new DbParameterAccessor(paramName,
-                        direction, getSqlType(dataType), getJavaClass(dataType),
-                        position++);
-                allParams.put(NameNormaliser.normaliseName(paramName), dbp);
-            }
-        }
-        return allParams;
+        return prepareStatement(qry, qualifiers);
     }
 
-    public String buildInsertCommand(String tableName,
-            DbParameterAccessor[] accessors) {
-        StringBuilder sb = new StringBuilder("insert into ");
-        sb.append(tableName).append("(");
-        String comma = "";
-        String retComma = "";
-
-        StringBuilder values = new StringBuilder();
-        StringBuilder retNames = new StringBuilder();
-        StringBuilder retValues = new StringBuilder();
-
-        for (DbParameterAccessor accessor : accessors) {
-            if (accessor.hasDirection(Direction.INPUT)) {
-                sb.append(comma);
-                values.append(comma);
-                sb.append(accessor.getName());
-                values.append("?");
-                comma = ",";
-            } else {
-                retNames.append(retComma);
-                retValues.append(retComma);
-                retNames.append(accessor.getName());
-                retValues.append("?");
-                retComma = ",";
+    private PreparedStatement prepareStatement(String query, String[] queryParameters) throws SQLException {
+        PreparedStatement statement = currentConnection.prepareStatement(query);
+        try {
+            for (int i = 0; i < queryParameters.length; i++) {
+                statement.setString(i + 1, queryParameters[i]);
             }
+        } catch (Throwable t) {
+            statement.close();
+            throw t;
         }
-        sb.append(") values (");
-        sb.append(values);
-        sb.append(")");
-        return sb.toString();
+
+        return statement;
+    }
+
+    private class ProcedureParameters {
+        private String[] paramTypes;
+        private String returnType;
+
+        ProcedureParameters(String[] paramTypes, String returnType) {
+            this.paramTypes = paramTypes;
+            this.returnType = returnType;
+        }
+
+        Map<String, DbParameterAccessor> getAllProcedureParameters() {
+            Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
+
+            for (int i = 0; i < paramTypes.length; ++i) {
+                addSingleParam(allParams, parameterAt(i));
+            }
+
+            if (returnType != null) {
+                addSingleParam(allParams, returnValueOf(returnType));
+            }
+
+            return allParams;
+        }
+
+        private DbParameterAccessor parameterAt(int pos) {
+            return createAccessor("$" + (pos + 1), INPUT, paramTypes[pos], pos);
+        }
+
+        private DbParameterAccessor returnValueOf(String returnType) {
+            return createAccessor("", RETURN_VALUE, returnType, -1);
+        }
+
+        private DbParameterAccessor createAccessor(
+                String name, Direction direction, String type, int pos) {
+            String dataType = reduceType(type);
+            return createDbParameterAccessor(
+                    name, direction, getSqlType(dataType), getJavaClass(dataType), pos);
+        }
+
+        private void addSingleParam(Map<String, DbParameterAccessor> allParams, DbParameterAccessor dbp) {
+            allParams.put(NameNormaliser.normaliseName(dbp.getName()), dbp);
+        }
+
+        private String reduceType(String paramType) {
+            return paramType.split("\\(")[0].trim();
+        }
     }
 }

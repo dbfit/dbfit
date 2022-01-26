@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import dbfit.util.Direction;
 import static dbfit.util.Direction.*;
@@ -23,18 +22,7 @@ public class DB2iEnvironment extends AbstractDbEnvironment {
 
     public DB2iEnvironment(String driverClassName) {
         super(driverClassName);
-    }
-
-    protected String parseCommandText(String commandText) {
-        commandText = commandText.replaceAll(paramNamePattern, "?");
-        return super.parseCommandText(commandText);
-    }
-
-    private static String paramNamePattern = "[@:]([A-Za-z0-9_]+)";
-    private static Pattern paramRegex = Pattern.compile(paramNamePattern);
-
-    public Pattern getParameterPattern() {
-        return paramRegex;
+        defaultParamPatternString = "[@:]([A-Za-z0-9_]+)";
     }
 
     protected String getConnectionString(String dataSource) {
@@ -50,7 +38,7 @@ public class DB2iEnvironment extends AbstractDbEnvironment {
         String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
                 .split("\\.");
         String qry = " select name as column_name, coltype as data_type, length, "
-                + "	'P' as direction from QSYS2.SYSCOLUMNS where ";
+                + "'P' as direction from QSYS2.SYSCOLUMNS where ";
         if (qualifiers.length == 2) {
             qry += " lower(dbname)=? and lower(tbname)=? ";
         } else {
@@ -79,11 +67,11 @@ public class DB2iEnvironment extends AbstractDbEnvironment {
                 // int length=rs.getInt(3);
                 String direction = rs.getString(4);
                 Direction paramDirection = getParameterDirection(direction);
-                DbParameterAccessor dbp = new DbParameterAccessor(paramName,
+                DbParameterAccessor dbp = createDbParameterAccessor(
+                        paramName,
                         paramDirection, getSqlType(dataType),
                         getJavaClass(dataType),
-                        paramDirection == RETURN_VALUE ? -1
-                                : position++);
+                        paramDirection == RETURN_VALUE ? -1 : position++);
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }
             rs.close();
@@ -93,16 +81,16 @@ public class DB2iEnvironment extends AbstractDbEnvironment {
 
     private static Direction getParameterDirection(String direction) {
         // iSeries uses QSYS2.SYSPARMS, whose values are:
-        //	IN
-        //	OUT
+        //  IN
+        //  OUT
         //  INOUT
-        	
+
         // zSeries uses SYSIBM.SYSPARMS, whose values are:
-        //	P - Input
-        //	O - Output
-        //	B - In/Out parameter
-        //	C - Result after casting (not applicable for stored procedures)  
-    	
+        //  P - Input
+        //  O - Output
+        //  B - In/Out parameter
+        //  C - Result after casting (not applicable for stored procedures)
+
         if (("P".equals(direction)) ||
            ("IN".equals(direction)))
             return INPUT;
@@ -139,11 +127,9 @@ public class DB2iEnvironment extends AbstractDbEnvironment {
     private static String NormaliseTypeName(String dataType) {
         dataType = dataType.toUpperCase().trim();
         return dataType;
-        
     }
 
     private static int getSqlType(String dataType) {
-       
         dataType = NormaliseTypeName(dataType);
 
         if (stringTypes.contains(dataType))
@@ -187,16 +173,16 @@ public class DB2iEnvironment extends AbstractDbEnvironment {
         throw new UnsupportedOperationException("Java - Type " + dataType
                 + " is not supported");
     }
-       
+
     public Map<String, DbParameterAccessor> getAllProcedureParameters(
             String procName) throws SQLException {
         // iSeries uses PARMNO, zSeries uses ORDINAL.
         // iSeries uses data_type, zSeries uses TYPENAME.
-        // iSeries PARMMODE, zSeries uses ROWTYPE    	
+        // iSeries PARMMODE, zSeries uses ROWTYPE
         String[] qualifiers = NameNormaliser.normaliseName(procName).split(
                 "\\.");
         String qry = " select parmname as column_name, data_type as data_type, precision,"
-                + "	parmmode as direction, parmno from QSYS2.SYSPARMS where ";
+                + "parmmode as direction, parmno from QSYS2.SYSPARMS where ";
         if (qualifiers.length == 2) {
             qry += " lower(specschema)=? and lower(specname)=? ";
         } else {

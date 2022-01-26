@@ -3,34 +3,27 @@ package dbfit.fixture;
 import java.sql.*;
 
 public class StatementExecution implements AutoCloseable {
-    private PreparedStatement statement;
+    protected PreparedStatement statement;
 
     public StatementExecution(PreparedStatement statement) {
-        this(statement, true);
-    }
-
-    public StatementExecution(PreparedStatement statement, boolean clearParameters) {
         this.statement = statement;
-        if (clearParameters) {
-            try {
-                statement.clearParameters();
-            } catch (SQLException e) {
-                throw new RuntimeException("Exception while clearing parameters on PreparedStatement", e);
-            }
-        }
     }
 
     public void run() throws SQLException {
         statement.execute();
     }
 
-    public void registerOutParameter(int index, int sqlType) throws SQLException {
+    public void registerOutParameter(int index, int sqlType, boolean isReturnValue) throws SQLException {
         convertStatementToCallable().registerOutParameter(index, sqlType);
     }
 
     public void setObject(int index, Object value, int sqlType, String userDefinedTypeName) throws SQLException {
         if (value == null) {
-            statement.setNull(index, sqlType, userDefinedTypeName);
+            if (userDefinedTypeName == null) {
+                statement.setNull(index, sqlType);
+            } else {
+                statement.setNull(index, sqlType, userDefinedTypeName);
+            }
         } else {
             // Don't use the variant that takes sqlType.
             // Derby (at least) assumes no decimal places for Types.DECIMAL and truncates the source data.
@@ -43,7 +36,7 @@ public class StatementExecution implements AutoCloseable {
     }
 
     //really ugly, but a hack to support mysql, because it will not execute inserts with a callable statement
-    private CallableStatement convertStatementToCallable() throws SQLException {
+    protected CallableStatement convertStatementToCallable() throws SQLException {
         if (statement instanceof CallableStatement) return (CallableStatement) statement;
         throw new SQLException("This operation requires a callable statement instead of "+ statement.getClass().getName());
     }

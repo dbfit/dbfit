@@ -4,12 +4,12 @@ import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.api.DbStoredProcedureCall;
 import dbfit.util.*;
+import dbfit.util.OracleDbParameterAccessor;
 import oracle.jdbc.OracleTypes;
 
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
-import java.util.regex.Pattern;
 
 import fit.TypeAdapter;
 
@@ -96,9 +96,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
      */
     static class DbDictionaryParamsOrColumnsIterator extends AbstractParamsOrColumnsIterator
             implements Iterator<DbParameterOrColumnInfo> {
+    private ResultSet rs;
 
-        private ResultSet rs;
-        
         private DbDictionaryParamsOrColumnsIterator(ResultSet rs) {
             this.rs = rs;
             this.position = 0;
@@ -137,7 +136,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         private ResultSetMetaData md;
         private int currentColumn = -1;
         private int columnCount;
-        
+
         private JdbcRsMetaParamsOrColumnsIterator(ResultSetMetaData md) throws SQLException {
             this.md = md;
             this.position = 0;
@@ -157,7 +156,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                 ++currentColumn;
                 return true;
             }
-            
+
             return false;
         }
 
@@ -215,6 +214,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
     public OracleEnvironment(String driverClassName) {
         super(driverClassName);
+        defaultParamPatternString = ":([A-Za-z0-9_]+)";
 
         // TypeAdapter.registerParseDelegate(oracle.sql.TIMESTAMP.class,
         // OracleTimestampParser.class);
@@ -222,15 +222,14 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                 new OracleTimestampNormaliser());
         TypeNormaliserFactory.setNormaliser(oracle.sql.DATE.class,
                 new OracleDateNormaliser());
-        TypeNormaliserFactory.setNormaliser(oracle.sql.CLOB.class,
+        TypeNormaliserFactory.setNormaliser(oracle.jdbc.OracleClob.class,
                 new OracleClobNormaliser());
         TypeNormaliserFactory.setNormaliser(oracle.jdbc.rowset.OracleSerialClob.class,
                 new OracleSerialClobNormaliser());
         TypeNormaliserFactory.setNormaliser(java.sql.Date.class,
                 new SqlDateNormaliser());
         try {
-            TypeNormaliserFactory.setNormaliser(
-                    Class.forName("oracle.jdbc.driver.OracleResultSetImpl"),
+            TypeNormaliserFactory.setNormaliser(java.sql.ResultSet.class,
                     new OracleRefNormaliser());
         } catch (Exception e) {
             throw new Error("Cannot initialise oracle rowset", e);
@@ -252,12 +251,6 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                     "data source should be in host:port format - " + dataSource
                             + " specified");
         return "jdbc:oracle:thin:@" + dataSource + ":" + databaseName;
-    }
-
-    private static Pattern paramsNames = Pattern.compile(":([A-Za-z0-9_]+)");
-
-    public Pattern getParameterPattern() {
-        return paramsNames;
     }
 
     public Map<String, DbParameterAccessor> getAllProcedureParameters(
@@ -312,7 +305,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
         String query = "select * from " + tableOrViewName + " where 1 = 2";
-        return readIntoParams(new String[]{}, query, InfoSource.JDBC_RESULT_SET_META_DATA); 
+        return readIntoParams(new String[]{}, query, InfoSource.JDBC_RESULT_SET_META_DATA);
     }
 
     private DbParameterAccessor addSingleParam(Map<String, DbParameterAccessor> allParams,
@@ -344,11 +337,22 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             paramDirection = getParameterDirection(direction);
         }
 
-        DbParameterAccessor dbp = new OracleDbParameterAccessor(paramName,
+        DbParameterAccessor dbp = createOracleDbParameterAcccessor(
+                paramName,
                 paramDirection, getSqlType(dataType), getJavaClass(dataType),
                 paramPosition, normaliseTypeName(dataType), userTypeName);
 
         return dbp;
+    }
+
+    private OracleDbParameterAccessor createOracleDbParameterAcccessor(
+            String name, Direction direction,
+            int sqlType, Class<?> javaType, int position,
+            String originalTypeName, String userTypeName) {
+        return new OracleDbParameterAccessor(
+                name, direction,
+                sqlType, javaType, position,
+                dbfitToJdbcTransformerFactory, originalTypeName, userTypeName);
     }
 
     private Map<String, DbParameterAccessor> readIntoParams(

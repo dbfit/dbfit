@@ -1,0 +1,253 @@
+!3 Dates
+
+|Execute Ddl|CREATE TABLE datatypetest (d1 DATE)|
+
+|Query|SELECT TODAY AS d FROM informix.systables WHERE tabid = 1|
+|d?|
+|>>d|
+
+|Insert|datatypetest|
+|d1|
+|<<d|
+
+|Query|SELECT * FROM datatypetest|
+|d1?|
+|<<d|
+
+|Execute Ddl|DROP TABLE datatypetest|
+
+!3 Dates/Times
+
+|Execute Ddl|!-
+CREATE TABLE datatypetest
+(
+  dt1 DATETIME YEAR TO YEAR
+, dt2 DATETIME YEAR TO MONTH
+, dt3 DATETIME YEAR TO DAY
+, dt4 DATETIME YEAR TO HOUR
+, dt5 DATETIME YEAR TO MINUTE
+, dt6 DATETIME YEAR TO SECOND
+, dt7 DATETIME YEAR TO FRACTION(1)
+, dt8 DATETIME YEAR TO FRACTION(2)
+, dt9 DATETIME YEAR TO FRACTION(3)
+, dt10 DATETIME YEAR TO FRACTION(4)
+, dt11 DATETIME YEAR TO FRACTION(5)
+)
+-!|
+
+|Query|!-
+SELECT CURRENT YEAR TO YEAR AS dt1
+     , CURRENT YEAR TO MONTH AS dt2
+     , CURRENT YEAR TO DAY AS dt3
+     , CURRENT YEAR TO HOUR AS dt4
+     , CURRENT YEAR TO MINUTE AS dt5
+     , CURRENT YEAR TO SECOND AS dt6
+     , CURRENT YEAR TO FRACTION(1) AS dt7
+     , CURRENT YEAR TO FRACTION(2) AS dt8
+     , CURRENT YEAR TO FRACTION(3) AS dt9
+     , CURRENT YEAR TO FRACTION(4) AS dt10
+     , CURRENT YEAR TO FRACTION(5) AS dt11
+  FROM informix.systables WHERE tabid = 1
+-!|
+|dt1?|dt2?|dt3?|dt4?|dt5?|dt6?|dt7?|dt8?|dt9?|dt10?|dt11?|
+|>>dt1|>>dt2|>>dt3|>>dt4|>>dt5|>>dt6|>>dt7|>>dt8|>>dt9|>>dt10|>>dt11|
+
+|Insert|datatypetest|
+|dt1|dt2|dt3|dt4|dt5|dt6|dt7|dt8|dt9|dt10|dt11|
+|<<dt1|<<dt2|<<dt3|<<dt4|<<dt5|<<dt6|<<dt7|<<dt8|<<dt9|<<dt10|<<dt11|
+
+|Query|SELECT * FROM datatypetest|
+|dt1|dt2|dt3|dt4|dt5|dt6|dt7|dt8|dt9|dt10|dt11|
+|<<dt1|<<dt2|<<dt3|<<dt4|<<dt5|<<dt6|<<dt7|<<dt8|<<dt9|<<dt10|<<dt11|
+
+|Execute Ddl|DROP TABLE datatypetest|
+
+|Execute Ddl|!-
+CREATE TABLE datatypetest
+(
+  dt1 DATETIME MONTH TO MONTH
+, dt2 DATETIME MONTH TO DAY
+, dt3 DATETIME MONTH TO HOUR
+, dt4 DATETIME MONTH TO MINUTE
+, dt5 DATETIME MONTH TO SECOND
+, dt6 DATETIME MONTH TO FRACTION(1)
+, dt7 DATETIME MONTH TO FRACTION(2)
+, dt8 DATETIME MONTH TO FRACTION(3)
+, dt9 DATETIME MONTH TO FRACTION(4)
+, dt10 DATETIME MONTH TO FRACTION(5)
+)
+-!|
+
+|Query|!-
+SELECT CURRENT MONTH TO MONTH AS dt1
+     , CURRENT MONTH TO DAY AS dt2
+     , CURRENT MONTH TO HOUR AS dt3
+     , CURRENT MONTH TO MINUTE AS dt4
+     , CURRENT MONTH TO SECOND AS dt5
+     , CURRENT MONTH TO FRACTION(1) AS dt6
+     , CURRENT MONTH TO FRACTION(2) AS dt7
+     , CURRENT MONTH TO FRACTION(3) AS dt8
+     , CURRENT MONTH TO FRACTION(4) AS dt9
+     , CURRENT MONTH TO FRACTION(5) AS dt10
+  FROM informix.systables WHERE tabid = 1
+-!|
+|dt1?|dt2?|dt3?|dt4?|dt5?|dt6?|dt7?|dt8?|dt9?|dt10?|
+|>>dt1|>>dt2|>>dt3|>>dt4|>>dt5|>>dt6|>>dt7|>>dt8|>>dt9|>>dt10|
+
+|Insert|datatypetest|
+|dt1|dt2|dt3|dt4|dt5|dt6|dt7|dt8|dt9|dt10|
+|<<dt1|<<dt2|<<dt3|<<dt4|<<dt5|<<dt6|<<dt7|<<dt8|<<dt9|<<dt10|
+
+|Query|SELECT * FROM datatypetest|
+|dt1|dt2|dt3|dt4|dt5|dt6|dt7|dt8|dt9|dt10|
+|<<dt1|<<dt2|<<dt3|<<dt4|<<dt5|<<dt6|<<dt7|<<dt8|<<dt9|<<dt10|
+
+|Execute Ddl|DROP TABLE datatypetest|
+
+|Execute Ddl|!-
+CREATE TABLE datatypetest
+(
+  dt1 DATETIME DAY TO DAY
+, dt2 DATETIME DAY TO HOUR
+, dt3 DATETIME DAY TO MINUTE
+, dt4 DATETIME DAY TO SECOND
+, dt5 DATETIME DAY TO FRACTION(1)
+, dt6 DATETIME DAY TO FRACTION(2)
+, dt7 DATETIME DAY TO FRACTION(3)
+, dt8 DATETIME DAY TO FRACTION(4)
+, dt9 DATETIME DAY TO FRACTION(5)
+)
+-!|
+
+|Query|!-
+SELECT CURRENT DAY TO DAY AS dt1
+     , CURRENT DAY TO HOUR AS dt2
+     , CURRENT DAY TO MINUTE AS dt3
+     , CURRENT DAY TO SECOND AS dt4
+     , CURRENT DAY TO FRACTION(1) AS dt5
+     , CURRENT DAY TO FRACTION(2) AS dt6
+     , CURRENT DAY TO FRACTION(3) AS dt7
+     , CURRENT DAY TO FRACTION(4) AS dt8
+     , CURRENT DAY TO FRACTION(5) AS dt9
+  FROM informix.systables WHERE tabid = 1
+-!|
+|dt1?|dt2?|dt3?|dt4?|dt5?|dt6?|dt7?|dt8?|dt9?|
+|>>dt1|>>dt2|>>dt3|>>dt4|>>dt5|>>dt6|>>dt7|>>dt8|>>dt9|
+
+|Insert|datatypetest|
+|dt1|dt2|dt3|dt4|dt5|dt6|dt7|dt8|dt9|
+|<<dt1|<<dt2|<<dt3|<<dt4|<<dt5|<<dt6|<<dt7|<<dt8|<<dt9|
+
+|Query|SELECT * FROM datatypetest|
+|dt1|dt2|dt3|dt4|dt5|dt6|dt7|dt8|dt9|
+|<<dt1|<<dt2|<<dt3|<<dt4|<<dt5|<<dt6|<<dt7|<<dt8|<<dt9|
+
+|Execute Ddl|DROP TABLE datatypetest|
+
+!3 Times
+
+|Execute Ddl|!-
+CREATE TABLE datatypetest
+(
+  dt1 DATETIME HOUR TO HOUR
+, dt2 DATETIME HOUR TO MINUTE
+, dt3 DATETIME HOUR TO SECOND
+, dt4 DATETIME HOUR TO FRACTION(1)
+, dt5 DATETIME HOUR TO FRACTION(2)
+, dt6 DATETIME HOUR TO FRACTION(3)
+, dt7 DATETIME HOUR TO FRACTION(4)
+, dt8 DATETIME HOUR TO FRACTION(5)
+)
+-!|
+
+|Query|!-
+SELECT CURRENT HOUR TO HOUR AS dt1
+     , CURRENT HOUR TO MINUTE AS dt2
+     , CURRENT HOUR TO SECOND AS dt3
+     , CURRENT HOUR TO FRACTION(1) AS dt4
+     , CURRENT HOUR TO FRACTION(2) AS dt5
+     , CURRENT HOUR TO FRACTION(3) AS dt6
+     , CURRENT HOUR TO FRACTION(4) AS dt7
+     , CURRENT HOUR TO FRACTION(5) AS dt8
+  FROM informix.systables WHERE tabid = 1
+-!|
+|dt1?|dt2?|dt3?|dt4?|dt5?|dt6?|dt7?|dt8?|
+|>>dt1|>>dt2|>>dt3|>>dt4|>>dt5|>>dt6|>>dt7|>>dt8|
+
+|Insert|datatypetest|
+|dt1|dt2|dt3|dt4|dt5|dt6|dt7|dt8|
+|<<dt1|<<dt2|<<dt3|<<dt4|<<dt5|<<dt6|<<dt7|<<dt8|
+
+|Query|SELECT * FROM datatypetest|
+|dt1|dt2|dt3|dt4|dt5|dt6|dt7|dt8|
+|<<dt1|<<dt2|<<dt3|<<dt4|<<dt5|<<dt6|<<dt7|<<dt8|
+
+|Execute Ddl|DROP TABLE datatypetest|
+
+|Execute Ddl|!-
+CREATE TABLE datatypetest
+(
+  dt1 DATETIME MINUTE TO MINUTE
+, dt2 DATETIME MINUTE TO SECOND
+, dt3 DATETIME MINUTE TO FRACTION(1)
+, dt4 DATETIME MINUTE TO FRACTION(2)
+, dt5 DATETIME MINUTE TO FRACTION(3)
+, dt6 DATETIME MINUTE TO FRACTION(4)
+, dt7 DATETIME MINUTE TO FRACTION(5)
+)-!|
+
+|Query|!-
+SELECT CURRENT MINUTE TO MINUTE AS dt1
+     , CURRENT MINUTE TO SECOND AS dt2
+     , CURRENT MINUTE TO FRACTION(1) AS dt3
+     , CURRENT MINUTE TO FRACTION(2) AS dt4
+     , CURRENT MINUTE TO FRACTION(3) AS dt5
+     , CURRENT MINUTE TO FRACTION(4) AS dt6
+     , CURRENT MINUTE TO FRACTION(5) AS dt7
+  FROM informix.systables
+ WHERE tabid = 1-!|
+|dt1?|dt2?|dt3?|dt4?|dt5?|dt6?|dt7?|
+|>>dt1|>>dt2|>>dt3|>>dt4|>>dt5|>>dt6|>>dt7|
+
+|Insert|datatypetest|
+|dt1|dt2|dt3|dt4|dt5|dt6|dt7|
+|<<dt1|<<dt2|<<dt3|<<dt4|<<dt5|<<dt6|<<dt7|
+
+|Query|SELECT * FROM datatypetest|
+|dt1|dt2|dt3|dt4|dt5|dt6|dt7|
+|<<dt1|<<dt2|<<dt3|<<dt4|<<dt5|<<dt6|<<dt7|
+
+|Execute Ddl|DROP TABLE datatypetest|
+
+|Execute Ddl|!-
+CREATE TABLE datatypetest
+(
+  dt1 DATETIME SECOND TO SECOND
+, dt2 DATETIME SECOND TO FRACTION(1)
+, dt3 DATETIME SECOND TO FRACTION(2)
+, dt4 DATETIME SECOND TO FRACTION(3)
+, dt5 DATETIME SECOND TO FRACTION(4)
+, dt6 DATETIME SECOND TO FRACTION(5)
+)-!|
+
+|Query|!-
+SELECT CURRENT SECOND TO SECOND AS dt1
+     , CURRENT SECOND TO FRACTION(1) AS dt2
+     , CURRENT SECOND TO FRACTION(2) AS dt3
+     , CURRENT SECOND TO FRACTION(3) AS dt4
+     , CURRENT SECOND TO FRACTION(4) AS dt5
+     , CURRENT SECOND TO FRACTION(5) AS dt6
+  FROM informix.systables
+ WHERE tabid = 1-!|
+|dt1?|dt2?|dt3?|dt4?|dt5?|dt6?|
+|>>dt1|>>dt2|>>dt3|>>dt4|>>dt5|>>dt6|
+
+|Insert|datatypetest|
+|dt1|dt2|dt3|dt4|dt5|dt6|
+|<<dt1|<<dt2|<<dt3|<<dt4|<<dt5|<<dt6|
+
+|Query|SELECT * FROM datatypetest|
+|dt1|dt2|dt3|dt4|dt5|dt6|
+|<<dt1|<<dt2|<<dt3|<<dt4|<<dt5|<<dt6|
+
+|Execute Ddl|DROP TABLE datatypetest|

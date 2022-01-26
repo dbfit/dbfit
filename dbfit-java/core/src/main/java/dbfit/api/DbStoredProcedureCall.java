@@ -3,55 +3,55 @@ package dbfit.api;
 import dbfit.fixture.StatementExecution;
 import dbfit.util.DbParameterAccessor;
 import dbfit.util.DbParameterAccessors;
+import static dbfit.util.sql.PreparedStatements.buildStoredRoutineCallText;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
-
-import static dbfit.util.sql.PreparedStatements.buildFunctionCall;
-import static dbfit.util.sql.PreparedStatements.buildStoredProcedureCall;
 
 public class DbStoredProcedureCall {
-    private DBEnvironment environment;
-    private String name;
-    private DbParameterAccessor[] accessors;
+    private final DBEnvironment environment;
+    private final String name;
+    private final DbParameterAccessors accessors;
 
     public DbStoredProcedureCall(DBEnvironment environment, String name, DbParameterAccessor[] accessors) {
         this.environment = environment;
         this.name = name;
-        this.accessors = accessors;
+        this.accessors = new DbParameterAccessors(accessors);
     }
+
     public String getName() {
         return name;
     }
 
-    public DbParameterAccessor[] getAccessors() {
+    protected DbParameterAccessors getAccessors() {
         return accessors;
     }
 
-    public boolean isFunction() {
-        return new DbParameterAccessors(accessors).containsReturnValue();
+    public boolean hasReturnValue() {
+        return getAccessors().containsReturnValue();
     }
 
-    public int getNumberOfInputParameters() {
-        List<String> accessorNames = new DbParameterAccessors(getAccessors()).getSortedAccessorNames();
-        int numberOfAccessors = accessorNames.size();
-        return isFunction() ? numberOfAccessors - 1 : numberOfAccessors;
+    private int getNumberOfParameters() {
+        return getAccessors().getNumberOfParameters();
     }
 
     public String toSqlString() {
-        if (isFunction()) {
-            return buildFunctionCall(getName(), getNumberOfInputParameters());
-        } else {
-            return buildStoredProcedureCall(getName(), getNumberOfInputParameters());
-        }
+        return buildStoredRoutineCallText(getName(), getNumberOfParameters(), hasReturnValue());
     }
 
     void bindParametersTo(StatementExecution cs) throws SQLException {
-        new DbParameterAccessors(getAccessors()).bindParameters(cs);
+        getAccessors().bindParameters(cs);
     }
 
     public StatementExecution toStatementExecution() throws SQLException {
-        StatementExecution cs = new StatementExecution(this.environment.getConnection().prepareCall(toSqlString()));
+        String sql = toSqlString();
+        PreparedStatement ps = environment.getConnection().prepareCall(sql);
+        StatementExecution cs;
+        if (hasReturnValue()) {
+            cs = environment.createFunctionStatementExecution(ps);
+        } else {
+            cs = environment.createStatementExecution(ps);
+        }
         bindParametersTo(cs);
         return cs;
     }

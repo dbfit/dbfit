@@ -1,6 +1,7 @@
 ext {
-    fitNesseVersion = '20150424'
-    mockitoVersion = '1.10.19'
+    fitNesseVersion = '20211006'
+    mockitoVersion = '2.2.2'
+    junitVersion = '4.13.2'
 }
 
 allprojects {
@@ -13,6 +14,9 @@ allprojects {
 
     group = 'com.github.dbfit'
     version = rootProject.dbfitVersion
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
     checkstyle {
         configFile = new File(parent.projectDir, "config/checkstyle/checkstyle.xml")
@@ -30,13 +34,6 @@ allprojects {
         }
     }
 
-    dependencies {
-        compile "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
-    }
-}
-
-subprojects {
-    jar.baseName = "dbfit-" + project.archivesBaseName
     repositories {
         flatDir {
             dirs "${rootProject.projectDir}/custom_libs"
@@ -46,10 +43,39 @@ subprojects {
             url "http://mvnrepository.com"
         }
         ivy {
-            artifactPattern "https://s3.amazonaws.com/dbfit/[artifact]-[revision].[ext]"
-            ivyPattern "https://aws.amazon.com/s3/ivy.xml"
+            artifactPattern "https://raw.githubusercontent.com/dbfit/dbfit-dependencies/main/[artifact]-[revision].[ext]"
+            metadataSources {
+                ivyDescriptor()
+                artifact()
+            }
         }
     }
+
+    dependencies {
+        compile "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
+    }
+
+    // fix gradle .classpath generation for bin folders and put it under /build/eclipse
+    eclipse {
+        classpath {
+            defaultOutputDir = file('build/eclipse') // this should be enough, but it's not
+            file.whenMerged {
+                entries.each { entry ->
+                    if (entry instanceof org.gradle.plugins.ide.eclipse.model.Output) {
+                        entry.path = entry.path.replaceFirst('^bin', 'build/eclipse')
+                    }
+
+                    if (entry instanceof org.gradle.plugins.ide.eclipse.model.SourceFolder) {
+                        entry.output = entry.output.replaceFirst('^bin', 'build/eclipse')
+                    }
+                }
+            }
+        }
+    }
+}
+
+subprojects {
+    jar.baseName = "dbfit-" + project.archivesBaseName
 
     task libs(type: Copy) {
         from configurations.runtime
@@ -68,10 +94,11 @@ subprojects {
     }
 
     dependencies {
-        testCompile 'junit:junit:4.12'
+        testCompile "junit:junit:${junitVersion}"
         testCompile "org.hamcrest:java-hamcrest:2.0.0.0"
         testCompile "commons-io:commons-io:2.4"
         testRuntime 'com.dbdeploy:dbdeploy-ant:3.0M3'
+        integrationTestCompile "junit:junit:${junitVersion}"
         integrationTestCompile "org.fitnesse:fitnesse:${fitNesseVersion}:standalone@jar"
     }
 
@@ -81,13 +108,79 @@ subprojects {
         include('**/*Support*')
     }
 
-    task integrationTest(type: Test) {
-        testClassesDir = sourceSets.integrationTest.output.classesDir
+    task deploymentProperties {
+        doLast {
+            ext {
+                delimiterType = 'normal'
+                delimiter = ';'
+                setUpTestScriptPath = "${rootProject.projectDir}/test_vm/scripts/${project.name}/sql/"
+                setUpTestDbScript = setUpTestScriptPath + "create-databases-${project.name}.sql"
+                tearDownTestDbScript = setUpTestScriptPath + "drop-databases-${project.name}.sql"
+            }
+        }
+    }
+
+    // to be overriden when needed
+    ext.connectionPropertiesFiles = []
+
+    ext.getConnectionFileProperties = { connectionPropertiesFile ->
+        def props = new Properties()
+        file(connectionPropertiesFile).withInputStream { props.load(it) }
+        return [props.username, props.password, props.service, props.database]
+    }
+
+    task connectionFileProperties {
+        doLast {
+            copyConnectionProperties '.'
+            ext {
+                userName = ''
+                passWord = ''
+                service = ''
+                database = ''
+            }
+            if (connectionPropertiesFiles) {
+                (userName, passWord, service, database) =
+                    getConnectionFileProperties(connectionPropertiesFiles[0])
+            }
+        }
+    }
+
+    ext.getJdbcUrl = { service, database ->
+    }
+
+    task dbConnectionProperties(dependsOn: [deploymentProperties, connectionFileProperties]) {
+        doLast {
+            ext.jdbcUrl = getJdbcUrl(connectionFileProperties.service,
+                connectionFileProperties.database)
+        }
+    }
+
+    task adminConnectionFileProperties {
+        doLast {
+            copyProperties new File(project.projectDir, adminConnectionPropertiesFile), '.'
+            ext {
+                (userName, passWord, service, database) =
+                    getConnectionFileProperties(adminConnectionPropertiesFile)
+            }
+        }
+    }
+
+    task dbAdminConnectionProperties(dependsOn: [adminConnectionFileProperties, deploymentProperties]) {
+        doLast {
+            ext.jdbcUrl = getJdbcUrl(adminConnectionFileProperties.service,
+                adminConnectionFileProperties.database)
+        }
+    }
+
+    task integrationTest(type: Test, dependsOn: dbConnectionProperties) {
+        testClassesDirs = sourceSets.integrationTest.output.classesDirs
         classpath = sourceSets.integrationTest.runtimeClasspath
         classpath += sourceSets.main.runtimeClasspath
     }
 
-    ext.dbdeploy = { dbDriver, url, userid, password, delimiterType = 'normal' ->
+    ext.dbdeploy = {
+        dbDriver, url, userid, password, delimiterType = 'normal', delimiter = ';',
+        dir = "$projectDir/src/integration-test/resources" ->
         ant.taskdef(name: 'dbdeploy',
                 classname: 'com.dbdeploy.AntTarget',
                 classpath: configurations.testRuntime.asPath)
@@ -95,20 +188,89 @@ subprojects {
                 url: url,
                 userid: userid,
                 password: password,
-                dir: "$projectDir/src/integration-test/resources",
+                dir: dir,
                 delimiterType: delimiterType,
-        )
+                delimiter: delimiter)
+    }
+
+    ext.createTestDbObjects = {
+        dbdeploy(deploymentProperties.jdbcDriverClass,
+            dbConnectionProperties.jdbcUrl,
+            connectionFileProperties.userName,
+            connectionFileProperties.passWord,
+            deploymentProperties.delimiterType,
+            deploymentProperties.delimiter)
+    }
+
+    ext.sql = {
+        dbDriver, url, userid, password, sourceFile, delimiterType = 'normal',
+        delimiter = ';', autocommit = true ->
+        ant.sql(classpath: configurations.runtime.asPath,
+                driver: dbDriver,
+                url: url,
+                userid: userid,
+                password: password,
+                delimiterType: delimiterType,
+                delimiter: delimiter,
+                autocommit: autocommit,
+                src: sourceFile)
+    }
+
+    ext.copyProperties = {
+        file, destination ->
+            copy {
+                from "${file}.default"
+                into destination
+                rename "(.*)\\.default", '$1'
+            }
+            copy {
+                from "${file}.custom"
+                into destination
+                rename "(.*)\\.custom", '$1'
+            }
+    }
+
+    ext.copyConnectionProperties = {
+        destination ->
+            project.connectionPropertiesFiles.each { file ->
+                copyProperties new File(project.projectDir, file), destination
+            }
+    }
+
+    ext.execSqlScriptTestDatabase = { scriptFile ->
+        sql(deploymentProperties.jdbcDriverClass,
+            dbAdminConnectionProperties.jdbcUrl,
+            adminConnectionFileProperties.userName,
+            adminConnectionFileProperties.passWord,
+            scriptFile,
+            deploymentProperties.delimiterType,
+            deploymentProperties.delimiter,
+            deploymentProperties.autoCommit)
+    }
+
+    task setUpTestDatabase(dependsOn: dbAdminConnectionProperties) {
+        doLast {
+            execSqlScriptTestDatabase(deploymentProperties.setUpTestDbScript)
+        }
+    }
+
+    task tearDownTestDatabase(dependsOn: dbAdminConnectionProperties) {
+        doLast {
+            execSqlScriptTestDatabase(deploymentProperties.tearDownTestDbScript)
+        }
     }
 
     integrationTest.inputs.dir file("$projectDir/../../FitNesseRoot/DbFit/AcceptanceTests/JavaTests")
+    integrationTest.doFirst {
+        copyConnectionProperties '.'
+    }
 }
-
 
 task assembleAll(dependsOn: subprojects.assemble) { }
 task libs(dependsOn: subprojects.libs) { }
 
 def publicCoreCompileDeps = [
-    'org.reflections:reflections:0.9.9',
+    'org.reflections:reflections:0.9.11',
     'commons-codec:commons-codec:1.10',
     'org.apache.commons:commons-lang3:3.4',
     'com.github.dbfit:fitlibrary:20091020'
@@ -141,13 +303,13 @@ project('derby') {
     }
     dependencies {
         compile project(':dbfit-java:core')
-        derby group: 'org.apache.derby', name: 'derby', version: '10.10.1.1'
-        derby group: 'org.apache.derby', name: 'derbyclient', version: '10.10.1.1'
+        derby group: 'org.apache.derby', name: 'derby', version: '10.12.1.1'
+        derby group: 'org.apache.derby', name: 'derbyclient', version: '10.12.1.1'
     }
 }
 
 def publicHsqldbRuntimeDeps = [
-    'org.hsqldb:hsqldb:2.3.2@jar'
+    'org.hsqldb:hsqldb:2.3.3@jar'
 ]
 
 project('hsqldb') {
@@ -156,6 +318,19 @@ project('hsqldb') {
     dependencies {
         compile project(':dbfit-java:core')
         runtime publicHsqldbRuntimeDeps
+    }
+}
+
+project('informix') {
+    description = 'DBFit Informix engine'
+
+    ext.connectionPropertiesFiles = [
+        'TestDbConnectionDbFitInformixANSI.properties',
+        'TestDbConnectionDbFitInformixINFORMIX.properties']
+
+    dependencies {
+        compile project(':dbfit-java:core')
+        compile 'com.informix:ifxjdbc:4.10.JC4W1@jar'
     }
 }
 
@@ -168,24 +343,12 @@ project('oracle') {
 
     dependencies {
         compile project(':dbfit-java:core')
-        compile 'dummy:ojdbc6:11.2.0.3.0@jar'
+        compile 'com.oracle.ojdbc:ojdbc8:19.3.0.0'
         compile publicOracleCompileDeps
         testCompile "org.mockito:mockito-core:${mockitoVersion}"
     }
 
-    integrationTest.doFirst {
-        copy {
-            from 'TestDbConnectionDbFitOracle.properties.default'
-            into '.'
-            rename '(.*).default', '$1'
-        }
-
-        copy {
-            from 'TestDbConnectionDbFitOracle.properties.custom'
-            into '.'
-            rename '(.*).custom', '$1'
-        }
-    }
+    ext.connectionPropertiesFiles = ['TestDbConnectionDbFitOracle.properties']
 }
 
 def publicMysqlCompileDeps = [
@@ -198,6 +361,7 @@ project('mysql') {
     dependencies {
         compile project(':dbfit-java:core')
         compile publicMysqlCompileDeps
+        testCompile project(':dbfit-java:core').sourceSets.test.output
     }
 
     integrationTest.doFirst {
@@ -206,7 +370,7 @@ project('mysql') {
 }
 
 def publicPostgresCompileDeps = [
-    'org.postgresql:postgresql:9.3-1101-jdbc41'
+    'org.postgresql:postgresql:42.3.1'
 ]
 
 project('postgres') {
@@ -222,6 +386,20 @@ project('postgres') {
     }
 }
 
+project('snowflake') {
+    description = 'DBFit snowflake engine'
+
+    dependencies {
+        compile project(':dbfit-java:core')
+        compile 'net.snowflake:snowflake-jdbc:3.13.0'
+        testCompile project(':dbfit-java:core').sourceSets.test.output
+    }
+
+    integrationTest.doFirst {
+        dbdeploy('net.snowflake.snowflake-jdbc', 'jdbc:snowflake://127.0.0.1', 'dbfit', 'DbFit000!', 'normal', 'GO')
+    }
+}
+
 project('sqlserver') {
     description = 'DBFit sqlserver engine'
 
@@ -229,6 +407,10 @@ project('sqlserver') {
         compile project(':dbfit-java:core')
         runtime 'com.microsoft:sqljdbc:4.1.5605@jar'
         integrationTestRuntime 'com.microsoft:sqljdbc:4.1.5605@jar'
+    }
+
+    integrationTest.doFirst {
+        dbdeploy('com.microsoft.sqlserver.jdbc.SQLServerDriver', 'jdbc:sqlserver://127.0.0.1', 'dbfit', 'DbFit000!', 'normal', 'GO')
     }
 }
 
@@ -240,6 +422,25 @@ project('teradata') {
         runtime 'com.teradata:terajdbc4:15.0.0.15@jar'
         runtime 'com.teradata:tdgssconfig:15.0.0.15@jar'
     }
+
+    ext.connectionPropertiesFiles = ['TestDbConnectionDbFitTeradata.properties']
+    ext.adminConnectionPropertiesFile = 'TestDbConnectionTeradataAdmin.properties'
+
+    deploymentProperties.doLast {
+        ext {
+            jdbcDriverClass = 'com.teradata.jdbc.TeraDriver'
+            jdbcDriverUrlPrefix = 'jdbc:teradata://'
+            delimiterType = 'row'
+            autoCommit = true
+        }
+    }
+
+    ext.getJdbcUrl = { service, database ->
+        return deploymentProperties.jdbcDriverUrlPrefix + service +
+            '/TMODE=TERA,DATABASE=' + database
+    }
+
+    integrationTest.doFirst createTestDbObjects
 }
 
 project('netezza') {
@@ -247,8 +448,26 @@ project('netezza') {
 
     dependencies {
         compile project(':dbfit-java:core')
-        runtime 'org.netezza:nzjdbc:7.1@jar'
+        runtime 'org.netezza:nzjdbc3:7.2@jar'
     }
+
+    ext.connectionPropertiesFiles = ['TestDbConnectionDbFitNetezza.properties']
+    ext.adminConnectionPropertiesFile = 'TestDbConnectionNetezzaAdmin.properties'
+
+    deploymentProperties.doLast {
+        ext {
+            jdbcDriverClass = 'org.netezza.Driver'
+            jdbcDriverUrlPrefix = 'jdbc:netezza://'
+            delimiterType = 'row'
+            autoCommit = true
+        }
+    }
+
+    ext.getJdbcUrl = { service, database ->
+        return deploymentProperties.jdbcDriverUrlPrefix + service + '/' + database
+    }
+
+    integrationTest.doFirst createTestDbObjects
 }
 
 // Aggregated dependencies to include in the POM file when publishing.
@@ -338,8 +557,21 @@ uploadArchives {
                 }
 
                 developers {
+                    developer {
+                        id "benilovj"
+                        name "Jake Benilov"
+                    }
+                    developer {
+                        id "javornikolov"
+                        name "Yavor Nikolov"
+                    }
+                    developer {
+                        id "mmatten"
+                        name "Mark Matten"
+                    }
                 }
             }
         }
-     }
+    }
 }
+

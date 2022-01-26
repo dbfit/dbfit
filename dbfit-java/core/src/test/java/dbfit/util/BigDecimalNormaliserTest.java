@@ -32,6 +32,6 @@ public class BigDecimalNormaliserTest {
     }
 
     private BigDecimal normalise(BigDecimal val) {
-        return (BigDecimal) normaliser.normalise(val);
+        return (BigDecimal) normaliser.transform(val);
     }
 }

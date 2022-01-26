@@ -5,3 +5,7 @@
 |Query|select * from users|
 |name|username|
 |user1|fromproc|
+
+|Clean|
+|table|clean?|
+|users|true|

@@ -1,7 +1,5 @@
 package dbfit.util;
 
-import dbfit.util.SqlTimeParseDelegate;
-
 import java.sql.Time;
 
 import org.junit.Test;

@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+#^syntax detection
+
+source "https://supermarket.chef.io"
+
+cookbook 'dbfit_test', :path => "vendor/cookbooks/dbfit_test"

@@ -4,7 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 
 /** this horrible class is a workaround for date format incompatibilities in javax.sql package
- * it will first try to parse the date in the standard JDBC timestamp format. If that fails, then 
+ * it will first try to parse the date in the standard JDBC timestamp format. If that fails, then
  * it will try to parse it in the standard JDBC date format. If that also fails, it will try the current locale
  * date/time format, and the current locale date format.
  */

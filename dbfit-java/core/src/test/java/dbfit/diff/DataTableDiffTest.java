@@ -129,6 +129,6 @@ public class DataTableDiffTest {
     }
 
     private DataRow anyDataRow() {
-        return org.mockito.Matchers.any(DataRow.class);
+        return org.mockito.ArgumentMatchers.any();
     }
 }

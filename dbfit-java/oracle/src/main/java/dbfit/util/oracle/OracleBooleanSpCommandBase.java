@@ -11,7 +11,7 @@ public class OracleBooleanSpCommandBase {
     protected List<OracleSpParameter> arguments;
     protected OracleSpParameter returnValue;
 
-    protected OracleBooleanSpCommandBase(String spName, 
+    protected OracleBooleanSpCommandBase(String spName,
             List<OracleSpParameter> args, OracleSpParameter returnValue) {
         this.procName = spName;
         this.arguments = args;
@@ -148,6 +148,5 @@ public class OracleBooleanSpCommandBase {
     public String getProcName() {
         return procName;
     }
-
 }
 

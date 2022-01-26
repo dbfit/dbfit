@@ -1,0 +1,223 @@
+name: build
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 5 * * *"
+jobs:
+
+  fast-build:
+    strategy:
+      matrix:
+        os: ['ubuntu-latest']
+        distribution: ['zulu']
+        java: ['8']
+    runs-on: ${{ matrix.os }}
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) fastbuild
+    timeout-minutes: 12
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Fast build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            clean
+            fastbuild
+
+      - name: Bundle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: bundle
+
+      - name: Determine bundle name
+        run: echo "project_bundle=`basename zips/*.zip`" >> $GITHUB_ENV
+
+      - name: Upload zips artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.project_bundle }}
+          path: ${{ github.workspace }}/zips/${{ env.project_bundle}}
+
+  test_postgres:
+    strategy:
+      matrix:
+        os: ['ubuntu-20.04']
+        distribution: ['zulu']
+        java: ['8', '11']
+        db_kind: ['postgres']
+    runs-on: ${{ matrix.os }}
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) ${{ matrix.db_kind }}
+    timeout-minutes: 12
+    services:
+      postgres:
+        image: postgres
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: dbfit
+          POSTGRES_PASSWORD: dbfit
+          POSTGRES_DB: dbfit
+          PGPASSWORD: dbfit
+        options: >-
+          --name ${{ matrix.db_kind }}
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Db Integration tests
+        uses: ./.github/actions/db-integration-test
+        with:
+          database_kind: ${{ matrix.db_kind }}
+
+  test_mysql:
+    strategy:
+      matrix:
+        os: ['ubuntu-20.04']
+        distribution: ['zulu']
+        java: ['8', '11']
+        db_kind: ['mysql']
+    runs-on: ${{ matrix.os }}
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) ${{ matrix.db_kind }}
+    timeout-minutes: 12
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: dbfit
+          MYSQL_USER: dbfit
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: rootpassword
+        ports:
+          - 3306:3306
+        options: >-
+          --name ${{ matrix.db_kind }}
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Db Integration tests
+        uses: ./.github/actions/db-integration-test
+        with:
+          database_kind: mysql
+
+  test_db2:
+    strategy:
+      matrix:
+        os: ['ubuntu-20.04']
+        distribution: ['zulu']
+        java: ['8', '11']
+        db_kind: ['db2']
+    runs-on: ${{ matrix.os }}
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) ${{ matrix.db_kind }}
+    timeout-minutes: 12
+    services:
+      db2:
+        image: ibmcom/db2:latest
+        ports:
+          - 50000:50000
+        env:
+          DB2INST1_PASSWORD: db2inst1-pwd
+          LICENSE: accept
+          DBNAME: db2inst1
+        options: >-
+          --name ${{ matrix.db_kind }}
+          --privileged
+          --health-cmd "test -f /database/config/.shared-data/setup_complete"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 40
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Db Integration tests
+        uses: ./.github/actions/db-integration-test
+        with:
+          database_kind: ${{ matrix.db_kind }}
+
+  test_oracle:
+    strategy:
+      matrix:
+        os: ['ubuntu-20.04']
+        distribution: ['zulu']
+        java: ['8', '11']
+        db_kind: ['oracle']
+    runs-on: ${{ matrix.os }}
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) ${{ matrix.db_kind }}
+    timeout-minutes: 12
+    services:
+      oracle:
+        image: gvenzl/oracle-xe:21
+        ports:
+          - 1521:1521
+        env:
+          ORACLE_URL: localhost:1521/XEPDB1
+          ORACLE_PASSWORD: Oracle18
+          ORACLE_ADMIN_PASSWORD: Oracle18
+          ORACLE_ADMIN_USER: system
+          NLS_LANG: AMERICAN_AMERICA.AL32UTF8
+        options: >-
+          --name oracle
+          --health-cmd healthcheck.sh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Db Integration tests
+        uses: ./.github/actions/db-integration-test
+        with:
+          database_kind: ${{ matrix.db_kind }}
+
+  test_sqlserver:
+    strategy:
+      matrix:
+        os: ['ubuntu-20.04']
+        distribution: ['zulu']
+        java: ['8']
+        db_kind: ['sqlserver']
+    runs-on: ${{ matrix.os }}
+    name: Java ${{ matrix.Java }} (${{ matrix.distribution }}) ${{ matrix.db_kind }}
+    timeout-minutes: 12
+    env:
+      DB_ADMIN_PASSWORD: yourStrongP@ssword
+
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: ${{ env.DB_ADMIN_PASSWORD }}
+          MSSQL_PID: Express
+        ports:
+          - 1433:1433
+        options: >-
+          --name ${{ matrix.db_kind }}
+          --health-cmd "/opt/mssql-tools/bin/sqlcmd -U sa -P $SA_PASSWORD -Q 'select 1' -b -o /dev/null"
+          --health-interval 60s
+          --health-timeout 30s
+          --health-start-period 20s
+          --health-retries 3
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Db Integration tests
+        uses: ./.github/actions/db-integration-test
+        with:
+          database_kind: ${{ matrix.db_kind }}

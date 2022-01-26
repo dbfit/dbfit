@@ -1,21 +1,40 @@
-env:
- global:
-   - "ARTIFACTS_AWS_REGION=us-east-1"
-   - "ARTIFACTS_S3_BUCKET=dbfit"
-   - secure: "NLAj1hPcTlzBO6hEbZ3X6AOfXUVeFl0oSytrd02m+UaXzbNA9PZ6ZjYBwCGA\nvpNdVd5YVNMaUWBX5IN336mscvJswg+9lyt3y8cgBzOUWNE/UXDRXYoL8xwx\nxXnMnBatW2+0M4QtuXyLZpWyPxKa+1AYuCVJXHaANrkjufuXm04="
-   - secure: "li8rtIJ0NxvXPn2o1TltT+CaiMyfN0neFoBBA7CXCRWOt0Gjs6ytzP89Hclu\nbdPuZsCXXKckW3UIIzqR6YDU0NhLZxkZuOz0u3+dD1856jqa2umXJi3MnQ6j\nlulUkNwfmE+ul0Hly0Hia4nNivHQ3f4I7BNSQlNM0GVYy+ZL4Oo="
-sudo: false
+sudo: required
+
+dist: trusty
+
+services:
+  - docker
+  - postgresql
+
 language: java
 before_install:
+  - >
+    docker run
+    --privileged --name dbfitdb2 -p 50000:50000 -v "`pwd`/test_vm/scripts/db2:/scripts"
+    -e DB2INST1_PASSWORD=db2inst1-pwd -e LICENSE=accept -e DBNAME=db2inst1 ibmcom/db2:latest
+    | tee -a /tmp/run-db2.log | grep -E '^(DB2|SQL|LIC|\(\*\))' &
+  - docker run --name dbfitora -p 1521:1521 -v "`pwd`/test_vm/scripts/oracle/sql:/docker-entrypoint-initdb.d:ro" wnameless/oracle-xe-11g-r2 &
   - "./gradlew -version"
 install: "./gradlew assemble"
-script: "./gradlew clean fastbuild"
+before_script:
+  - mysql -u root -v < dbfit-java/mysql/src/integration-test/resources/create-db-mysql.sql
+  - ./test_vm/scripts/postgresql/install_postgresql.sh
+  - for i in {1..60}; do echo "$i waiting for Oracle server startup"; docker exec dbfitora test -f /tmp/dbfit-ora-setup-done.flag && echo "[Oracle UP]" && break || sleep 6; done
+  - for i in {1..60}; do echo "$i waiting for DB2 server startup"; docker logs dbfitdb2 | grep 'Setup has completed' && echo "[DB2 UP]" && break || sleep 6; done
+  - docker exec dbfitdb2 /scripts/create_db_schema.sh
+script:
+  - ./gradlew --continue clean travisbuild
+  - ./gradlew bundle
 jdk:
-  - oraclejdk7
+  - openjdk8
   - oraclejdk8
-after_success:
-  - "./gradlew bundle"
-# the next line is a workaround for https://github.com/travis-ci/travis-artifacts/issues/23
-  - "gem install --version 0.8.9 faraday"
-  - "gem install travis-artifacts"
-  - "travis-artifacts upload --path zips --target-path artifacts/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID"
+addons:
+  postgresql: "9.6"
+  artifacts:
+    paths:
+    - zips/
+    target_paths: artifacts/$TRAVIS_REPO_SLUG/$TRAVIS_BUILD_NUMBER/$TRAVIS_JOB_NUMBER
+    s3_region: us-east-1
+env:
+  matrix:
+    secure: gOEl7TFI3RH0cMkSNOXeSwC0ZCF60/JSftuTK0Y7UZtSS4yEYkn4o2RX/PO3I+3kQdpkbx9pe+lnd1+C1to1QJqd4AhOGwoy/7KvTE+qCP0bdOLSWUbWJ92SmI/ZPijnODfcFWWkCDIhQBK0SEinVokjD5PPobDwGMosDMS2Qzo=

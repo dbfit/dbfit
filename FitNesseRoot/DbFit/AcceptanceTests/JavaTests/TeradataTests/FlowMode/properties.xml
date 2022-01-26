@@ -11,6 +11,7 @@
 <Suites/>
 <SymbolicLinks>
 <ObjectNames>.DbFit.AcceptanceTests.CoreTests.ObjectNames</ObjectNames>
+<StoredProcWithException>.DbFit.AcceptanceTests.JavaTests.TeradataTests.LibraryTests.StoredProcWithException</StoredProcWithException>
 </SymbolicLinks>
 <Versions/>
 <WhereUsed/>

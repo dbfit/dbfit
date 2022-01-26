@@ -42,3 +42,16 @@ END_PROC;-!|
 |ID|DESCRR|
 |1|TEST|
 
+!|Inspect Procedure|CalcLength|
+
+!|Execute Procedure |CalcLength|
+|$1  |
+|abcd|
+
+!|Execute Procedure |CalcLength|
+|$1  |?|
+|abcd|4|
+
+!|Execute Procedure|sp_procedure|
+|$1|$2   |? |
+|22|TESJE|22|

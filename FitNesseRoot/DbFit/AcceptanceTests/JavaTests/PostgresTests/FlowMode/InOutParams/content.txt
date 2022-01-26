@@ -1,5 +1,11 @@
 !3 IN/OUT params need to be specified twice
 
-|execute procedure|Multiply|
-|factor|val|?|
-|5|10|50|
+|execute procedure|MultiplyIO|
+|factor           |val |val? |
+|5                |10  |50   |
+
+!3 PostgreSQL allows getting the last output parameter as return value
+
+|execute procedure|MultiplyIO|
+|factor           |val |?  |
+|5                |10  |50 |

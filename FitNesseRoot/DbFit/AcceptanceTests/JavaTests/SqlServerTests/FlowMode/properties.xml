@@ -16,6 +16,7 @@
 <BulkInsertWithWeirdTableNames>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.BulkInsertWithWeirdTableNames</BulkInsertWithWeirdTableNames>
 <CallingFunctions>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.CallingFunctions</CallingFunctions>
 <ColumnMatching>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ColumnMatching</ColumnMatching>
+<CommitAndRollback>.DbFit.AcceptanceTests.LibraryTests.CommitAndRollback</CommitAndRollback>
 <CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
 <DataTypes>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.DataTypes</DataTypes>
 <ExecutingStatements>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.ExecutingStatements</ExecutingStatements>
@@ -35,7 +36,7 @@
 <SimpleStoredProc>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.SimpleStoredProc</SimpleStoredProc>
 <StoreAndCompareQueries>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.StoreAndCompareQueries</StoreAndCompareQueries>
 <StoredProcReturningQuery>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.StoredProcReturningQuery</StoredProcReturningQuery>
-<StoredProcedureWithException>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.StoredProcedureWithException</StoredProcedureWithException>
+<StoredProcWithException>.DbFit.AcceptanceTests.JavaTests.SqlServerTests.LibraryTests.StoredProcWithException</StoredProcWithException>
 <TransactionsTest>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.TransactionsTest</TransactionsTest>
 <UnknownParametersAreIgnored>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.UnknownParametersAreIgnored</UnknownParametersAreIgnored>
 <UpdateTest>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.UpdateTest</UpdateTest>

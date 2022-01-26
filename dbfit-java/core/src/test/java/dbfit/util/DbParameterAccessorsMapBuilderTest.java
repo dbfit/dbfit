@@ -6,13 +6,12 @@ import org.junit.Test;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-import java.util.Map;
-
 public class DbParameterAccessorsMapBuilderTest {
     private int sqlType = java.sql.Types.VARCHAR;
     private Class<?> javaType = String.class;
+    private TypeTransformerFactory dbfitToJdbcTransformerFactory = new TypeTransformerFactory();
     private DbParameterAccessorsMapBuilder params =
-        new DbParameterAccessorsMapBuilder();
+        new DbParameterAccessorsMapBuilder(dbfitToJdbcTransformerFactory);
 
     @Test
     public void normalParametersAreCreatedOnProperPositions() {

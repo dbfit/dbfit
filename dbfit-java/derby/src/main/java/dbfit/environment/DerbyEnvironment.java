@@ -3,10 +3,12 @@ package dbfit.environment;
 import dbfit.annotations.DatabaseEnvironment;
 import dbfit.api.AbstractDbEnvironment;
 import dbfit.util.DbParameterAccessor;
-import dbfit.util.NameNormaliser;
+import dbfit.util.Direction;
+import dbfit.util.DatabaseObjectName;
+import static dbfit.util.NameNormaliser.normaliseName;
 
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
@@ -14,14 +16,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
+import static java.util.Objects.requireNonNull;
 
-import dbfit.util.Direction;
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 /**
  * Encapsulates support for the Derby database (also known as JavaDB). Operates
  * in Client mode.
- * 
+ *
  * @see EmbeddedDerbyEnvironment
  * @author P&aring;l Brattberg, pal.brattberg@acando.com
  */
@@ -31,6 +33,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
 
     public DerbyEnvironment(String driverClassName) {
         super(driverClassName);
+        defaultParamPatternString = "@([A-Za-z0-9_]+)";
     }
 
     @Override
@@ -43,49 +46,170 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
         return String.format("jdbc:derby://%s/%s", dataSource, database);
     }
 
-    private static final String paramNamePattern = "@([A-Za-z0-9_]+)";
-    private static final Pattern paramRegex = Pattern.compile(paramNamePattern);
-
     @Override
-    public Pattern getParameterPattern() {
-        return paramRegex;
+    public Map<String, DbParameterAccessor> getAllColumns(String tableName)
+            throws SQLException {
+        return new DatabaseTable(buildDatabaseObjectName(tableName)).getParams();
     }
 
-    public Map<String, DbParameterAccessor> getAllColumns(
-            final String tableOrViewName) throws SQLException {
-        String qry = "SELECT COLUMNNAME, COLUMNDATATYPE "
-                + "FROM SYS.SYSCOLUMNS WHERE REFERENCEID = "
-                + "(SELECT TABLEID FROM SYS.SYSTABLES WHERE TABLENAME = ?)";
-        return readIntoParams(tableOrViewName.toUpperCase(), qry);
-    }
+    private abstract class DatabaseObject {
+        protected DatabaseObjectName name;
 
-    private Map<String, DbParameterAccessor> readIntoParams(
-            String tableOrViewName, String query) throws SQLException {
-        try (PreparedStatement dc = getConnection().prepareStatement(query)) {
-            dc.setString(1, tableOrViewName);
+        private DatabaseObject(DatabaseObjectName objName) {
+            name = objName;
+        }
 
-            ResultSet rs = dc.executeQuery();
-            Map<String, DbParameterAccessor> allParams = new HashMap<String, DbParameterAccessor>();
-            int position = 0;
-            while (rs.next()) {
-                String columnName = rs.getString(1);
-                String dataType = rs.getString(2);
-                DbParameterAccessor dbp = new DbParameterAccessor(columnName,
-                        Direction.INPUT,
-                        typeMapper.getJDBCSQLTypeForDBType(dataType),
-                        getJavaClass(dataType), position++);
-                allParams.put(NameNormaliser.normaliseName(columnName), dbp);
+        protected DatabaseMetaData getDbMetaData() throws SQLException {
+            return getConnection().getMetaData();
+        }
+
+        abstract protected ResultSet getObjectMetaData() throws SQLException;
+
+        public boolean exists() throws SQLException {
+            try (ResultSet rs = getObjectMetaData()) {
+                return rs.next();
             }
-            rs.close();
+        }
+
+        abstract protected ResultSet getColumns() throws SQLException;
+
+        public Map<String, DbParameterAccessor> getParams() throws SQLException {
+            Map<String, DbParameterAccessor> allParams = new HashMap<>();
+            try (ResultSet rs = getColumns()) {
+                while (rs.next()) {
+                    DbParameterAccessor accessor = createColumnAccessor(rs);
+                    allParams.put(normaliseName(accessor.getName()), accessor);
+                }
+            }
             return allParams;
+        }
+
+        protected DbParameterAccessor createColumnAccessor(ResultSet rs)
+                throws SQLException {
+            String paramTypeName = rs.getString("TYPE_NAME");
+            return createDbParameterAccessor(getColumnName(rs), columnDirection(rs),
+                           typeMapper.getJDBCSQLTypeForDBType(paramTypeName),
+                           getJavaClass(paramTypeName), rs.getInt("ORDINAL_POSITION") - 1);
+        }
+
+        protected String getColumnName(ResultSet rs) throws SQLException {
+            return defaultIfNull(rs.getString("COLUMN_NAME"), "");
+        }
+
+        protected Direction columnDirection(ResultSet rs) throws SQLException {
+            return requireNonNull(getColumnDirection(rs),
+                            "Invalid type for column/parameter " + getColumnName(rs));
+        }
+
+        abstract protected Direction getColumnDirection(ResultSet rs) throws SQLException;
+    }
+
+    private class DatabaseTable extends DatabaseObject {
+
+        private DatabaseTable(DatabaseObjectName objName) {
+            super(objName);
+        }
+
+        @Override
+        protected ResultSet getObjectMetaData() throws SQLException {
+            return getDbMetaData().getTables(null, name.getSchemaName(), name.getObjectName(), null);
+        }
+
+        @Override
+        public ResultSet getColumns() throws SQLException {
+            return getDbMetaData().getColumns(null, name.getSchemaName(), name.getObjectName(), "%");
+        }
+
+        @Override
+        protected Direction getColumnDirection(ResultSet rs) {
+            return Direction.INPUT;
         }
     }
 
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(
-            String procName) throws SQLException {
-        throw new UnsupportedOperationException();
+    private class DatabaseProcedure extends DatabaseObject {
+
+        private DatabaseProcedure(DatabaseObjectName objName) {
+            super(objName);
+        }
+
+        @Override
+        protected ResultSet getObjectMetaData() throws SQLException {
+            return getDbMetaData().getProcedures(null, name.getSchemaName(), name.getObjectName());
+        }
+
+        @Override
+        public ResultSet getColumns() throws SQLException {
+            return getDbMetaData().getProcedureColumns(null, name.getSchemaName(), name.getObjectName(), "%");
+        }
+
+        @Override
+        protected Direction getColumnDirection(ResultSet rs) throws SQLException {
+            switch (rs.getInt("COLUMN_TYPE")) {
+                case DatabaseMetaData.procedureColumnIn:
+                    return Direction.INPUT;
+                case DatabaseMetaData.procedureColumnInOut:
+                    return Direction.INPUT_OUTPUT;
+                case DatabaseMetaData.procedureColumnOut:
+                    return Direction.OUTPUT;
+                default:
+                    return null;
+            }
+        }
     }
 
+    private class DatabaseFunction extends DatabaseObject {
+
+        private DatabaseFunction(DatabaseObjectName objName) {
+            super(objName);
+        }
+
+        @Override
+        protected ResultSet getObjectMetaData() throws SQLException {
+            return getDbMetaData().getFunctions(null, name.getSchemaName(), name.getObjectName());
+        }
+
+        @Override
+        public ResultSet getColumns() throws SQLException {
+            return getDbMetaData().getFunctionColumns(null, name.getSchemaName(), name.getObjectName(), "%");
+        }
+
+        @Override
+        protected Direction getColumnDirection(ResultSet rs) throws SQLException {
+            switch (rs.getInt("COLUMN_TYPE")) {
+                case DatabaseMetaData.functionColumnIn:
+                    return Direction.INPUT;
+                case DatabaseMetaData.functionReturn:
+                    return Direction.RETURN_VALUE;
+                default:
+                    return null;
+            }
+        }
+    }
+
+    DatabaseObjectName buildDatabaseObjectName(String objName) throws SQLException {
+        return DatabaseObjectName.splitWithDelimiter(
+                objName.toUpperCase(), "\\.", getConnection().getSchema());
+    }
+
+    DatabaseObject findStoredRoutine(DatabaseObjectName objName) throws SQLException {
+        List<DatabaseObject> prioritisedCandidates = Arrays.asList(
+            new DatabaseProcedure(objName),
+            new DatabaseFunction(objName));
+        for (DatabaseObject object : prioritisedCandidates) {
+            if (object.exists()) {
+                return object;
+            }
+        }
+        throw new SQLException("Procedure/function " + objName.getObjectName() + " does not exist");
+    }
+
+    @Override
+    public Map<String, DbParameterAccessor> getAllProcedureParameters(String callableName)
+            throws SQLException {
+        return findStoredRoutine(buildDatabaseObjectName(callableName)).getParams();
+    }
+
+    @Override
     public Class<?> getJavaClass(final String dataType) {
         return typeMapper.getJavaClassForDBType(dataType);
     }
@@ -126,6 +250,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
         private static final List<String> timeTypes = Arrays
                 .asList(new String[] { "TIME" });
 
+        @Override
         public Class<?> getJavaClassForDBType(final String dbDataType) {
             String dataType = normaliseTypeName(dbDataType);
             if (stringTypes.contains(dataType))
@@ -152,6 +277,7 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
                     + "' is not supported for Derby");
         }
 
+        @Override
         public int getJDBCSQLTypeForDBType(final String dbDataType) {
             String dataType = normaliseTypeName(dbDataType);
             if (stringTypes.contains(dataType))
@@ -203,4 +329,3 @@ public class DerbyEnvironment extends AbstractDbEnvironment {
         }
     }
 }
-

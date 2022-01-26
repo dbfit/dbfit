@@ -9,7 +9,9 @@
 <Suite/>
 <SymbolicLinks>
 <AccessObjectsInNonDefaultDb>.DbFit.AcceptanceTests.DotNetTests.SqlServerTests.FlowMode.AccessObjectsInNonDefaultDb</AccessObjectsInNonDefaultDb>
+<CommitAndRollback>.DbFit.AcceptanceTests.LibraryTests.CommitAndRollback</CommitAndRollback>
 <CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
+<StoredProcWithException>.DbFit.AcceptanceTests.JavaTests.SqlServerTests.LibraryTests.StoredProcWithException</StoredProcWithException>
 </SymbolicLinks>
 <Versions/>
 <WhereUsed/>

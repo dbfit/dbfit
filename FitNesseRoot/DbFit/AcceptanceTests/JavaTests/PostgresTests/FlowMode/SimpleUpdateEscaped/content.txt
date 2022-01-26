@@ -1,0 +1,15 @@
+|insert|"Pers+""+Pos"|
+|"user"|"Info""+desc"|
+|arthur dent|adent|
+|ford prefect|fpref|
+|zaphod beeblebrox|zaphod|
+
+|update|"Pers+""+Pos"|
+|"Info""+desc"=|"user"|
+|adent2|arthur dent|
+
+|query|select * from "Pers+""+Pos"|
+|"user"|"Info""+desc"|
+|arthur dent|adent2|
+|ford prefect|fpref|
+|zaphod beeblebrox|zaphod|

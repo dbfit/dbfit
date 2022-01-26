@@ -38,7 +38,7 @@ public class TeradataDatePeriodParseDelegateTest {
         catch (Exception e) {
             throw new Error("During TeradataDatePeriodParseDelegate.parse(" + fromStr + "," + toStr + ")");
         }
-        
+
         assertTrue("Date period parse does not produce expected object", tp.equals(tp2));
     }
 }

@@ -9,8 +9,10 @@ dbfit-java/derby/dbfit/
 .project
 .classpath
 out
+.vscode
 
 dist
+/zips/
 /docs
 tmp/*
 custom_libs/*.jar
@@ -21,8 +23,11 @@ test_vm/.vagrant
 test_vm/tmp
 test_vm/Disk1
 test_vm/vagrant_config_custom.rb
+test_vm/disk1.vdi
+test_vm/.Vagrantfile.swp
 oracle-xe-*.rpm.zip
 db2_linuxx64_expc.tar.gz
+ids-linux-x86_64.tar
 
 # the documentation
 website/_site
@@ -33,6 +38,7 @@ FitNesseRoot/files/testResults
 FitNesseRoot/files/testProgress
 FitNesseRoot/update*
 FitNesseRoot/RecentChanges
+FitNesseRoot/RecentChanges.wiki
 [0-9]*-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].zip
 [A-Za-z0-9]*-[0-9]*-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].zip
 
@@ -42,5 +48,5 @@ build
 gradle.properties
 target
 dbfit-complete-*.zip
-dbfit-java/oracle/TestDbConnectionDbFitOracle.properties
-dbfit-java/oracle/TestDbConnectionDbFitOracle.properties.custom
+dbfit-java/*/TestDbConnection*.properties
+dbfit-java/*/TestDbConnection*.properties.custom

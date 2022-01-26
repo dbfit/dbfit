@@ -27,7 +27,6 @@ public class DatabaseTest extends Fixture {
         try {
             Log.log("Rolling back");
             if (environment != null) {
-                environment.rollback();
                 environment.closeConnection();
             }
         } catch (Exception e) {
@@ -57,12 +56,15 @@ public class DatabaseTest extends Fixture {
     }
 
     public void close() throws SQLException {
-        environment.rollback();
         environment.closeConnection();
     }
 
     public void setParameter(String name, String value) {
         dbfit.fixture.SetParameter.setParameter(name, value);
+    }
+
+    public void setParameter(String name, String value, String parseDelegate) {
+        dbfit.fixture.SetParameter.setParameter(name, value, parseDelegate);
     }
 
     public void clearParameters() {
@@ -90,11 +92,11 @@ public class DatabaseTest extends Fixture {
     }
 
     public Fixture executeProcedureExpectException(String statement) {
-        return new dbfit.fixture.ExecuteProcedure(environment, statement, true);
+        return new dbfit.fixture.ExecuteProcedureExpectException(environment, statement);
     }
 
     public Fixture executeProcedureExpectException(String statement, int code) {
-        return new dbfit.fixture.ExecuteProcedure(environment, statement, code);
+        return new dbfit.fixture.ExecuteProcedureExpectException(environment, statement, code);
     }
 
     public Fixture insert(String tableName) {
@@ -152,11 +154,10 @@ public class DatabaseTest extends Fixture {
     }
 
     public Fixture compareStoredQueriesHideMatchingRows(String symbol1, String symbol2) {
-        return new dbfit.fixture.CompareStoredQueriesHideMatchingRows(environment, symbol1, symbol2);    	
+        return new dbfit.fixture.CompareStoredQueriesHideMatchingRows(environment, symbol1, symbol2);
     }
 
     public Fixture setOption(String option, String value) {
         return new dbfit.fixture.SetOption(environment, option, value);
     }
 }
-

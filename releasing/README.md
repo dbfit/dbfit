@@ -1,6 +1,6 @@
 # Releasing DbFit
 
-1. Make sure that all issues and pull requests on master since the last release:
+1. Make sure that all issues and pull requests on `main` since the last release:
     - are assigned to a milestone
     - are labelled with one of `enhancement`, `bugfix`, etc
     - all have meaningful titles (since they'll appear in the release notes)
@@ -33,7 +33,7 @@
 
 9. [Create a GitHub release](https://github.com/dbfit/dbfit/releases/new) using the GitHub tag and the release notes. I try to always summarise the contents of the release in the first few sentences.
 
-10. Update the website by promoting the `master` docs to `gh-pages`:
+10. Update the website by promoting the `main` docs to `gh-pages`:
 
         $ bin/publish-to-gh-pages.sh
 

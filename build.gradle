@@ -1,7 +1,10 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-ext.dbfitVersion = '3.2.0'
-ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+ext {
+    dbfitVersion = '4.0.0-SNAPSHOT'
+    isReleaseVersion = !version.endsWith("SNAPSHOT")
+    fitSharpVersion = '2.5'
+}
 
 task cleanFitnesseroot(type:Exec) {
     def gitArgs = ['clean', '-d', '-x', '-f', 'FitNesseRoot/']
@@ -11,130 +14,144 @@ task cleanFitnesseroot(type:Exec) {
     args gitArgs
 }
 
-task cleanDist << {
-    delete 'dist'
-    delete 'zips'
-    delete 'docs'
+task cleanDist {
+    doLast {
+        delete 'dist'
+        delete 'zips'
+        delete 'docs'
+    }
 }
 
-task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAll', ':dbfit-java:libs']) << {
-    copy {
-        from 'LICENSE', 'README.md'
-        into 'dist'
-    }
-    copy {
-        from 'bin'
-        include 'encrypt.*'
-        into 'dist'
-    }
-    copy {
-        from 'templates'
-        include 'startFitnesse.*'
-        into 'dist'
-        rename '(.+)\\.tmpl$', '$1'
-        filter(ReplaceTokens,
-            tokens: ['dbfitVersion': dbfitVersion, 'fitNesseVersion': project(':dbfit-java').fitNesseVersion])
-    }
-    copy {
-        from 'files'
-        into 'dist'
-    }
-    copy {
-        from 'dbfit-java'
-        include '**/*.jar'
-        exclude 'build/**/*.jar'
-        exclude proprietaryLibs()
-        exclude experimentalItems()
-        into 'dist/lib'
-        eachFile {details ->
-            details.path = flattenPath(details.path)
+task copyLocal(dependsOn: [cleanFitnesseroot, cleanDist, ':dbfit-java:assembleAll', ':dbfit-java:libs']) {
+    doLast {
+        copy {
+            from 'LICENSE', 'README.md'
+            into 'dist'
         }
-        includeEmptyDirs = false 
-    }
-}
-
-task copyExtraLibs(dependsOn: [copyLocal]) << {
-    copy {
-        from 'dbfit-java'
-        include proprietaryLibs()
-        into 'dist/lib'
-        eachFile {details ->
-            details.path = flattenPath(details.path)
+        copy {
+            from 'bin'
+            include 'encrypt.*'
+            into 'dist'
         }
-        includeEmptyDirs = false
-    }
-    copy {
-        from project(':dbfit-java:derby').configurations.derby
-        into 'dist/lib'
-    }
-}
-
-task copyTestLibs(dependsOn: ':dbfit-java:derby:integrationTestJar') << {
-    copy {
-        from 'dbfit-java'
-        include '**/*integration-test*.jar'
-        exclude 'build/**/*.jar'
-        exclude proprietaryLibs()
-        exclude experimentalItems()
-        into 'dist/lib'
-        eachFile { details ->
-            details.path = flattenPath(details.path)
+        copy {
+            from 'templates'
+            include 'startFitnesse.*'
+            into 'dist'
+            rename '(.+)\\.tmpl$', '$1'
+            filter(ReplaceTokens,
+                tokens: ['dbfitVersion': dbfitVersion, 'fitNesseVersion': project(':dbfit-java').fitNesseVersion])
         }
-        includeEmptyDirs = false
+        copy {
+            from 'files'
+            into 'dist'
+        }
+        copy {
+            from 'dbfit-java'
+            include '**/*.jar'
+            exclude 'build/**/*.jar'
+            exclude proprietaryLibs()
+            exclude experimentalItems()
+            into 'dist/lib'
+            eachFile {details ->
+                details.path = flattenPath(details.path)
+            }
+            includeEmptyDirs = false
+        }
     }
 }
 
-task copyConnections(dependsOn: [copyLocal]) << {
-    copy {
-        from 'dbfit-java/oracle/TestDbConnectionDbFitOracle.properties.default'
-        into 'dist'
-        rename '(.*).default', '$1'
-    }
-
-    copy {
-        from 'dbfit-java/oracle/TestDbConnectionDbFitOracle.properties.custom'
-        into 'dist'
-        rename '(.*).custom', '$1'
-    }
-}
-
-task wikiDocsDir << {
-    mkdir('docs/Resources/')
-}
-
-task fitnesseUpdateList << {
-    copy {
-        from zipTree(fitnesseJar()).matching { include 'Resources/updateList' }
-        into 'docs'
-        rename 'updateList', 'updateList.fitnesse'
+task copyExtraLibs(dependsOn: [copyLocal]) {
+    doLast {
+        copy {
+            from 'dbfit-java'
+            include proprietaryLibs()
+            into 'dist/lib'
+            eachFile {details ->
+                details.path = flattenPath(details.path)
+            }
+            includeEmptyDirs = false
+        }
+        copy {
+            from project(':dbfit-java:derby').configurations.derby
+            into 'dist/lib'
+        }
     }
 }
 
-task dbfitUpdateList(dependsOn: wikiDocsDir) << {
-    File f = file('docs/Resources/updateList.dbfit')
-
-    fileTree('FitNesseRoot').each {
-        f << "${relativePath(it).toString().replace('\\', '/')}\n"
+task copyTestLibs(dependsOn: ':dbfit-java:derby:integrationTestJar') {
+    doLast {
+        copy {
+            from 'dbfit-java'
+            include '**/*integration-test*.jar'
+            exclude 'build/**/*.jar'
+            exclude proprietaryLibs()
+            exclude experimentalItems()
+            into 'dist/lib'
+            eachFile { details ->
+                details.path = flattenPath(details.path)
+            }
+            includeEmptyDirs = false
+        }
     }
 }
 
-task wikiDocsUpdateList(dependsOn: [fitnesseUpdateList, dbfitUpdateList]) << {
-    File f = file('docs/Resources/updateList')
-
-    f << file('docs/Resources/updateList.dbfit').text
-    f << file('docs/Resources/updateList.fitnesse').text
-
-    delete 'docs/Resources/updateList.fitnesse'
-    delete 'docs/Resources/updateList.dbfit'
+task copyConnections(dependsOn: [copyLocal]) {
+    doLast {
+        subprojects.each { prj ->
+            if (prj.hasProperty('connectionPropertiesFiles')) {
+                prj.copyConnectionProperties new File(project.rootDir, 'dist')
+            }
+        }
+    }
 }
 
-task wikiDocs(dependsOn: [wikiDocsUpdateList]) << {
-    copy {
-        from 'FitNesseRoot'
-        into 'docs/Resources/FitNesseRoot'
+task wikiDocsDir {
+    doLast {
+        mkdir('docs/Resources/')
     }
+}
 
-    ant.jar(destfile: 'dist/lib/dbfit-docs-' + dbfitVersion + '.jar', basedir: 'docs', level: 9)
+task fitnesseUpdateList {
+    doLast {
+        copy {
+            from zipTree(fitnesseJar()).matching { include 'Resources/updateList' }
+            into 'docs'
+            rename 'updateList', 'updateList.fitnesse'
+        }
+    }
+}
+
+task dbfitUpdateList(dependsOn: wikiDocsDir) {
+    doLast {
+        File f = file('docs/Resources/updateList.dbfit')
+
+        fileTree('FitNesseRoot').each {
+            f << "${relativePath(it).toString().replace('\\', '/')}\n"
+        }
+    }
+}
+
+task wikiDocsUpdateList(dependsOn: [fitnesseUpdateList, dbfitUpdateList]) {
+    doLast {
+        File f = file('docs/Resources/updateList')
+
+        f << file('docs/Resources/updateList.dbfit').text
+        f << file('docs/Resources/updateList.fitnesse').text
+
+        delete 'docs/Resources/updateList.fitnesse'
+        delete 'docs/Resources/updateList.dbfit'
+    }
+}
+
+task wikiDocs(dependsOn: [wikiDocsUpdateList]) {
+    doLast {
+        copy {
+            from 'FitNesseRoot'
+            into 'docs/Resources/FitNesseRoot'
+        }
+
+        ant.jar(destfile: 'dist/lib/dbfit-docs-' + dbfitVersion + '.jar', basedir: 'docs', level: 9)
+    }
 }
 
 def fitnesseJar() {
@@ -145,17 +162,20 @@ def flattenPath(def path) {
     path.replaceAll('.*/([^/]*?\\.jar)', {"${it[1]}"})
 }
 
-task bundleFitsharp(dependsOn: copyLocal) << {
-    mkdir 'dist/fitsharp/'
-    ant.get(src: 'http://cloud.github.com/downloads/jediwhale/fitsharp/release.2.2.net.40.zip',
-            dest: 'dist/fitsharp/',
-            verbose: true)
-    copy {
-        from zipTree('dist/fitsharp/release.2.2.net.40.zip')
-        into 'dist/fitsharp/'
+task bundleFitsharp(dependsOn: copyLocal) {
+    doLast {
+        def fitSharpFileName = "release.${fitSharpVersion}.net.40.zip"
+        mkdir 'dist/fitsharp/'
+        ant.get(src: "http://github.com/jediwhale/fitsharp/releases/download/${fitSharpVersion}/${fitSharpFileName}",
+                dest: 'dist/fitsharp/',
+                verbose: true)
+        copy {
+            from zipTree("dist/fitsharp/${fitSharpFileName}")
+            into 'dist/fitsharp/'
+        }
+        delete "dist/fitsharp/${fitSharpFileName}"
+        file('dist/fitsharp/Runner.exe.config') << '<configuration><runtime><loadFromRemoteSources enabled="true"/></runtime></configuration>'
     }
-    delete 'dist/fitsharp/release.2.2.net.40.zip'
-    file('dist/fitsharp/Runner.exe.config') << '<configuration><runtime><loadFromRemoteSources enabled="true"/></runtime></configuration>'
 }
 
 task bundle(type: Zip, dependsOn: [copyLocal, wikiDocs, bundleFitsharp]) {
@@ -187,15 +207,27 @@ task fastbuild(dependsOn: [
     ':dbfit-java:db2:check',
     ':dbfit-java:derby:check',
     ':dbfit-java:hsqldb:check',
+    ':dbfit-java:informix:check',
     ':dbfit-java:mysql:check',
     ':dbfit-java:netezza:check',
     ':dbfit-java:oracle:check',
     ':dbfit-java:postgres:check',
+    ':dbfit-java:snowflake:check',
     ':dbfit-java:sqlserver:check',
     ':dbfit-java:teradata:check',
     ':dbfit-java:derby:integrationTest',
     ':dbfit-java:hsqldb:integrationTest'
     ])
+
+task cibuild(dependsOn: [
+    fastbuild,
+    ':dbfit-java:db2:integrationTest',
+    ':dbfit-java:mysql:integrationTest',
+    ':dbfit-java:oracle:integrationTest',
+    ':dbfit-java:postgres:integrationTest'
+    ])
+
+task travisbuild(dependsOn: [cibuild])
 
 if (!project.hasProperty('excludeIntegrationTests')) {
     project.ext.set('excludeIntegrationTests', '')
@@ -220,7 +252,14 @@ def onWindows() {
 }
 
 def proprietaryLibs() {
-    ['**/ojdbc*.jar', '**/db2jcc4*.jar', '**/terajdbc*.jar', '**/tdgssconfig*.jar', '**/nzjdbc*.jar', '**/sqljdbc*.jar'] as Set
+    ['**/ojdbc*.jar',
+     '**/db2jcc4*.jar',
+     '**/terajdbc*.jar',
+     '**/tdgssconfig*.jar',
+     '**/nzjdbc*.jar',
+     '**/sqljdbc*.jar',
+     '**/ifxjdbc*.jar'
+    ] as Set
 }
 
 def experimentalItems() {

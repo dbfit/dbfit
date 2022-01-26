@@ -17,7 +17,6 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 import java.util.Properties;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
@@ -27,7 +26,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
 
     public SqlServerEnvironment(String driverClassName) {
         super(driverClassName);
-
+        defaultParamPatternString = "@([A-Za-z0-9_]+)";
         TypeNormaliserFactory.setNormaliser(java.sql.Time.class,
                 new MillisecondTimeNormaliser());
     }
@@ -53,18 +52,6 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
         super.connect(connectionString + ";sendTimeAsDatetime=false", info);
     }
 
-    private static String paramNamePattern = "@([A-Za-z0-9_]+)";
-    private static Pattern paramRegex = Pattern.compile(paramNamePattern);
-
-    public Pattern getParameterPattern() {
-        return paramRegex;
-    }
-
-    protected String parseCommandText(String commandText) {
-        commandText = commandText.replaceAll(paramNamePattern, "?");
-        return super.parseCommandText(commandText);
-    }
-
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
             throws SQLException {
         String qry = " select c.[name], TYPE_NAME(c.system_type_id) as [Type], c.max_length, "
@@ -77,7 +64,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
 
     private Map<String, DbParameterAccessor> readIntoParams(String objname,
             String query) throws SQLException {
-        DbParameterAccessorsMapBuilder params = new DbParameterAccessorsMapBuilder();
+        DbParameterAccessorsMapBuilder params = new DbParameterAccessorsMapBuilder(dbfitToJdbcTransformerFactory);
 
         objname = objname.replaceAll("[^a-zA-Z0-9_.#$]", "");
         String bracketedName = enquoteAndJoin(objname.split("\\."), ".", "[", "]");
@@ -137,7 +124,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
         String objectDatabasePrefix = "";
         String[] objnameParts = dbObjectName.split("\\.");
         if (objnameParts.length == 3) {
-        	objectDatabasePrefix = objnameParts[0] + ".";
+            objectDatabasePrefix = objnameParts[0] + ".";
         }
         return objectDatabasePrefix;
     }
@@ -147,7 +134,7 @@ public class SqlServerEnvironment extends AbstractDbEnvironment {
             return RETURN_VALUE;
         }
 
-        return (isOutput == 1) ? OUTPUT : INPUT;
+        return (isOutput == 1) ? INPUT_OUTPUT : INPUT;
     }
 
     private static int getSqlType(String dataType) {

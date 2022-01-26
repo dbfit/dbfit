@@ -14,16 +14,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 @DatabaseEnvironment(name="Teradata", driver="com.teradata.jdbc.TeraDriver")
 public class TeradataEnvironment extends AbstractDbEnvironment {
 
-    public static class TeradataClobNormaliser implements TypeNormaliser {
+    public static class TeradataClobNormaliser implements TypeTransformer {
 
         private static final int MAX_CLOB_LENGTH = 10000;
 
-        public Object normalise(Object o) throws SQLException {
+        public Object transform(Object o) throws SQLException {
 
             if (o == null)
                 return null;
@@ -41,9 +40,9 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
         }
     }
 
-    public static class TeradataPeriodNormaliser implements TypeNormaliser {
+    public static class TeradataPeriodNormaliser implements TypeTransformer {
 
-        public Object normalise(Object o) throws SQLException {
+        public Object transform(Object o) throws SQLException {
 
             if (o == null)
                 return null;
@@ -91,7 +90,7 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
     public TeradataEnvironment(String driverClassName) {
         super(driverClassName);
-
+        defaultParamPatternString = ":([A-Za-z0-9_]+)";
         TypeAdapter.registerParseDelegate(TeradataDatePeriod.class,
                 TeradataDatePeriodParseDelegate.class);
         TypeAdapter.registerParseDelegate(TeradataTimestampPeriod.class,
@@ -139,18 +138,6 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
                 getConnection().commit();
             }
         };
-    }
-
-    private static String paramNamePattern = ":([A-Za-z0-9_]+)";
-    private static Pattern paramsNames = Pattern.compile(":([A-Za-z0-9_]+)");
-
-    public Pattern getParameterPattern() {
-        return paramsNames;
-    }
-
-    protected String parseCommandText(String commandText) {
-        commandText = commandText.replaceAll(paramNamePattern, "?");
-        return super.parseCommandText(commandText);
     }
 
     public Map<String, DbParameterAccessor> getAllProcedureParameters(
@@ -282,10 +269,10 @@ public class TeradataEnvironment extends AbstractDbEnvironment {
 
                 int intSqlType = getSqlType(dataType);
                 Class<?> clsJavaClass = getJavaClass(dataType);
-                DbParameterAccessor dbp = new DbParameterAccessor(paramName,
+                DbParameterAccessor dbp = createDbParameterAccessor(
+                        paramName,
                         paramDirection, intSqlType, clsJavaClass,
-                        paramDirection == Direction.RETURN_VALUE ? -1
-                                : position++);
+                        paramDirection == Direction.RETURN_VALUE ? -1 : position++);
                 // Note that the HashMap key case must match the normalised name access by DbTable.getDbParameterAccessor.
                 allParams.put(NameNormaliser.normaliseName(paramName), dbp);
             }

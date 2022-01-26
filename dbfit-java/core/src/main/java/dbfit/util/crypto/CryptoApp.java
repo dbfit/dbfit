@@ -8,7 +8,7 @@ public class CryptoApp {
     public static final int EXIT_SUCCESS = 0;
     public static final int EXIT_INVALID_COMMAND = 1;
     public static final int EXIT_COMMAND_FAILED = 2;
-    
+
     private CryptoKeyStoreFactory ksFactory;
     private CryptoServiceFactory cryptoServiceFactory;
     private PrintStream out = System.out;
@@ -93,6 +93,4 @@ public class CryptoApp {
     private CryptoService getCryptoService(final CryptoKeyStore ks) {
         return cryptoServiceFactory.getCryptoService(ks);
     }
-
 }
-

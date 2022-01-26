@@ -9,6 +9,7 @@ show_comments: true
 *   [MS SQL Server](#microsoft-sql-server)
 *   [Teradata](#teradata)
 *   [Netezza](#netezza)
+*   [Informx](#informix)
 
 ---
 
@@ -107,6 +108,16 @@ There are two ways around this:
 2. Deploy `sqljdbc4.jar` in DbFit's `lib` folder - the same folder as dbfit-XXX.jar.
 3. Deploy auth\x86\sqljdbc_auth.dll in `%programfiles(x86)%\Java\jre7\bin` folder to allow `integrated windows authentication`
 
+### Database Engine configuration 
+
+* Make sure the engine is configured to allow TCP/IP connections. Launch SQL Server Configuration. SQL Server Network Configuration > SQL Server > Right click TCP/IP and choose Enable. 
+* Make sure you restart your engine after you enable TCP/IP connections.
+* Make sure you allow mixed-mode authentication so you can use Logins created to use SQL Authentication.
+
+#### SQL Express Specific 
+
+* Enable and start the SQL Browser Service. Change the service state from Disabled to Auto or Manual, then Start the service. The driver will indicate that it cannot communicate to UDP port 1434 if the SQL Browser Service is not started.
+
 ### Network and firewall settings
 
 * If connecting over network each database should be configured to accept TCP/IP connections (including allowance in firewall if any).
@@ -204,3 +215,26 @@ There are two ways around this:
 * Using Netezza Emulator default IP address and port, user name, password and test database
 
 `!|Connect|192.168.85.128:5480|admin|password|NETEZZATEST|`
+
+----
+
+## Informix
+
+1. [Download the Informix driver from the IBM site] (http://www-03.ibm.com/software/products/en/infjdbc).
+2. Deploy `ifxjdbc.<major>-<minor>-<tag>.jar` (e.g. `ifxjdbc-4.10.JC4W1.jar`) in DbFit's `lib` folder - the same folder as dbfit-XXX.jar.
+
+### Connection string to an Informix database
+
+* Check DbFit reference documentation: [ConnectUsingFile](/dbfit/docs/reference.html#connect-using-file) and [Connect](/dbfit/docs/reference.html#connect).
+* Refer to the [Informix JDBC Driver Reference](http://www-01.ibm.com/support/knowledgecenter/SSGU8G_12.1.0/com.ibm.jdbc_pg.doc/jdbc.htm) for details about JDBC url syntax.
+
+#### Examples
+
+* Using the Informix server host name, user name, password and database name
+
+`!|Connect|<myHost>:<myTcpPortNumber>|<myUserName>|<myPassword>|<myDbName>|`
+
+* Using a raw JDBC URL
+
+`!|Connect|jdbc:informix-sqli://<myHost>:<myTcpPortNumber>/<myDbName>:INFORMIXSERVER=<myServer>;user=<myUserName>;password=<myPassword>|`
+

@@ -8,18 +8,18 @@ import static dbfit.util.oracle.OracleBooleanConversions.*;
 
 public class OracleBooleanSpCommand extends OracleBooleanSpCommandBase {
 
-    public static OracleBooleanSpCommand newInstance(String spName, 
+    public static OracleBooleanSpCommand newInstance(String spName,
             List<OracleSpParameter> args) {
         return newInstance(spName, args, null);
     }
 
-    public static OracleBooleanSpCommand newInstance(String spName, 
+    public static OracleBooleanSpCommand newInstance(String spName,
             List<OracleSpParameter> args,
             OracleSpParameter returnValue) {
         return new OracleBooleanSpCommand(spName, args, returnValue);
     }
 
-    protected OracleBooleanSpCommand(String spName, 
+    protected OracleBooleanSpCommand(String spName,
             List<OracleSpParameter> args, OracleSpParameter returnValue) {
         super(spName, args, returnValue);
     }

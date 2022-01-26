@@ -2,7 +2,7 @@
 
 ### Documentation changes
 
-Please raise pull requests against master; the `gh-pages` branch is used only for publishing.
+Please raise pull requests against `main`; the `gh-pages` branch is used only for publishing.
 
 ### Code changes
 
@@ -17,6 +17,10 @@ Be careful with that on Windows where the default end of line style is `CR+LF`.
 If your editor or other tools don't have good support for the Unix end-of-line conventions you may consider using the help of Git's [autocrlf option](http://git-scm.com/book/en/Customizing-Git-Git-Configuration). If you do so, be aware that DbFit tests and VM setup scripts rely on having some files unchanged. So it's advised that you use `autocrlf = input` instead of `autocrlf = auto`.
 
 If your tools have good support for Unix end-of-line format - it's perfectly OK to run with autocrlf unconfigured (or `autocrlf = false`).
+
+##### Java style
+
+The coding style conventions for Java that have been adopted by the DbFit project are those of the Java Language Specification, from Sun Microsystems (now Oracle). See the full style guide document at: http://www.oracle.com/technetwork/java/codeconvtoc-136057.html.
 
 #### Fast build
 
@@ -54,13 +58,13 @@ However, unlike the VM, this approach doesn't necessarily create all the users a
 The easiest way to get a DbFit test environment is to provision a Linux virtual machine image. The instructions below describe how to do this.
 
 The fully-built VM includes:
- *  working installs of Gradle, MySQL, PostgreSQL, Derby and HSQLDB
+ *  working installs of Gradle, MySQL, PostgreSQL, SQL Server, Derby and HSQLDB
  *  the pre-requisites to easily install Oracle
  *  the pre-requisites to easily install DB2
+ *  the pre-requisites to easily install Informix
 
 The VM doesn't include:
  *  a working Oracle installation (however there is a shell script to help with the installation described below)
- *  a working SQL Server installation (obviously)
  *  a working Teradata installation (this can be created separately as a VMWare or EC2 installation)
  *  a working Netezza installation (this can be created separately as a pair of VMWare machines)
 
@@ -70,26 +74,33 @@ The VM doesn't include:
 
 2. [Install vagrant](http://docs.vagrantup.com/v2/installation/). Versions 1.2+.
 
-3. Install vagrant plugins
-   [vagrant-librarian-chef](https://github.com/jimmycuadra/vagrant-librarian-chef),
-   [vagrant-omnibus](https://github.com/schisamo/vagrant-omnibus),
-   [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest):
+3. [Install Chef Development Kit](https://downloads.chef.io/chef-dk)
 
-        vagrant plugin install vagrant-librarian-chef
+4. Install vagrant plugins
+   [vagrant-berkshelf](https://github.com/berkshelf/vagrant-berkshelf),
+   [vagrant-omnibus](https://github.com/schisamo/vagrant-omnibus),
+   [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest),
+   [vagrant-newdisk](https://github.com/dbfit/vagrant-newdisk)
+
+        vagrant plugin install vagrant-berkshelf
         vagrant plugin install vagrant-omnibus
         vagrant plugin install vagrant-vbguest
+        vagrant plugin install vagrant-newdisk
 
-4. If you want to provision Oracle database - download the setup package as
+5. If you want to provision Oracle database - download the setup package as
    described in 1st bullet of [ORACLE file](ORACLE.md).
 
-5. If you want to provision DB2 database - download the setup package as
+6. If you want to provision DB2 database - download the setup package as
    described in 1st bullet of [DB2 file](DB2.md).
-   
-6. Run every subsequent command from the `test_vm` folder:
+
+7. If you want to provision Informix database - download the setup package as
+   described in 1st bullet of [Informix file](INFORMIX.md).
+
+8. Run every subsequent command from the `test_vm` folder:
 
         cd test_vm
 
-6. Provision and start the vagrant VM:
+9. Provision and start the vagrant VM:
 
         vagrant up
 
@@ -277,6 +288,12 @@ If you need to use libraries which are not available on the public artifact repo
 
         sudo su - db2inst1
         db2
+
+ *  Logging in as the `informix` superuser for `informix`:
+
+        sudo su - informix
+        . /informix/dbfitifserver.ksh
+        /informix/bin/dbaccess dbfit
 
 ### Installing Teradata Express Edition
 

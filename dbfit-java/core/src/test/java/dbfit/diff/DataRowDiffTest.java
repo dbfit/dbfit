@@ -4,7 +4,6 @@ import dbfit.util.MatchResult;
 import dbfit.util.DiffListener;
 import dbfit.util.DataRow;
 import dbfit.util.DataCell;
-import dbfit.util.MatchStatus;
 import static dbfit.util.MatchStatus.*;
 
 import static dbfit.util.DiffTestUtils.createDataRowBuilder;
@@ -119,6 +118,6 @@ public class DataRowDiffTest {
     }
 
     private DataCell anyDataCell() {
-        return org.mockito.Matchers.any(DataCell.class);
+        return org.mockito.ArgumentMatchers.any();
     }
 }
