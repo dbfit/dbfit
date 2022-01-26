@@ -15,7 +15,7 @@ The binary distribution of `DbFit 2.X`, which is available from [dbfit.github.io
 - **DbFit/Java**: this is a Java implementation of the DbFit tables which FitNesse uses to talk to the database.
   - maintained by [Yavor Nikolov](https://github.com/javornikolov) and [Jake Benilov](https://github.com/benilovj)
   - binaries are built by Jake or Yavor whenever we cut a release
-  - source code lives at [{{ site.repository }}]({{ site.repository }})
+  - source code lives at [{{ site.repo }}]({{ site.repo }})
 - **DbFit/Fitsharp**: this is the .NET implementation of the DbFit tables.
   - maintained by [Mike Stockdale](https://github.com/jediwhale)
   - source code lives at [github.com/jediwhale/fitsharp](https://github.com/jediwhale/fitsharp)

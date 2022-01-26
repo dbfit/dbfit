@@ -46,11 +46,11 @@ show_comments: false
   </div>
   <div class="span8" markdown="1">
 
-### [What's new]({{ site.repository }}/releases) <small>The changes in each release.</small>
+### [What's new]({{ site.repo }}/releases) <small>The changes in each release.</small>
 
 ### [The team behind DbFit](/dbfit/docs/the-team-behind-dbfit.html) <small>Which part of DbFit is maintained by whom.</small>
 
-### [Contributing]({{ site.repository }}/blob/{{ site.default_branch }}/CONTRIBUTING.md) <small>Contributing code or documentation improvements to DbFit.</small>
+### [Contributing]({{ site.repo }}/blob/{{ site.default_branch }}/CONTRIBUTING.md) <small>Contributing code or documentation improvements to DbFit.</small>
 
 ### [DbFit: past and present](http://quickpeople.wordpress.com/2013/03/21/dbfit-the-past-and-present/) <small>A brief history of the project and its variants.</small>
 
@@ -65,7 +65,7 @@ show_comments: false
   </div>
   <div class="span8">
 
-    <h3><a href="{{ site.repository }}/releases/v1.1/2429/dbfit-20080822.pdf" onclick="recordOutboundLink(this, 'Documentation', 'Manual', 'Docs');return false;">DbFit 1.1 manual</a> <small>A PDF version of the original manual.</small></h3>
+    <h3><a href="{{ site.repo }}/releases/v1.1/2429/dbfit-20080822.pdf" onclick="recordOutboundLink(this, 'Documentation', 'Manual', 'Docs');return false;">DbFit 1.1 manual</a> <small>A PDF version of the original manual.</small></h3>
 
     <h3><a href="http://gojko.net/FitNesse/book/" onclick="recordOutboundLink(this, 'Outbound links', 'Gojko Fitnesse Book', 'Docs');return false;">Test Driven .NET Development with FitNesse</a> <small>Gojko's free book about using FitNesse.</small></h3>
 
