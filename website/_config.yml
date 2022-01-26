@@ -24,6 +24,7 @@ baseurl: /dbfit
 markdown: kramdown
 
 repository: https://github.com/dbfit/dbfit
+default_branch: main
 
 # The production_url is only used when full-domain names are needed
 # such as sitemap.txt 
