@@ -4,7 +4,7 @@ permalink: /:categories/:year/:month/:day/:title
 
 exclude: [".rvmrc", ".rbenv-version", "README.md", "Rakefile", "changelog.md"]
 auto: true
-pygments: true
+highlighter: pygments
 
 # Themes are encouraged to use these universal variables 
 # so be sure to set them if your theme uses them.
@@ -23,7 +23,8 @@ baseurl: /dbfit
 
 markdown: kramdown
 
-repository: https://github.com/dbfit/dbfit
+repo: https://github.com/dbfit/dbfit
+default_branch: main
 
 # The production_url is only used when full-domain names are needed
 # such as sitemap.txt 
@@ -62,7 +63,7 @@ JB :
   #   - Only the following values are falsy: ["", null, false]
   #   - When setting BASE_PATH it must be a valid url.
   #     This means always setting the protocol (http|https) or prefixing with "/"
-  BASE_PATH : http://dbfit.github.io/dbfit
+  BASE_PATH : /dbfit
 
   # By default, the asset_path is automatically defined relative to BASE_PATH plus the enabled theme.
   # ex: [BASE_PATH]/assets/themes/[THEME-NAME]
