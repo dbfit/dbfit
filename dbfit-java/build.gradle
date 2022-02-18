@@ -396,6 +396,8 @@ project('snowflake') {
         testCompile project(':dbfit-java:core').sourceSets.test.output
     }
 
+    ext.connectionPropertiesFiles = ['TestDbConnectionDbFitSnowflake.properties']
+
     integrationTest.doFirst {
         dbdeploy('net.snowflake.snowflake-jdbc', 'jdbc:snowflake://127.0.0.1', 'dbfit', 'DbFit000!', 'normal', 'GO')
     }
