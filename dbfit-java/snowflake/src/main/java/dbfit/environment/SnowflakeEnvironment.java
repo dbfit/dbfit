@@ -34,14 +34,16 @@ public class SnowflakeEnvironment extends AbstractDbEnvironment {
             throws SQLException {
         String[] qualifiers = NameNormaliser.normaliseName(tableOrViewName)
                 .split("\\.");
-        String qry = "select column_name, data_type, character_maximum_length "
-                + "from information_schema.columns where ";
-        if (qualifiers.length == 2) {
-            qry += " lower(table_schema)=? and lower(table_name)=? ";
+        String qry = "select column_name, data_type, character_maximum_length from "
+                + objectDatabasePrefix(tableOrViewName) + "information_schema.columns where ";
+        if (qualifiers.length == 3) {
+            qry += "lower(table_catalog)=? and lower(table_schema)=? and lower(table_name)=? ";
+        } else if (qualifiers.length >= 2) {
+            qry += "table_catalog=current_database() and lower(table_schema)=? and lower(table_name)=? ";
         } else {
-            qry += " (table_schema=database() and lower(table_name)=?)";
+            qry += "table_catalog=current_database() and table_schema=current_schema() and lower(table_name)=? ";
         }
-        qry += " order by ordinal_position";
+        qry += "order by ordinal_position";
         return readColumnsFromDb(qualifiers, qry);
     }
 
@@ -70,20 +72,19 @@ public class SnowflakeEnvironment extends AbstractDbEnvironment {
             return columns;
         }
     }
-
-    // List interface has sequential search, so using list instead of array to
+    
+    // List interface has sequential search, so using list instead of array to 
     // map types
     private static List<String> stringTypes = Arrays.asList("VARCHAR", "CHAR", "TEXT", "STRING");
     private static List<String> booleanTypes = Arrays.asList("BOOLEAN");
-
-    private static List<String> decimalTypes = Arrays.asList("DECIMAL", "NUMBER", "NUMERIC",
-            "INT", "INTEGER", "TINYINT", "SMALLINT" , "BIGINT");
+    private static List<String> decimalTypes = Arrays.asList("DECIMAL", "NUMBER", "NUMERIC", "INT", "INTEGER",
+            "TINYINT", "SMALLINT" , "BIGINT");
     private static List<String> timestampTypes = Arrays.asList("DATETIME", "TIMESTAMP_LTZ", "TIMESTAMP_NTZ",
             "TIMESTAMP_TZ" );
     private static List<String> dateTypes = Arrays.asList("DATE");
     private static List<String> timeTypes = Arrays.asList("TIME");
 
-     private static List<String> variantTypes = Arrays.asList("VARIANT");
+    private static List<String> variantTypes = Arrays.asList("VARIANT");
 
     private static int getSqlType(String dataType) {
         dataType = normaliseTypeName(dataType);
@@ -201,6 +202,15 @@ public class SnowflakeEnvironment extends AbstractDbEnvironment {
         return getConnection().prepareStatement(
                 buildInsertCommand(tableName, accessors),
                 Statement.NO_GENERATED_KEYS);
+    }
+
+    private String objectDatabasePrefix(String dbObjectName) {
+        String objectDatabasePrefix = "";
+        String[] objnameParts = dbObjectName.split("\\.");
+        if (objnameParts.length == 3) {
+            objectDatabasePrefix = objnameParts[0] + ".";
+        }
+        return objectDatabasePrefix;
     }
 }
 
