@@ -1,0 +1,6 @@
+!|dbfit.SnowflakeTest|
+
+...!|Connect|YC91938.eu-west-2.aws.snowflakecomputing.com|dbfit|Dbfit123!|DBFIT_TEST|
+
+
+|Connect|jdbc:snowflake://YC91938.eu-west-2.aws.snowflakecomputing.com/?user=dbfit&password=Dbfit123!&db=DBFIT_TEST&schema=Public|
