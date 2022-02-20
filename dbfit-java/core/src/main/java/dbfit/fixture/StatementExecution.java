@@ -25,9 +25,13 @@ public class StatementExecution implements AutoCloseable {
                 statement.setNull(index, sqlType, userDefinedTypeName);
             }
         } else {
-            // Don't use the variant that takes sqlType.
-            // Derby (at least) assumes no decimal places for Types.DECIMAL and truncates the source data.
-            statement.setObject(index, value);
+            if (value instanceof dbfit.util.Binary) {
+                statement.setBytes(index, ((dbfit.util.Binary) value).getBytes());
+            } else {
+                // Don't use the variant that takes sqlType.
+                // Derby (at least) assumes no decimal places for Types.DECIMAL and truncates the source data.
+                statement.setObject(index, value);
+            }
         }
     }
 
