@@ -20,7 +20,6 @@ public class Binary {
     }
 
     public static Object parse(String s) throws Exception {
-        //List<Byte> bytes = new ArrayList<Byte>();
         if (!s.substring(0, 2).equals("0x")) {
             throw new NumberFormatException("Hexadecimal string does not start with 0x");
         }
