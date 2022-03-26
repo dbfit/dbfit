@@ -247,6 +247,7 @@ Please be aware that if you change any code whilst the `/.gradlew start` command
 * Create a new Sonatype user profile (`https://issues.sonatype.org/secure/Signup!default.jspa`).
 * Create a new support issue and register to upload DbFit (`com.github.dbfit`) artefacts.
 * Modify the DbFit version number string in the parent Gradle build script (in the DbFit development root directory). Ensure the version number string has the `-SNAPSHOT` suffix.
+* Update `gradle.properties` in the DbFit development root directory with your Sonatype user name (`ossrhUsername`) and password (`ossrhPassword`).
 * Upload the development version snapshot artefact to the Sonatype snapshots repository with:
 
         dbfit$ ./gradlew uploadArchives
