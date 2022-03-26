@@ -86,9 +86,9 @@ DbFit requires two commands to connect to the database. The first line specifies
 
     !|dbfit.MySqlTest|
 
-    !|Connect|localhost|dbfit_user|password|dbfit|
+    !|Connect|localhost|dbfit_user|password|testdb|
 
-Notice the `MySqlTest` in the first line above. That tells DbFit which type of database driver to use.
+Notice the `MySqlTest` in the first line above. That tells DbFit which type of database driver to use. Check [Database-specific Information](/dbfit/docs/database-specific-information.html) for additional steps required to connect to some databases.
 
 Here's a comprehensive list of available types:
 
