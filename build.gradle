@@ -155,7 +155,7 @@ task wikiDocs(dependsOn: [wikiDocsUpdateList]) {
 }
 
 def fitnesseJar() {
-    fileTree(dir: 'dist/lib', include: 'fitnesse-*.jar').getSingleFile()
+    fileTree(dir: 'dist/lib', include: 'fitnesse-*standalone.jar').getSingleFile()
 }
 
 def flattenPath(def path) {
