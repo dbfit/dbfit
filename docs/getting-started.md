@@ -27,7 +27,7 @@ show_comments: false
   DbFit needs the Java Runtime Environment to run - it can be downloaded from the <a href="http://www.java.com/en/download/index.jsp">Oracle's Java homepage</a>.
 </div>
 
- 1. <a class="btn btn-success" href="{{ site.repository }}/releases/download/v{{ site.dbfit_version }}/dbfit-complete-{{ site.dbfit_version }}.zip" onclick="recordOutboundLink(this, 'Software', '{{ site.dbfit_version }}', 'Getting started');return false;">Download DbFit</a>
+ 1. <a class="btn btn-success" href="{{ site.repo }}/releases/download/v{{ site.dbfit_version }}/dbfit-complete-{{ site.dbfit_version }}.zip" onclick="recordOutboundLink(this, 'Software', '{{ site.dbfit_version }}', 'Getting started');return false;">Download DbFit</a>
 
  2. Unpack `dbfit-complete-XXX.zip` somewhere on your disk, and run `startFitnesse.bat` (or `startFitnesse.sh` on Linux). When FitNesse starts, you should see a command window with this message:
 
@@ -86,9 +86,9 @@ DbFit requires two commands to connect to the database. The first line specifies
 
     !|dbfit.MySqlTest|
 
-    !|Connect|localhost|dbfit_user|password|dbfit|
+    !|Connect|localhost|dbfit_user|password|testdb|
 
-Notice the `MySqlTest` in the first line above. That tells DbFit which type of database driver to use.
+Notice the `MySqlTest` in the first line above. That tells DbFit which type of database driver to use. Check [Database-specific Information](/dbfit/docs/database-specific-information.html) for additional steps required to connect to some databases.
 
 Here's a comprehensive list of available types:
 
@@ -104,6 +104,7 @@ Here's a comprehensive list of available types:
 | DB2i                      | DB2iTest            |
 | Teradata                  | TeradataTest        |
 | Netezza                   | NetezzaTest         |
+| Informix                  | InformixTest        |
 {: class="table table-bordered"}
 
 <div class="alert alert-info alert-block">

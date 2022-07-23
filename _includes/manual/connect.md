@@ -36,3 +36,7 @@ For additional information about database connection settings, please refer to:
 * the [Database-specific Information](database-specific-information.html) section
 * the database vendor's official site
 
+<div class="alert alert-warning alert-block">
+If you need to open a second connection it's advised to close the current one first using <code>|Close|</code> command.
+</div>
+
