@@ -13,7 +13,7 @@ import java.util.*;
 
 import fit.TypeAdapter;
 
-@DatabaseEnvironment(name="Oracle", driver="oracle.jdbc.OracleDriver")
+@DatabaseEnvironment(name = "Oracle", driver = "oracle.jdbc.OracleDriver")
 public class OracleEnvironment extends AbstractDbEnvironment {
     private static String SKIP_ORACLE_SYNONYMS = "SKIPORACLESYNONYMS";
 
@@ -96,7 +96,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
      */
     static class DbDictionaryParamsOrColumnsIterator extends AbstractParamsOrColumnsIterator
             implements Iterator<DbParameterOrColumnInfo> {
-    private ResultSet rs;
+        private ResultSet rs;
 
         private DbDictionaryParamsOrColumnsIterator(ResultSet rs) {
             this.rs = rs;
@@ -145,7 +145,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             this.columnCount = md.getColumnCount();
         }
 
-        public static JdbcRsMetaParamsOrColumnsIterator newInstance(ResultSetMetaData md) throws SQLException {
+        public static JdbcRsMetaParamsOrColumnsIterator newInstance(ResultSetMetaData md)
+                throws SQLException {
             return new JdbcRsMetaParamsOrColumnsIterator(md);
         }
 
@@ -248,19 +249,16 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     protected String getConnectionString(String dataSource, String databaseName) {
         if (dataSource.indexOf(":") == -1)
             throw new UnsupportedOperationException(
-                    "data source should be in host:port format - " + dataSource
-                            + " specified");
+                    "data source should be in host:port format - " + dataSource + " specified");
         return "jdbc:oracle:thin:@" + dataSource + ":" + databaseName;
     }
 
-    public Map<String, DbParameterAccessor> getAllProcedureParameters(
-            String procName) throws SQLException {
-        String[] qualifiers = NameNormaliser.normaliseName(procName).split(
-                "\\.");
-        String cols = " argument_name, data_type, data_length,  IN_OUT, sequence, " +
-                "(case when type_name is null then null else type_owner ||'.'|| type_name end) as type";
-        String qry = "select " + cols
-                + "  from all_arguments where data_level=0 and ";
+    public Map<String, DbParameterAccessor> getAllProcedureParameters(String procName)
+            throws SQLException {
+        String[] qualifiers = NameNormaliser.normaliseName(procName).split("\\.");
+        String cols = " argument_name, data_type, data_length,  IN_OUT, sequence, "
+                + "(case when type_name is null then null else type_owner ||'.'|| type_name end) as type";
+        String qry = "select " + cols + "  from all_arguments where data_level=0 and ";
         if (qualifiers.length == 3) {
             qry += " owner=? and package_name=? and object_name=? ";
         } else if (qualifiers.length == 2) {
@@ -332,8 +330,7 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         if (isReturnValueParameter(paramName)) {
             paramDirection = Direction.RETURN_VALUE;
             paramPosition = -1;
-        }
-        else {
+        } else {
             paramDirection = getParameterDirection(direction);
         }
 
@@ -388,7 +385,6 @@ public class OracleEnvironment extends AbstractDbEnvironment {
 
         return dc;
     }
-
 
     // List interface has sequential search, so using list instead of array to
     // map types
@@ -485,11 +481,9 @@ public class OracleEnvironment extends AbstractDbEnvironment {
         Log.log("buiding insert command for " + tableName);
 
         /*
-         * oracle jdbc interface with callablestatement has problems with
-         * returning into...
-         * http://forums.oracle.com/forums/thread.jspa?threadID
-         * =438204&tstart=0&messageID=1702717 so begin/end block has to be built
-         * around it
+         * oracle jdbc interface with callablestatement has problems with returning into...
+         * http://forums.oracle.com/forums/thread.jspa?threadID=438204&tstart=0&messageID=1702717
+         * so begin/end block has to be built around it
          */
         StringBuilder sb = new StringBuilder("begin insert into ");
         sb.append(tableName).append("(");
