@@ -271,5 +271,14 @@ public class HSQLDBEnvironment extends AbstractDbEnvironment {
     public StatementExecution createFunctionStatementExecution(PreparedStatement statement) {
         return new StatementExecutionCapturingResultSetValue(statement);
     }
+
+    @Override
+    public String getActualErrorCode(SQLException e) {
+        if (e.getSQLState().equals("5800")) { // unhandled user-defined exception
+            return e.getNextException().getSQLState();
+        } else {
+            return e.getSQLState();
+        }
+    }
 }
 

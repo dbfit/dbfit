@@ -191,4 +191,9 @@ public class DB2iEnvironment extends AbstractDbEnvironment {
         qry += " order by parmno";
         return readIntoParams(qualifiers, qry);
     }
+
+    @Override
+    public String getActualErrorCode(SQLException e) {
+        return e.getSQLState();
+    }
 }

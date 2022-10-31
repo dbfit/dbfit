@@ -12,5 +12,9 @@
 
 |Execute Ddl|${CREATEMULTIPLYPROC}|
 
+|Execute Ddl|${CREATERAISEERRORWITHPARAMSPROC}|
+
+|Execute Ddl|${CREATERAISEERRORNOPARAMSPROC}|
+
 |Database Environment|
 |Commit|

@@ -278,5 +278,9 @@ public abstract class AbstractDbEnvironment implements DBEnvironment {
         return (conn != null && !conn.isClosed());
     }
 
+    @Override
+    public String getActualErrorCode(SQLException e) {
+        return e.getSQLState();
+    }
 }
 

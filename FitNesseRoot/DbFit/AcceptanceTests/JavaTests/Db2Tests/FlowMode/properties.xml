@@ -12,9 +12,7 @@
 <Suites>(Shared Tests)</Suites>
 <SymbolicLinks>
 <CommitAndRollback>.DbFit.AcceptanceTests.LibraryTests.CommitAndRollback</CommitAndRollback>
-<CommonSuite>.DbFit.AcceptanceTests.CoreTests.CommonSuite</CommonSuite>
-<ObjectNames>.DbFit.AcceptanceTests.CoreTests.ObjectNames</ObjectNames>
-<StoredProcNoParams>.DbFit.AcceptanceTests.CoreTests.StoredProcNoParams</StoredProcNoParams>
+<CoreTests>.DbFit.AcceptanceTests.CoreTests</CoreTests>
 </SymbolicLinks>
 <Versions/>
 <WhereUsed/>

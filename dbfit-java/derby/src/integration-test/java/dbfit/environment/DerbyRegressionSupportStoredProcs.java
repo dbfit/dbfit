@@ -19,11 +19,33 @@ public class DerbyRegressionSupportStoredProcs {
         }
     }
 
-    public static void calcLength(String name, int[] strLength) throws SQLException {
-        strLength[0] = name.length();
+    public static void CalcLength(String Name, int[] StrLength) throws SQLException {
+        StrLength[0] = Name.length();
     }
 
-    public static double multiply(double n1, double n2) throws SQLException {
+    public static double Multiply(double n1, double n2) throws SQLException {
         return n1 * n2;
+    }
+
+    public static void raise_error_with_params(String name, int[] strlength) throws SQLException {
+        try (
+            // "jdbc:default:connection" tells the DriverManager to use the existing connection.
+            Connection conn = DriverManager.getConnection("jdbc:default:connection");
+            Statement stmt = conn.createStatement();
+        ) {
+            if (name.equals("xx")) {
+                throw new SQLException("test exception", "38123");
+            }
+        }
+    }
+
+    public static void raise_error_no_params() throws SQLException {
+        try (
+            // "jdbc:default:connection" tells the DriverManager to use the existing connection.
+            Connection conn = DriverManager.getConnection("jdbc:default:connection");
+            Statement stmt = conn.createStatement();
+        ) {
+            throw new SQLException("test exception", "38123");
+        }
     }
 }

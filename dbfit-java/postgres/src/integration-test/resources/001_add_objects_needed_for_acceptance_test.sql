@@ -73,3 +73,25 @@ END;
 $body$
 LANGUAGE plpgsql
 ;
+
+CREATE OR REPLACE FUNCTION raise_error_no_params()
+RETURNS VOID
+AS
+$body$
+BEGIN
+  RAISE EXCEPTION SQLSTATE '22012';
+END;
+$body$
+LANGUAGE plpgsql
+;
+
+CREATE OR REPLACE FUNCTION raise_error_with_params(name VARCHAR(100), OUT strlength INTEGER)
+RETURNS INTEGER
+AS
+$body$
+BEGIN
+  RAISE EXCEPTION SQLSTATE '22012';
+END;
+$body$
+LANGUAGE plpgsql
+;

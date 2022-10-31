@@ -1,0 +1,4 @@
+!3 Use ''Execute Procedure Expect Exception'' to check if a stored proc will throw an exception
+
+!|Execute Procedure Expect Exception|raise_error_no_params|
+
